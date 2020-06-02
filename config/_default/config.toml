@@ -1,0 +1,4 @@
+baseURL = "http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/"
+languageCode = "en-us"
+title = "Dev Blog"
+Theme = "ananke"
