@@ -1,8 +1,5 @@
-# Simple make target to publish the site
 #
 #
-
-
 
 
 # Fetch upstream changes from nttdata-emea.github.io
@@ -12,7 +9,7 @@ fetchgithub:
 
 pubs3:
 	hugo -D
-	aws s3 sync ./public/ s3://cps-tech-blog-draft/
+	aws s3 sync ./nttdata-emea.github.io/ s3://cps-tech-blog-draft/
 
-pibgithub:
+pubgithub:
 	aws s3

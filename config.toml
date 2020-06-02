@@ -3,4 +3,4 @@ languageCode = "en-us"
 title = "Technology Blog"
 Theme = "ananke"
 
-publishDir = "public"
+publishDir = "nttdata-emea.github.io"
