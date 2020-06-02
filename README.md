@@ -3,7 +3,15 @@
 This is a [gohugo.io](https://gohugo.io/) project. If you have never heard of
 gohugo before you should go read some of the [documentation](https://gohugo.io/documentation/).
 
-## Setup
+## Current
+
+Currently i have set up an s3 Bucket in aws.
+
+https://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/
+
+
+
+## Development Setup
 
 Gohugo ist written in golang. So you will need to have golang installed first.
 See https://golang.org/doc/install
@@ -58,3 +66,13 @@ The resources/ folder is automatically created when generating the static output
 > There are more directories that enable other features. I hjave removed them for now
 > since we currently dont use these features. See the documentation
 > https://gohugo.io/getting-started/directory-structure/
+
+
+## AWS Setup
+
+Currently there is a bucket on the Cloud Platform Services AWS Account.
+That is obviously temporary and should be decided upon where to
+put this page at a alter stage.
+
+The Name of the Bucket is s3://cps-tech-blog-draft/ and it lives  in the
+256279413964 account.
