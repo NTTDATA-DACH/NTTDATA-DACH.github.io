@@ -7,6 +7,7 @@ dev:
 	hugo serve
 
 s3:
+	rm -rf publish/s3/*
 	hugo --environment s3 -D
 
 github:
