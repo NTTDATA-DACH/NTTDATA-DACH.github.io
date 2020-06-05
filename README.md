@@ -32,7 +32,7 @@ set up a git remote to the repository where the static files live.
 
 Currently i have set up an s3 Bucket in aws.
 
-https://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/
+http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/
 
 
 

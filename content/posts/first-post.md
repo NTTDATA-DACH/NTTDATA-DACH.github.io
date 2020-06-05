@@ -4,13 +4,10 @@ date: 2020-06-02T09:04:54+02:00
 draft: false
 ---
 
-# A Post
 
-with some markdown
+Content is written in markdown. There are other content formats possible
+but why not stick to what is built in.
 
-## Subtitle
+## Sub title
 
-And more content.
-
-
-even more
+Add
