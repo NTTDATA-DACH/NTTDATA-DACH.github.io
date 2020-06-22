@@ -7,7 +7,3 @@ banner: "office.jpg"
 emphasized: true
 draft: false
 ---
-
-## Posts
-
-List all posts here

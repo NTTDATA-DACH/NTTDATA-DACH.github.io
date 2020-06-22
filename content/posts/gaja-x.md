@@ -5,7 +5,7 @@ image: "https://assets.t3n.sc/news/wp-content/uploads/2018/03/peter-altmaier-que
 banner: "/posts/office.jpg"
 date: 2020-06-02T09:04:54+02:00
 draft: false
-tags: ["Test", "Tech", "Development"]
+tags: ["Tech", "Development"]
 ---
 
 ## In der griechischen Mythologie
