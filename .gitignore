@@ -1,2 +1,3 @@
 publish/s3
 publish/dev
+.envrc

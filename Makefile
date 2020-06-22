@@ -10,15 +10,15 @@ s3:
 	rm -rf publish/s3/*
 	hugo --environment s3 -D
 
-github:
+gh:
 	hugo --environment github -D
 
 # Publish static content to s3 bucket
-publish_s3:
+pubs3:
 	aws s3 sync ./publish/s3/ s3://cps-tech-blog-draft/
 
 # Push changes to the remote repository using subtree push
-publish_github:
+pubgh:
 	git subtree push --prefix=publish/github/ git@github.com:NTTDATA-EMEA/nttdata-emea.github.io.git master
 
 # If you want to fetch changes from the remote github subtree:
