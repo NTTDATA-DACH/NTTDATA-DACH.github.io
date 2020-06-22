@@ -1,0 +1,151 @@
+body {
+  padding: 0;
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+ul, li {
+  list-style: none;
+  margin-left: 0;
+  padding-left: 0;
+}
+
+header, main, div.emobanner {
+  padding-left: 53px;
+  padding-right: 53px;
+}
+
+header {
+  background-color: black;
+  font-size: 13px;
+  display: flex;
+  justify-content: space-between;
+  height: 60px;
+}
+
+header img {
+  height: 58px;
+}
+
+header nav {
+  margin-top: auto;
+  margin-bottom: auto;
+  height: 100%;
+  display: flex;
+}
+
+header nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  margin: auto;
+  padding: 10px 20px;
+  margin-left: 40px;
+}
+
+header nav a.emphasized {
+  background-color: #172C7D;
+}
+
+main {
+  color: #3C4852;
+  font-size: 14px;
+  line-height: 23px;
+  margin-top: 40px;
+}
+
+div.emobanner {
+  background-color: black;
+  height: 385px;
+  display: flex;
+  padding-right: 20px;
+  background-size: cover;
+  z-index: 1;
+}
+
+div.emobanner.article {
+  background-color: #101C51;
+}
+
+div.emobanner.article div {
+  position: absolute;
+  left: 55vw;
+  width: 45vw;
+  height: 385px;
+  background-size: cover;
+  z-index: 2;
+}
+
+div.emobanner h1 {
+  margin: 0;
+  color: white;
+  margin-top: auto;
+  margin-bottom: auto;
+  font-size: 50px;
+}
+
+div.emobanner h1 span {
+  font-size: 16px;
+  color: #CFD8FC;
+  text-transform: uppercase;
+  font-weight: 100;
+}
+
+div.emobanner ul {
+  margin: 0;
+}
+
+div.emobanner h1 li {
+  float: left;
+  margin-right: 20px;
+}
+
+div.emobanner h1 li a {
+  font-size: 18px;
+  color: white;
+  border: 1px solid white;
+  padding: 10px 20px;
+  text-decoration: none;
+}
+
+div.emobanner h1 span::after {
+  content: "\A";
+  white-space: pre;
+}
+
+div.startpage h2 {
+  margin-top: 40px;
+  font-size: 12px;
+  color: #A9B0B8;
+  font-weight: 100;
+}
+
+div.startpage h3 {
+  color: #0F1C4F;
+  font-size: 33px;
+  line-height: 33px;
+}
+
+div.startpage a {
+  color: #0F1C4F;
+  text-decoration: none;
+  border-bottom: 2px solid #E6B600;
+  font-size: 13px;
+  font-weight: 600;
+  padding-bottom: 3px;
+}
+
+div.startpage li div.image {
+  float: right;
+  height: 250px;
+  width: 40%;
+  margin-left: 40px;
+  margin-bottom: 20px;
+  background-size: cover;
+}
+
+div.startpage li:after {
+  content: "";
+  display: table;
+  clear: both;
+}

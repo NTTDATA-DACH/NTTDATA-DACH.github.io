@@ -1,16 +1,19 @@
 ---
 title: "Cloud-Initiative Gaia-X"
+type: article
+image: "https://assets.t3n.sc/news/wp-content/uploads/2018/03/peter-altmaier-quelle-dpa.jpg?auto=format&fit=crop&h=348&ixlib=php-2.3.0&w=620"
+banner: "/posts/office.jpg"
+date: 2020-06-02T09:04:54+02:00
 draft: false
+tags: ["Test", "Tech", "Development"]
 ---
 
-
-{{< figure src="https://assets.t3n.sc/news/wp-content/uploads/2018/03/peter-altmaier-quelle-dpa.jpg?auto=format&fit=crop&h=348&ixlib=php-2.3.0&w=620" title="Wirtschaftsminister Peter Altmeier" >}}
+## In der griechischen Mythologie
 
 **Der Name für das Digitalprojekt Gaia-X ist bedeutungsschwer: In der griechischen
 Mythologie ist Gaia eine Urgottheit der Erde, die alles Lebende hervorbringt und
 ernährt. Nun soll Gaia-X von der Ebene des Ungefähren in die Praxis geholt und
 auf ganz Europa erweitert werden.**
-
 
 
 Die von Deutschland und Frankreich vorangetriebene europäische Cloud- und Dateninfrastruktur

@@ -1,0 +1,44 @@
+<!-- Header -->
+{{ partial "header.html" . }}
+
+<div class="emobanner" style="background-image: url({{ .Params.Banner }})">
+  <h1><span>{{ .Params.Topic }}</span>{{ .Title }}</h1>
+</div>
+
+<main>
+
+  <div class="startpage">
+
+
+
+    <ul>
+
+      <!-- Loop through all posts -->
+      {{ $paginator := .Paginate (where .Data.Pages "Type" "article") }}
+      {{ range .Paginator.Pages }}
+      <li>
+        <div class="image" style="background-image: url({{ .Params.Image }}" )></div>
+
+        <h3>{{ .Title }}</h3>
+
+        <p>
+          <small>{{ .Date.Format "02.01.2006" }}</small>
+        </p>
+
+        {{ .Summary }}
+
+        <p>
+          <a class="readmore" href="{{ .RelPermalink }}">Weiterlesen</a>
+        </p>
+
+      </li>
+      {{ end }}
+      <!-- End loop -->
+    </ul>
+  </div>
+
+  <!-- Navigation -->
+  {{ partial "page-navigation.html" . }}
+
+  <!-- Footer -->
+  {{ partial "footer.html" . }}

@@ -1,9 +1,13 @@
 baseURL = "http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/"
 languageCode = "en-us"
-title = "Dev Blog"
-Theme = "hugo-theme-learn-master"
+title = "Technology Blog"
+theme = "ntt-data"
+Paginate = 5
+Topic = "NTT DATA"
 publishDir = "publish/dev/"
 
+[taxonomies]
+  tag = "tags"
 
 [params]
 
@@ -14,18 +18,21 @@ publishDir = "publish/dev/"
         url = "#"
 
         [[params.navbar.nav]]
-        current = true
+        name = "All Blogposts"
+        emphasized = true
+        url = "/posts"
+
+        [[params.navbar.nav]]
         name = "Industrien"
-        url = "#"
+        url = "/about"
+
         [[params.navbar.nav]]
         name = "Services"
-        url = "#"
+        url = "/about"
+        
         [[params.navbar.nav]]
-        name = "Digital"
-        url = "#"
-        [[params.navbar.nav]]
-        name = "Newsroom"
-        url = "#"
+        name = "About"
+        url = "/about"
 
     [params.header]
         name = "Trusted Global Innovator"
