@@ -2,7 +2,6 @@
 title: "Cloud-Initiative Gaia-X"
 type: article
 image: "https://assets.t3n.sc/news/wp-content/uploads/2018/03/peter-altmaier-quelle-dpa.jpg?auto=format&fit=crop&h=348&ixlib=php-2.3.0&w=620"
-banner: "/posts/office.jpg"
 date: 2020-06-02T09:04:54+02:00
 draft: false
 tags: ["Tech", "Development"]

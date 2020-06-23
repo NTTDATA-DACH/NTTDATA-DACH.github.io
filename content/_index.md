@@ -2,7 +2,7 @@
 title: "Technology Blog"
 topic: "NTT Data"
 type: list
-banner: "KV-2020-Stock-Home-WP-Covid-19.jpg"
+image: "KV-2020-Stock-Home-WP-Covid-19.jpg"
 emphasized: true
 title: "NTTData Technology Blog"
 date: 2020-06-22T09:26:55+02:00

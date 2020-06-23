@@ -4,7 +4,7 @@ topic: "NTT Data tech Blog"
 type: page
 date: 2020-06-02T09:04:54+02:00
 emphasized: false
-banner: "/posts/car.png"
+image: "/posts/car.png"
 draft: false
 ---
 
