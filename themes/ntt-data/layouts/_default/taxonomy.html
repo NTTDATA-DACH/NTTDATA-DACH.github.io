@@ -2,7 +2,7 @@
 {{ partial "header.html" . }}
 
 <div class="emobanner article" style="background-image: url({{ .Params.Image }})">
-  <h1><span>{{ .Params.Topic }}</span>{{ .Title }}
+  <h1><span>{{ .Params.PreTitle }}</span>{{ .Title }}
 
   <ul>
     {{range $name, $taxonomy := .Site.Taxonomies.tags}}

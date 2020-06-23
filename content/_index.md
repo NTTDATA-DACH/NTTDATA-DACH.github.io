@@ -1,6 +1,6 @@
 ---
 title: "Technology Blog"
-topic: "NTT Data"
+PreTitle: "NTT Data"
 type: list
 image: "KV-2020-Stock-Home-WP-Covid-19.jpg"
 emphasized: true
