@@ -2,9 +2,9 @@
 {{ partial "header.html" . }}
 
 {{ if eq .Type "page" }}
-{{ partial "page.html" . }}
+  {{ partial "page.html" . }}
 {{ else }}
-{{ partial "article.html" . }}
+  {{ partial "article.html" . }}
 {{ end }}
 
 <!-- Footer -->
