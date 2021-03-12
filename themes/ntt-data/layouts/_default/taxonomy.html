@@ -1,20 +1,8 @@
 <!-- Header -->
 {{ partial "header.html" . }}
 
-<div class="emobanner article" style="background-image: url({{ .Params.Image }})">
-  <h1><span>{{ .Params.PreTitle }}</span>{{ .Title }}
-
-  <ul>
-    {{range $name, $taxonomy := .Site.Taxonomies.tags}}
-      {{ with $.Site.GetPage (printf "/tags/%s" $name) }}
-      <li>
-        <a href={{ .RelPermalink }} title="All pages with tag <i>{{$name}}</i>">{{$name}}</a>
-      </li>
-      {{end}}
-    {{end}}
-  </ul>
-  
-  </h1>
+<div class="emobanner article" style="background-image: url('{{ .Params.Image }}')">
+  <h1><span>{{ .Params.PreTitle }}</span>Articles related to {{ .Title }}</h1>
 </div>
 
 <main>
@@ -27,7 +15,7 @@
       {{ $paginator := .Paginate (where .Data.Pages "Type" "article") }}
       {{ range .Paginator.Pages }}
       <li>
-        <div class="image" style="background-image: url({{ .Params.Image }}" )></div>
+        <div class="image" style="background-image: url('{{ .Params.Image }}')" )></div>
 
         <h3>{{ .Title }}</h3>
 
@@ -36,6 +24,12 @@
         </p>
 
         {{ .Summary }}
+
+        <ul class="tag-list">
+          {{ range .Params.tags }}
+          <li>{{ . }}</li>
+          {{ end }}
+        </ul>
 
         <p>
           <a class="readmore" href="{{ .RelPermalink }}">Weiterlesen</a>
@@ -49,6 +43,17 @@
 
   <!-- Navigation -->
   {{ partial "page-navigation.html" . }}
+
+  <h2 class="footer">Other Topics</h2>
+  <ul class="tag-list-linked">
+    {{range $name, $taxonomy := .Site.Taxonomies.tags}}
+    {{ with $.Site.GetPage (printf "/tags/%s" $name) }}
+    <li>
+      <a href={{ .RelPermalink }} title="All pages with tag <i>{{$name}}</i>">{{$name}}</a>
+    </li>
+    {{end}}
+    {{end}}
+  </ul>
 
   <!-- Footer -->
   {{ partial "footer.html" . }}

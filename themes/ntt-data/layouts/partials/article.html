@@ -1,22 +1,38 @@
 <div class="emobanner article">
-  <div style="background-image: url({{ .Params.Image }})"></div>
   <h1>
-    <span>{{ .Date.Format "02.01.2006" }}</span>
+    <span class="pre">{{ .Date.Format "02.01.2006" }}</span>
     {{ .Title }}
-
-    <!-- Tags -->
-    {{ if isset .Params "tags" }}
-    {{ $baseURL := .Site.BaseURL }}
-    <ul>
-      {{ range .Params.tags }}
-      <li><a href="{{ $baseURL }}tags/{{ . | urlize }}/">{{ . }}</a> </li>
-      {{ end }}
-    </ul>
+    {{ if isset .Params "subtitle" }}
+      <span class="subtitle">{{ .Params.subtitle }}</span>
     {{ end }}
   </h1>
-
+  <div style="background-image: url('{{ .Params.Image }}')"></div>
 </div>
 
 <main>
 
   {{ .Content }}
+
+  {{ if isset .Params "tags" }}
+  {{ $baseURL := .Site.BaseURL }}
+
+  <h2 class="footer">Article Tags</h2>
+
+  <ul class="tag-list-linked">
+    {{ range .Params.tags }}
+    <li><a href="{{ $baseURL }}tags/{{ . | urlize }}/">{{ . }}</a> </li>
+    {{ end }}
+  </ul>
+  {{ end }}
+
+  {{- range .Params.authors }}
+  {{- with $.Site.GetPage "taxonomyTerm" (printf "authors/%s" (urlize .)) }}
+  <figure class="author">
+    <img src="../../authors/{{ .Params.photo }}" alt="" />
+    <figcaption>
+      <h3>{{ .Params.name }}</h3>
+      <p>{{ .Params.jobtitle }}</p>
+    </figcaption>
+  </figure>
+  {{ end }}
+  {{ end }}

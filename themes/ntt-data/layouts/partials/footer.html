@@ -1,5 +1,29 @@
 </main>
 
+<footer>
+  <a href="/"><img src="/images/NTT-Data-white.png"></a>
+  <nav>
+    {{ range .Site.Params.footer.nav }}
+    <a {{ if .emphasized }}class="emphasized" {{ end }} href="{{ .url }}">{{ .name }}{{ if .current }}<span
+        class="sr-only">(current)</span>{{ end }}</a>
+    {{ end }}
+  </nav>
+
+  <p class="text">{{ .Site.Copyright | markdownify }}</p>
+
+  <div>
+    <span class="first"><h3>Global CTA</h3><br><a href="https://www.nttdata.com/global/en">www.nttdata.com/global/en</a></span>
+    <span class="second"><h3>EMEA CTAs</h3><br>
+    <a href="https://de.nttdata.com/">de.nttdata.com</a>
+    <a href="https://uk.nttdata.com/">uk.nttdata.com</a>
+    <a href="https://it.nttdata.com/">it.nttdata.com</a>
+    <a href="https://ro.nttdata.com/">ro.nttdata.com</a>
+    </span>
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
 </body>
 
 </html>

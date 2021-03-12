@@ -1,20 +1,16 @@
 ---
 title: "Technology Blog"
-PreTitle: "NTT Data"
+PreTitle: "NTT DATA's Technology Blog"
 type: list
 image: "KV-2020-Stock-Home-WP-Covid-19.jpg"
 emphasized: true
-title: "NTTData Technology Blog"
+title: "Driving innovation | Where Ideas Come to Life | Creating innovation together"
+js: randomize_title # randomly choose one of the titles above on page load
 date: 2020-06-22T09:26:55+02:00
 draft: false
 ---
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 
-## Make it so
+# Visit NTT DATA 
 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-## Why not different?
-
-Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+NTT DATA is your Innovation Partner anywhere around the world. Headquartered in Tokyo, with business operations in more than 50 countries and regions, we emphasize long-term commitment and combine global reach and local intimacy to provide premier professional services from consulting, system development to business IT outsourcing. 

@@ -6,13 +6,16 @@
 
   <meta charset="utf-8">
 
+  {{ if .Params.js }}
+    <script src="js/{{ .Params.js }}.js"></script>
+  {{ end }}
   <link rel="stylesheet" href="{{ .Site.BaseURL }}css/main.css">
   <link href="{{ with .OutputFormats.Get "RSS" }}{{ .RelPermalink }}{{ end }}" rel="feed" type="application/rss+xml" title="{{ .Site.Title }}" />
 </head>
 
 <body>
   <header>
-    <img src="/images/NTT-Data-white.png">
+    <a href="/"><img src="/images/NTT-Data-white.png"></a>
 
     <nav>
 
@@ -20,7 +23,6 @@
         <a {{ if .emphasized }}class="emphasized" {{ end }} href="{{ .url }}">{{ .name }}{{ if .current }}<span class="sr-only">(current)</span>{{ end }}</a>
       {{ end }}
 
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-EMEA"><img src="/images/GitHub.png"></a>
     </nav>
-
   </header>
-

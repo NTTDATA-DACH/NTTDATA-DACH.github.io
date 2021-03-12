@@ -12,10 +12,6 @@ After you have installed both you should be able to run the hugo cli
     $ hugo version
     Hugo Static Site Generator v0.72.0/extended darwin/amd64 BuildDate: unknown
 
->
-> I'm assuming basic familiarity with hugo. If in doubt go read hugo docs
->
-
 ## Development setup
 
 Clone this repository to your local environment.
@@ -49,3 +45,8 @@ put this page at a alter stage.
 
 The Name of the Bucket is s3://cps-tech-blog-draft/ and it lives  in the
 256279413964 account.
+
+## Content Editing
+
+- Add plogposts by adding new files to content/posts
+- To create a new author add a file unter content/authors. The name of the file is the urlified name (use dashes instead of spaces). Add the data in the file.

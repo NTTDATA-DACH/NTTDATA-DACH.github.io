@@ -1,27 +1,38 @@
-baseURL = "http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/"
-languageCode = "en-us"
-title = "Technology Blog"
-theme = "ntt-data"
 Paginate = 5
 PreTitle = "NTT DATA"
+Copyright = "Copyright 2021 NTT DATA EMEA - This site does not use any cookies"
+baseURL = "http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/"
+languageCode = "en-us"
 publishDir = "publish/dev/"
+theme = "ntt-data"
+title = "Technology Blog"
+
 
 [[params.navbar.nav]]
-  name = "All Blogposts"
-  emphasized = true
-  url = "/posts"
+emphasized = true
+name = "All Blogposts"
+url = "/posts"
 
 [[params.navbar.nav]]
-  name = "Industrien"
-  url = "/about"
+name = "Contact"
+url = "mailto:github-emea@nttdata.com"
 
 [[params.navbar.nav]]
-  name = "Services"
-  url = "/about"
+name = "About Us"
+url = "https://www.nttdata.com/global/en/"
 
-[[params.navbar.nav]]
-  name = "About"
-  url = "/about"
+[[params.footer.nav]]
+name = "Privacy Policy"
+url = "/privacy"
+
+[[params.footer.nav]]
+name = "Imprint"
+url = "https://www.nttdata.com/global/en/term-of-use"
+
+[[params.footer.nav]]
+name = "Contact"
+url = "mailto:github-emea@nttdata.com"
 
 [taxonomies]
-  tag = "tags"
+author = "authors"
+tag = "tags"
