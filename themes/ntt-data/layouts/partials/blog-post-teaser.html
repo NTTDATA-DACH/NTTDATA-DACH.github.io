@@ -1,0 +1,20 @@
+<li>
+  <div class="image" style="background-image: url('{{ .Params.Image }}')"></div>
+
+  <h3>{{ .Title }}</h3>
+
+  <p>
+    <small>{{ .Date.Format "02.01.2006" }}
+      {{ if isset .Params "authors" }}
+      - {{ delimit .Params.authors ", "}}
+      {{ end }}
+    </small>
+  </p>
+
+  {{ .Summary }}
+
+  {{ partial "tags-linked" . }}
+
+  <a class="readmore" href="{{ .RelPermalink }}">Weiterlesen</a>
+
+</li>

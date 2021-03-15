@@ -18,11 +18,7 @@
 
   <h2 class="footer">Article Tags</h2>
 
-  <ul class="tag-list-linked">
-    {{ range .Params.tags }}
-    <li><a href="{{ $baseURL }}tags/{{ . | urlize }}/">{{ . }}</a> </li>
-    {{ end }}
-  </ul>
+  {{ partial "tags-linked" . }}
   {{ end }}
 
   {{- range .Params.authors }}

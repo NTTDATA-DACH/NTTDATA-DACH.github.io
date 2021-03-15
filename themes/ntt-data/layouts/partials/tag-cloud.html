@@ -1,0 +1,10 @@
+<h2 class="footer">Other Topics</h2>
+<ul class="tag-list-linked">
+  {{range $name, $taxonomy := .Site.Taxonomies.tags}}
+  {{ with $.Site.GetPage (printf "/tags/%s" $name) }}
+  <li>
+    <a href={{ .RelPermalink }} title="All pages with tag <i>{{$name}}</i>">{{$name}}</a>
+  </li>
+  {{end}}
+  {{end}}
+</ul>
