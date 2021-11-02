@@ -6,21 +6,13 @@ dev:
 	# Uses only _default config
 	hugo serve
 
-s3:
-	rm -rf publish/s3/*
-	hugo --environment s3 -D
-
 gh:
 	hugo --environment github -D
 
-# Publish static content to s3 bucket
-pubs3:
-	aws s3 sync ./publish/s3/ s3://cps-tech-blog-draft/
-
 # Push changes to the remote repository using subtree push
 pubgh:
-	git subtree push --prefix=publish/github/ git@github.com:NTTDATA-EMEA/nttdata-emea.github.io.git master
+	git subtree push --prefix=publish/github/ git@github.com:NTTDATA-DACH/NTTDATA-DACH.github.io.git main
 
 # If you want to fetch changes from the remote github subtree:
 fetch_github:
-	git subtree pull --prefix=./publish/github/ git@github.com:NTTDATA-EMEA/nttdata-emea.github.io.git master --squash
+	git subtree pull --prefix=./publish/github/ git@github.com:NTTDATA-DACH/NTTDATA-DACH.github.io.git main --squash
