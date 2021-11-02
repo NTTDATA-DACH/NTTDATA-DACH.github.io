@@ -1,7 +1,7 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Driving innovation | Where Ideas Come to Life | Creating innovation together on Technology Blog</title>
-    <link>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/</link>
+    <link>https://nttdata-dach.github.io/</link>
     <description>Die neuesten Inhalte auf Technology Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     
@@ -11,7 +11,7 @@
     
     <lastBuildDate>Mon, 22 Jun 2020 09:26:55 +0200</lastBuildDate>
     
-    <atom:link href="http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/" rel="self" type="application/rss+xml" />
+    <atom:link href="https://nttdata-dach.github.io/" rel="self" type="application/rss+xml" />
     
     
     
