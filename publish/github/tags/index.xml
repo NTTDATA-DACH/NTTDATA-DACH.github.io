@@ -1,14 +1,102 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on Technology Blog Github EMEA Account</title>
+    <title>Tags on Technology Blog</title>
     <link>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/tags/</link>
-    <description>Recent content in Tags on Technology Blog Github EMEA Account</description>
+    <description>Recent content in Tags on Technology Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
+    <copyright>Copyright 2021 NTT DATA Deutschland GmbH - This site does not use any cookies</copyright>
+    <lastBuildDate>Mon, 12 Jul 2021 00:00:00 +0000</lastBuildDate><atom:link href="http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>buildah</title>
+      <link>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/tags/buildah/</link>
+      <pubDate>Mon, 12 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/tags/buildah/</guid>
+      <description></description>
+    </item>
     
-	<atom:link href="http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ci</title>
+      <link>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/tags/ci/</link>
+      <pubDate>Mon, 12 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/tags/ci/</guid>
+      <description></description>
+    </item>
     
+    <item>
+      <title>container</title>
+      <link>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/tags/container/</link>
+      <pubDate>Mon, 12 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/tags/container/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>cowsay</title>
+      <link>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/tags/cowsay/</link>
+      <pubDate>Mon, 12 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/tags/cowsay/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>development</title>
+      <link>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/tags/development/</link>
+      <pubDate>Mon, 12 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/tags/development/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>docker</title>
+      <link>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/tags/docker/</link>
+      <pubDate>Mon, 12 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/tags/docker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>rootless</title>
+      <link>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/tags/rootless/</link>
+      <pubDate>Mon, 12 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/tags/rootless/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>process automation</title>
+      <link>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/tags/process-automation/</link>
+      <pubDate>Thu, 01 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/tags/process-automation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>best practice</title>
+      <link>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/tags/best-practice/</link>
+      <pubDate>Tue, 01 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/tags/best-practice/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>data</title>
+      <link>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/tags/data/</link>
+      <pubDate>Tue, 01 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/tags/data/</guid>
+      <description></description>
+    </item>
     
   </channel>
 </rss>

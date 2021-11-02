@@ -10,7 +10,6 @@
   <div class="startpage">
 
     <ul>
-
       <!-- Loop through all posts -->
       {{ $paginator := .Paginate (where .Data.Pages "Type" "article") }}
       {{ range .Paginator.Pages }}
@@ -23,4 +22,3 @@
   {{ partial "page-navigation.html" . }}
   {{ partial "tag-cloud.html" . }}
   {{ partial "footer.html" . }}
-  

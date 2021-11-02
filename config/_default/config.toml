@@ -1,7 +1,7 @@
 Paginate = 5
 PreTitle = "NTT DATA"
-Copyright = "Copyright 2021 NTT DATA EMEA - This site does not use any cookies"
-baseURL = "http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/"
+Copyright = "Copyright 2021 NTT DATA Deutschland GmbH - This site does not use any cookies"
+baseURL = "https://nttdata-dach.github.io/"
 languageCode = "en-us"
 publishDir = "publish/dev/"
 theme = "ntt-data"
@@ -12,26 +12,31 @@ title = "Technology Blog"
 emphasized = true
 name = "All Blogposts"
 url = "/posts"
+targetSelf = "true"
 
 [[params.navbar.nav]]
 name = "Contact"
-url = "mailto:github-emea@nttdata.com"
+url = "mailto:techblog@nttdata.com"
 
 [[params.navbar.nav]]
 name = "About Us"
-url = "https://www.nttdata.com/global/en/"
-
-[[params.footer.nav]]
-name = "Privacy Policy"
-url = "/privacy"
+url = "https://de.nttdata.com/"
 
 [[params.footer.nav]]
 name = "Imprint"
-url = "https://www.nttdata.com/global/en/term-of-use"
+url = "/imprint"
+
+[[params.footer.nav]]
+name = "Privacy Notice"
+url = "/privacy"
+
+[[params.footer.nav]]
+name = "Legal Notice"
+url = "/legal"
 
 [[params.footer.nav]]
 name = "Contact"
-url = "mailto:github-emea@nttdata.com"
+url = "mailto:techblog@nttdata.com"
 
 [taxonomies]
 author = "authors"

@@ -1,7 +1,7 @@
 <li>
-  <div class="image" style="background-image: url('{{ .Params.Image }}')"></div>
+  <a href="{{ .RelPermalink }}"><div class="image" style="background: url('{{ .Params.Image }}') no-repeat center center; background-size: cover"></div></a>
 
-  <h3>{{ .Title }}</h3>
+  <h3><a class="clickable-title" href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
 
   <p>
     <small>{{ .Date.Format "02.01.2006" }}
@@ -15,6 +15,6 @@
 
   {{ partial "tags-linked" . }}
 
-  <a class="readmore" href="{{ .RelPermalink }}">Weiterlesen</a>
+  <a class="readmore" href="{{ .RelPermalink }}">Read More</a>
 
 </li>

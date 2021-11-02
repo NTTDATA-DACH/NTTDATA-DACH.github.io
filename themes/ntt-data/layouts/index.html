@@ -1,8 +1,14 @@
 <!-- Header -->
 {{ partial "header.html" . }}
 
-<div class="emobanner" style="background-image: url('{{ .Params.Image }}')">
-  <h1><span class="pre">{{ .Params.PreTitle }}</span><span class="main" id="title">{{ .Title }}</span></h1>
+<div class="emobanner">
+  <video id="videoBG" preload="auto" autoplay muted loop poster="">
+    <source src="/images/innovation.mp4" type="video/mp4">
+  </video>
+  <h1>
+    <span class="pre" id="pre-title">{{ .Params.PreTitle }}</span>
+    <span class="main" id="title">{{ .Title }}</span>
+  </h1>
 </div>
 
 <main>
@@ -12,9 +18,8 @@
     <h2>Recent Posts</h2>
 
     <ul>
-
       <!-- Loop through recent 3 posts -->
-      {{ range first 3 (where .Site.RegularPages.ByPublishDate "Section" "posts")}}
+      {{ range first 3 (where .Site.RegularPages.ByDate.Reverse "Section" "posts")}}
       {{ partial "blog-post-teaser" . }}
       {{ end }}
       <!-- End loop -->
@@ -28,3 +33,4 @@
 
   <!-- Footer -->
   {{ partial "footer.html" . }}
+

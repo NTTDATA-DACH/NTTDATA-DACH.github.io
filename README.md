@@ -48,5 +48,5 @@ The Name of the Bucket is s3://cps-tech-blog-draft/ and it lives  in the
 
 ## Content Editing
 
-- Add plogposts by adding new files to content/posts
+- Add blogposts by adding new files to content/posts
 - To create a new author add a file unter content/authors. The name of the file is the urlified name (use dashes instead of spaces). Add the data in the file.

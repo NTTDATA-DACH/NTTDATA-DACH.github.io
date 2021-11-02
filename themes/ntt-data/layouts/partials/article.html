@@ -1,34 +1,52 @@
 <div class="emobanner article">
-  <h1>
-    <span class="pre">{{ .Date.Format "02.01.2006" }}</span>
-    {{ .Title }}
-    {{ if isset .Params "subtitle" }}
-      <span class="subtitle">{{ .Params.subtitle }}</span>
-    {{ end }}
-  </h1>
-  <div style="background-image: url('{{ .Params.Image }}')"></div>
+    <h1>
+        <span class="pre">{{ .Date.Format "02.01.2006" }}
+        {{ if isset .Params "authors" }}
+         - {{ delimit .Params.authors ", "}}
+        {{ end }}
+        </span>
+        {{ .Title }}
+        {{ if isset .Params "subtitle" }}
+        <span class="subtitle">{{ .Params.subtitle }}</span>
+        {{ end }}
+    </h1>
+    <div class="article-header-img" style="background: url('{{ .Params.Image }}') no-repeat center center; background-size: cover"></div>
 </div>
 
 <main>
 
-  {{ .Content }}
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            {{ .Content }}
+        </div>
+        <div class="spacer"></div>
+    </div>
 
-  {{ if isset .Params "tags" }}
-  {{ $baseURL := .Site.BaseURL }}
 
-  <h2 class="footer">Article Tags</h2>
 
-  {{ partial "tags-linked" . }}
-  {{ end }}
+    {{- range .Params.authors }}
+    {{- with $.Site.GetPage "taxonomyTerm" (printf "authors/%s" (urlize .)) }}
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/{{ .Params.photo }}" alt=""/>
+            <figcaption>
+                <h3>{{ .Params.name }}<span><a target="_blank"  href="https://github.com/{{ .Params.github }}"><img class="github-author" src="/images/GitHub_blk.png"></a></span></h3>
+                <p>{{ .Params.jobtitle }}</p>
 
-  {{- range .Params.authors }}
-  {{- with $.Site.GetPage "taxonomyTerm" (printf "authors/%s" (urlize .)) }}
-  <figure class="author">
-    <img src="../../authors/{{ .Params.photo }}" alt="" />
-    <figcaption>
-      <h3>{{ .Params.name }}</h3>
-      <p>{{ .Params.jobtitle }}</p>
-    </figcaption>
-  </figure>
-  {{ end }}
-  {{ end }}
+            </figcaption>
+        </figure>
+    </div>
+    {{ end }}
+    {{ end }}
+
+    {{ if isset .Params "tags" }}
+    {{ $baseURL := .Site.BaseURL }}
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            {{ partial "tags-linked" . }}
+        </div>
+    </div>
+    {{ end }}
+</main>

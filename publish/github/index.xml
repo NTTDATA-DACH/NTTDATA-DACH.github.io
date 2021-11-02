@@ -1,26 +1,29 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Technology Blog Github EMEA Account</title>
+    <title>Driving innovation | Where Ideas Come to Life | Creating innovation together on Technology Blog</title>
     <link>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/</link>
-    <description>Recent content on Technology Blog Github EMEA Account</description>
+    <description>Die neuesten Inhalte auf Technology Blog</description>
     <generator>Hugo -- gohugo.io</generator>
+    
     <language>en-us</language>
-    <lastBuildDate>Tue, 02 Jun 2020 09:04:54 +0200</lastBuildDate>
     
-	<atom:link href="http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/index.xml" rel="self" type="application/rss+xml" />
+    <copyright>Copyright 2021 NTT DATA Deutschland GmbH - This site does not use any cookies</copyright>
+    
+    <lastBuildDate>Mon, 22 Jun 2020 09:26:55 +0200</lastBuildDate>
+    
+    <atom:link href="http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/" rel="self" type="application/rss+xml" />
     
     
-    <item>
-      <title>First Post</title>
-      <link>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/posts/first-post/</link>
-      <pubDate>Tue, 02 Jun 2020 09:04:54 +0200</pubDate>
-      
-      <guid>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/posts/first-post/</guid>
-      <description>A Post with some markdown
-Subtitle And more content.
-even more</description>
-    </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
   </channel>
 </rss>

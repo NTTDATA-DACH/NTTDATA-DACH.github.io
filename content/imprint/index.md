@@ -1,13 +1,29 @@
 ---
-title: "About"
-PreTitle: "NTT Data tech Blog"
+title: "Imprint"
 type: page
-date: 2020-06-02T09:04:54+02:00
+date: 
 emphasized: false
-image: "/posts/car.png"
 draft: false
 ---
 
-## Clients first
+## Imprint
 
-Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+NTT DATA Deutschland GmbH
+
+Hans-Döllgast-Straße 26
+
+D-80807 München
+
+Geschäftsführung: Stefan Hansen (Vorsitzender), Ralf Malter, Swen Rehders
+
+Aufsichtsratsvorsitzender: Herbert Vogel
+
+Handelsregisternummer: HRB 51846 (eingetragen im Handelsregister des Amtsgerichts München).
+
+Umsatzsteueridentifikationsnummer: DE811163149. DUNS: 31-608-7840
+
+Telefon +49 89 9936-0
+
+Telefax +49 89 9936-1854
+
+E-Mail: INFO_DACH(at)NTTDATA.COM 

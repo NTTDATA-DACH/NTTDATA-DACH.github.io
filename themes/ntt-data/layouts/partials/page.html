@@ -1,22 +1,21 @@
 <div class="emobanner article">
-  <div style="background-image: url({{ .Params.Image }})"></div>
-  <h1>
-    <span>{{ .Params.PreTitle }}</span>
-    {{ .Title }}
+    <div style="background-image: url({{ .Params.Image }})"></div>
+    <h1>
+        <span>{{ .Params.PreTitle }}</span>
+        {{ .Title }}
 
-    <!-- Tags -->
-    {{ if isset .Params "tags" }}
-    {{ $baseURL := .Site.BaseURL }}
-    <ul>
-      {{ range .Params.tags }}
-      <li><a href="{{ $baseURL }}tags/{{ . | urlize }}/">{{ . }}</a> </li>
-      {{ end }}
-    </ul>
-    {{ end }}
-  </h1>
+        <!-- Tags -->
+        {{ if isset .Params "tags" }}
+        {{ $baseURL := .Site.BaseURL }}
+        <ul>
+            {{ range .Params.tags }}
+            <li><a href="{{ $baseURL }}tags/{{ . | urlize }}/">{{ . }}</a></li>
+            {{ end }}
+        </ul>
+        {{ end }}
+    </h1>
 
 </div>
-
 <main>
-
-{{ .Content }}
+    {{ .Content }}
+</main>

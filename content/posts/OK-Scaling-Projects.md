@@ -1,10 +1,10 @@
 ---
 title: "10 Lessons learnt from large-scale data migration projects"
 type: article
-date: 2021-06-01T09:04:54+02:00
-image: "/posts/team.jpg"
+date: 2021-06-01
+image: "/posts/img/data.jpg"
 draft: false
-tags: ["Test", "Development"]
+tags: ["data", "best practice", "development"]
 authors:
  - Oliver Koeth
 summary: "Data migration is of course only one aspect of system conversion. Usually data migration is performed in conjunction with other conversions like technology or interfaces. Nevertheless, data migration is often the most expensive and confusing part of the conversion project. So let’s revisit the handful of fairly large data migrations I encountered in my professional career and see which lessons can be drawn out of this experience."

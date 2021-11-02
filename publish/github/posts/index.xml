@@ -1,25 +1,38 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on Technology Blog Github EMEA Account</title>
+    <title>Clients first on Technology Blog</title>
     <link>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/posts/</link>
-    <description>Recent content in Posts on Technology Blog Github EMEA Account</description>
+    <description>Recent content in Clients first on Technology Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 02 Jun 2020 09:04:54 +0200</lastBuildDate>
-    
-	<atom:link href="http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/posts/index.xml" rel="self" type="application/rss+xml" />
-    
+    <copyright>Copyright 2021 NTT DATA Deutschland GmbH - This site does not use any cookies</copyright>
+    <lastBuildDate>Tue, 02 Jun 2020 09:04:54 +0200</lastBuildDate><atom:link href="http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Building Container Images Dockerless and Rootless with Buildah</title>
+      <link>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/posts/ab-container-rootless-buildah/</link>
+      <pubDate>Mon, 12 Jul 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/posts/ab-container-rootless-buildah/</guid>
+      <description>“You cannot use Docker in our enterprise CI platform, now way! It needs root rights, thus is not secure; forget it!”, said our DevOps Chief some months ago… So we had a problem.</description>
+    </item>
     
     <item>
-      <title>First Post</title>
-      <link>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/posts/first-post/</link>
-      <pubDate>Tue, 02 Jun 2020 09:04:54 +0200</pubDate>
+      <title>Personal Information Integration</title>
+      <link>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/posts/ok-personal-info-int/</link>
+      <pubDate>Thu, 01 Jul 2021 00:00:00 +0000</pubDate>
       
-      <guid>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/posts/first-post/</guid>
-      <description>A Post with some markdown
-Subtitle And more content.
-even more</description>
+      <guid>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/posts/ok-personal-info-int/</guid>
+      <description>Thanks to the internet we have access to a virtually unlimited amount of information. But thanks to the internet we also feel that we are drowning in this information tsunami.</description>
+    </item>
+    
+    <item>
+      <title>10 Lessons learnt from large-scale data migration projects</title>
+      <link>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/posts/ok-scaling-projects/</link>
+      <pubDate>Tue, 01 Jun 2021 00:00:00 +0000</pubDate>
+      
+      <guid>http://cps-tech-blog-draft.s3-website.eu-central-1.amazonaws.com/posts/ok-scaling-projects/</guid>
+      <description>Data migration is of course only one aspect of system conversion. Usually data migration is performed in conjunction with other conversions like technology or interfaces. Nevertheless, data migration is often the most expensive and confusing part of the conversion project. So let’s revisit the handful of fairly large data migrations I encountered in my professional career and see which lessons can be drawn out of this experience.</description>
     </item>
     
   </channel>
