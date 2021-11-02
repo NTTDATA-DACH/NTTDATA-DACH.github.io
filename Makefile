@@ -1,5 +1,5 @@
 #
-# Some Examnples for using this project
+# Some Examples for using this project
 #
 
 dev:
