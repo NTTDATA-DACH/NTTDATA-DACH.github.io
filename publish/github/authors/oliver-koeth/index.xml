@@ -7,7 +7,16 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2021 NTT DATA Deutschland GmbH - This site does not use any cookies</copyright>
-    <lastBuildDate>Thu, 01 Jul 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/authors/oliver-koeth/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 06 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/authors/oliver-koeth/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Pace Predictor</title>
+      <link>https://nttdata-dach.github.io/posts/ok-pacer/</link>
+      <pubDate>Mon, 06 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/posts/ok-pacer/</guid>
+      <description>At NTT DATA, some of us are sporty spices and we like to record our running, cycling, and swimming in this Strava Club. And of course trail running is also growing very popular in our club.</description>
+    </item>
+    
     <item>
       <title>Personal Information Integration</title>
       <link>https://nttdata-dach.github.io/posts/ok-personal-info-int/</link>
