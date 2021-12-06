@@ -7,7 +7,34 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2021 NTT DATA Deutschland GmbH - This site does not use any cookies</copyright>
-    <lastBuildDate>Mon, 12 Jul 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 06 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>data</title>
+      <link>https://nttdata-dach.github.io/tags/data/</link>
+      <pubDate>Mon, 06 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/data/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>development</title>
+      <link>https://nttdata-dach.github.io/tags/development/</link>
+      <pubDate>Mon, 06 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/development/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sport</title>
+      <link>https://nttdata-dach.github.io/tags/sport/</link>
+      <pubDate>Mon, 06 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/sport/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>buildah</title>
       <link>https://nttdata-dach.github.io/tags/buildah/</link>
@@ -45,15 +72,6 @@
     </item>
     
     <item>
-      <title>development</title>
-      <link>https://nttdata-dach.github.io/tags/development/</link>
-      <pubDate>Mon, 12 Jul 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://nttdata-dach.github.io/tags/development/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>docker</title>
       <link>https://nttdata-dach.github.io/tags/docker/</link>
       <pubDate>Mon, 12 Jul 2021 00:00:00 +0000</pubDate>
@@ -86,15 +104,6 @@
       <pubDate>Tue, 01 Jun 2021 00:00:00 +0000</pubDate>
       
       <guid>https://nttdata-dach.github.io/tags/best-practice/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>data</title>
-      <link>https://nttdata-dach.github.io/tags/data/</link>
-      <pubDate>Tue, 01 Jun 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://nttdata-dach.github.io/tags/data/</guid>
       <description></description>
     </item>
     
