@@ -13,6 +13,7 @@ gh:
 pubgh:
 	git subtree push --prefix=publish/github/ git@github.com:NTTDATA-DACH/NTTDATA-DACH.github.io.git main
 
+
 # If you want to fetch changes from the remote github subtree:
 fetch_github:
 	git subtree pull --prefix=./publish/github/ git@github.com:NTTDATA-DACH/NTTDATA-DACH.github.io.git main --squash
