@@ -2,7 +2,7 @@
 title: "Pace Predictor"
 type: article
 date: 2021-12-06
-image: "/posts/img/run.jpg"
+image: "/posts/img/ok-trail.jpg"
 draft: false
 tags: ["sport", "data", "development"]
 authors:
@@ -17,13 +17,13 @@ summary: "At NTT DATA, some of us are sporty spices and we like to record our ru
 At NTT DATA, some of us are sporty spices and we like to record our running, cycling, and swimming in this [Strava Club](https://www.strava.com/clubs/nttdata). And of course trail running is also growing very popular in our club.
 
 One challenge with trail running is that the pace of course depends on your fitness, but more so on conditions like elevation gain or surface of the trail. Hence, the available pacing strategies that rely on extrapolation of shorter distances do not work very well. Even more advanced approaches like Garmin's PacePro(TM) do not consider all factors relevant for trail running as the impact of the surface of a trail cannot be configured in the UI and the impact of elevation can only be configured within bounds which are too limited for steep uphill or technically challenging downhill passages. This example shows Garmin's pacing strategy for the quite challenging [GebürgTrail](https://fastestknowntime.com/route/geburg-trail-germany)
-in Frankonia and for soneone running a 6:00min/km pace on even grounds, 8:00 to 9:00 min/km pace on the steep ascents of the GebürgTrail is not feasible at all.
+in Franconia. For someone running at 6:00min/km pace on even grounds, 8:00 to 9:00 min/km pace on the steep ascents of the GebürgTrail is not feasible at all.
 
 ![pacepro](/posts/img/pacepro.png)
 
 So why not base the pace prediction on your personal experiences on the trail. This is exactly what this little project is doing: based on a previous run (hereafter referred to as "reference run") on similar terrain with comparable elevation and surface, a pacing strategy for a future run is provided (hereafter referred to as "target run", e.g. an upcoming ultra marathon race).
 
-This blog post gives a brief overview of the implementation of the "Pace Predictor" and allows you to further adjust or improve the implementation to your own needs. The main section sof this post are:
+This blog post gives a brief overview of the implementation of the "Pace Predictor" and allows you to further adjust or improve the implementation to your own needs. The main sections of this post are:
 
 * Data Loading Reference Run
 
@@ -65,15 +65,15 @@ base = pd.DataFrame(data=rows, index=idx, columns=cols)
 
 ## Data Preparation
 
-The data provided in the GPX file is just a series of discrete points. So to turn this into a continuous trail of data, some additional fields need to be calculated:
+The data provided in the GPX file is just a series of discrete points. So to turn this into a continuous stream of data, some additional fields need to be calculated:
 
 * Elevation Delta: The difference in elevation to the previous track point.
 
-* Time Delta: The time difference to the previous track point (Note: With Garmin in hires recording, this is always one second).
+* Time Delta: The time difference to the previous track point (Note: With a Garmin Fenix 6 in hires recording, this is always one second).
 
 * Distance Delta: The distance to the previous track point (line of sight).
 
-* Distance Sum: The accumulated distance of the track up tp this trackpoint.
+* Distance Sum: The accumulated distance of the track up to this trackpoint.
 
 * Distance Segment: The number of the 100m segment this trackpoint belongs to.
 
@@ -116,7 +116,7 @@ When plotting the result it becomes evident that the pace per segment depends on
 
 ## Creation of the Model
 
-Based on the data prepared from the reference run, we can now train simple regression models (marketing: machine learning models!). Based on the visual inspection of the data, one could either use two linear regression models (there is a different slope for uphill and downhill) or a parabolic regression model, or a combination of both.
+Based on the data prepared from the reference run, we can now train simple regression models (marketing speak: machine learning models!). Based on the visual inspection of the data, one could either use two linear regression models (there is a different slope for uphill and downhill) or a parabolic regression model, or a combination of both.
 
 Hence we create data sets for uphill, downhill, and both.
 
