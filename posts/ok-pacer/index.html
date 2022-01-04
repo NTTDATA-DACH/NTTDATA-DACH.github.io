@@ -45,7 +45,7 @@
         Pace Predictor
         
     </h1>
-    <div class="article-header-img" style="background: url('/posts/img/run.jpg') no-repeat center center; background-size: cover"></div>
+    <div class="article-header-img" style="background: url('/posts/img/ok-trail.jpg') no-repeat center center; background-size: cover"></div>
 </div>
 
 <main>
@@ -57,10 +57,10 @@
 <h2 id="introduction">Introduction</h2>
 <p>At NTT DATA, some of us are sporty spices and we like to record our running, cycling, and swimming in this <a href="https://www.strava.com/clubs/nttdata">Strava Club</a>. And of course trail running is also growing very popular in our club.</p>
 <p>One challenge with trail running is that the pace of course depends on your fitness, but more so on conditions like elevation gain or surface of the trail. Hence, the available pacing strategies that rely on extrapolation of shorter distances do not work very well. Even more advanced approaches like Garmin&rsquo;s PacePro(TM) do not consider all factors relevant for trail running as the impact of the surface of a trail cannot be configured in the UI and the impact of elevation can only be configured within bounds which are too limited for steep uphill or technically challenging downhill passages. This example shows Garmin&rsquo;s pacing strategy for the quite challenging <a href="https://fastestknowntime.com/route/geburg-trail-germany">GebürgTrail</a>
-in Frankonia and for soneone running a 6:00min/km pace on even grounds, 8:00 to 9:00 min/km pace on the steep ascents of the GebürgTrail is not feasible at all.</p>
+in Franconia. For someone running at 6:00min/km pace on even grounds, 8:00 to 9:00 min/km pace on the steep ascents of the GebürgTrail is not feasible at all.</p>
 <p><img src="/posts/img/pacepro.png" alt="pacepro"></p>
 <p>So why not base the pace prediction on your personal experiences on the trail. This is exactly what this little project is doing: based on a previous run (hereafter referred to as &ldquo;reference run&rdquo;) on similar terrain with comparable elevation and surface, a pacing strategy for a future run is provided (hereafter referred to as &ldquo;target run&rdquo;, e.g. an upcoming ultra marathon race).</p>
-<p>This blog post gives a brief overview of the implementation of the &ldquo;Pace Predictor&rdquo; and allows you to further adjust or improve the implementation to your own needs. The main section sof this post are:</p>
+<p>This blog post gives a brief overview of the implementation of the &ldquo;Pace Predictor&rdquo; and allows you to further adjust or improve the implementation to your own needs. The main sections of this post are:</p>
 <ul>
 <li>
 <p>Data Loading Reference Run</p>
@@ -81,7 +81,7 @@ in Frankonia and for soneone running a 6:00min/km pace on even grounds, 8:00 to 
 <p>The full source code is avail on <a href="https://github.com/okoeth/pacer-project">GitHub</a> and advanced readery may prefer to just read this <a href="https://github.com/okoeth/pacer-project/blob/master/Pacer.ipynb">Jupyter Notebook</a> instead of this chatty blog post.</p>
 <h2 id="data-loading-reference-run">Data Loading Reference Run</h2>
 <p>The reference run is provided as a GPX file with a GPS track and respective timings. This implementation uses the <a href="https://github.com/tkrajina/gpxpy">gpxpy</a> library for procession the GPX file format. The data is collected in an array and then converted in a Pandas data frame.</p>
-<pre><code>import gpxpy
+<pre tabindex="0"><code>import gpxpy
 import gpxpy.gpx
 
 gpx_file = open('data/osterfeld.gpx', 'r')
@@ -101,25 +101,25 @@ for track in gpx.tracks:
             
 base = pd.DataFrame(data=rows, index=idx, columns=cols)
 </code></pre><h2 id="data-preparation">Data Preparation</h2>
-<p>The data provided in the GPX file is just a series of discrete points. So to turn this into a continuous trail of data, some additional fields need to be calculated:</p>
+<p>The data provided in the GPX file is just a series of discrete points. So to turn this into a continuous stream of data, some additional fields need to be calculated:</p>
 <ul>
 <li>
 <p>Elevation Delta: The difference in elevation to the previous track point.</p>
 </li>
 <li>
-<p>Time Delta: The time difference to the previous track point (Note: With Garmin in hires recording, this is always one second).</p>
+<p>Time Delta: The time difference to the previous track point (Note: With a Garmin Fenix 6 in hires recording, this is always one second).</p>
 </li>
 <li>
 <p>Distance Delta: The distance to the previous track point (line of sight).</p>
 </li>
 <li>
-<p>Distance Sum: The accumulated distance of the track up tp this trackpoint.</p>
+<p>Distance Sum: The accumulated distance of the track up to this trackpoint.</p>
 </li>
 <li>
 <p>Distance Segment: The number of the 100m segment this trackpoint belongs to.</p>
 </li>
 </ul>
-<pre><code>base['elevation_delta'] = 
+<pre tabindex="0"><code>base['elevation_delta'] = 
     base.elevation.diff().shift(0)
 base['time_prev'] = 
     base.time.shift(+1)
@@ -137,7 +137,7 @@ base['distance_sum'] =
 base['distance_segment'] = 
     base.apply(lambda row: distance_to_segment(row['distance_sum']), axis=1)
 </code></pre><p>As a next step we group the track points by 100m segments and create a data frame that gives us elevation and timings for each segment. We also convert speed (in m/s) in pace (in min/km).</p>
-<pre><code>base_g = 
+<pre tabindex="0"><code>base_g = 
     base.groupby('distance_segment').agg(
         {
             'elevation_delta': ['sum'],
@@ -148,9 +148,9 @@ base_g['pace_segment'] =
 </code></pre><p>When plotting the result it becomes evident that the pace per segment depends on the elevation gain (or loss) of the segment with slight elevation losses still speeding up the base pace, but steeper decents also take their toll on the pace.</p>
 <p><img src="/posts/img/segments.png" alt="segments"></p>
 <h2 id="creation-of-the-model">Creation of the Model</h2>
-<p>Based on the data prepared from the reference run, we can now train simple regression models (marketing: machine learning models!). Based on the visual inspection of the data, one could either use two linear regression models (there is a different slope for uphill and downhill) or a parabolic regression model, or a combination of both.</p>
+<p>Based on the data prepared from the reference run, we can now train simple regression models (marketing speak: machine learning models!). Based on the visual inspection of the data, one could either use two linear regression models (there is a different slope for uphill and downhill) or a parabolic regression model, or a combination of both.</p>
 <p>Hence we create data sets for uphill, downhill, and both.</p>
-<pre><code>base_g_sorted = base_g.sort_values(by=('elevation_delta','sum'))
+<pre tabindex="0"><code>base_g_sorted = base_g.sort_values(by=('elevation_delta','sum'))
 x_arr = base_g_sorted[('elevation_delta','sum')].values
 y_arr = base_g_sorted['pace_segment'].values
 
@@ -172,14 +172,14 @@ for i in range(0, len(x_arr)):
             x_down_arr.append(x_arr[i])
             y_down_arr.append(y_arr[i])
 </code></pre><p>Now the creation of the models is pretty straight forward.</p>
-<pre><code>(a_para,b_para,c_para) = polyfit(x_all_arr, y_all_arr, 2)
+<pre tabindex="0"><code>(a_para,b_para,c_para) = polyfit(x_all_arr, y_all_arr, 2)
 (a_lin_up,b_lin_up) = polyfit(x_up_arr, y_up_arr, 1)    
 (a_lin_down,b_lin_down) = polyfit(x_down_arr, y_down_arr, 1)
 (a_para_down,b_para_down,c_para_down) = polyfit(x_down_arr, y_down_arr, 2)
 </code></pre><p>When reviewing the models against the points representing the individual segments, we see a relatively good fit for all aproaches.</p>
 <p><img src="/posts/img/models.png" alt="models"></p>
 <p>For now, we do not commit to one particular model, but create a wrapper function, that allows the selection of a model at runtime. For checking, a manual linear model has been hard-coded as well.</p>
-<pre><code>uphill_penalty_per_m=6/20
+<pre tabindex="0"><code>uphill_penalty_per_m=6/20
 downhill_penalty_per_m=3/20
 
 def predict_pace_raw(elevation, base_pace, model):
@@ -212,7 +212,7 @@ def predict_pace(elevation, base_pace, model, min_pace=19):
         return pace
 </code></pre><h2 id="data-loading-target-run">Data Loading Target Run</h2>
 <p>Preparing the target run follows the same approaches used for the reference run.</p>
-<pre><code>target_gpx_file = open('data/supertrail.gpx', 'r')
+<pre tabindex="0"><code>target_gpx_file = open('data/supertrail.gpx', 'r')
 target_gpx = gpxpy.parse(target_gpx_file)
 
 cols = [ 'lat', 'lon', 'elevation' ]
@@ -229,7 +229,7 @@ for track in target_gpx.tracks:
 
 target = pd.DataFrame(data=rows, index=idx, columns=cols)
 </code></pre><p>Accodringly, additional columns are prepared and the data frame is grouped.</p>
-<pre><code>target['elevation_delta'] = 
+<pre tabindex="0"><code>target['elevation_delta'] = 
     target.elevation.diff().shift(0)
 target['lat_prev'] = 
     target.lat.shift(+1)
@@ -250,13 +250,13 @@ target_g = target.groupby('distance_segment').agg(
         'distance_delta': ['sum']})
 </code></pre><h2 id="application-of-the-model">Application of the Model</h2>
 <p>Now everything gets very simple (as always when you are well prepared):</p>
-<pre><code>target_g['pace_segment'] = target_g.apply(
+<pre tabindex="0"><code>target_g['pace_segment'] = target_g.apply(
     lambda row: predict_pace(row[('elevation_delta','sum')], 6.5, 'parabolic'), axis=1)
 
 target_g['time_delta'] = target_g[('distance_delta','sum')]/(16.7/target_g['pace_segment'])
 target_g['time_sum'] = target_g['time_delta'].cumsum(axis = 0)/3600
 </code></pre><p>And we create the final plot, where multiple dimensions are put together in a single diagram:</p>
-<pre><code>fig,ax = plt.subplots()
+<pre tabindex="0"><code>fig,ax = plt.subplots()
 
 ax.set_ylabel('elevation [m]')
 ax.set_xlabel('segments [100m]')
