@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ssh on Technology Blog</title>
+    <link>https://nttdata-dach.github.io/tags/ssh/</link>
+    <description>Recent content in ssh on Technology Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright 2021 NTT DATA Deutschland GmbH - This site does not use any cookies</copyright>
+    <lastBuildDate>Mon, 20 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/tags/ssh/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Accessing private resources on AWS</title>
+      <link>https://nttdata-dach.github.io/posts/yk-ssm/</link>
+      <pubDate>Mon, 20 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/posts/yk-ssm/</guid>
+      <description>There are several ways to access private resources (located in private subnets within your VPC) on AWS. Let us discuss solutions based on Systems Manger (SSM) and SSH.</description>
+    </item>
+    
+  </channel>
+</rss>
