@@ -2,16 +2,43 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://nttdata-dach.github.io/authors/</loc>
-    <lastmod>2021-12-06T00:00:00+00:00</lastmod>
+    <loc>https://nttdata-dach.github.io/posts/yk-ssm/</loc>
+    <lastmod>2022-06-20T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/</loc>
-    <lastmod>2021-12-06T00:00:00+00:00</lastmod>
+    <lastmod>2022-06-20T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/tags/data/</loc>
-    <lastmod>2021-12-06T00:00:00+00:00</lastmod>
+    <loc>https://nttdata-dach.github.io/authors/</loc>
+    <lastmod>2022-06-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/aws/</loc>
+    <lastmod>2022-06-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/ci/</loc>
+    <lastmod>2022-06-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/container/</loc>
+    <lastmod>2022-06-20T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/development/</loc>
+    <lastmod>2022-06-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/ssh/</loc>
+    <lastmod>2022-06-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/ssm/</loc>
+    <lastmod>2022-06-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/</loc>
+    <lastmod>2022-06-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/vpc/</loc>
+    <lastmod>2022-06-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/authors/yury-kornev/</loc>
+    <lastmod>2022-06-20T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/data/</loc>
     <lastmod>2021-12-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/oliver-koeth/</loc>
@@ -23,9 +50,6 @@
     <loc>https://nttdata-dach.github.io/tags/sport/</loc>
     <lastmod>2021-12-06T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/tags/</loc>
-    <lastmod>2021-12-06T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://nttdata-dach.github.io/authors/adam-boczek/</loc>
     <lastmod>2021-07-12T00:00:00+00:00</lastmod>
   </url><url>
@@ -33,12 +57,6 @@
     <lastmod>2021-07-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/posts/ab-container-rootless-buildah/</loc>
-    <lastmod>2021-07-12T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/ci/</loc>
-    <lastmod>2021-07-12T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/container/</loc>
     <lastmod>2021-07-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/cowsay/</loc>
@@ -77,6 +95,8 @@
     <loc>https://nttdata-dach.github.io/authors/adam-boczek/</loc>
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/oliver-koeth/</loc>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/authors/yury-kornev/</loc>
   </url><url>
     <loc>https://nttdata-dach.github.io/imprint/</loc>
   </url><url>
