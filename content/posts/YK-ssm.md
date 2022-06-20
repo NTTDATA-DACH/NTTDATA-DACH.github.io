@@ -3,7 +3,7 @@ title: "Accessing private resources on AWS"
 type: article
 date: 2022-06-20
 publishdate: 2022-06-20
-image: "/posts/img/buildah.png"
+image: "/posts/img/server.jpg"
 draft: false
 tags: ["development", "container", "aws", "ssm", "vpc", "ci", "ssh"]
 authors:
