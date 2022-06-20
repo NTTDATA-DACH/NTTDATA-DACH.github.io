@@ -9,6 +9,15 @@
     <copyright>Copyright 2021 NTT DATA Deutschland GmbH - This site does not use any cookies</copyright>
     <lastBuildDate>Tue, 02 Jun 2020 09:04:54 +0200</lastBuildDate><atom:link href="https://nttdata-dach.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Accessing private resources on AWS</title>
+      <link>https://nttdata-dach.github.io/posts/yk-ssm/</link>
+      <pubDate>Mon, 20 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/posts/yk-ssm/</guid>
+      <description>There are several ways to access private resources (located in private subnets within your VPC) on AWS. Let us discuss solutions based on Systems Manger (SSM) and SSH.</description>
+    </item>
+    
+    <item>
       <title>Pace Predictor</title>
       <link>https://nttdata-dach.github.io/posts/ok-pacer/</link>
       <pubDate>Mon, 06 Dec 2021 00:00:00 +0000</pubDate>
