@@ -56,11 +56,11 @@
             <p><em>“You cannot use Docker in our enterprise CI platform, now way! It needs root rights, thus is not secure; forget it!”</em>,
 said our DevOps Chief some months ago… So we had a problem.</p>
 <p>At the beginning of this year, our customer started the initiative to move the entire on-premise CICD platform to the cloud.
-One of the first tasks we got as the CI team was to create a new pipeline, still using our on-premise solution, 
+One of the first tasks we got as the CI team was to create a new pipeline, still using our on-premise solution,
 for building container images for the tests of the build agents running in the containers. However rootless, thus without docker…</p>
 <h1 id="before-we-start">Before We Start</h1>
-<p>For the demonstration purposes for this post I created a simple <a href="https://github.com/NTTDATA-EMEA/tech-blog-aboczek/blob/main/202010-building-container-images-with-buildah/Dockerfile">Dockerfile</a>, 
-which creates a container image running program <code>cowsay</code>, 
+<p>For the demonstration purposes for this post I created a simple <a href="https://github.com/NTTDATA-EMEA/tech-blog-aboczek/blob/main/202010-building-container-images-with-buildah/Dockerfile">Dockerfile</a>,
+which creates a container image running program <code>cowsay</code>,
 which is as we all know <a href="https://medium.com/@jasonrigden/cowsay-is-the-most-important-unix-like-command-ever-35abdbc22b7f#:~:text=cowsay%20is%20a%20classic%20program,It%20just%20provides%20amusment.">&ldquo;The Most Important Unix-like Command Ever”</a>:</p>
 <pre><code>FROM library/debian:latest
 LABEL maintainer=&quot;Adam Boczek&quot;
@@ -73,7 +73,7 @@ RUN apt-get update &amp;&amp; \
 COPY entrypoint.sh /                          
                           
 ENTRYPOINT [&quot;/entrypoint.sh&quot;]
-</code></pre><p>As you can see it uses a popular pattern with an external <a href="https://github.com/NTTDATA-EMEA/tech-blog-aboczek/blob/main/202010-building-container-images-with-buildah/entrypoint.sh">entrypoint.sh</a> script to make this example a little more complicated 
+</code></pre><p>As you can see it uses a popular pattern with an external <a href="https://github.com/NTTDATA-EMEA/tech-blog-aboczek/blob/main/202010-building-container-images-with-buildah/entrypoint.sh">entrypoint.sh</a> script to make this example a little more complicated
 (it may happen that the entrypoint.sh will need execution rights in the container; you can set these with the help of <code>chmod +x entrypoint.sh</code> as the last RUN command):</p>
 <pre><code>#!/bin/bash
 if [ $# -eq 0 ]; then
@@ -82,7 +82,7 @@ else
   /usr/games/cowsay &quot;$@&quot;
 fi
 </code></pre><p>So, if we run the container with no parameter, our cow should say “Moo Buildah!”. When we provide some text as a parameter, it will say exactly that.</p>
-<p>The above example is not the perfect one, it’s true. According to the <a href="https://docs.docker.com/develop/develop-images/dockerfile_best-practices/">“Best practices for writing Dockerfiles”</a> it can be improved at some places 
+<p>The above example is not the perfect one, it’s true. According to the <a href="https://docs.docker.com/develop/develop-images/dockerfile_best-practices/">“Best practices for writing Dockerfiles”</a> it can be improved at some places
 (e.g. by replacing <code>:latest</code> tag with specific version or introducing the <code>USER</code> command etc.), but for the sake of simplicity let us use it as it is defined now.</p>
 <p>Additionally, we omit configuration parameters typical for an enterprise environment like setting proxy, registry mirrors, etc.</p>
 <h1 id="building-container-image-with-docker">Building Container Image with Docker</h1>
@@ -99,12 +99,12 @@ Removing intermediate container 7af53635b00d
 Step 3/7 : LABEL version=&quot;1.0.0&quot;
  ---&gt; Running in ec46b27e4500
 [...]
-</code></pre><p>If you analyze the <code>docker build</code> output (it may look slightly different on your computer, depending on the operating system and Docker version you are running), 
-you will notice the first line informing us about sending of the build context to the Docker daemon. 
-Then follow lines notifying about creation of some intermediate images 
-(lines like <code>---&gt; 1510e8501783</code>), which are used to avoid altering of the state of the image being build. Some commands like <code>LABEL</code>, 
-<code>RUN</code> or <code>ENTRYPOINT</code> cause creation of an intermediate container (lines like <code>---&gt; Running in 7af53635b00d</code>) 
-using latest intermediate image. Such container is then committed as the next intermediate image and removed 
+</code></pre><p>If you analyze the <code>docker build</code> output (it may look slightly different on your computer, depending on the operating system and Docker version you are running),
+you will notice the first line informing us about sending of the build context to the Docker daemon.
+Then follow lines notifying about creation of some intermediate images
+(lines like <code>---&gt; 1510e8501783</code>), which are used to avoid altering of the state of the image being build. Some commands like <code>LABEL</code>,
+<code>RUN</code> or <code>ENTRYPOINT</code> cause creation of an intermediate container (lines like <code>---&gt; Running in 7af53635b00d</code>)
+using latest intermediate image. Such container is then committed as the next intermediate image and removed
 (e.g. <code>Removing intermediate container 7af53635b00d</code>) if not explicitly suppressed by <code>--rm=false</code> option.</p>
 <p>Let us run a container based on the created image to check if it works as expected:</p>
 <pre><code>$ docker run test/cowsay:1.0.0 'Moo Docker!'
@@ -117,22 +117,22 @@ using latest intermediate image. Such container is then committed as the next in
                 ||----w |
                 ||     ||
 </code></pre><h2 id="the-root-problem">The Root Problem</h2>
-<p>As stated above the Docker daemon sometimes creates intermediate images with help of committing of the intermediate containers where various commands run. 
+<p>As stated above the Docker daemon sometimes creates intermediate images with help of committing of the intermediate containers where various commands run.
 The problem with this solution is that the Docker daemon runs in context of the root user on the host system, thus also all intermediate containers it starts. Try this:</p>
 <pre><code>$ ps -ef | grep dockerd
 root     15805     1  0 Oct26 ?        00:01:32 /usr/bin/dockerd
-</code></pre><p>In case of a CI platform it is a serious security flaw, because the design of a <code>Dockerfile</code> is out of scope of the platform, 
+</code></pre><p>In case of a CI platform it is a serious security flaw, because the design of a <code>Dockerfile</code> is out of scope of the platform,
 so we cannot control what e.g. a <code>RUN</code> command does during the build process.</p>
 <h2 id="the-solution">The Solution</h2>
-<p>The Docker developers know that the problem described above is an unacceptable requirement for many projects or organisations. 
-Even if since Docker 20.10.0 there is a possibility to run docker daemon in non-root mode this 
+<p>The Docker developers know that the problem described above is an unacceptable requirement for many projects or organisations.
+Even if since Docker 20.10.0 there is a possibility to run docker daemon in non-root mode this
 feature has still some limitations (see <a href="https://docs.docker.com/engine/security/rootless/">“Run the Docker daemon as a non-root user”</a> for more).</p>
-<p>The solution to the problem is not to use Docker at all and to switch to other tool which can build a container image without the need for the root rights. 
+<p>The solution to the problem is not to use Docker at all and to switch to other tool which can build a container image without the need for the root rights.
 The most interesting alternative at the time of writing is in my opinion the <a href="https://buildah.io/">Buildah</a> tool.</p>
 <h1 id="building-container-image-with-buildah">Building Container Image with Buildah</h1>
 <h2 id="the-procedure-1">The Procedure</h2>
-<p>The neat thing about Buildah is that it understands Dockerfile syntax so we can use it to build a container image with no modifications. However, 
-the command line commands and parameters are different compared to these used by Docker. 
+<p>The neat thing about Buildah is that it understands Dockerfile syntax so we can use it to build a container image with no modifications. However,
+the command line commands and parameters are different compared to these used by Docker.
 There is a special <code>command build-using-dockerfile</code> (or <code>bud</code> as an alias) in case we want to build a container image from a Dockerfile:</p>
 <pre><code>$ buildah bud -t test/cowsay:1.0.0
 STEP 1: FROM library/debian:latest
@@ -152,24 +152,24 @@ Copying config 0f21c6d578 done
 Writing manifest to image destination
 Storing signatures
 0f21c6d5783d8ebd954511d563ffb7f97b18ac934f022a6196c74d21d7157a70
-</code></pre><p>Buildah uses a similar concept for building container images as Docker does. 
-It starts an intermediate container where the requires modifications are made. 
-Finally, it commits the container as an image and finally deletes the intermediate container. 
+</code></pre><p>Buildah uses a similar concept for building container images as Docker does.
+It starts an intermediate container where the requires modifications are made.
+Finally, it commits the container as an image and finally deletes the intermediate container.
 You can observe this if you run <code>buildah ps</code> during the image is being built:</p>
 <pre><code>$ buildah ps
 CONTAINER ID  BUILDER  IMAGE ID     IMAGE NAME                       CONTAINER NAME
 36a47863c34e     *     1510e8501783 docker.io/library/debian:latest  debian-working-container
 </code></pre><h2 id="the-non-existing-root-problem">The Non-existing Root Problem</h2>
-<p>In the above scenario where we build a container image using Dockerfile, 
-Buildah’s primary advantage over Docker is that it does not require root rights. 
+<p>In the above scenario where we build a container image using Dockerfile,
+Buildah’s primary advantage over Docker is that it does not require root rights.
 We can prove it during the build process, with help of a second terminal session, as follows:</p>
 <pre><code>$ ps -ef | grep buildah
 adam     22753 24432  5 09:19 pts/1    00:00:00 buildah bud -t test/cowsay:1.0.0
 adam     22761 22753 99 09:19 pts/1    00:00:01 buildah-in-a-user-namespace bud -t test/cowsay:1.0.0
-</code></pre><p>As we can see Buildah starts two processes on the host, both in the context of logged user. 
+</code></pre><p>As we can see Buildah starts two processes on the host, both in the context of logged user.
 This behaviour allows us to define in the CI platform a technical user with exactly these rights that are needed to build container images, but nothing more.</p>
-<p>As Buildah is a tool for building container images only we need another tool to run and test our image. 
-Luckily we can use Docker for it, because images built with Buildah are <a href="https://opencontainers.org/">OCI compliant</a>, thus can be used by Docker with no modifications. 
+<p>As Buildah is a tool for building container images only we need another tool to run and test our image.
+Luckily we can use Docker for it, because images built with Buildah are <a href="https://opencontainers.org/">OCI compliant</a>, thus can be used by Docker with no modifications.
 However, if we list images using Docker, we will not find any image built by Buildah:</p>
 <pre><code>$ buildah images
 REPOSITORY                 TAG      IMAGE ID       CREATED          SIZE
@@ -179,8 +179,8 @@ $ docker images
 REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
 test/cowsay         1.0.0               8c71301ca77f        5 seconds ago       179MB
 debian              latest              1510e8501783        2 weeks ago         114MB
-</code></pre><p>The reason for that is the Buildah’s rootless nature. 
-It stores images in user context and not in daemon’s local container store as Docker does. 
+</code></pre><p>The reason for that is the Buildah’s rootless nature.
+It stores images in user context and not in daemon’s local container store as Docker does.
 To solve this problem, Buildah provides <code>push</code> command which allows, among other targets, pushing images to this Docker’s local store:</p>
 <pre><code>$ buildah push localhost/test/cowsay:1.0.0 docker-daemon:test/cowsay-buildah:1.0.0
 Getting image source signatures
@@ -194,7 +194,7 @@ REPOSITORY            TAG                 IMAGE ID            CREATED           
 test/cowsay           1.0.0               8c71301ca77f        9 minutes ago       179MB
 test/cowsay-buildah   1.0.0               0f21c6d5783d        44 minutes ago      178MB
 debian                latest              1510e8501783        2 weeks ago         114MB
-</code></pre><p>As we can see the <code>IMAGE ID</code> is identical <code>0f21c6d5783d</code> for both commands <code>buildah images</code> and <code>docker images</code>, 
+</code></pre><p>As we can see the <code>IMAGE ID</code> is identical <code>0f21c6d5783d</code> for both commands <code>buildah images</code> and <code>docker images</code>,
 thus both stored images are exactly the same. Now we can check our Buildah image running a container using Docker:</p>
 <pre><code>$ docker run test/cowsay-buildah:1.0.0
  ______________
@@ -206,8 +206,8 @@ thus both stored images are exactly the same. Now we can check our Buildah image
                 ||----w |
                 ||     ||
 </code></pre><h2 id="what-about-podman">What about Podman?</h2>
-<p>Using Docker to run a test container based on an image built by Buildah is not the only solution we have. 
-The developers of Buildah provide a very interesting tool <a href="https://podman.io/">Podman</a> which allows to run containers (and even pods with multiple containers inside) 
+<p>Using Docker to run a test container based on an image built by Buildah is not the only solution we have.
+The developers of Buildah provide a very interesting tool <a href="https://podman.io/">Podman</a> which allows to run containers (and even pods with multiple containers inside)
 based on the OCI compliant images. We can even build images with Podman, but it uses under the hood Buildah as listed by <code>podman info</code> command below:</p>
 <pre><code>$ podman info
 host:
@@ -234,9 +234,9 @@ $ podman run localhost/test/cowsay-buildah-by-hand:1.0.0 'Hallo Podman!'
                 ||----w |
                 ||     ||
 </code></pre><h2 id="dockerfile-less">Dockerfile-less</h2>
-<p>Buildah’s capability to build container images without root right is really great and, as we saw, quite easy to implement. 
+<p>Buildah’s capability to build container images without root right is really great and, as we saw, quite easy to implement.
 However, Buildah provides more than just being “better” build image tool. With Buildah,
-we can create container images from the command line without using a Dockerfile! 
+we can create container images from the command line without using a Dockerfile!
 So let’s convert our Dockerfile to a set of Buildah commands. Here our Dockerfile again:</p>
 <pre><code>FROM library/debian:latest
 LABEL maintainer=&quot;Adam Boczek&quot;
@@ -256,8 +256,8 @@ Copying config 1510e85017 done
 Writing manifest to image destination
 Storing signatures
 debian-working-container
-</code></pre><p>Buildah creates an intermediate container based on the image provided. 
-This container runs now, and we can extend it with additional configuration and tools. 
+</code></pre><p>Buildah creates an intermediate container based on the image provided.
+This container runs now, and we can extend it with additional configuration and tools.
 We can even connect to it if we e.g. need to check its state “inside”:</p>
 <pre><code>$ buildah ps
 CONTAINER ID  BUILDER  IMAGE ID     IMAGE NAME                       CONTAINER NAME
@@ -335,14 +335,14 @@ $ podman run localhost/test/cowsay-buildah-by-hand:1.0.0 -p 'Moo Podman!'
                 ||----w |
                 ||     ||
 </code></pre><h2 id="beyond-buildah">Beyond Buildah</h2>
-<p>This is of course not the end of the story. As stated at the beginning of this post, our customer decided to move the entire platform to the cloud. 
-It means that also the container images have to be built in a containerized environment like Kubernetes. 
-Is Buildah the right solution for this scenario is still an open question. 
+<p>This is of course not the end of the story. As stated at the beginning of this post, our customer decided to move the entire platform to the cloud.
+It means that also the container images have to be built in a containerized environment like Kubernetes.
+Is Buildah the right solution for this scenario is still an open question.
 There are already solutions on the market which sound to be a better solution for such environments, e.g. <a href="https://github.com/GoogleContainerTools/kaniko">Kaniko</a>.</p>
 <h1 id="conclusion">Conclusion</h1>
-<p>Using Buildah as the replacement for Docker in a CI platform seems to be a perfect solution for the problem with the root rights. 
-Ability to build container images without Dockerfile directly from a CLI or using a shell script, give us flexibility that Docker does not provide. 
-However, a new tool comes with its own problems, like different configuration or lack of support by other tools or plugins (e.g. Artifactory Jenkins plugin). 
+<p>Using Buildah as the replacement for Docker in a CI platform seems to be a perfect solution for the problem with the root rights.
+Ability to build container images without Dockerfile directly from a CLI or using a shell script, give us flexibility that Docker does not provide.
+However, a new tool comes with its own problems, like different configuration or lack of support by other tools or plugins (e.g. Artifactory Jenkins plugin).
 So before you decide to use Buildah instead of Docker, it is important to test this solution with all relevant components of your CI platform.</p>
 
         </div>

@@ -41,7 +41,7 @@ For your local machine, you have to install the [session manage plugin][2] and t
 connections through session manager. For that you need to edit the ~/.ssh/config and to add the
 [following configuration][3]:
 
-```shell
+```
 # SSH over Session Manager
 host i-* mi-*
     ProxyCommand sh -c "aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p'"
@@ -60,7 +60,7 @@ access EKS using *kubectl*.
 **Step 1:** Update your local ~/.kube/config with the private EKS cluster configuration. AWS CLI can
 be used for this purpose. For example,
 
-```shell
+```
 aws eks --region eu-central-1  update-kubeconfig --name <CLUSTER_NAME> --profile <AWS_PROFILE>  
 #Replace <CLUSTER_NAME> with the name of your cluster. and <AWS_PROFILE> - with the profile name 
 #you use to connect to AWS.
@@ -69,20 +69,20 @@ aws eks --region eu-central-1  update-kubeconfig --name <CLUSTER_NAME> --profile
 **Step 2:** Edit your local ~/.kube/config and replace the Kubernetes API server endpoint with your
 localhost and some port you will use for port forwarding. For example,
 
-```shell
+```
 server: https://127.0.0.1:6443
 ```
 
 **Step 3:** Edit your /etc/hosts file and add host mapping for the API endpoint. For example,
 
-```shell
+```
 127.0.1.1 XXXXXX.gr7.eu-central-1.eks.amazonaws.com
 #Replace XXXXXX.gr7.eu-central-1.eks.amazonaws.com with your actual endpoint.
 ```
 
 **Step 4:** At last you can start actual port forwarding. For example,
 
-```shell
+```
 ssh  -N -L 6443:<XXXXXX.gr7.eu-central-1.eks.amazonaws.com>:443 ec2-user@<i-XXXXXX>
 #Replace <XXXXXX.gr7.eu-central-1.eks.amazonaws.com> with your EKS API server endpoint. and
 #<i-XXXXXX> - with the instance id of your bastion host.
@@ -98,20 +98,20 @@ create a socket on the local machine, which serves as a SOCKS proxy.
 **Step 1:** Update your local ~/.kube/config with the private EKS cluster configuration. AWS CLI can
 be used for this purpose. For example,
 
-```shell
+```
 aws eks --region eu-central-1  update-kubeconfig --name <CLUSTER_NAME> --profile <AWS_PROFILE>  
 ```
 
 **Step 2:** Start dynamic port forwarding. For example,
 
-```shell
+```
 ssh -N -D 7777 ec2-user@<i-XXXXXX>
 #Replace the <i-XXXXXX> with the instance id of your bastion host
 ```
 
 **Step 3:** Force kubectl to use socks proxy. For example,
 
-```shell
+```
 export HTTPS_PROXY=socks5://127.0.0.1:7777
 ```
 
