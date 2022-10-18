@@ -81,13 +81,13 @@ in Franconia. For someone running at 6:00min/km pace on even grounds, 8:00 to 9:
 <p>The full source code is avail on <a href="https://github.com/okoeth/pacer-project">GitHub</a> and advanced readery may prefer to just read this <a href="https://github.com/okoeth/pacer-project/blob/master/Pacer.ipynb">Jupyter Notebook</a> instead of this chatty blog post.</p>
 <h2 id="data-loading-reference-run">Data Loading Reference Run</h2>
 <p>The reference run is provided as a GPX file with a GPS track and respective timings. This implementation uses the <a href="https://github.com/tkrajina/gpxpy">gpxpy</a> library for procession the GPX file format. The data is collected in an array and then converted in a Pandas data frame.</p>
-<pre><code>import gpxpy
+<pre tabindex="0"><code>import gpxpy
 import gpxpy.gpx
 
-gpx_file = open('data/osterfeld.gpx', 'r')
+gpx_file = open(&#39;data/osterfeld.gpx&#39;, &#39;r&#39;)
 gpx = gpxpy.parse(gpx_file)
 
-cols = [ 'lat', 'lon', 'elevation', 'time' ]
+cols = [ &#39;lat&#39;, &#39;lon&#39;, &#39;elevation&#39;, &#39;time&#39; ]
 idx = []
 rows = []
 
@@ -119,40 +119,40 @@ base = pd.DataFrame(data=rows, index=idx, columns=cols)
 <p>Distance Segment: The number of the 100m segment this trackpoint belongs to.</p>
 </li>
 </ul>
-<pre><code>base['elevation_delta'] = 
+<pre tabindex="0"><code>base[&#39;elevation_delta&#39;] = 
     base.elevation.diff().shift(0)
-base['time_prev'] = 
+base[&#39;time_prev&#39;] = 
     base.time.shift(+1)
-base['time_delta'] = 
-    base.apply(lambda row: time_delta(row['time'],row['time_prev']), axis=1)
-base['lat_prev'] = 
+base[&#39;time_delta&#39;] = 
+    base.apply(lambda row: time_delta(row[&#39;time&#39;],row[&#39;time_prev&#39;]), axis=1)
+base[&#39;lat_prev&#39;] = 
     base.lat.shift(+1)
-base['lon_prev'] = 
+base[&#39;lon_prev&#39;] = 
     base.lon.shift(+1)
-base['distance_delta'] = 
+base[&#39;distance_delta&#39;] = 
     base.apply(lambda row: 
-        distance(row['lat'],row['lon'],row['lat_prev'],row['lon_prev']), axis=1)
-base['distance_sum'] = 
-    base['distance_delta'].cumsum(axis = 0)
-base['distance_segment'] = 
-    base.apply(lambda row: distance_to_segment(row['distance_sum']), axis=1)
+        distance(row[&#39;lat&#39;],row[&#39;lon&#39;],row[&#39;lat_prev&#39;],row[&#39;lon_prev&#39;]), axis=1)
+base[&#39;distance_sum&#39;] = 
+    base[&#39;distance_delta&#39;].cumsum(axis = 0)
+base[&#39;distance_segment&#39;] = 
+    base.apply(lambda row: distance_to_segment(row[&#39;distance_sum&#39;]), axis=1)
 </code></pre><p>As a next step we group the track points by 100m segments and create a data frame that gives us elevation and timings for each segment. We also convert speed (in m/s) in pace (in min/km).</p>
-<pre><code>base_g = 
-    base.groupby('distance_segment').agg(
+<pre tabindex="0"><code>base_g = 
+    base.groupby(&#39;distance_segment&#39;).agg(
         {
-            'elevation_delta': ['sum'],
-            'distance_delta': ['sum'], 
-            'time_delta': ['sum']})
-base_g['pace_segment'] = 
-    16.7/(base_g[('distance_delta','sum')]/base_g[('time_delta','sum')])
+            &#39;elevation_delta&#39;: [&#39;sum&#39;],
+            &#39;distance_delta&#39;: [&#39;sum&#39;], 
+            &#39;time_delta&#39;: [&#39;sum&#39;]})
+base_g[&#39;pace_segment&#39;] = 
+    16.7/(base_g[(&#39;distance_delta&#39;,&#39;sum&#39;)]/base_g[(&#39;time_delta&#39;,&#39;sum&#39;)])
 </code></pre><p>When plotting the result it becomes evident that the pace per segment depends on the elevation gain (or loss) of the segment with slight elevation losses still speeding up the base pace, but steeper decents also take their toll on the pace.</p>
 <p><img src="/posts/img/segments.png" alt="segments"></p>
 <h2 id="creation-of-the-model">Creation of the Model</h2>
 <p>Based on the data prepared from the reference run, we can now train simple regression models (marketing speak: machine learning models!). Based on the visual inspection of the data, one could either use two linear regression models (there is a different slope for uphill and downhill) or a parabolic regression model, or a combination of both.</p>
 <p>Hence we create data sets for uphill, downhill, and both.</p>
-<pre><code>base_g_sorted = base_g.sort_values(by=('elevation_delta','sum'))
-x_arr = base_g_sorted[('elevation_delta','sum')].values
-y_arr = base_g_sorted['pace_segment'].values
+<pre tabindex="0"><code>base_g_sorted = base_g.sort_values(by=(&#39;elevation_delta&#39;,&#39;sum&#39;))
+x_arr = base_g_sorted[(&#39;elevation_delta&#39;,&#39;sum&#39;)].values
+y_arr = base_g_sorted[&#39;pace_segment&#39;].values
 
 x_all_arr = []
 y_all_arr = []
@@ -172,33 +172,33 @@ for i in range(0, len(x_arr)):
             x_down_arr.append(x_arr[i])
             y_down_arr.append(y_arr[i])
 </code></pre><p>Now the creation of the models is pretty straight forward.</p>
-<pre><code>(a_para,b_para,c_para) = polyfit(x_all_arr, y_all_arr, 2)
+<pre tabindex="0"><code>(a_para,b_para,c_para) = polyfit(x_all_arr, y_all_arr, 2)
 (a_lin_up,b_lin_up) = polyfit(x_up_arr, y_up_arr, 1)    
 (a_lin_down,b_lin_down) = polyfit(x_down_arr, y_down_arr, 1)
 (a_para_down,b_para_down,c_para_down) = polyfit(x_down_arr, y_down_arr, 2)
 </code></pre><p>When reviewing the models against the points representing the individual segments, we see a relatively good fit for all aproaches.</p>
 <p><img src="/posts/img/models.png" alt="models"></p>
 <p>For now, we do not commit to one particular model, but create a wrapper function, that allows the selection of a model at runtime. For checking, a manual linear model has been hard-coded as well.</p>
-<pre><code>uphill_penalty_per_m=6/20
+<pre tabindex="0"><code>uphill_penalty_per_m=6/20
 downhill_penalty_per_m=3/20
 
 def predict_pace_raw(elevation, base_pace, model):
-    if model=='manual':
+    if model==&#39;manual&#39;:
         if elevation &gt; 0:
             return base_pace+elevation*uphill_penalty_per_m
         else:
             return base_pace+abs(elevation)*downhill_penalty_per_m
 
-    elif model=='parabolic':
+    elif model==&#39;parabolic&#39;:
         return a_para*elevation**2+b_para*elevation+c_para
     
-    elif model=='linear':
+    elif model==&#39;linear&#39;:
         if elevation &gt;= 0:
             return a_lin_up*elevation+b_lin_up
         else:
             return a_lin_down*elevation+b_lin_down
     
-    elif model=='mixed':
+    elif model==&#39;mixed&#39;:
         if elevation &gt; 0:
             return a_lin_up*elevation+b_lin_up
         else:
@@ -212,10 +212,10 @@ def predict_pace(elevation, base_pace, model, min_pace=19):
         return pace
 </code></pre><h2 id="data-loading-target-run">Data Loading Target Run</h2>
 <p>Preparing the target run follows the same approaches used for the reference run.</p>
-<pre><code>target_gpx_file = open('data/supertrail.gpx', 'r')
+<pre tabindex="0"><code>target_gpx_file = open(&#39;data/supertrail.gpx&#39;, &#39;r&#39;)
 target_gpx = gpxpy.parse(target_gpx_file)
 
-cols = [ 'lat', 'lon', 'elevation' ]
+cols = [ &#39;lat&#39;, &#39;lon&#39;, &#39;elevation&#39; ]
 idx = []
 rows = []
 
@@ -229,52 +229,52 @@ for track in target_gpx.tracks:
 
 target = pd.DataFrame(data=rows, index=idx, columns=cols)
 </code></pre><p>Accodringly, additional columns are prepared and the data frame is grouped.</p>
-<pre><code>target['elevation_delta'] = 
+<pre tabindex="0"><code>target[&#39;elevation_delta&#39;] = 
     target.elevation.diff().shift(0)
-target['lat_prev'] = 
+target[&#39;lat_prev&#39;] = 
     target.lat.shift(+1)
-target['lon_prev'] = 
+target[&#39;lon_prev&#39;] = 
     target.lon.shift(+1)
-target['distance_delta'] = 
+target[&#39;distance_delta&#39;] = 
     target.apply(
-        lambda row: distance(row['lat'],row['lon'], row['lat_prev'],row['lon_prev']), axis=1)
-target['distance_sum'] = 
-    target['distance_delta'].cumsum(axis = 0)
-target['distance_segment'] = target.apply(
-    lambda row: distance_to_segment(row['distance_sum']), axis=1)
+        lambda row: distance(row[&#39;lat&#39;],row[&#39;lon&#39;], row[&#39;lat_prev&#39;],row[&#39;lon_prev&#39;]), axis=1)
+target[&#39;distance_sum&#39;] = 
+    target[&#39;distance_delta&#39;].cumsum(axis = 0)
+target[&#39;distance_segment&#39;] = target.apply(
+    lambda row: distance_to_segment(row[&#39;distance_sum&#39;]), axis=1)
 
-target_g = target.groupby('distance_segment').agg(
+target_g = target.groupby(&#39;distance_segment&#39;).agg(
     {
-        'elevation': ['mean'],
-        'elevation_delta': ['sum'],
-        'distance_delta': ['sum']})
+        &#39;elevation&#39;: [&#39;mean&#39;],
+        &#39;elevation_delta&#39;: [&#39;sum&#39;],
+        &#39;distance_delta&#39;: [&#39;sum&#39;]})
 </code></pre><h2 id="application-of-the-model">Application of the Model</h2>
 <p>Now everything gets very simple (as always when you are well prepared):</p>
-<pre><code>target_g['pace_segment'] = target_g.apply(
-    lambda row: predict_pace(row[('elevation_delta','sum')], 6.5, 'parabolic'), axis=1)
+<pre tabindex="0"><code>target_g[&#39;pace_segment&#39;] = target_g.apply(
+    lambda row: predict_pace(row[(&#39;elevation_delta&#39;,&#39;sum&#39;)], 6.5, &#39;parabolic&#39;), axis=1)
 
-target_g['time_delta'] = target_g[('distance_delta','sum')]/(16.7/target_g['pace_segment'])
-target_g['time_sum'] = target_g['time_delta'].cumsum(axis = 0)/3600
+target_g[&#39;time_delta&#39;] = target_g[(&#39;distance_delta&#39;,&#39;sum&#39;)]/(16.7/target_g[&#39;pace_segment&#39;])
+target_g[&#39;time_sum&#39;] = target_g[&#39;time_delta&#39;].cumsum(axis = 0)/3600
 </code></pre><p>And we create the final plot, where multiple dimensions are put together in a single diagram:</p>
-<pre><code>fig,ax = plt.subplots()
+<pre tabindex="0"><code>fig,ax = plt.subplots()
 
-ax.set_ylabel('elevation [m]')
-ax.set_xlabel('segments [100m]')
+ax.set_ylabel(&#39;elevation [m]&#39;)
+ax.set_xlabel(&#39;segments [100m]&#39;)
 
 ax2 = ax.twinx()
 ax2.set_ylim(4, 20)
-ax2.set_ylabel('pace [min/km]')
+ax2.set_ylabel(&#39;pace [min/km]&#39;)
 ax3 = ax.twinx()
-rspine = ax3.spines['right']
-rspine.set_position(('axes', 1.05))
+rspine = ax3.spines[&#39;right&#39;]
+rspine.set_position((&#39;axes&#39;, 1.05))
 ax3.set_frame_on(True)
 ax3.patch.set_visible(False)
-ax3.set_ylabel('duration [h]')
+ax3.set_ylabel(&#39;duration [h]&#39;)
 
 
-target_g['elevation'].plot(ax=ax, style='b-', figsize=(20,5))
-target_g['pace_segment'].plot(ax=ax2, style='g-')
-target_g['time_sum'].plot(ax=ax3, style='r-')
+target_g[&#39;elevation&#39;].plot(ax=ax, style=&#39;b-&#39;, figsize=(20,5))
+target_g[&#39;pace_segment&#39;].plot(ax=ax2, style=&#39;g-&#39;)
+target_g[&#39;time_sum&#39;].plot(ax=ax3, style=&#39;r-&#39;)
 </code></pre><p><img src="/posts/img/result.png" alt="result"></p>
 
         </div>

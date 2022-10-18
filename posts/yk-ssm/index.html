@@ -75,9 +75,9 @@ AmazonSSMManagedInstanceCore managed policy includes all the necessary access fo
 <p>For your local machine, you have to install the <a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html">session manage plugin</a> and to enable ssh
 connections through session manager. For that you need to edit the ~/.ssh/config and to add the
 <a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-getting-started-enable-ssh-connections.html">following configuration</a>:</p>
-<pre><code># SSH over Session Manager
+<pre tabindex="0"><code># SSH over Session Manager
 host i-* mi-*
-    ProxyCommand sh -c &quot;aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters 'portNumber=%p'&quot;
+    ProxyCommand sh -c &#34;aws ssm start-session --target %h --document-name AWS-StartSSHSession --parameters &#39;portNumber=%p&#39;&#34;
 </code></pre><p>You also need to upload your ssh public key to the bastion host. Although, connecting to the jump
 server using SSM does not require any key exchanges with the server, it is still needed for ssh. You
 can do it my adding it directly to the ~/.ssh/authorized_keys or to temporarily send it for the
@@ -87,17 +87,17 @@ session via <em>ec2-instance-connect</em>.</p>
 access EKS using <em>kubectl</em>.</p>
 <p><strong>Step 1:</strong> Update your local ~/.kube/config with the private EKS cluster configuration. AWS CLI can
 be used for this purpose. For example,</p>
-<pre><code>aws eks --region eu-central-1  update-kubeconfig --name &lt;CLUSTER_NAME&gt; --profile &lt;AWS_PROFILE&gt;  
+<pre tabindex="0"><code>aws eks --region eu-central-1  update-kubeconfig --name &lt;CLUSTER_NAME&gt; --profile &lt;AWS_PROFILE&gt;  
 #Replace &lt;CLUSTER_NAME&gt; with the name of your cluster. and &lt;AWS_PROFILE&gt; - with the profile name 
 #you use to connect to AWS.
 </code></pre><p><strong>Step 2:</strong> Edit your local ~/.kube/config and replace the Kubernetes API server endpoint with your
 localhost and some port you will use for port forwarding. For example,</p>
-<pre><code>server: https://127.0.0.1:6443
+<pre tabindex="0"><code>server: https://127.0.0.1:6443
 </code></pre><p><strong>Step 3:</strong> Edit your /etc/hosts file and add host mapping for the API endpoint. For example,</p>
-<pre><code>127.0.1.1 XXXXXX.gr7.eu-central-1.eks.amazonaws.com
+<pre tabindex="0"><code>127.0.1.1 XXXXXX.gr7.eu-central-1.eks.amazonaws.com
 #Replace XXXXXX.gr7.eu-central-1.eks.amazonaws.com with your actual endpoint.
 </code></pre><p><strong>Step 4:</strong> At last you can start actual port forwarding. For example,</p>
-<pre><code>ssh  -N -L 6443:&lt;XXXXXX.gr7.eu-central-1.eks.amazonaws.com&gt;:443 ec2-user@&lt;i-XXXXXX&gt;
+<pre tabindex="0"><code>ssh  -N -L 6443:&lt;XXXXXX.gr7.eu-central-1.eks.amazonaws.com&gt;:443 ec2-user@&lt;i-XXXXXX&gt;
 #Replace &lt;XXXXXX.gr7.eu-central-1.eks.amazonaws.com&gt; with your EKS API server endpoint. and
 #&lt;i-XXXXXX&gt; - with the instance id of your bastion host.
 </code></pre><p><strong>Step 5:</strong> Enjoy using kubectl locally.</p>
@@ -106,12 +106,12 @@ localhost and some port you will use for port forwarding. For example,</p>
 create a socket on the local machine, which serves as a SOCKS proxy.</p>
 <p><strong>Step 1:</strong> Update your local ~/.kube/config with the private EKS cluster configuration. AWS CLI can
 be used for this purpose. For example,</p>
-<pre><code>aws eks --region eu-central-1  update-kubeconfig --name &lt;CLUSTER_NAME&gt; --profile &lt;AWS_PROFILE&gt;  
+<pre tabindex="0"><code>aws eks --region eu-central-1  update-kubeconfig --name &lt;CLUSTER_NAME&gt; --profile &lt;AWS_PROFILE&gt;  
 </code></pre><p><strong>Step 2:</strong> Start dynamic port forwarding. For example,</p>
-<pre><code>ssh -N -D 7777 ec2-user@&lt;i-XXXXXX&gt;
+<pre tabindex="0"><code>ssh -N -D 7777 ec2-user@&lt;i-XXXXXX&gt;
 #Replace the &lt;i-XXXXXX&gt; with the instance id of your bastion host
 </code></pre><p><strong>Step 3:</strong> Force kubectl to use socks proxy. For example,</p>
-<pre><code>export HTTPS_PROXY=socks5://127.0.0.1:7777
+<pre tabindex="0"><code>export HTTPS_PROXY=socks5://127.0.0.1:7777
 </code></pre><p><strong>Step 4:</strong> Enjoy using kubectl locally.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>AWS SSM is very useful and remarkable piece of technology. And in this article we only showed how to

@@ -2,13 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://nttdata-dach.github.io/authors/</loc>
+    <lastmod>2022-10-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/authors/</loc>
+    <lastmod>2022-10-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/blockchain/</loc>
+    <lastmod>2022-10-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/decentralization/</loc>
+    <lastmod>2022-10-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/dlt/</loc>
+    <lastmod>2022-10-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/financial-services/</loc>
+    <lastmod>2022-10-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/authors/maja-schwarz/</loc>
+    <lastmod>2022-10-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/</loc>
+    <lastmod>2022-10-18T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/posts/sm-blockchain/</loc>
+    <lastmod>2022-10-18T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://nttdata-dach.github.io/posts/yk-ssm/</loc>
-    <lastmod>2022-06-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/authors/</loc>
-    <lastmod>2022-06-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/authors/</loc>
     <lastmod>2022-06-20T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/aws/</loc>
@@ -27,9 +48,6 @@
     <lastmod>2022-06-20T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/ssm/</loc>
-    <lastmod>2022-06-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/</loc>
     <lastmod>2022-06-20T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/vpc/</loc>
@@ -93,6 +111,8 @@
     <lastmod>2020-06-02T09:04:54+02:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/adam-boczek/</loc>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/authors/maja-schwarz/</loc>
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/oliver-koeth/</loc>
   </url><url>

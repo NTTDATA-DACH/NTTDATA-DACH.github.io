@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>decentralization on Technology Blog</title>
+    <link>https://nttdata-dach.github.io/tags/decentralization/</link>
+    <description>Recent content in decentralization on Technology Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright 2021 NTT DATA Deutschland GmbH - This site does not use any cookies</copyright>
+    <lastBuildDate>Tue, 18 Oct 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/tags/decentralization/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Three use cases highlighting the business value of private blockchain</title>
+      <link>https://nttdata-dach.github.io/posts/sm-blockchain/</link>
+      <pubDate>Tue, 18 Oct 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/posts/sm-blockchain/</guid>
+      <description>Rarely do we find a technology as controversial as blockchain. It seems there are as many blockchain sceptics as blockchain enthusiasts. The sceptics are concerned with unlawful behavior that occurred in public blockchain networks, as well as with extremely high current or past energy consumption of certain public blockchains.</description>
+    </item>
+    
+  </channel>
+</rss>
