@@ -1,9 +1,9 @@
 {{ if or (.Paginator.HasPrev) (.Paginator.HasNext) }}
 {{ if .Paginator.HasNext }}
-<a href="{{ .URL }}page/{{ .Paginator.Next.PageNumber }}">&larr; Ältere Beiträge&nbsp;&nbsp;&nbsp;&nbsp;</a>
+<a href="{{ .RelPermalink }}page/{{ .Paginator.Next.PageNumber }}">&larr; Ältere Beiträge&nbsp;&nbsp;&nbsp;&nbsp;</a>
 {{ end }}
 
 {{ if .Paginator.HasPrev }}
-<a href="{{ .URL }}page/{{ .Paginator.Prev.PageNumber }}">Neuere Beiträge &rarr;</a>
+<a href="{{ .RelPermalink }}page/{{ .Paginator.Prev.PageNumber }}">Neuere Beiträge &rarr;</a>
 {{ end }}
 {{ end }}
