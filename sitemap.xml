@@ -2,11 +2,35 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://nttdata-dach.github.io/authors/</loc>
-    <lastmod>2022-10-18T00:00:00+00:00</lastmod>
+    <loc>https://nttdata-dach.github.io/posts/sh-dataorienteddesign-ecs/</loc>
+    <lastmod>2023-03-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/array-of-struct/</loc>
+    <lastmod>2023-03-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/</loc>
-    <lastmod>2022-10-18T00:00:00+00:00</lastmod>
+    <lastmod>2023-03-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/authors/</loc>
+    <lastmod>2023-03-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/computing/</loc>
+    <lastmod>2023-03-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/data-oriented-design/</loc>
+    <lastmod>2023-03-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/data-streams/</loc>
+    <lastmod>2023-03-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/entity-component-system/</loc>
+    <lastmod>2023-03-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/authors/sascha-hampl/</loc>
+    <lastmod>2023-03-09T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/</loc>
+    <lastmod>2023-03-09T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/blockchain/</loc>
     <lastmod>2022-10-18T00:00:00+00:00</lastmod>
@@ -21,9 +45,6 @@
     <lastmod>2022-10-18T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/maja-schwarz/</loc>
-    <lastmod>2022-10-18T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/</loc>
     <lastmod>2022-10-18T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/posts/sm-blockchain/</loc>
@@ -114,7 +135,13 @@
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/maja-schwarz/</loc>
   </url><url>
+    <loc>https://nttdata-dach.github.io/authors/markus-frankenbach/</loc>
+  </url><url>
     <loc>https://nttdata-dach.github.io/authors/oliver-koeth/</loc>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/authors/samuel-wirth/</loc>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/authors/sascha-hampl/</loc>
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/yury-kornev/</loc>
   </url><url>
