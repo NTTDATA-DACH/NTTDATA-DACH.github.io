@@ -7,7 +7,52 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2023 NTT DATA Deutschland GmbH - This site does not use any cookies</copyright>
-    <lastBuildDate>Thu, 09 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 24 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cybersecurity</title>
+      <link>https://nttdata-dach.github.io/tags/cybersecurity/</link>
+      <pubDate>Fri, 24 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/cybersecurity/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>DevOps</title>
+      <link>https://nttdata-dach.github.io/tags/devops/</link>
+      <pubDate>Fri, 24 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/devops/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>DevSecOps</title>
+      <link>https://nttdata-dach.github.io/tags/devsecops/</link>
+      <pubDate>Fri, 24 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/devsecops/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Software Lifecycle</title>
+      <link>https://nttdata-dach.github.io/tags/software-lifecycle/</link>
+      <pubDate>Fri, 24 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/software-lifecycle/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Software Supply Chain</title>
+      <link>https://nttdata-dach.github.io/tags/software-supply-chain/</link>
+      <pubDate>Fri, 24 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/software-supply-chain/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Array of Struct</title>
       <link>https://nttdata-dach.github.io/tags/array-of-struct/</link>

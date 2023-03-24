@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>DevOps on Technology Blog</title>
+    <link>https://nttdata-dach.github.io/tags/devops/</link>
+    <description>Recent content in DevOps on Technology Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright 2023 NTT DATA Deutschland GmbH - This site does not use any cookies</copyright>
+    <lastBuildDate>Fri, 24 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/tags/devops/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Understanding the value of Software Supply Chain Security - Part 1: Attack vectors</title>
+      <link>https://nttdata-dach.github.io/posts/20230321_ab_softwaresupplychainsecurity_1/</link>
+      <pubDate>Fri, 24 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/posts/20230321_ab_softwaresupplychainsecurity_1/</guid>
+      <description>There is generally a lot less awareness of Software Supply Chain Security in the contemporary IT landscape and thus its aspects are completely ignored by DevSecOps practices. In this two-part article, I aim to provide an overview of what software supply chain is, what attack vectors you render yourself vulnerable to when not including these aspects in your pipelines and how you can &lt;strong&gt;reduce your attack surface area&lt;/strong&gt; using various tools / frameworks / guidelines like &lt;strong&gt;SLSA&lt;/strong&gt;, &lt;strong&gt;sigstore&lt;/strong&gt;, &lt;strong&gt;in-toto&lt;/strong&gt;, &lt;strong&gt;SBOM&lt;/strong&gt;, &lt;strong&gt;TUF&lt;/strong&gt;, &lt;strong&gt;OpenSSF&lt;/strong&gt; etc. We will also shed light on how the open source community as a whole is combating this threat.</description>
+    </item>
+    
+  </channel>
+</rss>

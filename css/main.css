@@ -281,7 +281,7 @@ figure {
     background-color: #f6f8fd;
     margin: 80px 0 0 0;
     padding: 0 30px 0 30px;
-    width: 66%;
+    width: 85%;
 }
 
 figure img {
@@ -348,7 +348,7 @@ and (-webkit-device-pixel-ratio: 3) {
         max-width: 66%;
     }
     figure {
-        width: 66%;
+        width: 90%;
     }
 }
 
@@ -357,7 +357,7 @@ and (-webkit-device-pixel-ratio: 3) {
         max-width: 50%;
     }
     figure {
-        width: 50%;
+        width: 90%;
     }
 }
 
