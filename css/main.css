@@ -324,6 +324,14 @@ a {
     color: #070E27;
 }
 
+a.footnote-ref::before {
+    content: '[';
+}
+
+a.footnote-ref::after {
+    content: ']';
+}
+
 /* Mobile */
 @media only screen
 and (min-device-width: 375px)
@@ -459,6 +467,19 @@ ul {
 h3 {
     font-size: 18px;
 }
+
+.footnotes {
+    margin-top: -1.2em;
+}
+
+.footnotes p {
+    font-size: 1.1em;
+}
+
+.footnotes hr {
+    border:0px;
+}
+
 
 
 /* syntax highlighting */

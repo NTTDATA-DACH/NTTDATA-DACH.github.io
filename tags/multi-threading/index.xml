@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Multi-Threading on Technology Blog</title>
+    <link>https://nttdata-dach.github.io/tags/multi-threading/</link>
+    <description>Recent content in Multi-Threading on Technology Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright 2023 NTT DATA Deutschland AG - This site does not use any cookies</copyright>
+    <lastBuildDate>Thu, 13 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/tags/multi-threading/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>New Random Generators in Java 17</title>
+      <link>https://nttdata-dach.github.io/posts/ms-newrandomgeneratorsinjava17/</link>
+      <pubDate>Thu, 13 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/posts/ms-newrandomgeneratorsinjava17/</guid>
+      <description>Java 17 introduced new random number generators. These provide longer cycles, improved statistical uniform distribution, improved threading support, and Streams API integration. This article provides a short introduction to random number generators and an overview of the improvements made in Java 17.</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -9,6 +9,15 @@
     <copyright>Copyright 2023 NTT DATA Deutschland AG - This site does not use any cookies</copyright>
     <lastBuildDate>Tue, 02 Jun 2020 09:04:54 +0200</lastBuildDate><atom:link href="https://nttdata-dach.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>New Random Generators in Java 17</title>
+      <link>https://nttdata-dach.github.io/posts/ms-newrandomgeneratorsinjava17/</link>
+      <pubDate>Thu, 13 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/posts/ms-newrandomgeneratorsinjava17/</guid>
+      <description>Java 17 introduced new random number generators. These provide longer cycles, improved statistical uniform distribution, improved threading support, and Streams API integration. This article provides a short introduction to random number generators and an overview of the improvements made in Java 17.</description>
+    </item>
+    
+    <item>
       <title>Understanding the value of Software Supply Chain Security - Part 2: Tools in your arsenal</title>
       <link>https://nttdata-dach.github.io/posts/20230321_ab_softwaresupplychainsecurity_2/</link>
       <pubDate>Tue, 28 Mar 2023 00:00:00 +0000</pubDate>

@@ -7,7 +7,61 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2023 NTT DATA Deutschland AG - This site does not use any cookies</copyright>
-    <lastBuildDate>Tue, 28 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 13 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Java 17</title>
+      <link>https://nttdata-dach.github.io/tags/java-17/</link>
+      <pubDate>Thu, 13 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/java-17/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>LCG</title>
+      <link>https://nttdata-dach.github.io/tags/lcg/</link>
+      <pubDate>Thu, 13 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/lcg/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>LXM</title>
+      <link>https://nttdata-dach.github.io/tags/lxm/</link>
+      <pubDate>Thu, 13 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/lxm/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Multi-Threading</title>
+      <link>https://nttdata-dach.github.io/tags/multi-threading/</link>
+      <pubDate>Thu, 13 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/multi-threading/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Random</title>
+      <link>https://nttdata-dach.github.io/tags/random/</link>
+      <pubDate>Thu, 13 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/random/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>StreamAPI</title>
+      <link>https://nttdata-dach.github.io/tags/streamapi/</link>
+      <pubDate>Thu, 13 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/streamapi/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Cybersecurity</title>
       <link>https://nttdata-dach.github.io/tags/cybersecurity/</link>
