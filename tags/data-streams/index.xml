@@ -10,10 +10,10 @@
     <lastBuildDate>Thu, 09 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/tags/data-streams/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>A Completely New Approach: An ECS Programming Language</title>
-      <link>https://nttdata-dach.github.io/posts/sh-dataorienteddesign-ecs/</link>
+      <link>https://nttdata-dach.github.io/posts/sh-dataorienteddesignecs/</link>
       <pubDate>Thu, 09 Mar 2023 00:00:00 +0000</pubDate>
       
-      <guid>https://nttdata-dach.github.io/posts/sh-dataorienteddesign-ecs/</guid>
+      <guid>https://nttdata-dach.github.io/posts/sh-dataorienteddesignecs/</guid>
       <description>Current enterprise software engineering is all about abstraction. We are bending our software in ways that the computer has trouble efficiently computing it. A decade ago we had to write efficient programs, because our hardware was a limiting factor. However, having better hardware is in no excuse to waste precious ressources. With Data-Oriented Design - DOD and Entity Component System - ECS, we can improve performance by up to 100 times!</description>
     </item>
     

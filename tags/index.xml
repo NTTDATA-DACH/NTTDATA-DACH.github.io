@@ -7,7 +7,70 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2023 NTT DATA Deutschland AG - This site does not use any cookies</copyright>
-    <lastBuildDate>Thu, 13 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 15 May 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>API Developer Portal</title>
+      <link>https://nttdata-dach.github.io/tags/api-developer-portal/</link>
+      <pubDate>Mon, 15 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/api-developer-portal/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>API Gateway</title>
+      <link>https://nttdata-dach.github.io/tags/api-gateway/</link>
+      <pubDate>Mon, 15 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/api-gateway/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>API Management</title>
+      <link>https://nttdata-dach.github.io/tags/api-management/</link>
+      <pubDate>Mon, 15 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/api-management/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>API Security</title>
+      <link>https://nttdata-dach.github.io/tags/api-security/</link>
+      <pubDate>Mon, 15 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/api-security/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>RESTful API</title>
+      <link>https://nttdata-dach.github.io/tags/restful-api/</link>
+      <pubDate>Mon, 15 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/restful-api/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Routing</title>
+      <link>https://nttdata-dach.github.io/tags/routing/</link>
+      <pubDate>Mon, 15 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/routing/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Traffic Management</title>
+      <link>https://nttdata-dach.github.io/tags/traffic-management/</link>
+      <pubDate>Mon, 15 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/traffic-management/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Java 17</title>
       <link>https://nttdata-dach.github.io/tags/java-17/</link>

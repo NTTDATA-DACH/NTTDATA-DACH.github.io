@@ -10,10 +10,10 @@
     <lastBuildDate>Tue, 01 Jun 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/tags/best-practice/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>10 Lessons learnt from large-scale data migration projects</title>
-      <link>https://nttdata-dach.github.io/posts/ok-scaling-projects/</link>
+      <link>https://nttdata-dach.github.io/posts/ok-lessonsdatamigration/</link>
       <pubDate>Tue, 01 Jun 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://nttdata-dach.github.io/posts/ok-scaling-projects/</guid>
+      <guid>https://nttdata-dach.github.io/posts/ok-lessonsdatamigration/</guid>
       <description>Data migration is of course only one aspect of system conversion. Usually data migration is performed in conjunction with other conversions like technology or interfaces. Nevertheless, data migration is often the most expensive and confusing part of the conversion project. So let’s revisit the handful of fairly large data migrations I encountered in my professional career and see which lessons can be drawn out of this experience.</description>
     </item>
     

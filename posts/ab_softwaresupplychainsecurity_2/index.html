@@ -1,0 +1,255 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Understanding the value of Software Supply Chain Security - Part 2: Tools in your arsenal  </title>
+
+  <meta charset="utf-8">
+
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+</head>
+
+<body>
+  <header>
+    <a href="/"><img src="/images/NTT-Data-white.png"></a>
+
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+    </nav>
+  </header>
+
+
+
+  <div class="emobanner article">
+    <h1>
+        <span class="pre">28.03.2023
+        
+         - Amulya Bhatia
+        
+        </span>
+        Understanding the value of Software Supply Chain Security - Part 2: Tools in your arsenal
+        
+    </h1>
+    <div class="article-header-img" style="background: url('/posts/img/AB_SoftwareSupplyChainSecurity/title-image.png') no-repeat center center; background-size: cover"></div>
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            <p>In the first part we discussed software supply chain in general, which possible attack vectors exist and what actions are being taken by the community but rather in an isolated manner. In this part, I&rsquo;ll line out specific actions which can be taken in an organized manner and which tools/framework/guidelines can be useful along this way.</p>
+<h2 id="what-actions-need-to-be--are-being-taken-organized">What actions need to be / are being taken? (Organized)</h2>
+<p>I&rsquo;ll start with a short overview of the actions that should be taken and which tools/frameworks/guidelines can be used to achieve this. Later I&rsquo;ll give an overview of these in further depth.</p>
+<h3 id="collect-metadata-for-your-supply-chain">Collect metadata for your supply chain</h3>
+<p>Collect metadata across your whole software supply chain, for e.g.</p>
+<ul>
+<li>How was the software artifact generated?</li>
+<li>Which source code was used to build, which build tool, what was the build command, what were its input and output parameters?</li>
+<li>What all dependencies are included in the software artifact, where did they all come from and what sort of security standard do they meet?</li>
+<li>What was the result of the vulnerability scan, unit tests, integration tests etc.?</li>
+<li>Who approved the artifact to be deployed on production, which specific policy engine was used and what decisions were made during the deployment?</li>
+</ul>
+<p>You could collect even more information that you see fit to your security standards and informs you further about your supply chain. Use <strong>SBOMs, SLSA Provenance, VEX, Detailed Vulnerability Scan reports, Verification Policy logging</strong> for this.</p>
+<h3 id="establish-trust-across-your-supply-chain">Establish trust across your supply chain</h3>
+<p>If you don&rsquo;t have mechanisms to establish trust in your supply chain, you can never be sure about whether the metadata you see is created by your CI/CD pipeline or if it is from some hacker. Use <strong>sigstore/TUF</strong> for this.</p>
+<h3 id="establish-integrity-of-the-metadata-across-your-supply-chain">Establish integrity of the metadata across your supply chain</h3>
+<p>Once the metadata is available you&rsquo;ll need to establish integrity of this metadata, i.e. it is <strong>tamper-proof</strong>. Without this, you can&rsquo;t trust the correctness and the accuracy of the metadata. Use <strong>in-toto, SLSA</strong> for this.</p>
+<h3 id="establish-and-follow-guidelines-to-continuously-monitor-your-status">Establish and follow guidelines to continuously monitor your status</h3>
+<p>Adapt frameworks like <strong>SLSA</strong>, follow guidelines from <strong>OpenSSF</strong> etc. to continuously monitor your security hygiene in the DevSecOps loop.</p>
+<p>Now it&rsquo;s time for a somewhat deeper dive into the above mentioned tools/frameworks/guidelines.</p>
+<h2 id="sbom">SBOM</h2>
+<p>Software Bill of Materials (SBOM) represents an <strong>inventory of all components</strong>, including open-source, first-party and third-party components, that are a part of your software artifact. Having such an inventory is important to able to respond to attacks similar to the <a href="https://blog.checkpoint.com/2021/12/11/protecting-against-cve-2021-44228-apache-log4j2-versions-2-14-1/">log4j attack</a> in 2021, as you can easily and rapidly search all of your artifacts for the ones that are using a specific dependency or a specific version. This helps you <strong>drastically reduce your MTTR (Mean Time To Recovery) for any future security incidents</strong> related to exploitable vulnerabilities in any of the third-party / open-source components included in your deployed artifacts. SBOMs can be represented in <strong>many machine-readable formats</strong> including <strong>json, xml, protobuf, yaml</strong> etc. This is helpful as these can be fed for further assessment in your security pipeline.</p>
+<h3 id="cyclonedx-vs-spdx">CycloneDX vs. SPDX</h3>
+<p>Two major players in this space are <a href="https://cyclonedx.org/">CycloneDX</a> and <a href="https://https://spdx.dev/">SPDX</a>. <a href="https://raw.githubusercontent.com/CycloneDX/bom-examples/master/SBOM/keycloak-10.0.2/bom.json">Here</a> is an example of an SBOM in json using CycloneDX. CycloneDX is being run under the leadership of Open Web Application Security Project (OWASP) whereas SPDX is a Linux Foundation Project. CycloneDX offers more Bill of Materials features than just SBOM, including:</p>
+<ul>
+<li><a href="https://cyclonedx.org/capabilities/saasbom/">Software as a Service Bill of Materials (SaaSBOM)</a></li>
+<li><a href="https://cyclonedx.org/capabilities/hbom/">Hardware Bill of Materials (HBOM)</a></li>
+<li><a href="https://cyclonedx.org/capabilities/obom/">Operations Bill of Materials (OBOM)</a></li>
+<li><a href="https://cyclonedx.org/capabilities/vex/">Vulnerability Exploitability Exchange (VEX)</a></li>
+</ul>
+<p>A deeper comparison of the two projects is beyond the scope of this article but suffice to say that you can very quickly include SBOM into your DevSecOps pipeline using either of these projects as they both support mainstream languages like Java, Python, .NET and Javascript. For example, you can simply include a <a href="https://github.com/CycloneDX/cyclonedx-maven-plugin">maven plugin</a> in your Java projects to quickly generate an SBOM.</p>
+<p>SBOMs are great but they don&rsquo;t include all of the necessary information that helps to respond to any sort of <strong>build tampering</strong> and attacks like <a href="https://www.zdnet.com/article/microsoft-fireeye-confirm-solarwinds-supply-chain-attack/">Solarwinds</a> and <a href="https://about.codecov.io/security-update/">Codecov</a>. SBOMs also don&rsquo;t provide any way to be able to verify the <strong>accuracy</strong> and <strong>correctness</strong> of the information included in them.</p>
+<h2 id="slsa">SLSA</h2>
+<p>Supply chain Levels for Software Artifacts (SLSA) is a framework which allows you to <strong>measure, evaluate, continuously monitor and improve</strong> the security of your Software Supply Chain. It provides guiding principles and a common terminology for both software producers and consumers. Software producers use SLSA to convey the <strong>maturity</strong> and <strong>security posture</strong> of their Software Supply Chain whereas the software consumers can make vendor decisions based on the security requirements specific to them.</p>
+<p>SLSA provides <strong>four levels</strong> of maturity of the project&rsquo;s security practices that are designed to be incremental and actionable. Before we jump deeper into these four levels, let me define two important terms used in SLSA:</p>
+<ul>
+<li><strong>Software Attestation</strong> - A software attestation is nothing more than <strong>authenticated metadata</strong> about software artifacts - the keyword here being <strong>authenticated</strong>.</li>
+<li><strong>Provenance</strong> - Primary idea behind provenance is to be able to <strong>link a particular software artifact to its source code</strong>. A provenance is a type of <strong>software attestation</strong> that some <strong>build system</strong> (Jenkins, Gitlab CI etc.) <strong>produced one or more software artifacts</strong>. It is metadata about how a particular software artifact was created, for e.g. it includes information like who started the build, what source code was used (git commit, repo etc.), which build system and build steps, what were the inputs to the build, what were its outputs etc.</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">   <span class="c1">// Standard Attestation fields
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="nt">&#34;_type&#34;</span><span class="p">:</span><span class="s2">&#34;https://in-toto.io/Statement/v0.1&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">   <span class="nt">&#34;subject&#34;</span><span class="p">:[</span>
+</span></span><span class="line"><span class="cl">      <span class="p">{</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;...&#34;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">}</span>
+</span></span><span class="line"><span class="cl">   <span class="p">],</span>
+</span></span><span class="line"><span class="cl">   <span class="c1">// SLSA Predicate definition
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>   <span class="nt">&#34;predicateType&#34;</span><span class="p">:</span> <span class="s2">&#34;https://slsa.dev/provenance/v0.2&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">   <span class="nt">&#34;predicate&#34;</span><span class="p">:{</span>   
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;builder&#34;</span><span class="p">:{</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;id&#34;</span><span class="p">:</span><span class="s2">&#34;&lt;URI&gt;&#34;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">},</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;buildType&#34;</span><span class="p">:</span><span class="s2">&#34;&lt;URI&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;buildConfig&#34;</span><span class="p">:</span><span class="s2">&#34;Object&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;invocation&#34;</span><span class="p">:{</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;configSource&#34;</span><span class="p">:</span><span class="s2">&#34;Object&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;parameters&#34;</span><span class="p">:</span><span class="s2">&#34;Object&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;environment&#34;</span><span class="p">:</span><span class="s2">&#34;Object&#34;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">},</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;metadata&#34;</span><span class="p">:{</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;buildStartedOn&#34;</span><span class="p">:</span><span class="s2">&#34;&lt;TIMESTAMP&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;buildFinishedon&#34;</span><span class="p">:</span><span class="s2">&#34;&lt;TIMESTAMP&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="nt">&#34;completeness&#34;</span><span class="p">:{</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;parameters&#34;</span><span class="p">:</span><span class="s2">&#34;Boolean&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;environment&#34;</span><span class="p">:</span><span class="s2">&#34;Boolean&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;materials&#34;</span><span class="p">:</span><span class="s2">&#34;Boolean&#34;</span>
+</span></span><span class="line"><span class="cl">         <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">},</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;materials&#34;</span><span class="p">:[</span>
+</span></span><span class="line"><span class="cl">         <span class="p">{</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;uri&#34;</span><span class="p">:</span><span class="s2">&#34;&lt;URI&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">            <span class="nt">&#34;digest&#34;</span><span class="p">:{</span>
+</span></span><span class="line"><span class="cl">               <span class="nt">&#34;...&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">         <span class="p">}</span>
+</span></span><span class="line"><span class="cl">      <span class="p">]</span>
+</span></span><span class="line"><span class="cl">   <span class="p">}</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h3 id="four-levels-of-slsa">Four Levels of SLSA</h3>
+<ol>
+<li><strong>Level 1 - Basic Assurance</strong>: Achieving level 1 means that you can provide <strong>provenance</strong> for your software artifacts and have a basic dev, build and release hygiene.</li>
+<li><strong>Level 2 - Credible Assurance</strong>: Achieving level 2 means that not only can you provide provenance but the provenance is <strong>authenticated</strong>. Furthermore you have a <strong>dedicated</strong> build environment and a <strong>version-controlled</strong> source code.</li>
+<li><strong>Level 3 - Resilient Assurance</strong>: You achieve level 3 when you are able to provide <strong>non-falsifiable</strong> provenance, an <strong>isolated</strong> build environment, <strong>version-controlled</strong> build and <strong>verified</strong> source history.</li>
+<li><strong>Level 4 - Maximum Assurance</strong>: This level requires <strong>two-party review</strong> for all changes and <a href="https://slsa.dev/spec/v0.1/requirements#parameterless">parameterless</a>, <a href="https://slsa.dev/spec/v0.1/requirements#hermetic">hermetic</a> builds, including <a href="https://slsa.dev/spec/v0.1/requirements#dependencies-complete">complete dependencies</a>.</li>
+</ol>
+<p>The great thing about SLSA is that it gives you a prescribed path to follow to achieve maximum assurance. You can decide what level you want to or can achieve based on the resources and budget available to you. Recognizing and adopting SLSA in your organization not only would help you improve your software supply chain as a producer but also as a consumer of open-source projects. You can define internal guidelines to allow use of third-party software which has, for e.g. at least level 3 or a similar badge as shown below.</p>
+
+    
+    <img src="/posts/img/AB_SoftwareSupplyChainSecurity/slsa-badge.png" alt="SLSA Level 3 badge" style="width: 25%; display: block; margin-left: auto; margin-right: auto;">
+
+<p>Being SLSA compliant will help you avert a lot of the attacks mentioned in the beginning, as you are able to link your software artifact back to the source code, including information about the build. As you achieve maximum assurance, you create isolated build environment which produce parameterless, hermetic builds providing very high integrity to your system. You can use <a href="https://github.com/slsa-framework">any one of the many provenance generators</a> available to get started.</p>
+<p><strong>Important:</strong> The goal of SLSA <strong>isn&rsquo;t to just provide build provenance</strong> but its use of <a href="https://github.com/in-toto/attestation#introduction"><strong>in-toto attestation</strong></a> allows this to be extended for other software metadata as well, for e.g. attestations for <strong>SBOMs, Vulnerability Reports, Test Reports, Policy Engines, VEX</strong> and lots more. This will help you standardize artifact metadata of all kinds, without them being specific to any producer or consumer.</p>
+<h2 id="sigstore">Sigstore</h2>
+<p>Now that we have mechanisms for capturing artifact metadata and guidelines/frameworks for ensuring their integrity, it&rsquo;s time to <strong>establish trust</strong> using digital signatures across the whole supply chain - this is where <a href="https://www.sigstore.dev/">sigstore</a> (an <a href="https://openssf.org/community/sigstore/">OpenSSF</a> project) comes in. Following is how they define their mission:</p>
+<blockquote>
+<p><strong>Sigstore</strong> aims to be for <strong>software artifact signing</strong> what <strong>Let’s Encrypt</strong> is to <strong>TLS</strong></p>
+</blockquote>
+<p>Any source code / repository maintainer who has ever dealt with managing keys (distributing keys, storage etc.) knows how hard it is. They also have no way of knowing when their keys get compromised, leaving doors open for security compromises. Sigstore aims to solve this major issue by taking away the pain of managing the keys altogether, as it allows you to use <strong>identities</strong> like any OIDC Identities (Google, Twitter etc.) or Workload Identity, for e.g. <a href="https://github.com/spiffe">SPIFFE and SPIRE</a>, for <strong>signing</strong>. This doesn&rsquo;t mean that you can&rsquo;t use your own keys in an enterprise setting using sigstore - it just gives you an option to not have to do key management yourself. Sigstore not only helps you with the signing but also the <strong>verification</strong> of these signatures using the following major components:</p>
+<ul>
+<li><strong>Rekor</strong>: Rekor is a <strong>transparency log</strong> (similar to blockchain but <strong>not</strong> blockchain) and a timestamping service which keeps <strong>signed metadata</strong> in a ledger which is <strong>non-temperable</strong> and can be <strong>searched</strong>. The complete key signing life cycle for each user is recorded here so anybody (an artifact consumer, any end-user etc.) can very easily <strong>verify</strong> the signature and <strong>establish trust</strong>. Furthermore you can also use Rekor even if you want to use your own keys for signing, which would be the case in most enterprise settings.</li>
+<li><strong>Fulcio</strong>: Fulcio is a <strong>root CA / OIDC PKI</strong> which is used for issuing <strong>temporary certificates</strong> to any <strong>identity</strong> (like OIDC) that has been <strong>authorized</strong> and <strong>publishes</strong> the whole transaction in the Rekor transparency log.</li>
+<li><strong>Multiple Clients</strong>: Sigstore provides clients for all mainstream programming languages like Java, Javascript, Python, Go, Ruby etc. It allows you to <strong>sign</strong> your <strong>git commits</strong> and <strong>tags</strong> using <a href="https://github.com/sigstore/gitsign">Gitsign</a> and also has a special client called <a href="https://github.com/sigstore/cosign">Cosign</a> which enables <strong>container/artifact signing, verification</strong> and <strong>storage</strong> in an OCI registry and supports <strong>in-toto/SLSA attestations</strong>. You can also connect Cosign to your <strong>Cloud KMS</strong> or <strong>K8s secrets</strong> and use it to sign your <strong>helm charts, tekton bundles,</strong> pretty much anything that is stored in a container registry - more information <a href="https://github.com/sigstore/cosign#cosign-is-10">here</a>.</li>
+</ul>
+<p>Sigstore is already supported by <strong>helm charts, kubernetes</strong> and has a <strong>policy controller</strong> enabling you to deploy images that you are sure have been signed by someone you trust (your build system, Ops lead, manager, etc.). It has also already found support in other important corners of the software ecosystem, for e.g. <strong>npm</strong> plans to not only use sigstore to sign their artifacts but also their build provenance, <strong>maven central</strong> and <strong>python</strong> have also started using it.</p>
+<p>You can deploy a private instance of sigstore or use a <strong>community managed publicly available instance</strong> of <a href="https://rekor.sigstore.dev/">rekor</a>, <a href="https://fulcio.sigstore.dev/">fulcio</a> and <a href="https://oauth2.sigstore.dev/">oidc</a> to get started.</p>
+<h2 id="tuf---the-update-framework">TUF - The Update Framework</h2>
+<p>TUF solves the same problem as sigstore - signing and verification of software artifacts, but has a greater focus on <strong>resiliency</strong> in case of a compromise. It aims to <strong>reduce impact</strong> of a compromise and enable <strong>secure recovery</strong> from a compromise.</p>
+<h3 id="sigstore-vs-tuf">Sigstore vs. TUF</h3>
+<p>While Sigstore allows for key signing using multiple techniques including identity and focuses on making signing and verification easier, TUF typically <strong>requires the developers to manage the keys</strong> themselves but makes sure that the impact of a compromise is minimal by having a design which allows for <strong>explicit</strong> and <strong>implicit key revocation</strong>, <strong>multi-signature trust</strong> and <strong>responsibility segregation</strong>. Sigstore actually uses <strong>TUF</strong> as <strong>root of trust</strong> for Fulcio and Rekor. Furthermore the releases of Fulcio, Rekor and Cosign are signed using TUF.</p>
+<p>TUF has been in the wild for much longer than sigstore while sigstore has seen great adoption recently because of its usability. Both projects are collaborating and you can see co-deployments in the future.</p>
+<h3 id="implementations-and-deployments">Implementations and Deployments</h3>
+<p>You can find TUF implementations in many mainstream programming languages including Python, Go, Rust. TUF has seen great use inside the <strong>Automotive</strong> and <strong>IoT</strong> space as they need secure OTA updates, for e.g. <a href="https://uptane.github.io/">Uptane</a>, <a href="https://github.com/advancedtelematic/aktualizr">Aktualizr</a> (C++ Uptane) which is also used in <a href="https://www.automotivelinux.org/">Automotive grade linux</a>.</p>
+<h2 id="final-words">Final Words</h2>
+<p>If you managed to read until here, I hope I was able to convince you of the value of software supply chain security and provide you an overview of the tools that would help you along the journey. While none of these tools alone will give you the security posture you need, the combination of them is a lethal force against attacks and will reduce your attack surface area to the minimal while providing you an easier path to remediation in case an attack does go through. Be sure to also follow updates and guidelines from OpenSSF as this community grows.</p>
+
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/amulya-bhatia.jpg" alt=""/>
+            <figcaption>
+                <h3>Amulya Bhatia<span>
+                    <a target="_blank"  href="https://github.com/iamulya"><img class="github-author" src="/images/GitHub_blk.png"></a>
+                    
+                    
+                </span></h3>
+                <p>Senior Solution Architect</p>
+
+            </figcaption>
+        </figure>
+    </div>
+    
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/cybersecurity/">Cybersecurity</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/devsecops/">DevSecOps</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/devops/">DevOps</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/software-supply-chain/">Software Supply Chain</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/software-lifecycle/">Software Lifecycle</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/NTT-Data-white.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2023 NTT DATA Deutschland AG - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</body>
+
+</html>

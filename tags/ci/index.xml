@@ -10,19 +10,19 @@
     <lastBuildDate>Mon, 20 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/tags/ci/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Accessing private resources on AWS</title>
-      <link>https://nttdata-dach.github.io/posts/yk-ssm/</link>
+      <link>https://nttdata-dach.github.io/posts/yk-accessingprivateressourcesonaws/</link>
       <pubDate>Mon, 20 Jun 2022 00:00:00 +0000</pubDate>
       
-      <guid>https://nttdata-dach.github.io/posts/yk-ssm/</guid>
+      <guid>https://nttdata-dach.github.io/posts/yk-accessingprivateressourcesonaws/</guid>
       <description>There are several ways to access private resources (located in private subnets within your VPC) on AWS. Let us discuss solutions based on Systems Manger (SSM) and SSH.</description>
     </item>
     
     <item>
       <title>Building Container Images Dockerless and Rootless with Buildah</title>
-      <link>https://nttdata-dach.github.io/posts/ab-container-rootless-buildah/</link>
+      <link>https://nttdata-dach.github.io/posts/ab-containerrootlessbuildah/</link>
       <pubDate>Mon, 12 Jul 2021 00:00:00 +0000</pubDate>
       
-      <guid>https://nttdata-dach.github.io/posts/ab-container-rootless-buildah/</guid>
+      <guid>https://nttdata-dach.github.io/posts/ab-containerrootlessbuildah/</guid>
       <description>“You cannot use Docker in our enterprise CI platform, now way! It needs root rights, thus is not secure; forget it!”, said our DevOps Chief some months ago… So we had a problem.</description>
     </item>
     

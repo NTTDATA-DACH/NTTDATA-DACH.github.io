@@ -437,6 +437,14 @@ p {
     border-top-right-radius: 0;
 }
 
+.linkedin-author {
+    width: 25px;
+    height: auto;
+    top: 5px;
+    left: 10px;
+    margin-left: 10px;
+    border-top-right-radius: 0;
+}
 
 #videoBG {
     object-fit: cover;
