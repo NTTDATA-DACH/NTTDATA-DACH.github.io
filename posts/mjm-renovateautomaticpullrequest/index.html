@@ -1,0 +1,596 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Using Renovate to scale up automatic pull request creation on GitHub  </title>
+
+  <meta charset="utf-8">
+
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+</head>
+
+<body>
+  <header>
+    <a href="/"><img src="/images/NTT-Data-white.png"></a>
+
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+    </nav>
+  </header>
+
+
+
+  <div class="emobanner article">
+    <h1>
+        <span class="pre">13.04.2023
+        
+         - Mikel Jason Münnekhoff
+        
+        </span>
+        Using Renovate to scale up automatic pull request creation on GitHub
+        
+    </h1>
+    <div class="article-header-img" style="background: url('/posts/img/MJM-RenovateAutomaticPullRequest/title-image.jpg') no-repeat center center; background-size: cover"></div>
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            <p>Running infrastructure and applications is hard, but running those on large scale is even harder. Having multiple environments in different versions and configurations makes installing and operating even a single project a non-trivial task. CI/CD pipelines and the GitOps approach do help out here, but how can we run them at scale? Follow along and find out, how we run our infrastructure and support applications in several different instances, using <a href="https://github.com/renovatebot/Renovate">Renovate</a> to automate pull requests on GitHub (Enterprise Server).</p>
+<h1 id="the-scenario">The Scenario</h1>
+<p>Allow me to explain our setup briefly. We are a team of about 20 individuals developing, supporting and operating our client&rsquo;s cloud framework. This framework is used for multiple applications (we don&rsquo;t know in detail), for which multiple environments exist. In this article, we will focus on the Kubernetes part only, as this is the easier one. Regarding our cluster contents, we as the platform team manage some basic applications like storage and network drivers, observability and security. All our charts are stored in a <a href="https://monorepo.tools/">monorepo</a> called <em>charts</em>. Everything related to the specific purpose application, like databases, is stored in their specific monorepos, called <em>charts-A</em> for application <em>A</em>. Every application has multiple stages or environments. As we follow the GitOps approach, we have one repository for each application, e.g. <code>k8s-A-dev</code> contains all references to the deployed charts - generic and specific - for application A in its development cluster. In particular, we use <a href="https://github.com/argoproj/argo-cd">ArgoCD</a> for this.</p>
+<p>
+  <img src="/posts/img/MJM-RenovateAutomaticPullRequest/repos.png" alt="">
+
+</p>
+<p>With a growing number of applications onboarded to the cloud framework and discussions of using this not only on the German market but rolling it out for other countries, too, we need the update management to scale as well. Sp far, this had been done manually, resulting in the repetitive work of creating hundreds of pull requests.</p>
+<h1 id="dependabot-vs-renovate">Dependabot vs Renovate</h1>
+<p>You might already know <a href="https://github.com/dependabot/dependabot-core">dependabot</a>, the magic tool that creates pull requests (PRs) on public GitHub when you don&rsquo;t care about your last experimental project in a major programming language with package management. Sooner or later, you find an email for a PR that fixes a known security flaw by patching one of your dependencies. Luckily, you not only get the information that there is an update available, but you get a full PR including a fixing commit and some explanations in the PR body. Although you might find these to be annoying for a project you cared about one weekend three years ago, we wanted to have this for our repositories.</p>
+<p>
+  <img src="/posts/img/MJM-RenovateAutomaticPullRequest/dependabot.png" alt="">
+
+</p>
+<p>dependabot is a GitHub product, so we thought it might be the best tool for us to use. It has some nice integrations with the GitHub interface that no other tool can offer, so why not? Because it neither supports what we need nor allows enough customization to make it work on our side. You can find the full list of supported formats in the <a href="https://docs.github.com/en/enterprise-server@3.8/code-security/dependabot/dependabot-version-updates/about-dependabot-version-updates#supported-repositories-and-ecosystems">GitHub docs</a> (this one is for GitHub Enterprise Server 3.8). You cannot find anything regarding ArgoCD, helm or Kubernetes on the list.</p>
+<p>The next big thing we researched was <a href="https://github.com/renovatebot/Renovate">Renovate</a>. Renovate describes itself as a &ldquo;Universal dependency update tool that fits into your workflows&rdquo;. Indeed, it supports not only a lot of package managers but also multiple platforms like GitHub, GitLab, BitBucket as well as AWS CodeCommit or Azure DevOps. Besides its managed service, Renovate can be used privately, so no big issue of connecting something from the outside to our GitHub Enterprise Server (GHES), looking good so far. So we started configuring it to see what we can achieve.</p>
+<h1 id="lets-go-deep">Let&rsquo;s Go Deep</h1>
+<p>We started setting up Renovate for our Kubernetes environment.  Each EKS cluster has a corresponding <em>application repository</em>. These contain only namespaces and ArgoCD application definitions. These look like this:
+<p style="margin-top: -1.5em;">
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">argoproj.io/v1alpha1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Application</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">coredns</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">argo-A-dev</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">source</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="l">target</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">repoURL</span><span class="p">:</span><span class="w"> </span><span class="l">https://github.company.com/org/charts.git</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">targetRevision</span><span class="p">:</span><span class="w"> </span><span class="l">coredns/v1.2.3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l">charts/coredns/chart</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">destination</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l">https://[...].eks.amazonaws.com</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">kube-system</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">helm</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">values</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">      </span><span class="w">      </span><span class="p">[</span><span class="l">...]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">syncPolicy</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">automated</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">prune</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">selfHeal</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span></code></pre></div>
+</p></p>
+<p>Here, we define that we deploy an instance of <em>coredns</em>. The helm chart is located in our generic <em>charts</em> repository. These are monorepos with a couple of helm charts in subdirectories. Here, we see <code>path: charts/coredns/chart</code> as the relative path in the charts repository. The <code>targetRevision</code> describes the version of the chart as a git revision. <code>coredns/v1.2.3</code> is a tag in the repository, which lives alongside other version tags of the same application, e.g. <code>coredns/v0.1.2</code>, and tags of other applications in the same repository, e.g. <code>prometheus/v1.1.1</code>.</p>
+<p>The ultimate goal for now is: Whenever there is a new internal version of <code>coredns</code> on our charts repository, Renovate opens a pull request to all application repositories to change the version in the ArgoCD application. Once this is merged, ArgoCD takes it away and updates the instances automatically.</p>
+<h1 id="basic-setup-as-github-action">Basic Setup as GitHub Action</h1>
+<p>Since Renovate offers an <a href="https://github.com/renovatebot/github-action">official GitHub Action</a>, we started with this right away. Usually, one would configure Renovate in the repository containing the dependency declarations. For us, this would mean a few dozen configurations, one for each application repository. We chose the approach to not touch the application repositories at all, but to centralize the config to where the action is executed: our charts repository. The initial setup needed the following steps (assuming you have your action runners configured properly):</p>
+<ol>
+<li>Create a feature branch on the charts repository. For the developing/testing process, we did not need to merge to master.</li>
+<li>Add a GitHub workflow that triggers the Renovate action
+<ul>
+<li>For accessing the GHES, we configured a GitHub app and added the ID and private key to the repository&rsquo;s secrets. Then, we use <a href="https://github.com/tibdex/github-app-token">this GitHub action</a> to get an access token that can then be used by Renovate.</li>
+<li>Provide the access configuration as an environment variable to the action. Unfortunately, we were unsuccessful in integrating single environment variables (just the access token) in the configuration file. Luckily, Renovate offers several ways to provide configurations that are all merged into one during the execution. This allows to setup of the GHES access in the action definition.</li>
+<li>Set the trigger of the workflow to every push on the feature branch. This is useful for testing and Renovate is designed to run multiple times on the same scenario, so we don&rsquo;t expect any downsides here.</li>
+<li>Set the log level to debug via the environment variable.</li>
+</ul>
+</li>
+<li>Add the file <code>.github/Renovate.json5</code> to the repository. This is one of the default files the script is looking for. We chose <code>json5</code> over <code>json</code> to be able to add comments.</li>
+</ol>
+<p>The workflow definition should look like this:
+<p style="margin-top: -1.5em;">
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Renovate</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">on</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">workflow_dispatch</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">push</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">jobs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">Renovate</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l">self-hosted</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Checkout</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">actions/checkout@v3</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Generate Token</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l">generate_token</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">tibdex/github-app-token@v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">with</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">app_id</span><span class="p">:</span><span class="w"> </span><span class="l">${{ secrets.APP_BOT_ID }}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">private_key</span><span class="p">:</span><span class="w"> </span><span class="l">${{ secrets.APP_BOT_PRIVATE_KEY }}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Self-hosted Renovate</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">renovatebot/github-action@v34.82.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">env</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">LOG_LEVEL</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;debug&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">RENOVATE_HOST_RULES</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;[{&#34;matchHost&#34;: &#34;https://github.company.com/&#34;, &#34;token&#34;: &#34;${{ steps.generate_token.outputs.token }}&#34;}]&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">with</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">configurationFile</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;${{ github.workspace }}/.github/renovate.json5&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l">${{ steps.generate_token.outputs.token }}</span><span class="w">
+</span></span></span></code></pre></div>
+</p></p>
+<p>Let&rsquo;s jump to the Renovate configuration stored in <code>.github/renovate.json5</code>. You can find all available parameters and their respective descriptions in the <a href="https://docs.renovatebot.com/configuration-options/">official Renovate docs</a>. We will go through the minimal setup parameters one by one:</p>
+<ul>
+<li><code>dryRun</code>: The very first setup is to deactivate creating PRs to not annoy other team members. The debug log is sufficient to see available updates, so let&rsquo;s not create PRs that send emails to users watching the app repositories or being auto-assigned (by other tools).</li>
+<li><code>repositories</code>: Renovate needs to know which repositories to check and update. There is an auto-discovery feature, but we want to have fine-grained control over its scope, because we have a centralized configuration.</li>
+<li><code>requireConfig</code>: We tell Renovate to not expect a configuration file in the application repositories.</li>
+<li><code>username</code> &amp; <code>gitAuthor</code>: Commits authored by the action will be filed with this user and email address. This is like running <code>git config --global user.name</code> or <code>user.email</code> on your local machine.</li>
+<li><code>onboarding</code>: There&rsquo;s an onboarding feature for repositories that creates pull requests to setup a proper configuration, but we don&rsquo;t want this.</li>
+<li><code>platform</code>, <code>gitUrl</code> <code>endpoint</code>: Enable Renovate to talk to our GHES instance.</li>
+<li><code>baseBranches</code>: For development purposes, don&rsquo;t watch the default branches that ArgoCD watches as well, but a new one. This allows to play around with the versions without any effect on the clusters.</li>
+</ul>
+<p>Using all of these options, our first configuration looked like this:</p>
+<p style="margin-top: -1.5em;">
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;$schema&#34;</span><span class="p">:</span> <span class="s2">&#34;https://docs.renovatebot.com/renovate-schema.json&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;username&#34;</span><span class="p">:</span> <span class="s2">&#34;bot&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;gitAuthor&#34;</span><span class="p">:</span> <span class="s2">&#34;bot &lt;bot@users.noreply.github.com&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;onboarding&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;requireConfig&#34;</span><span class="p">:</span> <span class="s2">&#34;ignored&#34;</span><span class="p">,</span> <span class="c1">// no need for config in the app repos, we have everything here
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="nt">&#34;platform&#34;</span><span class="p">:</span> <span class="s2">&#34;github&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;repositories&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;org/k8s-A-dev&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">],</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;gitUrl&#34;</span><span class="p">:</span> <span class="s2">&#34;endpoint&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;endpoint&#34;</span><span class="p">:</span> <span class="s2">&#34;https://github.company.com/api/v3/&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;dryRun&#34;</span><span class="p">:</span> <span class="s2">&#34;full&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;baseBranches&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;feat/renovate&#34;</span><span class="p">],</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
+</p>
+<h1 id="learning-from-the-first-attempt">Learning from the first attempt</h1>
+<p>With all of these parameters in place, the action was ready to run by pushing the feature branch to the GHES. The results of the run can be viewed in the action&rsquo;s log. First, we see the action picking up all configurations and merging them into one. So far so good, nothing unexpected. Scrolling further down, we get to the first unwanted behavior: As per default, Renovate runs with most so-called <em>managers</em>. Managers correspond to package managers and here means which language or dependency type the action is looking for.</p>
+<!-- raw HTML omitted -->
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">DEBUG: Using file match: (^|/)tasks/[^/]+\.ya?ml$ for manager ansible (repository=org/k8s-A-dev)
+</span></span><span class="line"><span class="cl">DEBUG: Using file match: (^|/)requirements\.ya?ml$ for manager ansible-galaxy (repository=org/k8s-A-dev)
+</span></span><span class="line"><span class="cl">DEBUG: Using file match: (^|/)galaxy\.ya?ml$ for manager ansible-galaxy (repository=org/k8s-A-dev)
+</span></span><span class="line"><span class="cl">DEBUG: Using file match: (^|/)\.tool-versions$ for manager asdf (repository=org/k8s-A-dev)
+</span></span><span class="line"><span class="cl">DEBUG: Using file match: azure.*pipelines?.*\.ya?ml$ for manager azure-pipelines (repository=org/k8s-A-dev)
+</span></span><span class="line"><span class="cl">DEBUG: Using file match: (^|/)batect(-bundle)?\.yml$ for manager batect (repository=org/k8s-A-dev)
+</span></span><span class="line"><span class="cl">[...]
+</span></span><span class="line"><span class="cl">DEBUG: Matched 10 file(s) for manager github-actions: [...] (repository=org/k8s-A-dev)
+</span></span><span class="line"><span class="cl">DEBUG: Matched 1 file(s) for manager helm-values: apps/values.yaml (repository=org/k8s-A-dev)
+</span></span><span class="line"><span class="cl">DEBUG: Matched 1 file(s) for manager helmv3: apps/Chart.yaml (repository=org/k8s-A-dev)
+</span></span></code></pre></div><p>Although we seem to have nothing but our ArgoCD applications in the app repositories (so they find nothing and stay silent), some managers kick in for some supporting content: GitHub Actions and helm metadata. We don&rsquo;t want PRs for outdated actions or metadata. Unfortunately, our ArgoCD applications are not picked up. Thus, we need to tune the config. Fortunately, we can simply enable the <a href="https://docs.renovatebot.com/modules/manager/argocd/"><code>argocd</code> manager</a>. To do so, we need to set the managers and configure the ArgoCD one to match files by path:</p>
+<p style="margin-top: -1.5em;">
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="err">[...]</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;enabledManagers&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;argocd&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">],</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;argocd&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;fileMatch&#34;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&#34;apps/.*\\.ya?ml$&#34;</span><span class="p">]</span>
+</span></span><span class="line"><span class="cl">  <span class="p">},</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
+</p>
+<p>Running this again leads to our applications being picked up. By path, also <code>Chart.yaml</code> and <code>values.yaml</code> are matched, but the manager correctly detects that these are no ArgoCD files and disregards them. We can see this when the actual package files are the matched files reduced by 2.</p>
+<!-- raw HTML omitted -->
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-go" data-lang="go"><span class="line"><span class="cl"><span class="nx">DEBUG</span><span class="p">:</span> <span class="nx">Using</span> <span class="nx">file</span> <span class="nx">match</span><span class="p">:</span> <span class="nx">apps</span><span class="o">/</span><span class="p">.</span><span class="o">*</span><span class="err">\</span><span class="p">.</span><span class="nx">ya</span><span class="err">?</span><span class="nx">ml</span><span class="err">$</span> <span class="k">for</span> <span class="nx">manager</span> <span class="nf">argocd</span> <span class="p">(</span><span class="nx">repository</span><span class="p">=</span><span class="nx">org</span><span class="o">/</span><span class="nx">k8s</span><span class="o">-</span><span class="nx">A</span><span class="o">-</span><span class="nx">dev</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">DEBUG</span><span class="p">:</span> <span class="nx">Matched</span> <span class="mi">42</span> <span class="nf">file</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span> <span class="k">for</span> <span class="nx">manager</span> <span class="nx">argocd</span><span class="p">:</span> <span class="nx">apps</span><span class="o">/</span><span class="nx">Chart</span><span class="p">.</span><span class="nx">yaml</span><span class="p">,</span> <span class="nx">apps</span><span class="o">/</span><span class="nx">templates</span><span class="o">/</span><span class="nx">apps</span><span class="o">/</span><span class="nx">aws</span><span class="o">-</span><span class="nx">alb</span><span class="o">-</span><span class="nx">controller</span><span class="p">.</span><span class="nx">yaml</span><span class="p">,</span> <span class="p">[</span><span class="o">...</span><span class="p">]</span> <span class="p">(</span><span class="nx">repository</span><span class="p">=</span><span class="nx">org</span><span class="o">/</span><span class="nx">k8s</span><span class="o">-</span><span class="nx">A</span><span class="o">-</span><span class="nx">dev</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">DEBUG</span><span class="p">:</span> <span class="nx">Found</span> <span class="nx">argocd</span> <span class="kn">package</span> <span class="nf">files</span> <span class="p">(</span><span class="nx">repository</span><span class="p">=</span><span class="nx">org</span><span class="o">/</span><span class="nx">k8s</span><span class="o">-</span><span class="nx">A</span><span class="o">-</span><span class="nx">dev</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="nx">DEBUG</span><span class="p">:</span> <span class="nx">Found</span> <span class="mi">40</span> <span class="kn">package</span> <span class="nf">file</span><span class="p">(</span><span class="nx">s</span><span class="p">)</span> <span class="p">(</span><span class="nx">repository</span><span class="p">=</span><span class="nx">org</span><span class="o">/</span><span class="nx">k8s</span><span class="o">-</span><span class="nx">A</span><span class="o">-</span><span class="nx">dev</span><span class="p">)</span>
+</span></span></code></pre></div><p>Further investigation of the action log leads to the second issue with the minimalistic setup, which is more severe. The manager <em>argocd</em> had been active, so we expected or, more realistically, hoped to see available updates or at least that everything&rsquo;s up to date. Indeed, Renovate did find our ArgoCD application files, but did not manage to compare versions properly.</p>
+<!-- raw HTML omitted -->
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="cl">DEBUG: packageFiles with updates (repository=org/k8s-A-dev, baseBranch=feat/renovate)
+</span></span><span class="line"><span class="cl">        &#34;config&#34;: {
+</span></span><span class="line"><span class="cl">          &#34;argocd&#34;: [
+</span></span><span class="line"><span class="cl">            [...]
+</span></span><span class="line"><span class="cl">            {
+</span></span><span class="line"><span class="cl">              &#34;packageFile&#34;: &#34;apps/templates/apps/coredns.yml&#34;,
+</span></span><span class="line"><span class="cl">              &#34;deps&#34;: [
+</span></span><span class="line"><span class="cl">                {
+</span></span><span class="line"><span class="cl">                  &#34;depName&#34;: &#34;https://github.company.com/org/charts&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;currentValue&#34;: &#34;coredns/v0.1.1&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;datasource&#34;: &#34;git-tags&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;depIndex&#34;: 0,
+</span></span><span class="line"><span class="cl">                  &#34;updates&#34;: [],
+</span></span><span class="line"><span class="cl">                  &#34;warnings&#34;: [],
+</span></span><span class="line"><span class="cl">                  &#34;versioning&#34;: &#34;semver&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;skipReason&#34;: &#34;invalid-value&#34;
+</span></span><span class="line"><span class="cl">                }
+</span></span><span class="line"><span class="cl">              ]
+</span></span><span class="line"><span class="cl">            },
+</span></span></code></pre></div><p>With <code>&quot;skipReason&quot;: &quot;invalid-value&quot;</code>, the log gave us the hint that they cannot parse the versions. By default, Renovate expects <a href="https://semver.org">semantic versioning</a>, to which we don&rsquo;t strictly comply with our monorepo and scoped tags. For this, Renovate allows us to adjust the versioning structure. The <a href="https://docs.renovatebot.com/modules/versioning/">Renovate docs</a> provide some presets of versioning, but for individual cases like ours, we can use the <code>regex</code> variant. With this, we are required to configure a regular expression that matches some named capture groups. We are interested in <code>major</code>, <code>minor</code> and <code>patch</code> for the version, <code>build</code> and <code>prerelease</code> are irrelevant in our use case. In addition, there is the named group <code>compatibility</code>. According to the docs, this can be used to define <em>build compatibility</em> that will never change, e.g. <code>v1.2.3-linux</code> should never be updated to something with <code>-windows</code> as the suffix. We used this option and let the application scope of the version tag match the <code>compatibility</code> group. Our used versioning regex is
+<p style="margin-top: -1.5em;">
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="err">[...]</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;versioning&#34;</span> <span class="p">:</span> <span class="s2">&#34;regex:^(?&lt;compatibility&gt;.*)/v?(?&lt;major&gt;\\d+)\\.(?&lt;minor&gt;\\d+)\\.(?&lt;patch&gt;\\d+)?$&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
+</p></p>
+<p>This finally read and analyzed our applications correctly:</p>
+<!-- raw HTML omitted -->
+<p style="margin-top: -1.5em;">
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">DEBUG: packageFiles with updates (repository=org/k8s-A-dev, baseBranch=feat/renovate)
+</span></span><span class="line"><span class="cl">        &#34;config&#34;: {
+</span></span><span class="line"><span class="cl">          &#34;argocd&#34;: [
+</span></span><span class="line"><span class="cl">            [...]
+</span></span><span class="line"><span class="cl">            {
+</span></span><span class="line"><span class="cl">              &#34;packageFile&#34;: &#34;apps/templates/apps/aws-alb-controller.yaml&#34;,
+</span></span><span class="line"><span class="cl">              &#34;deps&#34;: [
+</span></span><span class="line"><span class="cl">                {
+</span></span><span class="line"><span class="cl">                  &#34;depName&#34;: &#34;https://github.company.com/org/charts&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;currentValue&#34;: &#34;aws-lb-controller/v0.0.2&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;datasource&#34;: &#34;git-tags&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;depIndex&#34;: 0,
+</span></span><span class="line"><span class="cl">                  &#34;updates&#34;: [],
+</span></span><span class="line"><span class="cl">                  &#34;warnings&#34;: [],
+</span></span><span class="line"><span class="cl">                  &#34;versioning&#34;: &#34;regex:^(?&lt;compatibility&gt;.*)/v?(?&lt;major&gt;\\d+)\\.(?&lt;minor&gt;\\d+)\\.(?&lt;patch&gt;\\d+)?$&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;sourceUrl&#34;: &#34;https://github.company.com/org/charts&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;currentVersion&#34;: &#34;aws-lb-controller/v0.0.2&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;fixedVersion&#34;: &#34;aws-lb-controller/v0.0.2&#34;
+</span></span><span class="line"><span class="cl">                }
+</span></span><span class="line"><span class="cl">              ]
+</span></span><span class="line"><span class="cl">            },
+</span></span><span class="line"><span class="cl">            {
+</span></span><span class="line"><span class="cl">              &#34;packageFile&#34;: &#34;apps/templates/apps/coredns.yml&#34;,
+</span></span><span class="line"><span class="cl">              &#34;deps&#34;: [
+</span></span><span class="line"><span class="cl">                {
+</span></span><span class="line"><span class="cl">                  &#34;depName&#34;: &#34;https://github.company.com/org/charts&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;currentValue&#34;: &#34;coredns/v0.1.1&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;datasource&#34;: &#34;git-tags&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;depIndex&#34;: 0,
+</span></span><span class="line"><span class="cl">                  &#34;updates&#34;: [
+</span></span><span class="line"><span class="cl">                    {
+</span></span><span class="line"><span class="cl">                      &#34;bucket&#34;: &#34;non-major&#34;,
+</span></span><span class="line"><span class="cl">                      &#34;newVersion&#34;: &#34;coredns/v0.1.2&#34;,
+</span></span><span class="line"><span class="cl">                      &#34;newValue&#34;: &#34;coredns/v0.1.2&#34;,
+</span></span><span class="line"><span class="cl">                      &#34;newDigest&#34;: &#34;22c39efb005a9c740d4eca008b527def2df264f3&#34;,
+</span></span><span class="line"><span class="cl">                      &#34;newMajor&#34;: 0,
+</span></span><span class="line"><span class="cl">                      &#34;newMinor&#34;: 1,
+</span></span><span class="line"><span class="cl">                      &#34;updateType&#34;: &#34;patch&#34;,
+</span></span><span class="line"><span class="cl">                      &#34;branchName&#34;: &#34;renovate/https-github.company.com-charts-0.x&#34;
+</span></span><span class="line"><span class="cl">                    }
+</span></span><span class="line"><span class="cl">                  ],
+</span></span><span class="line"><span class="cl">                  &#34;warnings&#34;: [],
+</span></span><span class="line"><span class="cl">                  &#34;versioning&#34;: &#34;regex:^(?&lt;compatibility&gt;.*)/v?(?&lt;major&gt;\\d+)\\.(?&lt;minor&gt;\\d+)\\.(?&lt;patch&gt;\\d+)?$&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;sourceUrl&#34;: &#34;https://github.company.com/org/charts&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;currentVersion&#34;: &#34;coredns/v0.1.1&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;isSingleVersion&#34;: true,
+</span></span><span class="line"><span class="cl">                  &#34;fixedVersion&#34;: &#34;coredns/v0.1.1&#34;
+</span></span><span class="line"><span class="cl">                }
+</span></span><span class="line"><span class="cl">              ]
+</span></span><span class="line"><span class="cl">            },
+</span></span></code></pre></div>
+</p>
+<p>The third major problem with this setup is not easy to see when you&rsquo;re thrilled that it finally works after dozens of attempts. To be honest, we did not learn this with <code>dryRun</code> activated, but with real PRs. Now that we know, we see this quite obviously in the log. Look up again and read the section <code>branchName</code> for the coreDNS update very carefully. We notice that PRs are grouped by the detected dependency. In our simple case, everything comes from the charts repository, and this means all dependency updates are handled in one PR. From our real-run experience, we can tell this also means only one commit. This does not make sense for a couple of reasons:</p>
+<ul>
+<li>We don&rsquo;t want to mix up multiple applications in one because
+<ul>
+<li>We use and enforce <a href="https://www.conventionalcommits.org/en/v1.0.0/">conventional commits</a> with the application as scope - we cannot comply with more than one application in one commit (example: <code>feat(coredns): update node selector</code>).</li>
+<li>If two individuals are working on different applications that should be merged, the responsibility for doing so is on two different individuals. Therefore, we want two PRs with separate approval processes.</li>
+<li>We don&rsquo;t want to have all environments up to date immediately. Maybe, we need to hold back one version in a productive environment. If so, the whole PR automation would fail since it would pick up the unwanted update all the time without the option to selectively ignore one.</li>
+</ul>
+</li>
+<li>We don&rsquo;t want to mix up multiple versions. We have other PR automation tools in place, including one that automatically closes PRs on certain conditions. While it might be fairly safe to merge patches automatically (in some environments), we definitely don&rsquo;t want to do this for major versions.</li>
+</ul>
+<p>To summarize, we are pretty restricted with the <em>argocd</em> manager. Take a short look in the source code <a href="https://github.com/renovatebot/Renovate/blob/eee2b0534aca146782c08d3f396ff5e462c76da2/lib/modules/manager/argocd/extract.ts#L38-L67">here</a> to see what it actually matches: <code>depName</code> and <code>currentValue</code> (the version) from the files, plus it sets the <code>datasource</code> to git tags as fixed value (you likely don&rsquo;t know these parameters yet, but they will make perfectly sense very shortly). We simply don&rsquo;t have enough flexibility for our setup, so let&rsquo;s try another strategy.</p>
+<h1 id="use-regex-manager">Use regex manager</h1>
+<p>For any dependency for which no other manager is suitable, the regex manager comes to the rescue. Here we do everything on our own. As we did it for the versioning schema, we needed to write some regular expressions that match some pre-defined named capture groups. Please find the documentation of the regex manager and all available named capture groups <a href="https://docs.renovatebot.com/modules/manager/regex/">here</a>. For our scenario, we do care about the following groups:</p>
+<ul>
+<li><code>depName</code>: This is the real name of the dependency, e.g. <em>coredns</em> or <em>prometheus</em>.</li>
+<li><code>packageName</code>: This will hold the charts repository (or any other repo that contains the dependency) URL. Renovate needs to know where to fetch content from. If this is empty, this will be filled with <code>depName</code> which is the reason for the URL being stored in <code>depName</code> when using the argo manager.</li>
+<li><code>currentValue</code>: This is the full version, e.g. <code>coredns/v1.2.3</code></li>
+<li><code>datasourceTemplate</code>: We want to set this to <em>GitHub tags</em> as a fixed setting because GitHub is the only source we have (no OCI repository or else).</li>
+</ul>
+<p>We could set the fixed value directly. For actual matching, we needed to provide an array of strings as <code>matchStrings</code> parameter. Matching all mentioned values in one regex might be too complex, if not impossible. Therefore, we must set <code>matchStringsStrategy</code> to <code>combination</code>. This enforces that target files match all provided expressions in our array, not only one as per default (this would be strategy <code>any</code>). This also allowed us to restrict the dependency matching further. We just added another regex to enforce that we only match files with <code>kind: Application</code> and <code>apiVersion: argoproj.io/...</code>. Remember: The argocd manager filtered two YAML files, but we cannot expect that from simple regex and ensured no non-argocd files on our own. Plus without a tailing <code>$</code>, we would match <code>kind: ApplicationSet</code> here, too.</p>
+<p>Without further ado, bring on the regex manager config!</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="err">[...]</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;regexManagers&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;fileMatch&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;apps/.*\\.ya?ml$&#34;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">],</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;datasourceTemplate&#34;</span><span class="p">:</span> <span class="s2">&#34;git-tags&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;matchStringsStrategy&#34;</span><span class="p">:</span> <span class="s2">&#34;combination&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;matchStrings&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;apiVersion: [\&#34;]?argoproj.io[\&#34;]?&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;kind: [\&#34;]?Application[\&#34;]?&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;repoURL: [\&#34;]?(?&lt;packageName&gt;[^\&#34;\\s]+)[\&#34;]?\\n&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;targetRevision: [\&#34;]?(?&lt;currentValue&gt;[^\&#34;\\s]+)[\&#34;]?\\n&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;metadata:\\s*\\n\\s{2}name:\\s+[\&#34;]?(?&lt;depName&gt;[^\&#34;\\s]+)[\&#34;]?\\n&#34;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">],</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Commit the changes and push those to fire up a new Renovate run. Taking a look at the new log, we managed to mitigate our issue of combining all changes into one branch and commit. Now, all update branches are named after the application it takes care of:</p>
+<p style="margin-top: -1.5em;">
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-text" data-lang="text"><span class="line"><span class="cl">DEBUG: packageFiles with updates (repository=org/k8s-A-dev, baseBranch=feat/renovate)
+</span></span><span class="line"><span class="cl">        &#34;config&#34;: {
+</span></span><span class="line"><span class="cl">          &#34;argocd&#34;: [
+</span></span><span class="line"><span class="cl">            [...]
+</span></span><span class="line"><span class="cl">            {
+</span></span><span class="line"><span class="cl">              &#34;packageFile&#34;: &#34;apps/templates/apps/coredns.yml&#34;,
+</span></span><span class="line"><span class="cl">              &#34;deps&#34;: [
+</span></span><span class="line"><span class="cl">                {
+</span></span><span class="line"><span class="cl">                  &#34;depName&#34;: &#34;coredns&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;packageName&#34;: &#34;https://github.company.com/org/charts&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;currentValue&#34;: &#34;coredns/v0.1.1&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;datasource&#34;: &#34;git-tags&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;replaceString&#34;: &#34;targetRevision: coredns/v0.1.1\n&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;depIndex&#34;: 0,
+</span></span><span class="line"><span class="cl">                  &#34;updates&#34;: [
+</span></span><span class="line"><span class="cl">                    {
+</span></span><span class="line"><span class="cl">                      &#34;bucket&#34;: &#34;non-major&#34;,
+</span></span><span class="line"><span class="cl">                      &#34;newVersion&#34;: &#34;coredns/v0.1.2&#34;,
+</span></span><span class="line"><span class="cl">                      &#34;newValue&#34;: &#34;coredns/v0.1.2&#34;,
+</span></span><span class="line"><span class="cl">                      &#34;newDigest&#34;: &#34;22c39efb005a9c740d4eca008b527def2df264f3&#34;,
+</span></span><span class="line"><span class="cl">                      &#34;newMajor&#34;: 0,
+</span></span><span class="line"><span class="cl">                      &#34;newMinor&#34;: 1,
+</span></span><span class="line"><span class="cl">                      &#34;updateType&#34;: &#34;patch&#34;,
+</span></span><span class="line"><span class="cl">                      &#34;branchName&#34;: &#34;renovate/coredns-0.x&#34;
+</span></span><span class="line"><span class="cl">                    }
+</span></span><span class="line"><span class="cl">                  ],
+</span></span><span class="line"><span class="cl">                  &#34;warnings&#34;: [],
+</span></span><span class="line"><span class="cl">                  &#34;versioning&#34;: &#34;regex:^(?&lt;compatibility&gt;.*)/v?(?&lt;major&gt;\\d+)\\.(?&lt;minor&gt;\\d+)\\.(?&lt;patch&gt;\\d+)?$&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;sourceUrl&#34;: &#34;https://github.company.com/org/charts&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;currentVersion&#34;: &#34;coredns/v0.1.1&#34;,
+</span></span><span class="line"><span class="cl">                  &#34;isSingleVersion&#34;: true,
+</span></span><span class="line"><span class="cl">                  &#34;fixedVersion&#34;: &#34;coredns/v0.1.1&#34;
+</span></span><span class="line"><span class="cl">                }
+</span></span><span class="line"><span class="cl">              ],
+</span></span><span class="line"><span class="cl">              &#34;matchStrings&#34;: [
+</span></span><span class="line"><span class="cl">                &#34;apiVersion: [\&#34;]?argoproj.io[\&#34;]?&#34;,
+</span></span><span class="line"><span class="cl">                &#34;kind: [\&#34;]?Application[\&#34;]?&#34;,
+</span></span><span class="line"><span class="cl">                &#34;repoURL: [\&#34;]?(?&lt;packageName&gt;[^\&#34;\\s]+)[\&#34;]?\\n&#34;,
+</span></span><span class="line"><span class="cl">                &#34;targetRevision: [\&#34;]?(?&lt;currentValue&gt;[^\&#34;\\s]+)[\&#34;]?\\n&#34;,
+</span></span><span class="line"><span class="cl">                &#34;metadata:\\s*\\n\\s{2}name:\\s+[\&#34;]?(?&lt;depName&gt;[^\&#34;\\s]+)[\&#34;]?\\n&#34;
+</span></span><span class="line"><span class="cl">              ],
+</span></span><span class="line"><span class="cl">              &#34;matchStringsStrategy&#34;: &#34;combination&#34;,
+</span></span><span class="line"><span class="cl">              &#34;datasourceTemplate&#34;: &#34;git-tags&#34;
+</span></span><span class="line"><span class="cl">            },
+</span></span></code></pre></div>
+</p>
+<h1 id="setup-commit-message-and-pr-content">Setup commit message and PR content</h1>
+<p>Now that the detection and grouping were fine, we tackled the finishing touches: Commit messages and PR contents. Renovate offers enough flexibility to set the commit message as we like. It even offers support for semantic commits. We simply used this to set the commit messages as follows:
+<p style="margin-top: -1.5em;">
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="err">[...]</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;semanticCommits&#34;</span><span class="p">:</span> <span class="s2">&#34;enabled&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;semanticCommitType&#34;</span><span class="p">:</span> <span class="s2">&#34;feat&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;semanticCommitScope&#34;</span><span class="p">:</span> <span class="s2">&#34;{{{depName}}}&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;commitMessageAction&#34;</span><span class="p">:</span> <span class="s2">&#34;update&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;commitMessageTopic&#34;</span><span class="p">:</span> <span class="s2">&#34;to&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;commitMessageExtra&#34;</span><span class="p">:</span> <span class="s2">&#34;{{{newVersion}}}&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
+</p></p>
+<p>With the usage of the <code>{{{variables}}}</code> Renovate offers, this produces commit messages like <code>feat(coredns): update to coredns/v1.2.3</code>.</p>
+<p>Next up: PR content. As we don&rsquo;t want to mix up Renovate branches with our development branches, we adjust the naming of the branches Renovate will create. For this, we use the option <code>branchPrefix</code> to group all branches, and <code>branchTopic</code> to more verbose naming per branch.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="err">[...]</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;branchPrefix&#34;</span><span class="p">:</span> <span class="s2">&#34;dependency/&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;branchTopic&#34;</span><span class="p">:</span> <span class="s2">&#34;{{{depNameSanitized}}}&#34;</span><span class="p">,</span> <span class="c1">// remove version number from branch name
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><p>As per default, Renovate populates a PR body with some content like an overview table or changelog/release notes. Since Renovate does not support monorepo here, the automatic changelog includes changes in other applications as well. This is irritating, so we want to get rid of this. Renovate offers the <code>prBodyTemplate</code> parameter to override the body template. We copied the default <a href="https://docs.renovatebot.com/configuration-options/#prbodytemplate">from the docs</a> and removed unwanted contents: <code>changelogs</code> (we provide our own), <code>controls</code> (not needed) and <code>footer</code> (unwanted Renovate ad). Instead, we added some custom content in <code>prBodyNotes</code>. We wanted to set a short reminder that this is a dumb automation and does not check possible required configuration changes. Also, we wanted to add a link to the GitHub release of the new version, as this contains our release notes. As we have the repository URL as the <code>packageName</code> and the tag as <code>newValue</code>, we can create the link easily.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="err">[...]</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;prBodyTemplate&#34;</span><span class="p">:</span> <span class="s2">&#34;{{{header}}}{{{table}}}{{{warnings}}}{{{notes}}}&#34;</span><span class="p">,</span> <span class="c1">// remove default changelog (not monorepo-aware) and footer (Renovate advertisement)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="nt">&#34;prBodyNotes&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;**Release notes**: {{{packageName}}}/releases/tag/{{{encodeURIComponent newVersion}}}&#34;</span><span class="p">,</span> <span class="c1">// produces link to release in correct repo!
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="s2">&#34;**Remember**: This PR is a simple update of the version and does not cover any, **probably required**, configuration changes! You can use this PR to add those changes if needed.&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">],</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>Lastly, we wanted to set some PR labels. This is important to us for integration with our other PR integration tools. We could easily set the target labels via the <code>labels</code> parameter:</p>
+<p style="margin-top: -1.5em;">
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="err">[...]</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;addLabels&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;dependencies&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;needs triage&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">],</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div>
+</p>
+<p>Et voilà, a fully automated pull request to update a single dependency in an environment:</p>
+<p>
+  <img src="/posts/img/MJM-RenovateAutomaticPullRequest/renovate_pr_complete.png" alt="">
+
+</p>
+<h1 id="behind-the-writing-scenes">Behind the (writing) scenes</h1>
+<p>Of course, this blog post is condensed to what works and what is generic enough to be valuable for any developer or engineer out there. But let us quickly discuss two obstacles we encountered, that might be helpful to know about, too.</p>
+<p>First of all, let&rsquo;s talk about variables in dependencies. It might be nice to use helm chart variables in ArgoCD applications. We did so, too. In our case, we had the base URL of our GHES as a variable in Kubernetes. While this absolutely works for the functional part, Renovate does not template helm charts, so using variables is a blocker for Renovate and we needed to remove these first.</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>The second obstacle was one we honestly don&rsquo;t understand the reason for. Renovate offers the usage of <em>presets</em> to not start from scratch but have some well-tested configurations. We started using it out of the thought that we use it as a first start and then customize it further and further. However, there&rsquo;s one caveat you need to be aware of: Preset values take precedence over your custom configuration. We noticed this when we were trying to set the semantic commit type to <code>feat</code>. We were unable to do so, because we were using the <code>config:base</code> preset which sets this to <code>chore</code>. After reading this important detail in the docs by chance, we reverse-engineered all settings our configured presets contain, and dropped them with minimal changes on our side. Luckily, the docs list what the prefixes contain, e.g. <a href="https://docs.renovatebot.com/presets-config/#configbase">config:base</a>. It was pretty annoying to check everything (spoiler: they are built recursively), but we managed to get down to only one preset, <code>:disableDependencyDashboard</code>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="err">[...]</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;extends&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;:disableDependencyDashboard&#34;</span><span class="p">,</span> <span class="c1">// do not create dashboard issue
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="p">],</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><h1 id="rebasing--cronjobs">Rebasing &amp; Cronjobs</h1>
+<p>There&rsquo;s one thing left to discuss: Rebasing. For all our repositories, we enforce linear git histories. To merge PRs, we need to rebase to the latest main branch. One, this is annoying manual work, but two, due to our automation tools, whoever rebases the branch (e.g. in GitHub Web UI, it&rsquo;s just one click) cannot approve the PR anymore because they become involved as committer. Renovate has the option to automatically rebase open branches. This can be configured by adding <code>:rebaseStalePrs</code> as a second preset. To regularly rebase all branches, we then need to run our GitHub action as a cronjob, too.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Renovate</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">on</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">workflow_dispatch</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">schedule</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">cron</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;0 0 * * *&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">push</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">tags</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s1">&#39;*/v[0-9]+\.[0-9]+\.[0-9]+&#39;</span><span class="w">
+</span></span></span></code></pre></div><p>We activated rebasing, but it has a side effect. We have another action in place that marks PRs as stale and closes them after certain limits of no activity. Now, Renovate rebases these PR branches, so effectively, these PRs are not going to be marked as stale although there is no human activity. We have not decided on how to deal with this yet, time will tell. For now, we keep the rebasing.</p>
+<p>All in all, this setup is ready to go out there and reduce our manual, repetitive work, at least to some extent. We still need to approve manually because we don&rsquo;t have an overarching versioning strategy on the project yet. And because other tools are used to perform checks and auto-merge, we did not touch the auto-merging capabilities of Renovate, but they definitely exist!</p>
+<p>Putting it all together, the configuration now looks like below and we are ready to roll this out and gather some lessons learned in the field. For this, we only need to change the trigger of the action to new tags instead of pushes to the feature branch, drop the custom base branch and the dryRun in the Renovate config and merge it to master.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;$schema&#34;</span><span class="p">:</span> <span class="s2">&#34;https://docs.renovatebot.com/Renovate-schema.json&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;extends&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;:disableDependencyDashboard&#34;</span><span class="p">,</span> <span class="c1">// do not create dashboard issue as no deployment can react to anything there
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="s2">&#34;:rebaseStalePrs&#34;</span> <span class="c1">// auto-rebase branches
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="p">],</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;enabledManagers&#34;</span><span class="p">:</span> <span class="p">[</span> <span class="c1">// remove all other managers, esp. gh actions
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="s2">&#34;regex&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">],</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;regexManagers&#34;</span><span class="p">:</span> <span class="p">[</span> <span class="c1">// use regex instead of arcocd manager because it is not capable of our monorepo approach
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="p">{</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;fileMatch&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;apps/.*\\.ya?ml$&#34;</span>
+</span></span><span class="line"><span class="cl">      <span class="p">],</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;datasourceTemplate&#34;</span><span class="p">:</span> <span class="s2">&#34;git-tags&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;matchStringsStrategy&#34;</span><span class="p">:</span> <span class="s2">&#34;combination&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="nt">&#34;matchStrings&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;apiVersion: [\&#34;]?argoproj.io[\&#34;]?&#34;</span><span class="p">,</span> <span class="c1">// must match only argo app files
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="s2">&#34;kind: [\&#34;]?Application[\&#34;]?&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="s2">&#34;repoURL: [\&#34;]?(?&lt;packageName&gt;[^\&#34;\\s]+)[\&#34;]?\\n&#34;</span><span class="p">,</span> <span class="c1">// repo url as &#39;packageName&#39; -&gt; cannot use {{ .Values.xxx }} here!
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="s2">&#34;targetRevision: [\&#34;]?(?&lt;currentValue&gt;[^\&#34;\\s]+)[\&#34;]?\\n&#34;</span><span class="p">,</span> <span class="c1">// full target rev as &#39;currentValue&#39; which is then handled by &#39;versioningTemplate&#39;
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>        <span class="s2">&#34;metadata:\\s*\\n\\s{2}name:\\s+[\&#34;]?(?&lt;depName&gt;[^\&#34;\\s]+)[\&#34;]?\\n&#34;</span> <span class="c1">// read dependency name from metadata.name to distinguish xxx-crd which uses xxx/v0.0.0 tag
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>      <span class="p">],</span>
+</span></span><span class="line"><span class="cl">    <span class="p">}</span>
+</span></span><span class="line"><span class="cl">  <span class="p">],</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;versioning&#34;</span><span class="p">:</span> <span class="s2">&#34;regex:^(?&lt;compatibility&gt;.*)/v?(?&lt;major&gt;\\d+)\\.(?&lt;minor&gt;\\d+)\\.(?&lt;patch&gt;\\d+)?$&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;semanticCommits&#34;</span><span class="p">:</span> <span class="s2">&#34;enabled&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;semanticCommitType&#34;</span><span class="p">:</span> <span class="s2">&#34;feat&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;semanticCommitScope&#34;</span><span class="p">:</span> <span class="s2">&#34;{{{depName}}}&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;commitMessageAction&#34;</span><span class="p">:</span> <span class="s2">&#34;update&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;commitMessageTopic&#34;</span><span class="p">:</span> <span class="s2">&#34;to&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;commitMessageExtra&#34;</span><span class="p">:</span> <span class="s2">&#34;{{{newVersion}}}&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;branchPrefix&#34;</span><span class="p">:</span> <span class="s2">&#34;dependency/&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;branchTopic&#34;</span><span class="p">:</span> <span class="s2">&#34;{{{depNameSanitized}}}&#34;</span><span class="p">,</span> <span class="c1">// remove version number from branch name
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="nt">&#34;addLabels&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;dependencies&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;needs triage&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">],</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;username&#34;</span><span class="p">:</span> <span class="s2">&#34;bot&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;gitAuthor&#34;</span><span class="p">:</span> <span class="s2">&#34;bot &lt;bot@users.noreply.github.com&gt;&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;onboarding&#34;</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;requireConfig&#34;</span><span class="p">:</span> <span class="s2">&#34;ignored&#34;</span><span class="p">,</span> <span class="c1">// no need for config in the app repos, we have everything here
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="nt">&#34;platform&#34;</span><span class="p">:</span> <span class="s2">&#34;github&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;repositories&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;org/k8s-A-dev&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">],</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;prBodyTemplate&#34;</span><span class="p">:</span> <span class="s2">&#34;{{{header}}}{{{table}}}{{{warnings}}}{{{notes}}}&#34;</span><span class="p">,</span> <span class="c1">// remove default changelog (not monorepo-aware) and footer (Renovate advertisement)
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="nt">&#34;prBodyNotes&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">    <span class="s2">&#34;**Release notes**: {{{packageName}}}/releases/tag/{{{encodeURIComponent newVersion}}}&#34;</span><span class="p">,</span> <span class="c1">// produces link to release in correct repo!
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="s2">&#34;**Remember**: This PR is a simple update of the version and does not cover any, **probably required**, configuration changes! You can use this PR to add those changes if needed.&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="p">],</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;gitUrl&#34;</span><span class="p">:</span> <span class="s2">&#34;endpoint&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="nt">&#34;endpoint&#34;</span><span class="p">:</span> <span class="s2">&#34;https://github.company.com/api/v3/&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">  <span class="c1">// &#34;dryRun&#34;: &#34;full&#34;,
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>  <span class="c1">// &#34;baseBranches&#34;: [&#34;feat/renovate&#34;],
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="p">}</span>
+</span></span></code></pre></div><h1 id="credits">Credits</h1>
+<p>Title image by <a href="https://www.shutterstock.com/g/ESB+Professional">ESB Professional</a> on <a href="https://www.shutterstock.com">Shutterstock</a></p>
+
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/mikel-jason-muennekhoff.jpg" alt=""/>
+            <figcaption>
+                <h3>Mikel Jason Münnekhoff<span>
+                    
+                    
+                    <a target="_blank"  href="https://www.linkedin.com/in/mikel-jason-m%C3%BCnnekhoff-ab47a5140"><img class="linkedin-author" src="/images/LinkedIn_blk.png"></a>
+                </span></h3>
+                <p>Senior Technical Consultant</p>
+
+            </figcaption>
+        </figure>
+    </div>
+    
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/dependency-management/">dependency management</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/github-actions/">github actions</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/devops/">devops</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/automation/">automation</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/kubernetes/">kubernetes</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/argo-cd/">argo-cd</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/NTT-Data-white.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2023 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</body>
+
+</html>

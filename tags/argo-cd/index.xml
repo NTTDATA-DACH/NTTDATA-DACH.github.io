@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>argo-cd on Technology Blog</title>
+    <link>https://nttdata-dach.github.io/tags/argo-cd/</link>
+    <description>Recent content in argo-cd on Technology Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright 2023 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
+    <lastBuildDate>Thu, 13 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/tags/argo-cd/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Using Renovate to scale up automatic pull request creation on GitHub</title>
+      <link>https://nttdata-dach.github.io/posts/mjm-renovateautomaticpullrequest/</link>
+      <pubDate>Thu, 13 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/posts/mjm-renovateautomaticpullrequest/</guid>
+      <description>See how we use the dependency update tool Renovate to distribute helm charts with ArgoCD applications in a GitOps fashion. This article shows how to set up Renovate for several kubernetes clusters with a centralized configuration as a GitHub action.</description>
+    </item>
+    
+  </channel>
+</rss>

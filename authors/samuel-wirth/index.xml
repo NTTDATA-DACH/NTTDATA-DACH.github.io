@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Samuel Wirth on Technology Blog</title>
+    <link>https://nttdata-dach.github.io/authors/samuel-wirth/</link>
+    <description>Recent content in Samuel Wirth on Technology Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright 2023 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
+    <lastBuildDate>Fri, 04 Nov 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/authors/samuel-wirth/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Quantum-inspired approaches to the Job-Shop Problem</title>
+      <link>https://nttdata-dach.github.io/posts/mf-sw-jobshopproblem/</link>
+      <pubDate>Fri, 04 Nov 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/posts/mf-sw-jobshopproblem/</guid>
+      <description>The Job-Shop problem is a well-known optimization problem where a certain number of jobs have to be scheduled such that the total time needed to finish all jobs is minimal. In this article we shine a light on two algorithms that could be used as a possible solution for this problem.</description>
+    </item>
+    
+  </channel>
+</rss>
