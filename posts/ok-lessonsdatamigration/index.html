@@ -9,7 +9,10 @@
 
   
   <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
   <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+  <script src="reading-time.js"></script>
 </head>
 
 <body>
@@ -39,20 +42,30 @@
     <h1>
         <span class="pre">01.06.2021
         
-         - Oliver Koeth
+         - Oliver Koeth - <i class="fa-solid fa-book-open"></i> 6 min read
         
         </span>
         10 Lessons learnt from large-scale data migration projects
         
     </h1>
-    <div class="article-header-img" style="background: url('/posts/img/OK-LessonsDataMigration/title-image.jpg') no-repeat center center; background-size: cover"></div>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/OK-LessonsDataMigration/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient" style="background: linear-gradient(to right, rgba(16, 28, 81,1), rgba(255,0,0,0));width:80%; left:0"></div>
+        </div> 
+    
+
+
+    
 </div>
 
 <main>
-
+    
     <div class="container">
         <div class="spacer"></div>
         <div class="content">
+            
+           
             <p>Data migration is of course only one aspect of system conversion. Usually data migration is performed in conjunction with other conversions like technology or interfaces. Nevertheless, data migration is often the most expensive and confusing part of the conversion project. So let’s revisit the handful of fairly large data migrations I encountered in my professional career and see which lessons can be drawn out of this experience.</p>
 <h2 id="1-improve-data-quality-in-source">1 Improve data quality in source</h2>
 <p>The foremost objective of the data migration is to move records from the legacy system to the new system. Unfortunately, the data in legacy systems was created over a long period of time by all kinds of releases of the legacy system. From a version 1.0 to its current state and maybe even by a previous data migration. As a consequence, the data will most likely not meet the constraints expressed in the current business logic of the legacy system or the design and development of the new system. While data could also be rectified in-flight during the migration, the best location for data cleansing is still the source system. In the source system, the data cleansing can start immediately and can be conducted by the users themselves, while cleansing during migration will require additional logic and slow down the development and execution times of the migration.</p>
@@ -78,6 +91,7 @@ But also from a teaming perspective, your migration has to be in the hearts and 
 <h1 id="credits">Credits</h1>
 <p>Title image by <a href="https://www.shutterstock.com/g/gorodenkoff">Gorodenkoff</a> on <a href="https://www.shutterstock.com">Shutterstock</a></p>
 
+            
         </div>
         <div class="spacer"></div>
     </div>
@@ -85,7 +99,7 @@ But also from a teaming perspective, your migration has to be in the hearts and 
         <figure class="author">
             <img src="../../authors/oliver-koeth.jpg" alt=""/>
             <figcaption>
-                <h3>Oliver Koeth<span>
+                <h3><a href="/authors/oliver-koeth">Oliver Koeth</a><span>
                     <a target="_blank"  href="https://github.com/okoeth"><img class="github-author" src="/images/GitHub_blk.png"></a>
                     
                     
@@ -94,8 +108,23 @@ But also from a teaming perspective, your migration has to be in the hearts and 
 
             </figcaption>
         </figure>
+        
     </div>
     
+    
+
+    <div class="related-container">
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+
+        </div>
+    </div>
     
 
     

@@ -9,7 +9,10 @@
 
   
   <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
   <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+  <script src="reading-time.js"></script>
 </head>
 
 <body>
@@ -39,20 +42,30 @@
     <h1>
         <span class="pre">13.04.2023
         
-         - Markus Seidl
+         - Markus Seidl - <i class="fa-solid fa-book-open"></i> 7 min read
         
         </span>
         New Random Generators in Java 17
         
     </h1>
-    <div class="article-header-img" style="background: url('/posts/img/MS-NewRandomGeneratorInJava17/title-image.jpg') no-repeat center center; background-size: cover"></div>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/MS-NewRandomGeneratorInJava17/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient" style="background: linear-gradient(to right, rgba(16, 28, 81,1), rgba(255,0,0,0));width:80%; left:0"></div>
+        </div> 
+    
+
+
+    
 </div>
 
 <main>
-
+    
     <div class="container">
         <div class="spacer"></div>
         <div class="content">
+            
+           
             <p>Java 17 introduced new random number generators. These provide longer cycles, improved statistical uniform distribution, improved threading support, and Streams API integration. This article provides a short introduction to random number generators and an overview of the improvements made in Java 17.</p>
 <h1 id="how-do-pseudo-random-number-generators-work">How do Pseudo Random Number Generators work?</h1>
 <p>All pseudo random number generators, abbreviated RNGs, have an <em>internal state</em> that is initialized upon creation with a user provided <em>seed</em>. When a new random number is requested, the internal state is then updated by an RNG-type specific function to produce the next <em>state</em> and the actual random number <em>output</em>.</p>
@@ -132,6 +145,7 @@ There is technically no reason to switch to the new algorithm after Java 17 even
 </ol>
 </div>
 
+            
         </div>
         <div class="spacer"></div>
     </div>
@@ -139,7 +153,7 @@ There is technically no reason to switch to the new algorithm after Java 17 even
         <figure class="author">
             <img src="../../authors/placeholder.png" alt=""/>
             <figcaption>
-                <h3>Markus Seidl<span>
+                <h3><a href="/authors/markus-seidl">Markus Seidl</a><span>
                     <a target="_blank"  href="https://github.com/markus-ntt-seidl"><img class="github-author" src="/images/GitHub_blk.png"></a>
                     
                     
@@ -148,8 +162,23 @@ There is technically no reason to switch to the new algorithm after Java 17 even
 
             </figcaption>
         </figure>
+        
     </div>
     
+    
+
+    <div class="related-container">
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+
+        </div>
+    </div>
     
 
     
