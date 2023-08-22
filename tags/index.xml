@@ -7,7 +7,61 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2023 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Mon, 31 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 22 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>argo-cd</title>
+      <link>https://nttdata-dach.github.io/tags/argo-cd/</link>
+      <pubDate>Tue, 22 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/argo-cd/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>automation</title>
+      <link>https://nttdata-dach.github.io/tags/automation/</link>
+      <pubDate>Tue, 22 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/automation/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>dependency management</title>
+      <link>https://nttdata-dach.github.io/tags/dependency-management/</link>
+      <pubDate>Tue, 22 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/dependency-management/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>DevOps</title>
+      <link>https://nttdata-dach.github.io/tags/devops/</link>
+      <pubDate>Tue, 22 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/devops/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>github actions</title>
+      <link>https://nttdata-dach.github.io/tags/github-actions/</link>
+      <pubDate>Tue, 22 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/github-actions/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>kubernetes</title>
+      <link>https://nttdata-dach.github.io/tags/kubernetes/</link>
+      <pubDate>Tue, 22 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/kubernetes/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>AWS</title>
       <link>https://nttdata-dach.github.io/tags/aws/</link>
@@ -45,15 +99,6 @@
     </item>
     
     <item>
-      <title>DevOps</title>
-      <link>https://nttdata-dach.github.io/tags/devops/</link>
-      <pubDate>Mon, 31 Jul 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://nttdata-dach.github.io/tags/devops/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>Infrastructure</title>
       <link>https://nttdata-dach.github.io/tags/infrastructure/</link>
       <pubDate>Mon, 31 Jul 2023 00:00:00 +0000</pubDate>
@@ -68,15 +113,6 @@
       <pubDate>Mon, 31 Jul 2023 00:00:00 +0000</pubDate>
       
       <guid>https://nttdata-dach.github.io/tags/infrastructure-as-code/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Kubernetes</title>
-      <link>https://nttdata-dach.github.io/tags/kubernetes/</link>
-      <pubDate>Mon, 31 Jul 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://nttdata-dach.github.io/tags/kubernetes/</guid>
       <description></description>
     </item>
     

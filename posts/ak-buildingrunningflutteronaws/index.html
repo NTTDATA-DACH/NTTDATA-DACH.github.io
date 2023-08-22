@@ -1,0 +1,381 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Building and running Flutter mobile applications for Android on AWS Device Farm  </title>
+
+  <meta charset="utf-8">
+
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+  <script src="reading-time.js"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img src="/images/NTT-Data-white.png"></a>
+
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+    </nav>
+  </header>
+
+
+
+  <div class="emobanner article">
+    <h1>
+        <span class="pre">30.06.2023
+        
+         - Alexander Kroll - <i class="fa-solid fa-book-open"></i> 10 min read
+        
+        </span>
+        Building and running Flutter mobile applications for Android on AWS Device Farm
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/AK-BuildingRunningFlutterOnAWS/title-image.png') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient" style="background: linear-gradient(to right, rgba(16, 28, 81,1), rgba(255,0,0,0));width:80%; left:0"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+    
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <h2 id="setting-the-scene">Setting the scene</h2>
+<p>When building and testing mobile applications and in case you want to assure that your mobile application is running correctly on different devices and operating systems, this can become very cumbersome and expensive over time. The efforts for various tasks of the device management like maintaining the physical infrastructure, patching and updating the devices can be very cost intensive for a company in case these tasks are conducted by a developer or someone else in a business organization. Just imagine you have 15 or 20 different devices, that need to get patched manually. This will take a few hours in case everything works as expected. The effort for maintenance will increase linearly, depending on the number of managed devices. However, not only the different device types are important but also the combinations of devices and installed operating versions could let explode the test efforts dramatically.</p>
+<h2 id="aws-device-farm-to-the-rescue">AWS Device Farm to the rescue</h2>
+<p>Keep calm, there is a solution. AWS Device Farm to the rescue. With AWS Device Farm AWs offers a solution that makes mobile testing a breeze. AWS Device Farm is a managed service on AWS that allows using a fleet of mobile devices and mobile environments from AWS via an on-demand model to either provision devices for manual or automated testing.
+The good news, you can test AWS Device Farm and get the first 1000 minutes for free.</p>
+<h2 id="prerequisites">Prerequisites</h2>
+<p>What you will need for the sample is the following:</p>
+<ul>
+<li>Android Studio</li>
+<li>Android SDK</li>
+<li>Flutter (Version 3.0.5 or higher)</li>
+<li>Git</li>
+<li>AWS Account</li>
+<li>Some free space on your SSD ;-)</li>
+</ul>
+<h2 id="flutter-sample-app">Flutter sample app</h2>
+<p>The Flutter sample app for the test is a simplistic login page with username and password that forwards to a welcome screen page. From there you can start a browser application with a search engine web page.</p>
+<p>
+  <img src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/alkwwzhxa0savuilq3fv.png" alt="Image description">
+
+</p>
+<h2 id="testing-with-appium">Testing with Appium</h2>
+<p>Appium is a common open-source test automation framework for use with native, hybrid and mobile web apps. It uses the Webdriver protocol (similar like Selenium) and can be used for testing iOS, Android and Windows apps.
+Appium is one of the test frameworks which is directly supported by the AWS Device Farm.
+For more information visit the AWS documentation:
+<a href="https://docs.aws.amazon.com/devicefarm/latest/developerguide/test-types-appium.html">https://docs.aws.amazon.com/devicefarm/latest/developerguide/test-types-appium.html</a>
+With Appium you can use specific annotations like “AndroidFindBy” to identify elements on a screen of a mobile app, interact with these elements (clicking, entering text, &hellip;) and checking the state of these elements (e.g. is shown or is enabled). This can be done with several programming languages, like Java, Kotlin, Python, JavaScript, etc.</p>
+<p>Here are some examples with Java.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="c1">// identifying elements with annotations
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="nd">@AndroidFindBy</span><span class="o">(</span><span class="n">accessibility</span> <span class="o">=</span> <span class="s">&#34;LoginText&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl"><span class="kd">private</span> <span class="n">MobileElement</span> <span class="n">loginText</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// identifying elements programmatically
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">MobileElement</span> <span class="n">loginText</span> <span class="o">=</span> <span class="n">driver</span><span class="o">.</span><span class="na">findElementByAccessibilityId</span><span class="o">(</span><span class="s">&#34;LoginText&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// perform a click
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">loginText</span><span class="o">.</span><span class="na">click</span><span class="o">()</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// enter text
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">loginText</span><span class="o">.</span><span class="na">sendKeys</span><span class="o">(</span><span class="s">&#34;Hello&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl"><span class="c1">// asking if element is shown or not
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span><span class="n">loginText</span><span class="o">.</span><span class="na">isDisplayed</span><span class="o">()</span>
+</span></span></code></pre></div><p>For writing Appium tests in Java you can also choose between different testing frameworks, like JUnit or TestNG.</p>
+<h2 id="write-appium-tests-for-aws-device-farm">Write Appium tests for AWS Device Farm</h2>
+<p>There is a sample app for the AWS Device Farm which illustrates what you need for you Appium tests on the AWS Device Farm.
+See <a href="https://github.com/aws-samples/aws-device-farm-appium-tests-for-sample-app">https://github.com/aws-samples/aws-device-farm-appium-tests-for-sample-app</a>
+One important step is to create a ZIP file with all compiled Appium tests, and their dependencies (Appium jars) needed to execute the tests. This ZIP file will be later uploaded to the AWS Device Farm together with the APP binary.
+The recommended way to implement the tests is to make use of the page pattern, which creates a “shadowed” object of the mobile frontend page. The test can make use of the Appium features to identify Android application elements like the input fields and the button by using the <code>@AndroidFindBy</code> annotation with an XPath expression in the object tree and will provide that object as a <code>MobileElement</code>. In addition, you can now configure the possible actions of the page by using public methods to modify the contents of the <code>MobileElement</code> and emit actions on the button.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="kn">package</span> <span class="nn">com.alex.flutter_sample.appium.pages</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">io.appium.java_client.AppiumDriver</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">io.appium.java_client.MobileElement</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"><span class="kn">import</span> <span class="nn">io.appium.java_client.pagefactory.AndroidFindBy</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">LoginPage</span> <span class="kd">extends</span> <span class="n">BasePage</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nd">@AndroidFindBy</span><span class="o">(</span><span class="n">xpath</span> <span class="o">=</span> <span class="s">&#34;/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View/android.view.View/android.widget.EditText[1]&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="n">MobileElement</span> <span class="n">username</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="nd">@AndroidFindBy</span><span class="o">(</span><span class="n">xpath</span> <span class="o">=</span> <span class="s">&#34;/hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.view.View/android.view.View/android.view.View/android.view.View/android.widget.EditText[2]&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="n">MobileElement</span> <span class="n">password</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="nd">@AndroidFindBy</span><span class="o">(</span><span class="n">accessibility</span> <span class="o">=</span> <span class="s">&#34;Login&#34;</span><span class="o">)</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="n">MobileElement</span> <span class="n">loginButton</span><span class="o">;</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="nf">LoginPage</span><span class="o">(</span><span class="n">AppiumDriver</span><span class="o">&lt;</span><span class="n">MobileElement</span><span class="o">&gt;</span> <span class="n">driver</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="kd">super</span><span class="o">(</span><span class="n">driver</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="nd">@Override</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isDisplayed</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">return</span> <span class="n">loginButton</span><span class="o">.</span><span class="na">isDisplayed</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setUsername</span><span class="o">(</span><span class="n">String</span> <span class="n">username</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="o">.</span><span class="na">username</span><span class="o">.</span><span class="na">click</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">wait</span><span class="o">(</span><span class="n">2000</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="o">.</span><span class="na">username</span><span class="o">.</span><span class="na">clear</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="o">.</span><span class="na">username</span><span class="o">.</span><span class="na">sendKeys</span><span class="o">(</span><span class="n">username</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setPassword</span><span class="o">(</span><span class="n">String</span> <span class="n">password</span><span class="o">)</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="o">.</span><span class="na">password</span><span class="o">.</span><span class="na">click</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="n">wait</span><span class="o">(</span><span class="n">2000</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="o">.</span><span class="na">password</span><span class="o">.</span><span class="na">clear</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="o">.</span><span class="na">password</span><span class="o">.</span><span class="na">sendKeys</span><span class="o">(</span><span class="n">password</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">clickLogin</span><span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="o">.</span><span class="na">loginButton</span><span class="o">.</span><span class="na">click</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl">    <span class="o">}</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><p>A sample Appium test could check if a user can go from the <code>LoginPage</code> to the <code>SecondPage</code> when authenticating with the correct credentials. To spin up this scenario, we would create an instance of the LoginPage and check, that the page is loaded successfully. Then the user input (username and password) is simulated and a click on the login button is triggered. This will cause a change of the page and we can assert that the SecondPage is displayed. In the end we could take a screenshot of the test run, which will be bundled with the test result of this test run and can be used for manual checks at a later point in time.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Test</span>
+</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kt">void</span> <span class="nf">login_withCorrectCredentials_gotoSecondPage</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">InterruptedException</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="c1">// given
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">LoginPage</span> <span class="n">loginPage</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LoginPage</span><span class="o">(</span><span class="n">driver</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="n">assertThat</span><span class="o">(</span><span class="n">loginPage</span><span class="o">.</span><span class="na">isDisplayed</span><span class="o">(),</span> <span class="n">is</span><span class="o">(</span><span class="kc">true</span><span class="o">));</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="c1">// when
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">loginPage</span><span class="o">.</span><span class="na">setUsername</span><span class="o">(</span><span class="s">&#34;Alex&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">loginPage</span><span class="o">.</span><span class="na">setPassword</span><span class="o">(</span><span class="s">&#34;alex&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl">    <span class="n">loginPage</span><span class="o">.</span><span class="na">clickLogin</span><span class="o">();</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl">    <span class="c1">// then
+</span></span></span><span class="line"><span class="cl"><span class="c1"></span>    <span class="n">assertThat</span><span class="o">(</span><span class="k">new</span> <span class="n">SecondPage</span><span class="o">(</span><span class="n">driver</span><span class="o">).</span><span class="na">isDisplayed</span><span class="o">(),</span> <span class="n">is</span><span class="o">(</span><span class="kc">true</span><span class="o">));</span>
+</span></span><span class="line"><span class="cl">    <span class="n">takeScreenshot</span><span class="o">(</span><span class="s">&#34;secondPage.png&#34;</span><span class="o">);</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div><h2 id="run-automated-appium-tests-on-aws-device-farm">Run automated Appium tests on AWS Device Farm</h2>
+<p>The following steps are needed to setup a project in AWS Device Farm to run Appium tests.
+You need to create an AWS Device Farm project which is just an “organizational unit” containing a configuration of your application. So, you can simply start by creating a mobile application project.</p>
+<p>
+  <img src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/gaxj1tmfs8zw8tfwuxkf.png" alt="Image description">
+
+</p>
+<p>You can then see the project in the overview of your mobile projects.</p>
+<p>
+  <img src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/qjsh1m65bouzbddeob1z.png" alt="Image description">
+
+</p>
+<p>Within the project you can configure the automated tests and start a new run. In this setup we want AWS Device Farm to spin up an Android application and run the Appium tests automatically once the device is ready. The other option here would be to provision a device for “remote access”. That would give you a “bare” device that you can use for various manual testing purposes.</p>
+<p>
+  <img src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/xe2h7h2lylvylfnji0wj.png" alt="Image description">
+
+</p>
+<p>In the project you have two options, what kind of project you want to test on the device. It could be either a mobile application or a web application. In this guide we will focus on an Android mobile application that has been implemented with the Flutter framework. You need to upload an apk file (Android Package) and upload it to AWS Device Farm. You can find your app-release.apk file in project-name/module-name/build/outputs/apk/ folder.</p>
+<p>
+  <img src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/8zf4twww7vgyou7gmei9.png" alt="Image description">
+
+</p>
+<p>In the configuration section you have the option to choose between a standard environment setup and a custom environment setup. A custom setup can be very useful in case you have some special steps to perform before the test. A typical use case for a custom environment could be the setting of a specific Appium version.</p>
+<p>
+  <img src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/9jo3lfm2q0xo8dcbsh9c.png" alt="Image description">
+
+</p>
+<p>The next step is to select some devices that can be used to run the mobile application. You have the possibility to choose between more than 100 devices and you can group device to a device pool, which can be reused. I selected a list of different devices from different vendors like Samsung and Google. In general, the availability of Samsung devices is very good while other vendors like Huawei are not available. I recommend testing the application also on different versions of the Android operating systems in combination with different devices.</p>
+<p>
+  <img src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/ay5d7aely75bpirkc8is.png" alt="Image description">
+
+</p>
+<p>In case you want to load specific data onto the device, there is an upload possibility. In addition, you can specify the network settings of the device and the geo location for the test run. This can be useful in case you have scenarios where a geo location is relevant, e.g. you have a location-based service using a map, or in case you want to test your application with a bad internet connection, meaning high latency or low bandwidth. For this case you could also create a network profile. When running a multi-market or multi-language application it could also be useful to have some variations on the locale settings. So, AWS Device Farm offers you a wide bandwidth of parameters to achieve the desired state of the device.</p>
+<p>
+  <img src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/vc4txioe47z0qxo33vvf.png" alt="Image description">
+
+</p>
+<p>After setting the device state you can start the automated test runs for which the live status is provided in an overview. Some minutes later you can see the result of the test as a circle diagram, indicating the success rate of the executed tests.</p>
+<p>
+  <img src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/h95yqyrcq8ildox4ak0x.png" alt="Image description">
+
+</p>
+<h2 id="check-the-results-of-the-automated-appium-tests">Check the results of the automated Appium tests</h2>
+<p>When the test has been performed you can see the jobs, that have been run and can drill down into the details of the test run. Typically, it takes about 2-3 minutes until the execution of the tests starts, as this time is needed to select and prepare a device in the AWS Device Farm for you. After this preparation time your automated tests are executed on the specified device and after the execution, the device is shut down. The result of the automated test run contains different artifacts like screenshots of the test workflow on the device, a short video of the workflow, the test specification log, the log output, and a very simplistic performance dashboard of the automated test run, giving a good indication of the CPU and memory usage during the test on the device.</p>
+<p>
+  <img src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/tegzn1arbcuh72ze5q3a.png" alt="Image description">
+
+</p>
+<p>
+  <img src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/5w4og5ze6m577k1v6nah.png" alt="Image description">
+
+</p>
+<p>
+  <img src="https://dev-to-uploads.s3.amazonaws.com/uploads/articles/5bhh4ogptbb42juve18j.png" alt="Image description">
+
+</p>
+<h2 id="setup-aws-device-farm-project-from-cli">Setup AWS Device Farm project from CLI</h2>
+<p>In case you do not want to do all the steps manually, it may be more efficient to make use of the AWS CLI which allows you to perform all the necessary steps from a shell script. Especially, when you want to use a CI/CD tool like Jenkins, Gitlab, and others, these scripted steps might be useful for reuse within some pipeline jobs or steps.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="cp">#! /bin/bash
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span><span class="nb">echo</span> <span class="s2">&#34;Starting automatic deployment of Alex Sample App with Tests&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 1. Retrieve PROJECT_ARN</span>
+</span></span><span class="line"><span class="cl"><span class="nv">PROJECT_NAME</span> <span class="o">=</span> <span class="s2">&#34;Alex Sample Project&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">PROFILE</span> <span class="o">=</span> <span class="s2">&#34;alex.dev&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">REGION</span> <span class="o">=</span> <span class="s2">&#34;us-west-2&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">PROJECT_ARN</span> <span class="o">=</span> aws devicefarm create-project --name <span class="nv">$PROJECT_NAME</span> --profile<span class="o">=</span>PROFILE --region<span class="o">=</span><span class="nv">$REGION</span> <span class="p">|</span> jq <span class="s1">&#39;.project.arn&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 2. Get Upload ARN and URL for Android App</span>
+</span></span><span class="line"><span class="cl"><span class="nv">APP_FILE</span> <span class="o">=</span> <span class="s2">&#34;app-release.apk&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">APP_TYPE</span> <span class="o">=</span> <span class="s2">&#34;ANDROID_APP&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">APP_UPLOAD_JSON</span> <span class="o">=</span> aws devicefarm create-upload –project-arn <span class="nv">$PROJECT_ARN</span> –name <span class="nv">$APP_FILE</span> –type <span class="nv">$APP_TYPE</span> --profile<span class="o">=</span><span class="nv">$PROFILE</span> --region<span class="o">=</span><span class="nv">$REGION</span> <span class="p">|</span> jq <span class="s1">&#39;.upload&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">APP_UPLOAD_ARN</span> <span class="o">=</span> jq <span class="s1">&#39;.arn&#39;</span> <span class="nv">$APP_UPLOAD_JSON</span>
+</span></span><span class="line"><span class="cl"><span class="nv">APP_UPLOAD_URL</span> <span class="o">=</span> jq <span class="s1">&#39;.url&#39;</span> <span class="nv">$APP_UPLOAD_JSON</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 3. Upload the app</span>
+</span></span><span class="line"><span class="cl">curl -T app-release.apk <span class="nv">$APP_UPLOAD_URL</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 4. Get Upload ARN and URL for Test App</span>
+</span></span><span class="line"><span class="cl"><span class="nv">TEST_FILE</span> <span class="o">=</span> <span class="s2">&#34;tests.zip&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">TEST_TYPE</span> <span class="o">=</span> <span class="s2">&#34;TEST_TYPE&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">TEST_UPLOAD_JSON</span> <span class="o">=</span> aws devicefarm create-upload –project-arn <span class="nv">$PROJECT_ARN</span> –name <span class="nv">$TEST_FILE</span> –type <span class="nv">$TEST_TYPE</span> --profile<span class="o">=</span><span class="nv">$PROFILE</span> --region<span class="o">=</span><span class="nv">$REGION</span> <span class="p">|</span> jq <span class="s1">&#39;.upload&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">TEST_UPLOAD_ARN</span> <span class="o">=</span> jq <span class="s1">&#39;.arn&#39;</span> <span class="nv">$TEST_UPLOAD_JSON</span>
+</span></span><span class="line"><span class="cl"><span class="nv">TEST_UPLOAD_URL</span> <span class="o">=</span> jq <span class="s1">&#39;.url&#39;</span> <span class="nv">$TEST_UPLOAD_JSON</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 5. Upload the tests</span>
+</span></span><span class="line"><span class="cl">curl -T tests.zip <span class="nv">$TEST_UPLOAD_URL</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 6. Create device pool</span>
+</span></span><span class="line"><span class="cl"><span class="nv">DEVICE_POOL_NAME</span> <span class="o">=</span> <span class="s2">&#34;SampleDevicePool&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">DEVICE_POOL_ARN</span> <span class="o">=</span> aws devicefarm create-device-pool –project-arn <span class="nv">$PROJECT_ARN</span> –name <span class="nv">$DEVICE_POOL_NAME</span> –rules <span class="s1">&#39;[{&#34;attribute&#34;: &#34;PLATFORM&#34;, &#34;operator&#34;: &#34;EQUALS&#34;, &#34;value&#34;: &#34;&#34;ANDROID&#34;&#34;}]&#39;</span>  --profile<span class="o">=</span><span class="nv">$PROFILE</span> --region<span class="o">=</span><span class="nv">$REGION</span> <span class="p">|</span> jq <span class="s1">&#39;.devicePool&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># 7. Schedule test run</span>
+</span></span><span class="line"><span class="cl"><span class="nv">SCHEDULE_RUN_NAME</span> <span class="o">=</span> <span class="s2">&#34;Sample-Test-Run&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">TEST_RUN_RESULT</span> <span class="o">=</span> aws devicefarm schedule-run –project-arn <span class="nv">$PROJECT_ARN</span> –app-arn <span class="nv">$APP_UPLOAD_ARN</span> –device-pool-arn <span class="nv">$DEVICE_POOL_ARN</span> –name <span class="nv">$SCHEDULE_RUN_NAME</span> –test <span class="s1">&#39;{&#34;type&#34;: &#34;TEST_TYPE&#34;,&#34;testPackageArn&#34;:&#34;&#39;</span> + <span class="nv">$TEST_UPLOAD_ARN</span> + <span class="s1">&#39;&#34;}&#39;</span>  --profile<span class="o">=</span><span class="nv">$PROFILE</span> --region<span class="o">=</span><span class="nv">$REGION</span>
+</span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="nv">$TEST_RUN_RESULT</span>
+</span></span></code></pre></div><h2 id="summary">Summary</h2>
+<p>This article has come to an end, and you now have a blueprint and hopefully a good feeling on how to test a Flutter application automatically on AWS Device Farm.
+My experience with the AWS Device Farm and Android mobile applications has been quite nice. The UI of AWS Device Farm is simple but contains the most important features to modify the state of the devices and supports the relevant testing frameworks. Most of the actual devices on the market are available within 2 to 6 weeks after their market release. My observation is that the support for some device manufacturers is really good (Samsung, Apple, Google), while some other manufacturers like Huawei are not widely supported. However, in case you need some very specific devices you can always make use of the &ldquo;private devices&rdquo; features which is a BYOD model (bring your own device).</p>
+<h1 id="credits">Credits</h1>
+<p>Title image by <a href="https://www.shutterstock.com/de/g/chombosan">metamorworks</a> on <a href="https://www.shutterstock.com">Shutterstock</a></p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/alexander-kroll.jpg" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/alexander-kroll">Alexander Kroll</a><span>
+                    
+                    
+                    
+                </span></h3>
+                <p>Senior Cloud Solution Architect</p>
+
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+                <h3 class="related-heading">You may also like</h3>
+
+                
+                
+                <ul>
+                    
+                    
+                    
+                        <li><a class="related-link" href="/posts/ns-controlplaneoperatedinfrastructure_1/">CONTROL PLANE OPERATED INFRASTRUCTURE - Part 1: Introduction to Crossplane</a></li>
+                    
+                    
+                </ul>
+                
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/aws/">AWS</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/flutter/">Flutter</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/android/">Android</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/cloud/">Cloud</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/mobile/">Mobile</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/NTT-Data-white.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2023 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</body>
+
+</html>

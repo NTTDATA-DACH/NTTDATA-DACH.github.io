@@ -2,11 +2,38 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://nttdata-dach.github.io/authors/</loc>
-    <lastmod>2023-07-31T00:00:00+00:00</lastmod>
+    <loc>https://nttdata-dach.github.io/tags/argo-cd/</loc>
+    <lastmod>2023-08-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/</loc>
-    <lastmod>2023-07-31T00:00:00+00:00</lastmod>
+    <lastmod>2023-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/authors/</loc>
+    <lastmod>2023-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/automation/</loc>
+    <lastmod>2023-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/dependency-management/</loc>
+    <lastmod>2023-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/devops/</loc>
+    <lastmod>2023-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/github-actions/</loc>
+    <lastmod>2023-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/kubernetes/</loc>
+    <lastmod>2023-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/authors/mikel-jason-m%C3%BCnnekhoff/</loc>
+    <lastmod>2023-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/</loc>
+    <lastmod>2023-08-22T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/posts/mjm-renovateautomaticpullrequest/</loc>
+    <lastmod>2023-08-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/aws/</loc>
     <lastmod>2023-07-31T00:00:00+00:00</lastmod>
@@ -23,16 +50,10 @@
     <loc>https://nttdata-dach.github.io/tags/crossplane/</loc>
     <lastmod>2023-07-31T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/tags/devops/</loc>
-    <lastmod>2023-07-31T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://nttdata-dach.github.io/tags/infrastructure/</loc>
     <lastmod>2023-07-31T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/infrastructure-as-code/</loc>
-    <lastmod>2023-07-31T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/kubernetes/</loc>
     <lastmod>2023-07-31T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/niklas-schuster/</loc>
@@ -42,9 +63,6 @@
     <lastmod>2023-07-31T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/series/</loc>
-    <lastmod>2023-07-31T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/</loc>
     <lastmod>2023-07-31T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/alexander-suchier/</loc>
