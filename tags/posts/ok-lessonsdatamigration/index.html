@@ -1,0 +1,189 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  10 Lessons learnt from large-scale data migration projects  </title>
+
+  <meta charset="utf-8">
+
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+  <script src="reading-time.js"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img src="/images/NTT-Data-white.png"></a>
+
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+    </nav>
+  </header>
+
+
+
+  <div class="emobanner article">
+    <h1>
+        <span class="pre">01.06.2021
+        
+         - Oliver Koeth - <i class="fa-solid fa-book-open"></i> 6 min read
+        
+        </span>
+        10 Lessons learnt from large-scale data migration projects
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/OK-LessonsDataMigration/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient" style="background: linear-gradient(to right, rgba(16, 28, 81,1), rgba(255,0,0,0));width:80%; left:0"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+    
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <p>Data migration is of course only one aspect of system conversion. Usually data migration is performed in conjunction with other conversions like technology or interfaces. Nevertheless, data migration is often the most expensive and confusing part of the conversion project. So let’s revisit the handful of fairly large data migrations I encountered in my professional career and see which lessons can be drawn out of this experience.</p>
+<h2 id="1-improve-data-quality-in-source">1 Improve data quality in source</h2>
+<p>The foremost objective of the data migration is to move records from the legacy system to the new system. Unfortunately, the data in legacy systems was created over a long period of time by all kinds of releases of the legacy system. From a version 1.0 to its current state and maybe even by a previous data migration. As a consequence, the data will most likely not meet the constraints expressed in the current business logic of the legacy system or the design and development of the new system. While data could also be rectified in-flight during the migration, the best location for data cleansing is still the source system. In the source system, the data cleansing can start immediately and can be conducted by the users themselves, while cleansing during migration will require additional logic and slow down the development and execution times of the migration.</p>
+<h2 id="2-find-a-lingua-franca-for-data">2 Find a lingua franca for data</h2>
+<p>Often the data model of the legacy system (e.g. a several decades old mainframe system) and the new system (e.g. a complex packaged application) are based on entirely different technology platforms and a team responsible for one system will most likely not be able to understand the data model of the other system. Hence it is important to find a lingua franca in form of a technology neutral intermediate data format. Good candidates for such data formats are staging areas of data warehouses, interfaces to or from the legacy system, or common domain models of an enterprise service bus.</p>
+<h2 id="3-access-the-data">3 Access the data</h2>
+<p>Don’t be shy. Gain access to the legacy data as soon as possible. Find a form of access that suits you (e.g. SQL command line). Then start to investigate the data. Do not forget to regularly refresh your data from production. Use this access to immediately validate you design hypothesises. Let me give you an example: If there is an “own retail” flag and an “independent retail” flag, it’s quite save to bet your money on some retail outlets having both flags set. But don’t limit yourself to SQL access. Consider other technologies like NoSQL databases or access on transaction log level provided by tools like Oracle’s Golden Gate.</p>
+<h2 id="4-count-measure-weigh-your-data-and-create-a-map">4 Count, measure, weigh your data and create a map</h2>
+<p>With access to the data start to count, measure, and weigh your data. For each entity count the columns and rows and you will learn where the hot spots of the migration will be. For low data volumes consider alternative approaches for data priming. If your table has create and last modify timestamps try to understand the volumes and timings in the life-cycle of the data. Create a map of your data. Which areas are well understood (e.g. from data centric interfaces, reports, or a piece of well maintained documentation)? Create heat maps to show high volume data. Identify areas of concern and dedicated extra time for heuristic data analysis and migration workshops. Create a list of all tables and identify those which need to be migrated. Group the tables by functional topics and design you migration workshops around this grouping.</p>
+<h2 id="5-establish-a-data-dictionary">5 Establish a data dictionary</h2>
+<p>If you haven’t started a proper database-backed data dictionary for your project it’s about time to create one. This data dictionary is the “definitive version of the truth” for the data model and can be accessed by members of all teams (feature development, integration, migration, test, …) and is changed in a controlled way. The data dictionary also provides a great way to report progress on the migration mapping.</p>
+<h2 id="6-talk-to-all-stakeholders">6 Talk to all stakeholders</h2>
+<p>Be a social butterfly and meet all stakeholders of the data migration. Do not only talk to the “usual suspects” in the business and IT departments. Also spend time with the not so popular kids from the data privacy, data security (and in Germany: works council) camps. If left out, these stakeholders have the super-powers to put the data migration project to a full halt—even hours before the cut-over is scheduled to start.</p>
+<h2 id="7-test-data-qualities-and-quantities">7 Test data qualities and quantities</h2>
+<p>The migration test has two important objectives: a) is the data migrated in the right way, and b) is all relevant data migrated. The former can be tested by record-based comparison reports which are executed for an (ideally stratified) sample of your data and checked manually. The latter can be tested by summary reports counting the records in the legacy and the new system. Don’t expect the numbers to exactly match up, but be prepared to explain the differences.</p>
+<h2 id="8-reconsider-data-archiving-to-minimize-data-volumes">8 Reconsider data archiving to minimize data volumes</h2>
+<p>The most efficient approach to data migration is not to migrate the data. While this approach can of course not be applied to all legacy data this rule should be applied to as many tables and as many rows as feasible. Use the heat map, time-stamps and data volumes to build your case for not having to migrate the data. A data migration is also a great chance to reconsider your data archiving strategy. An archive with good data retrieval methods or even automated restore procedures is a very good argument for not migrating data which is not so frequently accessed.</p>
+<h2 id="9-start-your-migration-early-and-finish-late">9 Start your migration early and finish late</h2>
+<p>The data migration is probably taking most of the time in the downtime window during cut-over. Hence consider reducing the run-time of the data migration by starting the data migration well before cut-over. This can either be achieved by delta loads or by starting with immutable data. Note that delta loads may only have to be established for the entities with the highest volumes (and possibly their parent entities). Also the data migration may well run longer than the actual cut-over. For example, secondary information like a customer’s older contact history records may be migrated after the cut-over was completed and the new system is live.</p>
+<h2 id="10-design-your-new-system-with-migration-in-mind">10 Design your new system with migration in mind</h2>
+<p>Last but not least, you need to understand that migration can become quite hard if it is conducted as an aftermath of the new system’s design. This does by no means advocate that the new system shall be limited by the capabilities which lie in the legacy data, but in areas where the current data base is insufficient a co-existence in conjunction with an eventual business migration needs to be taken into consideration.
+But also from a teaming perspective, your migration has to be in the hearts and minds of the design and development teams of the new system. When they understand that the migration team is their key into the wicked world of legacy data they will intensify collaboration and arrive at a design that is not only brilliant on paper but actually works with the data at hand.</p>
+<h1 id="credits">Credits</h1>
+<p>Title image by <a href="https://www.shutterstock.com/g/gorodenkoff">Gorodenkoff</a> on <a href="https://www.shutterstock.com">Shutterstock</a></p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/oliver-koeth.jpg" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/oliver-koeth">Oliver Koeth</a><span>
+                    <a target="_blank"  href="https://github.com/okoeth"><img class="github-author" src="/images/GitHub_blk.png"></a>
+                    
+                    
+                </span></h3>
+                <p>CTO</p>
+
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/data/">data</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/best-practice/">best practice</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/development/">development</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/NTT-Data-white.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2023 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</body>
+
+</html>

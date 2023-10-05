@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Series on Technology Blog</title>
+    <link>https://nttdata-dach.github.io/series/</link>
+    <description>Recent content in Series on Technology Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright 2023 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
+    <lastBuildDate>Mon, 31 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/series/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>CONTROL PLANE OPERATED INFRASTRUCTURE</title>
+      <link>https://nttdata-dach.github.io/series/control-plane-operated-infrastructure/</link>
+      <pubDate>Mon, 31 Jul 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/series/control-plane-operated-infrastructure/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Understanding the value of Software Supply Chain Security</title>
+      <link>https://nttdata-dach.github.io/series/understanding-the-value-of-software-supply-chain-security/</link>
+      <pubDate>Tue, 28 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/series/understanding-the-value-of-software-supply-chain-security/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

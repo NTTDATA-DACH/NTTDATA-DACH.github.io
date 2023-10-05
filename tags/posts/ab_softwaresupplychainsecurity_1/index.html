@@ -1,0 +1,249 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Part 1: Attack vectors  </title>
+
+  <meta charset="utf-8">
+
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+  <script src="reading-time.js"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img src="/images/NTT-Data-white.png"></a>
+
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+    </nav>
+  </header>
+
+
+
+  <div class="emobanner article">
+    <h1>
+        <span class="pre">24.03.2023
+        
+         - Amulya Bhatia - <i class="fa-solid fa-book-open"></i> 6 min read
+        
+        </span>
+        Part 1: Attack vectors
+        
+        <a id="series-link" href="/series/understanding-the-value-of-software-supply-chain-security"><span class="subtitle">Understanding the value of Software Supply Chain Security</span></a>
+        
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/AB_SoftwareSupplyChainSecurity/title-image.png') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient" style="background: linear-gradient(to right, rgba(16, 28, 81,1), rgba(255,0,0,0));width:80%; left:0"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+    
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <p>There is generally a lot less awareness of Software Supply Chain Security in the contemporary IT landscape and thus its aspects are completely ignored by DevSecOps practices. In this two-part article, I aim to provide an overview of what software supply chain is, what attack vectors you render yourself vulnerable to when not including these aspects in your pipelines and how you can <strong>reduce your attack surface area</strong> using various tools / frameworks / guidelines like <strong>SLSA</strong>, <strong>sigstore</strong>, <strong>in-toto</strong>, <strong>SBOM</strong>, <strong>TUF</strong>, <strong>OpenSSF</strong> etc. We will also shed light on how the open source community as a whole is combating this threat.</p>
+<h3 id="what-does-software-supply-chain-look-like">What does software supply chain look like?</h3>
+<p>
+  <figure>
+    <img src="/posts/img/AB_SoftwareSupplyChainSecurity/ssc-white.png" alt="Software Supply chain - a sketch">
+    <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Software Supply Chain - a sketch</figcaption>
+  </br>
+  </figure>
+
+</p>
+<p>This is something that most of the readers must be already aware of, so just a short summary would suffice. A developer writes code and pushes it into a source code repository (git, svn etc.). The code is built through a pre-defined, mostly using GitOps and automated processes (Github Actions, Jenkins Pipelines, Argo CD, Tekton etc.) while requiring certain dependencies which may include some open source artifacts (numpy, pandas, spring etc.). The built artifact or package is then pushed into a Package Repo (OCI Container Registry, Artifactory etc.) where the consumer (your CD Pipeline) consumes the package and deploys it to the target system.</p>
+<h3 id="attacks-on-the-software-supply-chain">Attacks on the Software Supply Chain</h3>
+<p>
+  <figure>
+    <img src="/posts/img/AB_SoftwareSupplyChainSecurity/sscs-white.png" alt="Attack Vectors for Software Supply Chain">
+    <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Attack Vectors for Software Supply Chain</figcaption>
+  </br>
+  </figure>
+
+</p>
+<p>There are multiple attacks possible throughout the Software Supply Chain:</p>
+<ul>
+<li><strong>Submit unauthorized code / Bypass Code Review -</strong> You might say to this that it&rsquo;s not possible to do at your company but don&rsquo;t forget that you might be consuming open source artifacts which are vulnerable to such attacks as shown by <a href="https://lore.kernel.org/lkml/202105051005.49BFABCE@keescook/">this</a>, where a researcher tried to <strong>intentionally introduce vulnerabilities</strong> into the Linux kernel.</li>
+<li><strong>Compromise Source Control (git/svn server) / Unauthorized access</strong> - One of such recent attacks (in 2021) was on PHP&rsquo;s self hosted git server where two malicious commits were injected - more information <a href="https://news-web.php.net/php.internals/113838">here</a>.</li>
+<li><strong>Build from modified source code</strong> - Such attacks are quite prominent where the attacker compromises the build process to use source code which is not even part of your source control. An example of this is the attack on <a href="https://www.webmin.com/exploit.html">Webmin</a>.</li>
+<li><strong>Compromise build process</strong> - <a href="https://www.crowdstrike.com/blog/sunspot-malware-technical-analysis/">Solarwinds attack</a>, one of the most high profile cyber attacks from 2020, was performed by compromising the build platform in a way that a malicious behavior was injected during each build.</li>
+<li><strong>Using a compromised dependency in the build process</strong> - This kind of attack might be already known to people who use npm, especially the event-stream package which was <a href="https://web.archive.org/web/20210909051737/https://schneider.dev/blog/event-stream-vulnerability-explained/">compromised</a> a few years ago where an attacker added a seemingly unharmful dependency and then later updated the dependency to add malicious behavior.</li>
+<li><strong>Upload Compromised Package or Bypass CI/CD</strong> - This is generally possible when credentials gets leaked which gives the attackers the opportunity to upload compromised packages which were not built by your CI pipeline. An example of such an attack recently is <a href="https://about.codecov.io/apr-2021-post-mortem/">CodeCov</a>.</li>
+<li><strong>Compromise Package Repo</strong> - Package managers use different security mechanisms that provide varying levels of usability and resiliency to attacks. Most of these package managers have vulnerabilities that can be exploited by a man-in-the-middle or a malicious mirror as shown in <a href="https://theupdateframework.io/papers/attacks-on-package-managers-ccs2008.pdf">this paper</a>.</li>
+<li><strong>Use Compromised Package</strong> - These are generally performed by techniques like <a href="https://blog.sonatype.com/damaging-linux-mac-malware-bundled-within-browserify-npm-brandjack-attempt">Typosquating/Brandjacking</a>, where the attacker creates packages with misspelled names of a popular component or spoofing it closely. Such attacks rely on developers misspelling component names which happens as often as you think it does. Malicious payloads can be executed (crypto miners, install malware, steal credentials etc.) using such techniques as most developer build tools have the privileges to execute commands.</li>
+<li><strong>Compromise Open Source Artifact Server or dependencies</strong> - All of the attacks mentioned above can similarly happen outside of your CI/CD pipeline and creep through dependencies.</li>
+</ul>
+<p>For further depth on attacks and what is being done to thwart them, I highly recommend reading the report on the <a href="https://www.sonatype.com/state-of-the-software-supply-chain/introduction">State of the Software Supply Chain by Sonatype</a> published in 2022. For those with limited time, here is a TL;DR and the most important pieces of information presented as quotes from the report with some details around it:</p>
+<ul>
+<li>&ldquo;The overall download volume across the four major ecosystems (Java, Javascript, Python and .Net) is now projected to top <strong>3 trillion downloads</strong> overall.&rdquo; - This points towards our increasing dependence on open source artifacts, while not having much or any idea about what sort of security mechanism are in place to produce them.</li>
+<li>&ldquo;There has been an astonishing <strong>742% average annual increase</strong> in <strong>Software Supply Chain attacks</strong> over the past 3 years.&rdquo; - This is an alarming rate of increase!</li>
+<li>&ldquo;The most serious development in 2022 is an approaching collision of two critical issues in our industry: the <strong>continued growth of open source security concerns</strong> along with a dramatic legislative <strong>response by governments</strong> worldwide.&rdquo; - The governments around the world are taking these threats very seriously. The US issued a <a href="https://www.nist.gov/system/files/documents/2022/02/04/software-supply-chain-security-guidance-under-EO-14028-section-4e.pdf"><strong>Software Supply Chain Security Guidance Under Executive Order 14028</strong></a>, published a <a href="https://www.congress.gov/bill/117th-congress/senate-bill/4913"><strong>Securing Open Source Act of 2022</strong></a> and a <a href="https://csrc.nist.gov/Projects/ssdf"><strong>Secure Software Development Framework</strong></a>. The UK government unveiled its <a href="https://www.gov.uk/government/publications/national-cyber-strategy-2022/national-cyber-security-strategy-2022"><strong>National Cyber Security Strategy 2022</strong></a>, specifically citing supply chain vulnerabilities as an area of concern. Germany issued the <a href="https://www.buzer.de/BSIG.htm"><strong>Information Security Act 2.0 (IT-SiG)</strong></a> and the Second Ordinance Amending the BSI Criticality Ordinance (BSI KritisV) which specifically states that suppliers, i.e. manufacturers of critical components, will also be subject to certain obligations to <strong>safeguard the entire supply chain</strong>. Similar actions are taking place in other regions around the world as well.</li>
+<li>&ldquo;About <strong>6</strong> out of every <strong>7</strong> project vulnerabilities come from <strong>transitive dependencies</strong>.&rdquo;</li>
+<li>&ldquo;<strong>1.2 billion</strong> vulnerable dependencies are downloaded <strong>each month</strong>.&rdquo;</li>
+<li>&ldquo;We’ve hit an inflection point, and development teams <strong>must address software supply chain attacks</strong> and select better open source projects.&rdquo;</li>
+</ul>
+<h2 id="what-actions-are-being-taken-isolated">What actions are being taken? (Isolated)</h2>
+<p>GitHub <a href="https://github.blog/2022-02-01-top-100-npm-package-maintainers-require-2fa-additional-security/"><strong>introduced mandatory two-factor authentication for the top 100 npm maintainers</strong></a> and <a href="https://setuptools.pypa.io/en/latest/userguide/development_mode.html"><strong>PyPA is working to reduce dependence on setup.py</strong></a>, which is a key element to how these attacks can launch alongside while promoting <a href="https://p.datadoghq.com/sb/7dc8b3250-389f47d638b967dbb8f7edfd4c46acb1?from_ts=1662301978564&amp;to_ts=1662388378564&amp;live=true"><strong>2FA adoption using a public dashboard</strong></a>. These measures are an important step in preventing maintainer hijacking of known popular packages and will encourage added trust in the integrity of the package maintainer.</p>
+<p>Some registries such as the <strong>Maven Central Repository</strong> require mandatory organizational verification and a namespaced coordinate system to help avert attacks like <strong>Dependency confusion</strong>, a form of attack relying on spoofing internal package names and publishing them to an open source registry with an abnormally high version number.</p>
+<p>While there are these isolated actions, they don&rsquo;t solve all supply chain issues and there is certainly a need for more concerted, organized actions which the organizations, businesses and enterprises around the world need to take to be more robust in order to avert these attacks.</p>
+<p>In part two, I&rsquo;ll discuss what actions can be taken in an organized manner and what tools are available to do so. Time for a quick break now!</p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/amulya-bhatia.jpg" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/amulya-bhatia">Amulya Bhatia</a><span>
+                    <a target="_blank"  href="https://github.com/iamulya"><img class="github-author" src="/images/GitHub_blk.png"></a>
+                    
+                    
+                </span></h3>
+                <p>Senior Solution Architect</p>
+
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        <div class="related-block">
+            <h3 class="related-heading">Check out the full series</h3>
+            
+            <ul>
+                
+                <li><a class="related-link" href="/posts/ab_softwaresupplychainsecurity_1/">UNDERSTANDING THE VALUE OF SOFTWARE SUPPLY CHAIN SECURITY - Part 1: Attack vectors</a></li>
+                
+                <li><a class="related-link" href="/posts/ab_softwaresupplychainsecurity_2/">UNDERSTANDING THE VALUE OF SOFTWARE SUPPLY CHAIN SECURITY - Part 2: Tools in your arsenal</a></li>
+                
+            </ul>
+        </div>
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+                <h3 class="related-heading">You may also like</h3>
+
+                
+                
+                <ul>
+                    
+                    
+                    
+                    <li><a class="related-link" href="/posts/mjm-renovateautomaticpullrequest/">Using Renovate to scale up automatic pull request creation on GitHub</a></li>
+                    
+                    
+                    
+                    
+                        <li><a class="related-link" href="/posts/ns-controlplaneoperatedinfrastructure_1/">CONTROL PLANE OPERATED INFRASTRUCTURE - Part 1: Introduction to Crossplane</a></li>
+                    
+                    
+                </ul>
+                
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/cybersecurity/">Cybersecurity</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/devsecops/">DevSecOps</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/devops/">DevOps</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/software-supply-chain/">Software Supply Chain</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/software-lifecycle/">Software Lifecycle</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/NTT-Data-white.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2023 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</body>
+
+</html>
