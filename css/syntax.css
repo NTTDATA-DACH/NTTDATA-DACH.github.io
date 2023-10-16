@@ -1,4 +1,4 @@
-/* Background */ .bg { color: #e2e4e5; background-color: #282a36; }
+/* Background */ .bg { color: #e2e4e5; background-color: var(--attention-accent-yellow); }
 /* PreWrapper */ .chroma { color: #e2e4e5; background-color: #282a36; }
 /* Other */ .chroma .x {  }
 /* Error */ .chroma .err { color: #ff5c57 }

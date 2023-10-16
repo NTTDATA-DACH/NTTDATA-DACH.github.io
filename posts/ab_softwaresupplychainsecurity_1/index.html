@@ -6,19 +6,18 @@
   <title>  Part 1: Attack vectors  </title>
 
   <meta charset="utf-8">
-
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
   
-  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
   <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
   <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
   <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
-  <script src="reading-time.js"></script>
 </head>
 
 <body>
   <header>
-    <a href="/"><img src="/images/NTT-Data-white.png"></a>
-
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
     <nav>
 
       
@@ -33,6 +32,12 @@
       
 
       <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
     </nav>
   </header>
 
@@ -54,7 +59,7 @@
 
     
         <div class="article-header-img" style="background: url('/posts/img/AB_SoftwareSupplyChainSecurity/title-image.png') no-repeat center center; background-size: cover">
-            <div class="article-header-gradient" style="background: linear-gradient(to right, rgba(16, 28, 81,1), rgba(255,0,0,0));width:80%; left:0"></div>
+            <div class="article-header-gradient"></div>
         </div> 
     
 
@@ -125,12 +130,16 @@
             <img src="../../authors/amulya-bhatia.jpg" alt=""/>
             <figcaption>
                 <h3><a href="/authors/amulya-bhatia">Amulya Bhatia</a><span>
-                    <a target="_blank"  href="https://github.com/iamulya"><img class="github-author" src="/images/GitHub_blk.png"></a>
-                    
                     
                 </span></h3>
-                <p>Senior Solution Architect</p>
-
+                <p>Senior Solution Architect </p>
+                <p calss="author-socials">
+                    <a target="_blank"  href="https://github.com/iamulya"><i class="fa-brands fa-github"></i></a>
+                    
+                    
+                </p>
+                
+                    
             </figcaption>
         </figure>
         
@@ -243,7 +252,5 @@
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
 </script>
-
-</body>
 
 </html>
