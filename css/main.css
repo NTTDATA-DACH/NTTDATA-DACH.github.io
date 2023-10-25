@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100;200;300;400;500;600;700;800;900&family=Noto+Serif&display=swap');
+
 :root {
     --smart-navi-main:                #070F26;
     --future-blue-main:               #0072BC;
@@ -275,6 +278,10 @@ div.emobanner {
     padding-right: 0px;
     background-size: cover;
     z-index: 1;
+    justify-content: space-around;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-bottom: -60px;
     
 }
 
@@ -284,6 +291,8 @@ div.emobanner.article {
     background-size: cover;
     background-color: var(--smart-navi-main);
     z-index: 1;
+    flex-wrap: nowrap;
+    margin-bottom: 0px;
 }
 
 div.emobanner.article div {
@@ -301,7 +310,10 @@ div.emobanner h1 {
     margin-bottom: auto;
     font-family: var(--L1-headline-font);
     font-size: 50px;
-    flex: 1;
+    flex: 0 1 90%;
+    overflow: hidden;
+    max-width: 1400px;
+    padding-bottom: 40px;
 }
 
 div.emobanner h1 span.pre {
@@ -536,6 +548,23 @@ a.footnote-ref::before {
 
 a.footnote-ref::after {
     content: ']';
+}
+
+table,th,td {
+    border: solid 1px rgb(255, 255, 255);    
+    border-collapse: collapse;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    background-color: #404457;
+    color: var(--text-color-grey-50);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+th {
+    background-color: #282a36;
 }
 
 /* Mobile */
@@ -815,7 +844,7 @@ h3 {
     justify-content: space-around;
     flex-direction: row;
     flex-wrap: wrap;
-    margin-top: 60px;
+    margin-top: 40px;
  }
 
 .card {
