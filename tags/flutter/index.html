@@ -4,21 +4,20 @@
 
 <head>
   <title>  Flutter  </title>
-
-  <meta charset="utf-8">
-
+  <meta charset="utf-8"/> 
   
-  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  
   <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
   <link href="/tags/flutter/index.xml" rel="feed" type="application/rss+xml" title="Technology Blog" />
   <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
-  <script src="reading-time.js"></script>
 </head>
 
 <body>
   <header>
-    <a href="/"><img src="/images/NTT-Data-white.png"></a>
-
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
     <nav>
 
       
@@ -33,6 +32,12 @@
       
 
       <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
     </nav>
   </header>
 
@@ -40,11 +45,13 @@
 <div class="emobanner article" style="background-image: url('')">
   
   
-  <h1><span></span>Articles related to <b>Flutter</b></h1>
+  <h1><span></span>Articles related to 
+    <br>
+      <b>Flutter</b></h1>
   
 
   <div class="article-header-img" style="background: url('/images/office.jpg') no-repeat center center; background-size: cover">
-    <div class="article-header-gradient" style="background: linear-gradient(to right, rgba(16, 28, 81,1), rgba(255,0,0,0));width:80%; left:0"></div>
+    <div class="article-header-gradient"></div>
   </div> 
 
 
@@ -62,7 +69,7 @@
         <div class="card">
   <a style="width: 100%; height:100%" href="/posts/ak-buildingrunningflutteronaws/">
     <div class="image-wrapper">
-      <div class="card-image" style="background-image:url('/posts/img/AK-BuildingRunningFlutterOnAWS/title-image.png')"></div>
+      <div class="card-image" style="background-image:url('/posts/img/AK-BuildingRunningFlutterOnAWS/title-image.jpg')"></div>
       <div class="card-gradient"></div>
       
     </div>
@@ -77,7 +84,7 @@
       <div class="card-author-wrapper">
         
         <p class="card-date">
-          </i> 30.06.2023
+          </i> 03.11.2023
         </p>
         <p class="card-author">
             
@@ -156,7 +163,19 @@
   
   
   <li>
+    <a href=/tags/argo-cd/ title="All pages with tag <i>argo-cd</i>">argo-cd</a>
+  </li>
+  
+  
+  
+  <li>
     <a href=/tags/array-of-struct/ title="All pages with tag <i>array-of-struct</i>">array-of-struct</a>
+  </li>
+  
+  
+  
+  <li>
+    <a href=/tags/automation/ title="All pages with tag <i>automation</i>">automation</a>
   </li>
   
   
@@ -258,6 +277,12 @@
   
   
   <li>
+    <a href=/tags/dependency-management/ title="All pages with tag <i>dependency-management</i>">dependency-management</a>
+  </li>
+  
+  
+  
+  <li>
     <a href=/tags/development/ title="All pages with tag <i>development</i>">development</a>
   </li>
   
@@ -301,6 +326,12 @@
   
   <li>
     <a href=/tags/flutter/ title="All pages with tag <i>flutter</i>">flutter</a>
+  </li>
+  
+  
+  
+  <li>
+    <a href=/tags/github-actions/ title="All pages with tag <i>github-actions</i>">github-actions</a>
   </li>
   
   
@@ -434,7 +465,7 @@
   </main>
 
 <footer>
-  <a href="/"><img src="/images/NTT-Data-white.png"></a>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
   <nav>
     
     <a  href="/imprint">Imprint</a>
@@ -463,7 +494,5 @@
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
 </script>
-
-</body>
 
 </html>

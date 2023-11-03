@@ -2,6 +2,36 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://nttdata-dach.github.io/authors/alexander-kroll/</loc>
+    <lastmod>2023-11-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/android/</loc>
+    <lastmod>2023-11-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/authors/</loc>
+    <lastmod>2023-11-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/authors/</loc>
+    <lastmod>2023-11-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/aws/</loc>
+    <lastmod>2023-11-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/posts/ak-buildingrunningflutteronaws/</loc>
+    <lastmod>2023-11-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/cloud/</loc>
+    <lastmod>2023-11-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/flutter/</loc>
+    <lastmod>2023-11-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/mobile/</loc>
+    <lastmod>2023-11-03T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/</loc>
+    <lastmod>2023-11-03T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://nttdata-dach.github.io/authors/alexander-suchier/</loc>
     <lastmod>2023-10-25T00:00:00+00:00</lastmod>
   </url><url>
@@ -17,12 +47,6 @@
     <loc>https://nttdata-dach.github.io/tags/api-security/</loc>
     <lastmod>2023-10-25T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/authors/</loc>
-    <lastmod>2023-10-25T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/authors/</loc>
-    <lastmod>2023-10-25T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://nttdata-dach.github.io/series/kong-gateway/</loc>
     <lastmod>2023-10-25T00:00:00+00:00</lastmod>
   </url><url>
@@ -36,9 +60,6 @@
     <lastmod>2023-10-25T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/series/</loc>
-    <lastmod>2023-10-25T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/</loc>
     <lastmod>2023-10-25T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/traffic-management/</loc>
@@ -67,12 +88,6 @@
   </url><url>
     <loc>https://nttdata-dach.github.io/posts/mjm-renovateautomaticpullrequest/</loc>
     <lastmod>2023-08-22T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/aws/</loc>
-    <lastmod>2023-07-31T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/cloud/</loc>
-    <lastmod>2023-07-31T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/control-plane/</loc>
     <lastmod>2023-07-31T00:00:00+00:00</lastmod>
@@ -286,6 +301,8 @@
     <loc>https://nttdata-dach.github.io/authors/samuel-wirth/</loc>
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/sascha-hampl/</loc>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/authors/sherief-ahmed/</loc>
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/stefan-k%c3%bchnel/</loc>
   </url><url>
