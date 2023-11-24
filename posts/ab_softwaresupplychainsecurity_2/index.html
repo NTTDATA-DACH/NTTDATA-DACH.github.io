@@ -15,6 +15,7 @@
   <meta property="og:description" content="In the first part we discussed software supply chain in general, which possible attack vectors exist and what actions are being taken by the community but rather in an isolated manner. In this part, I&rsquo;ll line out specific actions which can be taken in an organized manner and which tools/framework/guidelines can be useful along this way."/>
   
   <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
   
   <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
   <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
@@ -51,7 +52,21 @@
 
 
 
-  <div class="emobanner article">
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <p class="image is-4by3">
+            <img src="" alt="" id="modalImg">
+        </p>
+        <div id="caption">
+        </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
     <h1>
         <span class="pre">28.03.2023
         
@@ -76,7 +91,7 @@
 </div>
 
 <main>
-    
+
     <div class="container">
         <div class="spacer"></div>
         <div class="content">

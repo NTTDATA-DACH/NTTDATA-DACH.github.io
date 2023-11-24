@@ -7,22 +7,121 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2023 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Fri, 03 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 24 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AWS</title>
+      <link>https://nttdata-dach.github.io/tags/aws/</link>
+      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/aws/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>EKS</title>
+      <link>https://nttdata-dach.github.io/tags/eks/</link>
+      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/eks/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>external secrets</title>
+      <link>https://nttdata-dach.github.io/tags/external-secrets/</link>
+      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/external-secrets/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>GitOps</title>
+      <link>https://nttdata-dach.github.io/tags/gitops/</link>
+      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/gitops/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>HashiCorp Vault</title>
+      <link>https://nttdata-dach.github.io/tags/hashicorp-vault/</link>
+      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/hashicorp-vault/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>kubernetes</title>
+      <link>https://nttdata-dach.github.io/tags/kubernetes/</link>
+      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/kubernetes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Kubernetes operator</title>
+      <link>https://nttdata-dach.github.io/tags/kubernetes-operator/</link>
+      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/kubernetes-operator/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Parameter Store</title>
+      <link>https://nttdata-dach.github.io/tags/parameter-store/</link>
+      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/parameter-store/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Quarkus</title>
+      <link>https://nttdata-dach.github.io/tags/quarkus/</link>
+      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/quarkus/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>sealed secrets</title>
+      <link>https://nttdata-dach.github.io/tags/sealed-secrets/</link>
+      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/sealed-secrets/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>secrets</title>
+      <link>https://nttdata-dach.github.io/tags/secrets/</link>
+      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/secrets/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Secrets Manager</title>
+      <link>https://nttdata-dach.github.io/tags/secrets-manager/</link>
+      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io/tags/secrets-manager/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Android</title>
       <link>https://nttdata-dach.github.io/tags/android/</link>
       <pubDate>Fri, 03 Nov 2023 00:00:00 +0000</pubDate>
       
       <guid>https://nttdata-dach.github.io/tags/android/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>AWS</title>
-      <link>https://nttdata-dach.github.io/tags/aws/</link>
-      <pubDate>Fri, 03 Nov 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://nttdata-dach.github.io/tags/aws/</guid>
       <description></description>
     </item>
     
@@ -158,15 +257,6 @@
       <pubDate>Tue, 22 Aug 2023 00:00:00 +0000</pubDate>
       
       <guid>https://nttdata-dach.github.io/tags/github-actions/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>kubernetes</title>
-      <link>https://nttdata-dach.github.io/tags/kubernetes/</link>
-      <pubDate>Tue, 22 Aug 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://nttdata-dach.github.io/tags/kubernetes/</guid>
       <description></description>
     </item>
     

@@ -15,6 +15,7 @@
   <meta property="og:description" content="Java 17 introduced new random number generators. These provide longer cycles, improved statistical uniform distribution, improved threading support, and Streams API integration. This article provides a short introduction to random number generators and an overview of the improvements made in Java 17."/>
   
   <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
   
   <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
   <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
@@ -51,7 +52,21 @@
 
 
 
-  <div class="emobanner article">
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <p class="image is-4by3">
+            <img src="" alt="" id="modalImg">
+        </p>
+        <div id="caption">
+        </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
     <h1>
         <span class="pre">13.04.2023
         
@@ -73,7 +88,7 @@
 </div>
 
 <main>
-    
+
     <div class="container">
         <div class="spacer"></div>
         <div class="content">

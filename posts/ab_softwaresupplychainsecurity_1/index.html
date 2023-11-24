@@ -15,6 +15,7 @@
   <meta property="og:description" content="There is generally a lot less awareness of Software Supply Chain Security in the contemporary IT landscape and thus its aspects are completely ignored by DevSecOps practices. In this two-part article, I aim to provide an overview of what software supply chain is, what attack vectors you render yourself vulnerable to when not including these aspects in your pipelines and how you can reduce your attack surface area using various tools / frameworks / guidelines like SLSA, sigstore, in-toto, SBOM, TUF, OpenSSF etc. We will also shed light on how the open source community as a whole is combating this threat."/>
   
   <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
   
   <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
   <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
@@ -51,7 +52,21 @@
 
 
 
-  <div class="emobanner article">
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <p class="image is-4by3">
+            <img src="" alt="" id="modalImg">
+        </p>
+        <div id="caption">
+        </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
     <h1>
         <span class="pre">24.03.2023
         
@@ -76,7 +91,7 @@
 </div>
 
 <main>
-    
+
     <div class="container">
         <div class="spacer"></div>
         <div class="content">

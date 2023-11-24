@@ -15,6 +15,7 @@
   <meta property="og:description" content="This tech blog article introduces Crossplane, an open-source Kubernetes add-on that extends the capabilities of infrastructure management by leveraging Kubernetes as a control plane. Crossplane uses Kubernetes&rsquo; extensible API design and Custom Resource Definitions (CRDs) to manage not only services and applications but also cloud infrastructure. The article provides step-by-step instructions on how to get started with Crossplane and provision your first resources in the cloud using Kubernetes as a control plane."/>
   
   <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
   
   <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
   <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
@@ -51,7 +52,21 @@
 
 
 
-  <div class="emobanner article">
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <p class="image is-4by3">
+            <img src="" alt="" id="modalImg">
+        </p>
+        <div id="caption">
+        </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
     <h1>
         <span class="pre">31.07.2023
         
@@ -76,7 +91,7 @@
 </div>
 
 <main>
-    
+
     <div class="container">
         <div class="spacer"></div>
         <div class="content">
@@ -285,17 +300,17 @@
                     
                     
                     
+                    <li><a class="related-link" href="/posts/sk-secretshandlinginkubernetes/">Secrets Handling in Kubernetes</a></li>
+                    
+                    
+                    
+                    
                     <li><a class="related-link" href="/posts/ak-buildingrunningflutteronaws/">Building and running Flutter mobile applications for Android on AWS Device Farm</a></li>
                     
                     
                     
                     
                     <li><a class="related-link" href="/posts/mjm-renovateautomaticpullrequest/">Using Renovate to scale up automatic pull request creation on GitHub</a></li>
-                    
-                    
-                    
-                    
-                        <li><a class="related-link" href="/posts/ab_softwaresupplychainsecurity_2/">UNDERSTANDING THE VALUE OF SOFTWARE SUPPLY CHAIN SECURITY - Part 2: Tools in your arsenal</a></li>
                     
                     
                 </ul>
