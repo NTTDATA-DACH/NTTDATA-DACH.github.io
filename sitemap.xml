@@ -2,11 +2,59 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://nttdata-dach.github.io/authors/</loc>
-    <lastmod>2023-11-24T00:00:00+00:00</lastmod>
+    <loc>https://nttdata-dach.github.io/tags/aad/</loc>
+    <lastmod>2023-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/authors/alexander-suchier/</loc>
+    <lastmod>2023-12-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/</loc>
-    <lastmod>2023-11-24T00:00:00+00:00</lastmod>
+    <lastmod>2023-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/authors/</loc>
+    <lastmod>2023-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/gateway/</loc>
+    <lastmod>2023-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/jwt/</loc>
+    <lastmod>2023-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/kong/</loc>
+    <lastmod>2023-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/series/kong-the-gateway-without-limitations/</loc>
+    <lastmod>2023-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/kong-plugin/</loc>
+    <lastmod>2023-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/lua-module/</loc>
+    <lastmod>2023-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/obo/</loc>
+    <lastmod>2023-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/on-behalf-of/</loc>
+    <lastmod>2023-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/posts/as-konggateway-onbehalfof/</loc>
+    <lastmod>2023-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/pdk/</loc>
+    <lastmod>2023-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/saml/</loc>
+    <lastmod>2023-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/series/</loc>
+    <lastmod>2023-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/</loc>
+    <lastmod>2023-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/token-exchange/</loc>
+    <lastmod>2023-12-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/aws/</loc>
     <lastmod>2023-11-24T00:00:00+00:00</lastmod>
@@ -50,9 +98,6 @@
     <loc>https://nttdata-dach.github.io/authors/stefan-k%C3%BChnel/</loc>
     <lastmod>2023-11-24T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/tags/</loc>
-    <lastmod>2023-11-24T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://nttdata-dach.github.io/authors/alexander-kroll/</loc>
     <lastmod>2023-11-03T00:00:00+00:00</lastmod>
   </url><url>
@@ -71,9 +116,6 @@
     <loc>https://nttdata-dach.github.io/tags/mobile/</loc>
     <lastmod>2023-11-03T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/authors/alexander-suchier/</loc>
-    <lastmod>2023-10-25T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://nttdata-dach.github.io/tags/api-developer-portal/</loc>
     <lastmod>2023-10-25T00:00:00+00:00</lastmod>
   </url><url>
@@ -86,9 +128,6 @@
     <loc>https://nttdata-dach.github.io/tags/api-security/</loc>
     <lastmod>2023-10-25T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/series/kong-gateway/</loc>
-    <lastmod>2023-10-25T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://nttdata-dach.github.io/posts/as-konglogchunking/</loc>
     <lastmod>2023-10-25T00:00:00+00:00</lastmod>
   </url><url>
@@ -96,9 +135,6 @@
     <lastmod>2023-10-25T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/routing/</loc>
-    <lastmod>2023-10-25T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/series/</loc>
     <lastmod>2023-10-25T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/traffic-management/</loc>
@@ -322,6 +358,8 @@
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/amulya-bhatia/</loc>
   </url><url>
+    <loc>https://nttdata-dach.github.io/authors/esmaeil-nikumanesh/</loc>
+  </url><url>
     <loc>https://nttdata-dach.github.io/authors/maja-schwarz/</loc>
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/markus-frankenbach/</loc>
@@ -329,6 +367,8 @@
     <loc>https://nttdata-dach.github.io/authors/markus-seidl/</loc>
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/mikel-jason-m%c3%bcnnekhoff/</loc>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/authors/najmeh-foroozani/</loc>
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/niklas-schuster/</loc>
   </url><url>

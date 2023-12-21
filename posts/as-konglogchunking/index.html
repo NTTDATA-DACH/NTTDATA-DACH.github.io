@@ -7,7 +7,7 @@
   <meta charset="utf-8"/> 
   
   <meta property="og:type" content="article"/>
-  <meta property="og:title" content="Kong Gateway - Part 2: Log Chunking"/>
+  <meta property="og:title" content="Kong - The Gateway without Limitations - Part 2: Log Chunking"/>
   
   <meta property="article:author" content="[Alexander Suchier]"/>
   <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/AS-KongLogChunking/title-image.jpg"/>
@@ -75,7 +75,7 @@
         </span>
         Part 2: Log Chunking
         
-        <a id="series-link" href="/series/kong-gateway"><span class="subtitle">Kong Gateway</span></a>
+        <a id="series-link" href="/series/kong-the-gateway-without-limitations"><span class="subtitle">Kong - The Gateway without Limitations</span></a>
         
         
     </h1>
@@ -112,15 +112,15 @@ This is where we start talking about log chunking, which is a method of breaking
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">KONG_UNSTRUSTED_LUA_SANDBOX_REQUIRES</span> <span class="o">=</span> pl.stringx, kong.modules.chunk_utils</span></span></code></pre></div>
 <p>I found the Penlight library to be a great help in speeding up Lua development. After the configuration steps, the chunker utility module can be used in both serverless functions and plugins.</p>
 <p>Example of using the chunker module in a serverless function:
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-lua" data-lang="lua"><span class="line"><span class="ln" id="1"><a style="outline: none; text-decoration:none; color:inherit" href="#1">1</a></span><span class="cl"><span class="kr">return</span> <span class="kr">function</span><span class="p">()</span>
-</span></span><span class="line"><span class="ln" id="2"><a style="outline: none; text-decoration:none; color:inherit" href="#2">2</a></span><span class="cl">  <span class="cm">--[[ logging --]]</span>
-</span></span><span class="line"><span class="ln" id="3"><a style="outline: none; text-decoration:none; color:inherit" href="#3">3</a></span><span class="cl"> 
-</span></span><span class="line"><span class="ln" id="4"><a style="outline: none; text-decoration:none; color:inherit" href="#4">4</a></span><span class="cl">  <span class="kd">local</span> <span class="n">chunk_utils</span> <span class="o">=</span> <span class="n">require</span> <span class="s1">&#39;kong.modules.chunk_utils&#39;</span>
-</span></span><span class="line"><span class="ln" id="5"><a style="outline: none; text-decoration:none; color:inherit" href="#5">5</a></span><span class="cl">  <span class="kd">local</span> <span class="n">chunker</span> <span class="o">=</span> <span class="n">chunk_utils.chunker</span>
-</span></span><span class="line"><span class="ln" id="6"><a style="outline: none; text-decoration:none; color:inherit" href="#6">6</a></span><span class="cl"> 
-</span></span><span class="line"><span class="ln" id="7"><a style="outline: none; text-decoration:none; color:inherit" href="#7">7</a></span><span class="cl">  <span class="kd">local</span> <span class="n">authorization</span> <span class="o">=</span> <span class="n">kong.request</span><span class="p">.</span><span class="n">get_header</span><span class="p">(</span><span class="s1">&#39;Authorization&#39;</span><span class="p">)</span>
-</span></span><span class="line"><span class="ln" id="8"><a style="outline: none; text-decoration:none; color:inherit" href="#8">8</a></span><span class="cl">  <span class="n">chunker.logChunks</span><span class="p">(</span><span class="n">kong.log</span><span class="p">.</span><span class="n">debug</span><span class="p">,</span> <span class="s1">&#39;authorization header: &#39;</span><span class="p">,</span> <span class="n">authorization</span><span class="p">)</span>
-</span></span><span class="line"><span class="ln" id="9"><a style="outline: none; text-decoration:none; color:inherit" href="#9">9</a></span><span class="cl"><span class="kr">end</span></span></span></code></pre></div></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-lua" data-lang="lua"><span class="line"><span class="ln" id="1"><a class="lnlinks" href="#1">1</a></span><span class="cl"><span class="kr">return</span> <span class="kr">function</span><span class="p">()</span>
+</span></span><span class="line"><span class="ln" id="2"><a class="lnlinks" href="#2">2</a></span><span class="cl">  <span class="cm">--[[ logging --]]</span>
+</span></span><span class="line"><span class="ln" id="3"><a class="lnlinks" href="#3">3</a></span><span class="cl"> 
+</span></span><span class="line"><span class="ln" id="4"><a class="lnlinks" href="#4">4</a></span><span class="cl">  <span class="kd">local</span> <span class="n">chunk_utils</span> <span class="o">=</span> <span class="n">require</span> <span class="s1">&#39;kong.modules.chunk_utils&#39;</span>
+</span></span><span class="line"><span class="ln" id="5"><a class="lnlinks" href="#5">5</a></span><span class="cl">  <span class="kd">local</span> <span class="n">chunker</span> <span class="o">=</span> <span class="n">chunk_utils.chunker</span>
+</span></span><span class="line"><span class="ln" id="6"><a class="lnlinks" href="#6">6</a></span><span class="cl"> 
+</span></span><span class="line"><span class="ln" id="7"><a class="lnlinks" href="#7">7</a></span><span class="cl">  <span class="kd">local</span> <span class="n">authorization</span> <span class="o">=</span> <span class="n">kong.request</span><span class="p">.</span><span class="n">get_header</span><span class="p">(</span><span class="s1">&#39;Authorization&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln" id="8"><a class="lnlinks" href="#8">8</a></span><span class="cl">  <span class="n">chunker.logChunks</span><span class="p">(</span><span class="n">kong.log</span><span class="p">.</span><span class="n">debug</span><span class="p">,</span> <span class="s1">&#39;authorization header: &#39;</span><span class="p">,</span> <span class="n">authorization</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln" id="9"><a class="lnlinks" href="#9">9</a></span><span class="cl"><span class="kr">end</span></span></span></code></pre></div></p>
 <p>Whenever an overly long logging message is chunked, it is output with chunk meta information.</p>
 <p><code>[&lt;chunk id&gt;, &lt;chunk index&gt;, &lt;chunks&gt; &lt;chunk size&gt;]</code></p>
 <p>With this meta information, the associated log chunks can also be automatically searched and reassembled (if necessary).</p>
@@ -162,9 +162,11 @@ This is where we start talking about log chunking, which is a method of breaking
             
             <ul>
                 
-                <li><a class="related-link" href="/posts/as-kongproductintroduction/">KONG GATEWAY - Part 1: Brief Product Introduction</a></li>
+                <li><a class="related-link" href="/posts/as-kongproductintroduction/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 1: Brief Product Introduction</a></li>
                 
-                <li><a class="related-link" href="/posts/as-konglogchunking/">KONG GATEWAY - Part 2: Log Chunking</a></li>
+                <li><a class="related-link" href="/posts/as-konglogchunking/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 2: Log Chunking</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-onbehalfof/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 3: Token Exchange On-Behalf-Of</a></li>
                 
             </ul>
         </div>

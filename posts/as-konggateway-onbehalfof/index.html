@@ -1,0 +1,305 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Part 3: Token Exchange On-Behalf-Of  </title>
+  <meta charset="utf-8"/> 
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Kong - The Gateway without Limitations - Part 3: Token Exchange On-Behalf-Of"/>
+  
+  <meta property="article:author" content="[Alexander Suchier]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/AS-KongGateway-OnBehalfOf/title-image.jpg"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/as-konggateway-onbehalfof/"/>
+  <meta property="og:description" content="In the last blog, I provided a solution on how to overcome the character limit when logging. This time, I would like to show how to implement an OAuth 2.0-based On-Behalf-Of (delegation) grant flow. Such complex token orchestration tasks can be easily handled on the API gateway while ensuring the highest security standards which even make zero-trust architectures possible in the first place."/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <p class="image is-4by3">
+            <img src="" alt="" id="modalImg">
+        </p>
+        <div id="caption">
+        </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">21.12.2023
+        
+         - Alexander Suchier - <i class="fa-solid fa-book-open"></i> 9 min read
+        
+        </span>
+        Part 3: Token Exchange On-Behalf-Of
+        
+        <a id="series-link" href="/series/kong-the-gateway-without-limitations"><span class="subtitle">Kong - The Gateway without Limitations</span></a>
+        
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/AS-KongGateway-OnBehalfOf/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <p>In the last <a href="https://nttdata-dach.github.io/posts/as-konglogchunking/">blog</a>, I provided a solution on how to overcome the character limit when logging. This time, I would like to show how to implement an OAuth 2.0-based On-Behalf-Of (delegation) grant flow. Such complex token orchestration tasks can be easily handled on the <a href="https://nttdata-dach.github.io/posts/as-kongproductintroduction/">API Gateway</a> while ensuring the highest security standards which even make zero-trust architectures (ZTA) possible in the first place.</p>
+<h1 id="overview">Overview</h1>
+<p>In my previous blog articles, I concluded that Kong is the API Gateway without limits. In this technical blog, I would like to provide a solution for an enhanced token management flow for token exchange. The exchange flow is called On-Behalf-Of grant type, OBO for short. Once again, the Kong Gateway proves its great expansion possibilities.</p>
+<p>The OBO flow is not part of the standard OAuth 2.0 specification (<a href="https://datatracker.ietf.org/doc/html/rfc6749">RFC 6749</a>) of the Internet Engineering Task Force (IETF). Currently, it seems to be an exclusive Microsoft Azure Active Directory (AAD) implementation, as described and implemented in the <a href="https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-on-behalf-of-flow">OBO Microsoft documentation</a>. In the following, I will refer to the OBO solution offered by Microsoft AAD (recently Azure AD was renamed to <a href="https://learn.microsoft.com/en-us/entra/fundamentals/new-name#product-name">Microsoft Entra ID</a>, but for this blog I will stick to the previous well-known name and the acronym AAD). While the IETF has extended its standard to include OAuth 2.0 Token Exchange (<a href="https://datatracker.ietf.org/doc/html/rfc8693">RFC 8693</a>), but AAD does not utilize the officially introduced grant type <code>urn:ietf:params:oauth:grant-type:token-exchange</code>. Microsoft’s implementation deviates from the official documentation promoted as a standard in 2020. Still, the delegation idea remains the same (at this point I would like to point out an excellent <a href="https://www.youtube.com/watch?v=Ue8HKBGkIJY">token exchange YT video</a> by Sascha Preibisch).</p>
+<p>The OBO flow enables a resource server to call another protected resource server in the background without any user interaction. This approach is particularly valuable when there are two or more resource servers that trust the same authorization server and contribute to the logic of a single application through the request chain. The idea is to propagate the delegated user identity and appropriate permissions seamlessly throughout the chain in the background. It allows the exchange of tokens from &ldquo;external&rdquo; to &ldquo;internal&rdquo; structures. Traditionally, such calls are made as machine-to-machine requests using an access token obtained via the <a href="https://datatracker.ietf.org/doc/html/rfc6749#section-1.3.4">Client Credentials grant type</a>. However, without OBO, the user context is lost when making these machine-to-machine requests.</p>
+<p>A further great advantage of the AAD solution is that the requested token can not only be a <a href="https://datatracker.ietf.org/doc/html/rfc7519">JSON Web Token (JWT)</a>, but also a <a href="https://saml.xml.org/saml-specifications">Security Assertion Markup Language (SAML)</a> v1.0 or v2.0 token. There are still a lot of systems that can only get along with a SAML token. Therefore, it is an ideal solution for exchanging the security token format. It is important to note that the AAD OBO flow works only for user principles and not for service principles.</p>
+
+<aside data-content="Note"><br/>
+
+    In the context a central Identity Provider (IdP) like AAD and its role in Identity and Access Management (IAM), a &ldquo;user principal&rdquo; typically refers to an individual user, while a &ldquo;service principal&rdquo; refers to an identity associated with a service or application rather than an individual user. In practical terms, user principals are associated with human users, while service principals are associated with non-human entities like applications, scripts, or services that need to interact with other services or resources in an automated manner (for example in enterprise job scheduling and workload automation tasks).
+</aside>
+<p>The diagram below illustrates the general principle with an API Gateway acting as an intermediary for the OBO grant type. This detail from the overall process sequence flow assumes that user authentication and authorization have been completed, and that the authorization server (AAD) issued a security token that may have been used in previous resource server calls.</p>
+<!-- raw HTML omitted -->
+
+
+  
+
+<picture style="display: contents;"
+     
+    id="[167 432 213 287 345 458]"
+    onclick="openModal(this.id)"
+     >
+    <source srcset="/posts/img/AS-KongGateway-OnBehalfOf/diagram-dark.png" media="none"/>
+    <img    
+        class=" modal-pic"    
+        src="/posts/img/AS-KongGateway-OnBehalfOf/diagram-light.png" 
+         alt="test" 
+         
+        />
+</picture>
+<script>
+    initPicture()
+</script>
+<p>The diagram conveys the OBO idea in the context of an intermediary API Gateway. To allow the API Gateway to use the OBO grant type, the authorization server must be properly configured. Discussing this configuration exceeds the scope of this blog, so please refer to the official configuration information available in the <a href="https://learn.microsoft.com/en-us/entra/identity-platform/">AAD documentation</a> or look for other OBO articles that focus on AAD configuration (e.g. at <a href="https://www.cloudmatter.io/post/experience-with-oauth-2-0-on-behalf-of-flow">Cloud Matter</a>). Kong offers plugins for serving the standard authorization grant flows as described in the standard IETF specification (<a href="https://datatracker.ietf.org/doc/html/rfc6749">RFC 6749</a>). Yet, after thorough investigation and consultation with Kong’s advisors, there is currently no official and third-party solution for implementing the OBO grant type. Let&rsquo;s explore how we can overcome this limitation.</p>
+<h1 id="problem">Problem</h1>
+<p>Consider a scenario where a frontend application has received a token via the authorization code grant (or implicit) flow and is communicating with services via an API Gateway. The gateway applies the security policies and distributes the token to the services that accept this token. Now a service should be called in the service-to-service chain that is subject to the security rules of another AAD registered application and only accepts SAML v2.0 tokens. However, you want to preserve the original user context and pass it on so that the called service can perform an authorization check on the original user identity. To do this, the existing token has to be exchanged for the existing user identity and converted to a new scoped SAML format. However, this complexity should not be imposed on each API caller but should be performed at a central switching point – the API Gateway. Is this achievable with the Kong Gateway? Absolutely, it is possible!</p>
+<h1 id="solution">Solution</h1>
+<p>Kong is built on top of <a href="https://www.nginx.com/">NGINX</a> using the <a href="https://www.lua.org/">Lua</a>-based <a href="https://openresty.org/">OpenResty</a> framework to enable API Gateway features (for more details, refer to my <a href="https://nttdata-dach.github.io/posts/as-kongproductintroduction/">Kong introduction blog</a>). As such, Kong is a Lua application designed to load and execute Lua modules (commonly referred to as plugins). These plugins interact with the request/response objects or streams via the Plugin Development Kit (PDK) to implement arbitrary logic. The PDK, which provides a rich set of Lua functions, allows anyone to create their own custom plugins.</p>
+
+<aside data-content="Note"><br/>
+
+    Plugins can also be written in the programming languages Go (&gt;= Kong v2.0), Javascript (&gt;= Kong v2.3) and Python (&gt;= Kong v2.3). However, these so-called external plugins require a concurrently running plugin server. Lua plugins are handled in local processes, external plugins imply expensive inter-process communication (Kong hints at <a href="https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/performance/">implications with external plugins</a>). Unless there are compelling reasons against Lua, my recommendation is to write all custom plugins in Lua.
+</aside>
+<p>That said, the solution to our problem of missing Kong functionality is to write our own OBO custom plugin (by the way, minor enhancements requiring only few lines of Lua code can also be implemented in so-called Kong Functions, formerly called Serverless Functions). If writing custom plugins is a new topic for you, please read the chapters in the documentation &ldquo;<a href="https://docs.konghq.com/gateway/latest/plugin-development/">Develop Custom Plugins</a>&rdquo; and watch the excellent <a href="https://www.youtube.com/watch?v=RfgpqY6CVhw">plugin YT video</a> by Lokesh Chechani.<br>
+However, it should come as no surprise that I have already written a Lua OBO custom plugin. I am happy to share it with you in case you also suffer from loss of OBO functionality. Please look at the NTT DATA GitHub repository for the plugin source code <a href="https://github.com/NTTDATA-DACH/TECHblog_code/tree/main/Series-KongGateway/03-AS-OnBehalfOf">here</a>.</p>
+<h1 id="usage">Usage</h1>
+<p>The plugin priority determines when the plugin is executed. The plugin runs in the NGINX access phase with priority 800, therefore its execution in the processing pipeline follows the entry and authentication plugins, which can first check the entry token for validity. A valid entry bearer token in the Authorization header is important because this token needs to be exchanged on the authorization server via the OBO plugin.</p>
+<p>The plugin takes the token from the request authorization header and executes an OBO on the AAD authorization server according to the specified plugin configuration. A method other than the authorization request header field for the token transfer is not supported by the plugin, as outlined in the IETF specification (<a href="https://datatracker.ietf.org/doc/html/rfc6750">RFC 6750</a>).</p>
+<p>In addition to the possibly required network and optional caching configuration, the actual OBO configuration must be complete. The following <a href="https://docs.konghq.com/gateway/latest/production/deployment-topologies/db-less-and-declarative-config/">DB-less configuration</a> excerpt shows a minimal running configuration that implements the OBO with a shared secret (please note that the plugin currently does not implement the OBO with certificate).</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">plugins</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">oauth2-on-behalf-of</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;oauth2-on-behalf-of&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">service</span><span class="p">:</span><span class="w"> </span><span class="l">&lt;configured service entity&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">config</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">enable_proxy</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">https_proxy</span><span class="p">:</span><span class="w"> </span><span class="l">&lt;proxy URL&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">https_verify</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">enable_client_certificate</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">token_endpoint</span><span class="p">:</span><span class="w"> </span><span class="l">https://login.microsoftonline.com/&lt;tenant id&gt;/oauth2/v2.0/token</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">client_id</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&lt;client id&gt;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">client_secret</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&lt;client secret&gt;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">scope</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">&lt;requested scope&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">requested_token_type</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;urn:ietf:params:oauth:token-type:saml2&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">enable_caching</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">enable_factor_ttl</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">ttl_factor</span><span class="p">:</span><span class="w"> </span><span class="m">0.75</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">stopwatch</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre></div>
+<p>The configuration shown above enables an HTTPS proxy configuration to reach the AAD authorization server. No client certificate is required. The OBO AAD endpoint is taken from the <code>token_endpoint</code> configuration parameter (the tenant is a path parameter). The <code>client_id</code> and <code>client_secret</code> are AAD-generated and assigned to the application client during the registration process. The scope permissions list the desired scopes as a string array. The <code>requested_token_type</code> parameter requires an official token format type for the token to be issued (Microsoft adheres to the official specification, see <a href="https://datatracker.ietf.org/doc/html/rfc8693#section-3">RFC 8693</a>). It is possible to issue a JWT, SAML1 or SAML2 token format type. The schema definition of the OBO plugin contains a description of each parameter and the default setting.
+To pass the next <a href="https://en.wikipedia.org/wiki/Penetration_test">penetration test</a>, the determined token is rendered unusable for logging above the debug logging level by removing the signature (JWT, SAML1 and SAML2). If the token cannot be fully logged due to the existing logging character limitation, the previously introduced <a href="https://nttdata-dach.github.io/posts/as-konglogchunking/">chunking module</a> can be used (coding is commented out in the Lua handler module).</p>
+<p>The OBO plugin has its own stopwatch and exhibits fluctuating runtimes between 250 and 350 milliseconds in my Google Kubernetes Engine (GKE) test environment when token caching is disabled. The entire plugin runtime is almost entirely due to the AAD invocation (in OAuth2 terms the call to the authorization server). The URL *.microsoftonline.com (port HTTPS/443) is used to import/export AAD data. If caching is enabled and the token is cached, the plugin runtime at Kong info logging level is approximately 1 millisecond. The cache key is formed from the configured AAD appli-cation client ID (<code>client_id</code>) and a unique user identifier claim (<code>user_identifier_claim</code>) which is determined from the token (customizable to your requirements).</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>Token management is complex but essential for communication between services. Therefore, easy-to-configure and customizable plugins are important for this task. The discussed OBO plugin fills a gap in Kong and enables a token exchange directly at the Kong Gateway. The plugin is implemented in Lua for stability and performance.
+The presented plugin will solve your OBO token exchange problems with AAD. To reiterate my opening statement, with the Kong Gateway you will not run into any limitations.</p>
+<h1 id="credits">Credits</h1>
+<p>Title image by <a href="https://www.shutterstock.com/de/g/gorodenkoff">Gorodenkoff</a> on <a href="https://www.shutterstock.com">Shutterstock</a></p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/alexander-suchier.jpg" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/alexander-suchier">Alexander Suchier</a><span>
+                    
+                </span></h3>
+                <p>Senior Managing Technical Consultant and Kong Champion </p>
+                <p calss="author-socials">
+                    
+                    
+                    
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        <div class="related-block">
+            <h3 class="related-heading" id="series-list">Check out the full series</h3>
+            
+            <ul>
+                
+                <li><a class="related-link" href="/posts/as-kongproductintroduction/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 1: Brief Product Introduction</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konglogchunking/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 2: Log Chunking</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-onbehalfof/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 3: Token Exchange On-Behalf-Of</a></li>
+                
+            </ul>
+        </div>
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/kong/">Kong</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/gateway/">Gateway</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/kong-plugin/">Kong Plugin</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/token-exchange/">Token Exchange</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/on-behalf-of/">On-Behalf-Of</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/obo/">OBO</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/aad/">AAD</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/jwt/">JWT</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/saml/">SAML</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/pdk/">PDK</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/lua-module/">Lua Module</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2023 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</html>

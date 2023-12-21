@@ -1,16 +1,23 @@
 function openModal(imageId) {
+    var theme = document.documentElement.getAttribute("data-theme");
     const modal = document.getElementById("uphillModal");
     if (modal === null) {
         return
     }
     // Get the original image element and use it inside the modal
-    const img = document.getElementById(imageId);
+    const picture = document.getElementById(imageId);
+    const img = picture.getElementsByTagName("img")[0];
+    const source = picture.getElementsByTagName("source")[0];
     const modalImg = document.getElementById("modalImg");
     const captionText = document.getElementById("caption");
     
     // Display modal
     modal.style.display = "block";
-    modalImg.src = img.src;
+    if (theme === "light") {
+        modalImg.src = img.src;
+    } else {
+        modalImg.src = source.srcset;
+    }
     captionText.innerHTML = img.alt;
 
     // The element that closes the modal

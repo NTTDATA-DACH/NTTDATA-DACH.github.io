@@ -1078,7 +1078,7 @@ blockquote {
     border-left: 10px solid var(--future-blue-main);
     margin: 1.5em 0px 10px 0px;
     padding: 1em 1em;
-    font-size: 1.2em;
+    font-size: 1.4em;
     quotes: "\201C""\201D""\2018""\2019";
   }
   blockquote:before {
@@ -1097,6 +1097,22 @@ blockquote {
     text-align: right;
   }
 
+aside {
+    background: var(--figure-color);
+    border-left: 10px solid var(--future-blue-main);
+    margin: 1.5em 0px 10px 0px;
+    padding: 1em 1em;
+    font-size: 1.4em;
+    quotes: "\201C""\201D""\2018""\2019";
+  }
+aside:before {
+    color: var(--future-blue-main);
+    content: attr(data-content);
+    font-size: 1.2em;
+    line-height: 1.0em;
+    vertical-align: 0.4em;
+    font-weight: 600;
+  }
 
   /* The markdown image container */
   .md__image {
@@ -1139,6 +1155,7 @@ blockquote {
 
     width: 90%;
     max-width: 1400px;
+    background-color: var(--background-color);
   }
   
   /* The Close Button */
@@ -1188,5 +1205,14 @@ blockquote {
     cursor: pointer;
     color: white;
     line-height: 70px;
+}
+
+.gallery {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.blochSphereSmall{
+    width: 35% !important;
 }
   

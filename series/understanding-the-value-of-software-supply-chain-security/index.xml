@@ -7,24 +7,21 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2023 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Tue, 28 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://nttdata-dach.github.io/series/understanding-the-value-of-software-supply-chain-security/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 28 Mar 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://nttdata-dach.github.io/series/understanding-the-value-of-software-supply-chain-security/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Part 2: Tools in your arsenal</title>
       <link>https://nttdata-dach.github.io/posts/ab_softwaresupplychainsecurity_2/</link>
       <pubDate>Tue, 28 Mar 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://nttdata-dach.github.io/posts/ab_softwaresupplychainsecurity_2/</guid>
       <description>In the first part we discussed software supply chain in general, which possible attack vectors exist and what actions are being taken by the community but rather in an isolated manner. In this part, I&amp;rsquo;ll line out specific actions which can be taken in an organized manner and which tools/framework/guidelines can be useful along this way.</description>
     </item>
-    
     <item>
       <title>Part 1: Attack vectors</title>
       <link>https://nttdata-dach.github.io/posts/ab_softwaresupplychainsecurity_1/</link>
       <pubDate>Fri, 24 Mar 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://nttdata-dach.github.io/posts/ab_softwaresupplychainsecurity_1/</guid>
       <description>There is generally a lot less awareness of Software Supply Chain Security in the contemporary IT landscape and thus its aspects are completely ignored by DevSecOps practices. In this two-part article, I aim to provide an overview of what software supply chain is, what attack vectors you render yourself vulnerable to when not including these aspects in your pipelines and how you can &lt;strong&gt;reduce your attack surface area&lt;/strong&gt; using various tools / frameworks / guidelines like &lt;strong&gt;SLSA&lt;/strong&gt;, &lt;strong&gt;sigstore&lt;/strong&gt;, &lt;strong&gt;in-toto&lt;/strong&gt;, &lt;strong&gt;SBOM&lt;/strong&gt;, &lt;strong&gt;TUF&lt;/strong&gt;, &lt;strong&gt;OpenSSF&lt;/strong&gt; etc. We will also shed light on how the open source community as a whole is combating this threat.</description>
     </item>
-    
   </channel>
 </rss>

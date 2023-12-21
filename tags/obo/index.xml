@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>OBO on Technology Blog</title>
+    <link>https://nttdata-dach.github.io/tags/obo/</link>
+    <description>Recent content in OBO on Technology Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright 2023 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
+    <lastBuildDate>Thu, 21 Dec 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://nttdata-dach.github.io/tags/obo/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Part 3: Token Exchange On-Behalf-Of</title>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-onbehalfof/</link>
+      <pubDate>Thu, 21 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/as-konggateway-onbehalfof/</guid>
+      <description>In the last blog, I provided a solution on how to overcome the character limit when logging. This time, I would like to show how to implement an OAuth 2.0-based On-Behalf-Of (delegation) grant flow. Such complex token orchestration tasks can be easily handled on the API gateway while ensuring the highest security standards which even make zero-trust architectures possible in the first place.</description>
+    </item>
+  </channel>
+</rss>

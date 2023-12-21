@@ -96,7 +96,7 @@
            
             <h1 id="structure-of-this-blog">Structure of this Blog</h1>
 <p>At the start we have an introduction as to what Data-Oriented Design (DOD) is used for, what the problem with current popular paradigms in the business space is and how we can solve them with DOD.
-This is followed by a technical section that will explain some of the concepts of DOD with examples. 
+This is followed by a technical section that will explain some of the concepts of DOD with examples.
 At the end, I will show the usage of ECS and list some frameworks.</p>
 <h1 id="introduction">Introduction</h1>
 <p>DOD was used a decade ago predominantly by the video game industry. Back when a complex game had to fit on something like a 32MB cartridge. Humans had to find ways to think more like a computer to make data fit and make their programs run more efficient.</p>
@@ -189,11 +189,11 @@ If used correctly, ECS can improve performance up to 100x. You can find an examp
 </span></span></code></pre></div><p>In the first case we iterate over all the employees and open them up looking for those named &ldquo;Hans&rdquo;. In the second case we only retrieve the column <code>firstnames</code> and, before we iterate, we eliminate all rows that are not of type <code>Employee</code>.</p>
 <h2 id="keeping-data-dumb">Keeping Data Dumb</h2>
 <p>Early on in OOP and Domain-Driven Design (DDD) we learn that we should validate our data as close as possible to the data-object to restrict other developers from instantiating invalid objects. This means that in C# you will sometimes see code like this:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="k">public</span> <span class="k">class</span> <span class="nc">Person</span><span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="k">private</span> <span class="kt">string</span> <span class="n">firstname</span><span class="p">;</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="kd">public</span> <span class="k">class</span> <span class="nc">Person</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">private</span> <span class="kt">string</span> <span class="n">firstname</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="k">public</span> <span class="kt">string</span> <span class="n">Firstname</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">string</span> <span class="n">Firstname</span><span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="k">get</span><span class="p">{</span>
 </span></span><span class="line"><span class="cl">            <span class="k">return</span> <span class="n">firstname</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">        <span class="p">}</span>
@@ -208,11 +208,11 @@ If used correctly, ECS can improve performance up to 100x. You can find an examp
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">class</span> <span class="nc">Employee</span> <span class="p">:</span> <span class="n">Person</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="k">class</span> <span class="nc">Employee</span> <span class="p">:</span> <span class="n">Person</span><span class="p">{</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">class</span> <span class="nc">SomewhereElse</span><span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="k">public</span> <span class="k">void</span> <span class="n">Foo</span><span class="p">(){</span>
+</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="k">class</span> <span class="nc">SomewhereElse</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="k">void</span> <span class="n">Foo</span><span class="p">(){</span>
 </span></span><span class="line"><span class="cl">        <span class="n">Logger</span><span class="p">.</span><span class="n">LogInfo</span><span class="p">(</span><span class="s">&#34;Starting program...&#34;</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">        <span class="p">...</span>
 </span></span><span class="line"><span class="cl">        <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="n">nameList</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;();</span>
@@ -247,24 +247,24 @@ If used correctly, ECS can improve performance up to 100x. You can find an examp
 <li><strong>sealed class</strong> → sealed classes will restrict the object from being further inherited from and yields vast performance increases (credit to Nick Chapsas YT here: <a href="https://youtu.be/d76WWAD99Yo">https://youtu.be/d76WWAD99Yo</a>)</li>
 <li><strong>using <code>List</code> everywhere</strong> → one could argue that it is ok in this context, but I have also seen Senior Developers only working with <code>List</code>s instead of using the correct Data Collection for the job, because they feel most comfortable with <code>List</code>s.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="k">public</span> <span class="k">readonly</span> <span class="k">struct</span> <span class="nc">Person</span><span class="p">{</span>    
-</span></span><span class="line"><span class="cl">    <span class="k">public</span> <span class="k">readonly</span> <span class="kt">string</span> <span class="n">Firstname</span><span class="p">;</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="kd">public</span> <span class="k">readonly</span> <span class="k">struct</span> <span class="nc">Person</span><span class="p">{</span>    
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="k">readonly</span> <span class="kt">string</span> <span class="n">Firstname</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="k">public</span> <span class="n">Person</span><span class="p">(</span><span class="kt">string</span> <span class="n">firstname</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="n">Person</span><span class="p">(</span><span class="kt">string</span> <span class="n">firstname</span><span class="p">){</span>
 </span></span><span class="line"><span class="cl">        <span class="n">Firstname</span> <span class="p">=</span> <span class="n">firstname</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">readonly</span> <span class="k">struct</span> <span class="nc">Employee</span><span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="k">public</span> <span class="k">readonly</span> <span class="n">Person</span> <span class="n">Person</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="k">readonly</span> <span class="k">struct</span> <span class="nc">Employee</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="k">readonly</span> <span class="n">Person</span> <span class="n">Person</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">...</span>
 </span></span><span class="line"><span class="cl">    
-</span></span><span class="line"><span class="cl">    <span class="k">public</span> <span class="n">Employee</span><span class="p">(</span><span class="n">Person</span> <span class="n">person</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="n">Employee</span><span class="p">(</span><span class="n">Person</span> <span class="n">person</span><span class="p">){</span>
 </span></span><span class="line"><span class="cl">        <span class="n">Person</span> <span class="p">=</span> <span class="n">person</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">class</span> <span class="nc">SomewhereElse</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="k">public</span> <span class="k">void</span> <span class="n">Foo</span><span class="p">()</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="k">class</span> <span class="nc">SomewhereElse</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="k">void</span> <span class="n">Foo</span><span class="p">()</span> <span class="p">{</span>
 </span></span><span class="line"><span class="cl">        <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="n">nameList</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">        <span class="c1">//populate nameList from a csv</span>
 </span></span><span class="line"><span class="cl">        <span class="kt">var</span> <span class="n">employeeList</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">Employee</span><span class="p">&gt;();</span>
@@ -296,7 +296,7 @@ Now the key concepts of DOD I take into everyday programming are:</p>
 <li>to compute large amounts of datasets, try to work with chunks and keep the data separate from business logic</li>
 <li>know how your computer works. For C# there is <a href="https://sharplab.io/">sharplab.io</a> where you can view your code as IL or JIT asm. Also don&rsquo;t be scared to run benchmarks.</li>
 </ul>
-<p>We also try to incorporate the main two concepts of functional programming, because many consider them best practice for most programming approaches. 
+<p>We also try to incorporate the main two concepts of functional programming, because many consider them best practice for most programming approaches.
 Those are:</p>
 <ul>
 <li>immutability</li>
@@ -327,19 +327,19 @@ Those are:</p>
 <p>You can think of these managers of what would be built into the programming language itself, if there was an ECS programming language.</p>
 <p>Now let&rsquo;s see what ECS can look like in use:</p>
 <h3 id="components">Components</h3>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="k">public</span> <span class="k">struct</span> <span class="nc">PositionComponent</span><span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="k">public</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">;</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="kd">public</span> <span class="k">struct</span> <span class="nc">PositionComponent</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
-</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="k">public</span> <span class="k">struct</span> <span class="nc">MovementComponent</span><span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="k">public</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">;</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="kd">public</span> <span class="k">struct</span> <span class="nc">MovementComponent</span><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><p>These 2 get constantly updated, so we refrain from immutability this time.</p>
 <h3 id="archetype">Archetype</h3>
 <p>I included it here to give you an idea of what archetypes are typically used for. You can see the usage of it in the entities and systems section.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="k">public</span> <span class="k">readonly</span> <span class="k">struct</span> <span class="nc">Archetype</span> <span class="p">{</span>
-</span></span><span class="line"><span class="cl">    <span class="k">public</span> <span class="k">readonly</span> <span class="n">Type</span><span class="p">[]</span> <span class="n">componentTypes</span><span class="p">;</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="kd">public</span> <span class="k">readonly</span> <span class="k">struct</span> <span class="nc">Archetype</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="k">readonly</span> <span class="n">Type</span><span class="p">[]</span> <span class="n">componentTypes</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">
-</span></span><span class="line"><span class="cl">    <span class="k">public</span> <span class="n">Archetype</span><span class="p">(</span><span class="k">params</span> <span class="n">Type</span><span class="p">[]</span> <span class="n">componentTypes</span><span class="p">)</span> <span class="p">{</span> 
+</span></span><span class="line"><span class="cl">    <span class="kd">public</span> <span class="n">Archetype</span><span class="p">(</span><span class="k">params</span> <span class="n">Type</span><span class="p">[]</span> <span class="n">componentTypes</span><span class="p">)</span> <span class="p">{</span> 
 </span></span><span class="line"><span class="cl">        <span class="k">this</span><span class="p">.</span><span class="n">componentTypes</span> <span class="p">=</span> <span class="n">componentTypes</span><span class="p">;</span>
 </span></span><span class="line"><span class="cl">    <span class="p">}</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
@@ -356,7 +356,7 @@ Those are:</p>
 </span></span><span class="line"><span class="cl"><span class="n">em</span><span class="p">.</span><span class="n">CreateEntities</span><span class="p">(</span><span class="n">personArchetype</span><span class="p">,</span> <span class="n">playerPositions</span><span class="p">,</span> <span class="n">playerMovement</span><span class="p">);</span>
 </span></span></code></pre></div><h3 id="systems">Systems</h3>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="c1">//with Archetypes</span>
-</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="n">MovementSystem</span><span class="p">(</span><span class="n">Entities</span> <span class="n">entities</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">static</span> <span class="k">void</span> <span class="n">MovementSystem</span><span class="p">(</span><span class="n">Entities</span> <span class="n">entities</span><span class="p">){</span>
 </span></span><span class="line"><span class="cl">    <span class="n">entities</span>
 </span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">Of</span><span class="p">(</span><span class="n">personArchetype</span><span class="p">)</span>
 </span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">ForEach</span><span class="p">((</span><span class="k">ref</span> <span class="n">PositionComponent</span> <span class="n">pos</span><span class="p">,</span> <span class="k">in</span> <span class="n">MovementComponent</span> <span class="n">move</span><span class="p">)</span>
@@ -367,7 +367,7 @@ Those are:</p>
 </span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">Schedule</span><span class="p">();</span>
 </span></span><span class="line"><span class="cl"><span class="p">}</span>
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cs" data-lang="cs"><span class="line"><span class="cl"><span class="c1">//without Archetypes</span>
-</span></span><span class="line"><span class="cl"><span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="n">MovementSystem</span><span class="p">(</span><span class="n">Entities</span> <span class="n">entities</span><span class="p">){</span>
+</span></span><span class="line"><span class="cl"><span class="kd">public</span> <span class="kd">static</span> <span class="k">void</span> <span class="n">MovementSystem</span><span class="p">(</span><span class="n">Entities</span> <span class="n">entities</span><span class="p">){</span>
 </span></span><span class="line"><span class="cl">    <span class="n">entities</span>
 </span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">With</span><span class="p">&lt;</span><span class="n">MovementComponent</span><span class="p">&gt;()</span> <span class="c1">//also .WithOut&lt;&gt;()</span>
 </span></span><span class="line"><span class="cl">        <span class="p">.</span><span class="n">With</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">PositionComponent</span><span class="p">))</span>
@@ -425,7 +425,7 @@ Those are:</p>
 </ul>
 </li>
 </ul>
-<p>My work with Unity DOTS or Data-Oriented Tech Stack in the past is what first triggered my passion for DOD and ECS. 
+<p>My work with Unity DOTS or Data-Oriented Tech Stack in the past is what first triggered my passion for DOD and ECS.
 I am currently planning my own ECS programming language, doing benchmarks and everything, which is also why I wanted to share some useful insights that I gained on my journey so far.</p>
 <p>I hope that you are able to take away something from this and I think you are now deserving a relaxing break after this read :D</p>
 <h1 id="credits">Credits</h1>

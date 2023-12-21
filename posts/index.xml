@@ -7,150 +7,126 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2023 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Tue, 02 Jun 2020 09:04:54 +0200</lastBuildDate><atom:link href="https://nttdata-dach.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 02 Jun 2020 09:04:54 +0200</lastBuildDate>
+    <atom:link href="https://nttdata-dach.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Part 3: Token Exchange On-Behalf-Of</title>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-onbehalfof/</link>
+      <pubDate>Thu, 21 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/as-konggateway-onbehalfof/</guid>
+      <description>In the last blog, I provided a solution on how to overcome the character limit when logging. This time, I would like to show how to implement an OAuth 2.0-based On-Behalf-Of (delegation) grant flow. Such complex token orchestration tasks can be easily handled on the API gateway while ensuring the highest security standards which even make zero-trust architectures possible in the first place.</description>
+    </item>
     <item>
       <title>Secrets Handling in Kubernetes</title>
       <link>https://nttdata-dach.github.io/posts/sk-secretshandlinginkubernetes/</link>
       <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://nttdata-dach.github.io/posts/sk-secretshandlinginkubernetes/</guid>
       <description>Committing plain .yaml files which defines Kubernetes secrets definitions to a source code management system is not very secure. This article explains why and shows two better alternatives.</description>
     </item>
-    
     <item>
       <title>Building and running Flutter mobile applications for Android on AWS Device Farm</title>
       <link>https://nttdata-dach.github.io/posts/ak-buildingrunningflutteronaws/</link>
       <pubDate>Fri, 03 Nov 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://nttdata-dach.github.io/posts/ak-buildingrunningflutteronaws/</guid>
       <description>This article will give you an overview on how to build and run a Flutter cross-platform mobile application for the Android OS platform in the cloud. We will cover all the steps from the basic app itself to the integration with Appium, and ultimately the deployment and testing on several devices in the AWS Device Farm.</description>
     </item>
-    
     <item>
       <title>Part 2: Log Chunking</title>
       <link>https://nttdata-dach.github.io/posts/as-konglogchunking/</link>
       <pubDate>Wed, 25 Oct 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://nttdata-dach.github.io/posts/as-konglogchunking/</guid>
       <description>In the last blog, I briefly introduced Kong as a sophisticated API gateway product. This time, I will discuss a problem related to logging message size limitation and offer a solution. This problem significantly limits root cause analysis and ultimately solution development.</description>
     </item>
-    
     <item>
       <title>Using Renovate to scale up automatic pull request creation on GitHub</title>
       <link>https://nttdata-dach.github.io/posts/mjm-renovateautomaticpullrequest/</link>
       <pubDate>Tue, 22 Aug 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://nttdata-dach.github.io/posts/mjm-renovateautomaticpullrequest/</guid>
       <description>See how we use the dependency update tool Renovate to distribute helm charts with ArgoCD applications in a GitOps fashion. This article shows how to set up Renovate for several kubernetes clusters with a centralized configuration as a GitHub action.</description>
     </item>
-    
     <item>
       <title>Part 1: Introduction to Crossplane</title>
       <link>https://nttdata-dach.github.io/posts/ns-controlplaneoperatedinfrastructure_1/</link>
       <pubDate>Mon, 31 Jul 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://nttdata-dach.github.io/posts/ns-controlplaneoperatedinfrastructure_1/</guid>
       <description>This tech blog article introduces Crossplane, an open-source Kubernetes add-on that extends the capabilities of infrastructure management by leveraging Kubernetes as a control plane. Crossplane uses Kubernetes&amp;rsquo; extensible API design and Custom Resource Definitions (CRDs) to manage not only services and applications but also cloud infrastructure. The article provides step-by-step instructions on how to get started with Crossplane and provision your first resources in the cloud using Kubernetes as a control plane.</description>
     </item>
-    
     <item>
       <title>Part 1: Brief Product Introduction</title>
       <link>https://nttdata-dach.github.io/posts/as-kongproductintroduction/</link>
       <pubDate>Mon, 15 May 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://nttdata-dach.github.io/posts/as-kongproductintroduction/</guid>
       <description>Kong Gateway is a lightweight, fast, and flexible API Gateway. It acts as an intermediary between API providers and consumers, enabling them to communicate based on policies. It also provides observability features, allowing to track API usage and performance. Overall it is a convincing and outstanding product which is briefly introduced in the following blog.</description>
     </item>
-    
     <item>
       <title>New Random Generators in Java 17</title>
       <link>https://nttdata-dach.github.io/posts/ms-newrandomgeneratorsinjava17/</link>
       <pubDate>Thu, 13 Apr 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://nttdata-dach.github.io/posts/ms-newrandomgeneratorsinjava17/</guid>
       <description>Java 17 introduced new random number generators. These provide longer cycles, improved statistical uniform distribution, improved threading support, and Streams API integration. This article provides a short introduction to random number generators and an overview of the improvements made in Java 17.</description>
     </item>
-    
     <item>
       <title>Part 2: Tools in your arsenal</title>
       <link>https://nttdata-dach.github.io/posts/ab_softwaresupplychainsecurity_2/</link>
       <pubDate>Tue, 28 Mar 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://nttdata-dach.github.io/posts/ab_softwaresupplychainsecurity_2/</guid>
       <description>In the first part we discussed software supply chain in general, which possible attack vectors exist and what actions are being taken by the community but rather in an isolated manner. In this part, I&amp;rsquo;ll line out specific actions which can be taken in an organized manner and which tools/framework/guidelines can be useful along this way.</description>
     </item>
-    
     <item>
       <title>Part 1: Attack vectors</title>
       <link>https://nttdata-dach.github.io/posts/ab_softwaresupplychainsecurity_1/</link>
       <pubDate>Fri, 24 Mar 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://nttdata-dach.github.io/posts/ab_softwaresupplychainsecurity_1/</guid>
       <description>There is generally a lot less awareness of Software Supply Chain Security in the contemporary IT landscape and thus its aspects are completely ignored by DevSecOps practices. In this two-part article, I aim to provide an overview of what software supply chain is, what attack vectors you render yourself vulnerable to when not including these aspects in your pipelines and how you can &lt;strong&gt;reduce your attack surface area&lt;/strong&gt; using various tools / frameworks / guidelines like &lt;strong&gt;SLSA&lt;/strong&gt;, &lt;strong&gt;sigstore&lt;/strong&gt;, &lt;strong&gt;in-toto&lt;/strong&gt;, &lt;strong&gt;SBOM&lt;/strong&gt;, &lt;strong&gt;TUF&lt;/strong&gt;, &lt;strong&gt;OpenSSF&lt;/strong&gt; etc. We will also shed light on how the open source community as a whole is combating this threat.</description>
     </item>
-    
     <item>
       <title>A Completely New Approach: An ECS Programming Language</title>
       <link>https://nttdata-dach.github.io/posts/sh-dataorienteddesignecs/</link>
       <pubDate>Thu, 09 Mar 2023 00:00:00 +0000</pubDate>
-      
       <guid>https://nttdata-dach.github.io/posts/sh-dataorienteddesignecs/</guid>
       <description>Current enterprise software engineering is all about abstraction. We are bending our software in ways that the computer has trouble efficiently computing it. A decade ago we had to write efficient programs, because our hardware was a limiting factor. However, having better hardware is in no excuse to waste precious ressources. With Data-Oriented Design - DOD and Entity Component System - ECS, we can improve performance by up to 100 times!</description>
     </item>
-    
     <item>
       <title>Three use cases highlighting the business value of private blockchain</title>
       <link>https://nttdata-dach.github.io/posts/ms-usecasesprivateblockchain/</link>
       <pubDate>Tue, 18 Oct 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://nttdata-dach.github.io/posts/ms-usecasesprivateblockchain/</guid>
       <description>Rarely do we find a technology as controversial as blockchain. It seems there are as many blockchain sceptics as blockchain enthusiasts. The sceptics are concerned with unlawful behavior that occurred in public blockchain networks, as well as with extremely high current or past energy consumption of certain public blockchains.</description>
     </item>
-    
     <item>
       <title>Accessing private resources on AWS</title>
       <link>https://nttdata-dach.github.io/posts/yk-accessingprivateressourcesonaws/</link>
       <pubDate>Mon, 20 Jun 2022 00:00:00 +0000</pubDate>
-      
       <guid>https://nttdata-dach.github.io/posts/yk-accessingprivateressourcesonaws/</guid>
       <description>There are several ways to access private resources (located in private subnets within your VPC) on AWS. Let us discuss solutions based on Systems Manger (SSM) and SSH.</description>
     </item>
-    
     <item>
       <title>Pace Predictor</title>
       <link>https://nttdata-dach.github.io/posts/ok-pacepredictor/</link>
       <pubDate>Mon, 06 Dec 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://nttdata-dach.github.io/posts/ok-pacepredictor/</guid>
       <description>At NTT DATA, some of us are sporty spices and we like to record our running, cycling, and swimming in this Strava Club. And of course trail running is also growing very popular in our club.</description>
     </item>
-    
     <item>
       <title>Building Container Images Dockerless and Rootless with Buildah</title>
       <link>https://nttdata-dach.github.io/posts/ab-containerrootlessbuildah/</link>
       <pubDate>Mon, 12 Jul 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://nttdata-dach.github.io/posts/ab-containerrootlessbuildah/</guid>
       <description>“You cannot use Docker in our enterprise CI platform, now way! It needs root rights, thus is not secure; forget it!”, said our DevOps Chief some months ago… So we had a problem.</description>
     </item>
-    
     <item>
       <title>Personal Information Integration</title>
       <link>https://nttdata-dach.github.io/posts/ok-personalinformationintegration/</link>
       <pubDate>Thu, 01 Jul 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://nttdata-dach.github.io/posts/ok-personalinformationintegration/</guid>
       <description>Thanks to the internet we have access to a virtually unlimited amount of information. But thanks to the internet we also feel that we are drowning in this information tsunami.</description>
     </item>
-    
     <item>
       <title>10 Lessons learnt from large-scale data migration projects</title>
       <link>https://nttdata-dach.github.io/posts/ok-lessonsdatamigration/</link>
       <pubDate>Tue, 01 Jun 2021 00:00:00 +0000</pubDate>
-      
       <guid>https://nttdata-dach.github.io/posts/ok-lessonsdatamigration/</guid>
       <description>Data migration is of course only one aspect of system conversion. Usually data migration is performed in conjunction with other conversions like technology or interfaces. Nevertheless, data migration is often the most expensive and confusing part of the conversion project. So let’s revisit the handful of fairly large data migrations I encountered in my professional career and see which lessons can be drawn out of this experience.</description>
     </item>
-    
   </channel>
 </rss>
