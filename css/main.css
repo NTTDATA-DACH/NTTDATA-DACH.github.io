@@ -1123,7 +1123,7 @@ aside:before {
   .modal {
     display: none;
     position: fixed;
-    z-index: 1;
+    z-index: 50;
     padding-top: 4em;
     left: 0;
     top: 0;
@@ -1135,9 +1135,11 @@ aside:before {
   
   /* Modal Content */
   .modal-content {
-    position: relative;
-    margin: auto;
-    padding: 0;
+    display: flex;
+	justify-content: center;
+	align-items: center;
+	min-height: 100vh;
+    z-index: 5;
   }
   
   .modal-pic { /* image in article */
@@ -1145,17 +1147,41 @@ aside:before {
     align-content: center;
     cursor: pointer;
   }
-
+/*
   .modal-content .image {
-    display: flex;
-    justify-content: center;
+    
+    
   }
 
-  #modalImg { /*id of the image in the modal*/
+  #modalImg { id of the image in the modal
 
     width: 90%;
     max-width: 1400px;
     background-color: var(--background-color);
+  }*/
+
+  #modalImg {
+    width: 100%;
+  }
+
+  #modalContainer {
+    width: 85%;
+    max-width: 1400px;
+    max-height: 90%;
+    background-color: var(--background-color);
+    padding: 2em;
+    display: flex;
+    vertical-align: middle;
+    justify-content: center;
+  }
+
+  #modalInner{
+    justify-content: center;
+  }
+
+  figcaption:before {
+    content: attr(ref);
+    font-weight: 800;
   }
   
   /* The Close Button */

@@ -56,11 +56,13 @@
     <div class="modal" id="uphillModal">
     <div class="modal-background"></div>
     <div class="modal-content">
-        <p class="image is-4by3">
-            <img src="" alt="" id="modalImg">
-        </p>
-        <div id="caption">
-        </div>
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
     </div>
     <button class="modal-close is-large" aria-label="close"></button>
 </div>

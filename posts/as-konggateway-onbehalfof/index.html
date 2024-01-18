@@ -56,11 +56,13 @@
     <div class="modal" id="uphillModal">
     <div class="modal-background"></div>
     <div class="modal-content">
-        <p class="image is-4by3">
-            <img src="" alt="" id="modalImg">
-        </p>
-        <div id="caption">
-        </div>
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
     </div>
     <button class="modal-close is-large" aria-label="close"></button>
 </div>
@@ -116,7 +118,7 @@
 
 <picture style="display: contents;"
      
-    id="[288 433 196 439 337 120]"
+    id="[249 129 355 291 492 21]"
     onclick="openModal(this.id)"
      >
     <source srcset="/posts/img/AS-KongGateway-OnBehalfOf/diagram-dark.png" media="none"/>
@@ -124,8 +126,11 @@
         class=" modal-pic"    
         src="/posts/img/AS-KongGateway-OnBehalfOf/diagram-light.png" 
          alt="test" 
-         
+        
+        
+        
         />
+    
 </picture>
 <script>
     initPicture()
