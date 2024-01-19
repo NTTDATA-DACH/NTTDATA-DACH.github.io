@@ -116,25 +116,33 @@
 
   
 
+
 <picture style="display: contents;"
      
-    id="[249 129 355 291 492 21]"
+    id="[486 282 306 377 10 342]"
     onclick="openModal(this.id)"
      >
+    
     <source srcset="/posts/img/AS-KongGateway-OnBehalfOf/diagram-dark.png" media="none"/>
+    
     <img    
-        class=" modal-pic"    
+        class="dynamicimage modal-pic"    
+        
         src="/posts/img/AS-KongGateway-OnBehalfOf/diagram-light.png" 
+        
          alt="test" 
+        
         
         
         
         />
     
 </picture>
+
 <script>
     initPicture()
 </script>
+
 <p>The diagram conveys the OBO idea in the context of an intermediary API Gateway. To allow the API Gateway to use the OBO grant type, the authorization server must be properly configured. Discussing this configuration exceeds the scope of this blog, so please refer to the official configuration information available in the <a href="https://learn.microsoft.com/en-us/entra/identity-platform/">AAD documentation</a> or look for other OBO articles that focus on AAD configuration (e.g. at <a href="https://www.cloudmatter.io/post/experience-with-oauth-2-0-on-behalf-of-flow">Cloud Matter</a>). Kong offers plugins for serving the standard authorization grant flows as described in the standard IETF specification (<a href="https://datatracker.ietf.org/doc/html/rfc6749">RFC 6749</a>). Yet, after thorough investigation and consultation with Kong’s advisors, there is currently no official and third-party solution for implementing the OBO grant type. Let&rsquo;s explore how we can overcome this limitation.</p>
 <h1 id="problem">Problem</h1>
 <p>Consider a scenario where a frontend application has received a token via the authorization code grant (or implicit) flow and is communicating with services via an API Gateway. The gateway applies the security policies and distributes the token to the services that accept this token. Now a service should be called in the service-to-service chain that is subject to the security rules of another AAD registered application and only accepts SAML v2.0 tokens. However, you want to preserve the original user context and pass it on so that the called service can perform an authorization check on the original user identity. To do this, the existing token has to be exchanged for the existing user identity and converted to a new scoped SAML format. However, this complexity should not be imposed on each API caller but should be performed at a central switching point – the API Gateway. Is this achievable with the Kong Gateway? Absolutely, it is possible!</p>

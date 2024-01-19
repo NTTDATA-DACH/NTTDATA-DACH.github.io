@@ -7,8 +7,50 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Thu, 21 Dec 2023 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 19 Jan 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Cloud</title>
+      <link>https://nttdata-dach.github.io/tags/cloud/</link>
+      <pubDate>Fri, 19 Jan 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/cloud/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>kubernetes</title>
+      <link>https://nttdata-dach.github.io/tags/kubernetes/</link>
+      <pubDate>Fri, 19 Jan 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/kubernetes/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Metrics</title>
+      <link>https://nttdata-dach.github.io/tags/metrics/</link>
+      <pubDate>Fri, 19 Jan 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/metrics/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Observability</title>
+      <link>https://nttdata-dach.github.io/tags/observability/</link>
+      <pubDate>Fri, 19 Jan 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/observability/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>OpenTelemetry</title>
+      <link>https://nttdata-dach.github.io/tags/opentelemetry/</link>
+      <pubDate>Fri, 19 Jan 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/opentelemetry/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Platform Engineering</title>
+      <link>https://nttdata-dach.github.io/tags/platform-engineering/</link>
+      <pubDate>Fri, 19 Jan 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/platform-engineering/</guid>
+      <description></description>
+    </item>
     <item>
       <title>AAD</title>
       <link>https://nttdata-dach.github.io/tags/aad/</link>
@@ -122,13 +164,6 @@
       <description></description>
     </item>
     <item>
-      <title>kubernetes</title>
-      <link>https://nttdata-dach.github.io/tags/kubernetes/</link>
-      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/kubernetes/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Kubernetes operator</title>
       <link>https://nttdata-dach.github.io/tags/kubernetes-operator/</link>
       <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
@@ -175,13 +210,6 @@
       <link>https://nttdata-dach.github.io/tags/android/</link>
       <pubDate>Fri, 03 Nov 2023 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/android/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Cloud</title>
-      <link>https://nttdata-dach.github.io/tags/cloud/</link>
-      <pubDate>Fri, 03 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/cloud/</guid>
       <description></description>
     </item>
     <item>

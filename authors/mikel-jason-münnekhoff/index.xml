@@ -7,8 +7,15 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Tue, 22 Aug 2023 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 19 Jan 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/authors/mikel-jason-m%C3%BCnnekhoff/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Part 1: A Brief Introduction</title>
+      <link>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics_01-intro/</link>
+      <pubDate>Fri, 19 Jan 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics_01-intro/</guid>
+      <description>With this blog post, we kick off a series on evolving our Kubernetes metrics stack. Our journey to replace Prometheus with an OpenTelemetry solution begins with an introduction OpenTelemetry and why we see it as a valid alternative to our current implementation. After explaining the main parts of the OpenTelemetry project and briefly reviewing its history, we discuss the pros and cons. After reading this, you will be able to follow along our hands-on and deep-tech posts on how we optimize our metrics stack.</description>
+    </item>
     <item>
       <title>Using Renovate to scale up automatic pull request creation on GitHub</title>
       <link>https://nttdata-dach.github.io/posts/mjm-renovateautomaticpullrequest/</link>
