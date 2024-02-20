@@ -1,0 +1,348 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0  </title>
+  <meta charset="utf-8"/> 
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Kong - The Gateway without Limitations - Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0"/>
+  
+  <meta property="article:author" content="[Alexander Suchier]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/AS-KongGateway-Saml2Bearer/title-image.jpg"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/as-konggateway-saml2bearer/"/>
+  <meta property="og:description" content="My last blog provided a solution for implementing an OAuth 2.0-based On-Behalf-Of (delegation) grant flow. This time it’s about implementing a Security Assertion Markup Language (SAML) 2.0 Profile for OAuth 2.0 Client Authentication and Authorization Grants. This flow allows OAuth 2.0 clients to obtain access tokens by presenting SAML 2.0 assertions as a form of authentication. This somewhat extended grant flow expands the scope for exchanging authentication and authorization data between different parties with seamless management, all achieved through the API Gateway."/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">20.02.2024
+        
+         - Alexander Suchier - <i class="fa-solid fa-book-open"></i> 11 min read
+        
+        </span>
+        Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0
+        
+        <a id="series-link" href="/series/kong-the-gateway-without-limitations"><span class="subtitle">Kong - The Gateway without Limitations</span></a>
+        
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/AS-KongGateway-Saml2Bearer/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <p>My last <a href="https://nttdata-dach.github.io/posts/as-konggateway-onbehalfof/">blog</a> provided a solution for implementing an OAuth 2.0-based On-Behalf-Of (delegation) grant flow. This time it’s about how to implement a Security Assertion Markup Language (SAML) 2.0 Profile for OAuth 2.0 Client Authentication and Authorization Grants. This flow allows OAuth 2.0 clients to obtain access tokens by presenting SAML 2.0 assertions as a form of authentication. This rather extended grant flow broadens the scope for exchanging authentication and authorization data between different parties with seamless management, all achieved through the <a href="https://nttdata-dach.github.io/posts/as-kongproductintroduction/">API Gateway</a>. Once again, the API Gateway enables the highest and most diverse security standards by providing the ability to run such a special grant flow. Therefore, the Kong Gateway is an important security enabler and plays a crucial role in establishing the foundation of a <a href="https://en.wikipedia.org/wiki/Zero_trust_security_model">zero trust architecture</a> (ZTA) even under heterogeneous security conditions.</p>
+<h1 id="overview">Overview</h1>
+<p>My previous blog articles ended by saying that Kong is the <a href="https://nttdata-dach.github.io/posts/as-kongproductintroduction/">API Gateway</a> without limits. In this technical blog post, I will share a solution for another extended token management flow for token exchange. The exchange flow is called SAML 2.0 Bearer Assertion flow for OAuth 2.0, or SAML 2.0 Bearer Assertion for short. The Kong Gateway proves again and again its great extensibility.</p>
+<p>The SAML 2.0 Bearer Assertion flow is not part of the OAuth 2.0 specification (<a href="https://datatracker.ietf.org/doc/html/rfc6749">RFC 6749</a>) from the Internet Engineering Task Force (IETF), which describes some &ldquo;standard&rdquo; ways for clients to request and receive tokens. Later, the SAML 2.0 Bearer Assertion (<a href="https://datatracker.ietf.org/doc/html/rfc7522">RFC 7522</a>) extended this base specification by describing a way to exchange SAML assertions, an XML-based security token, for OAuth tokens. The specification covers only <a href="https://saml.xml.org/saml-specifications">Security Assertion Markup Language</a> (SAML) v2.0 tokens; SAML v1.0 tokens are not considered. The SAML 2.0 Bearer Assertion RFC was promoted as a standard in 2015.</p>
+<p>The essential core is that a client can use the resource owner&rsquo;s SAML 2.0 Bearer Assertion, presented as a bearer token, to obtain an access token from the authorization server without having to interact with the resource owner again. It also allows authorization servers to trust authorization grants from third-party <a href="https://en.wikipedia.org/wiki/Identity_provider">Identity Providers</a> (IdP). In our context, the client is represented by the API Gateway, which performs this exchange of a valid and signed SAML assertion for an OAuth 2.0 access token. This RFC is particularly useful for integrating OAuth 2.0 with systems that use SAML 2.0 for identity and authentication purposes, and for seamlessly propagating the delegated user identity through the request chain in the background.</p>
+<p><a href="https://datatracker.ietf.org/doc/html/rfc7522">RFC 7522</a> supports two mechanisms for obtaining an OAuth token. In the following, I will refer to the SAML 2.0 Bearer Assertion grant type <code>urn:ietf:params:oauth:grant-type:saml2-bearer</code>. The specification also provides a SAML assertion for client authentication when the client needs to authenticate itself to the authorization server (<code>urn:ietf:params:oauth:client-assertion-type:saml2-bearer</code>), which is outside the scope of this blog.</p>
+<p>The challenge and reason for this blog post was the need to exchange tokens with an SAP system to enable access to REST-based <a href="https://en.wikipedia.org/wiki/Open_Data_Protocol">OData</a> (Open Data Protocol) services. To do this, the SAP authorization server receives a SAML 2.0 token issued by <a href="https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id">Microsoft Entra ID</a> (formerly Azure Active Directory, AAD), which is exchanged for an SAP-compliant access token. The SAP OData service can then be called with the access token in the request. Therefore, I will stick to this requirement and refer to some SAP documentation (in this <a href="https://youtu.be/792SHsUWFB0?t=835">SAP YT video</a> there is another general explanation of the SAML assertion bearer flow in the SAP environment). However, many other sources show that the specification is actually being used in the field in non-SAP environments (e.g. this <a href="https://help.salesforce.com/s/articleView?id=sf.remoteaccess_oauth_SAML_bearer_flow.htm&amp;type=5">link</a> shows an exchange with Salesforce, also explained in <a href="https://youtu.be/w7CMqx1QhsM?t=130">this video</a> by Steve Simpson).
+There are several prerequisites for token exchange to work. Instead of listing them here, I will refer you to the corresponding <a href="https://help.sap.com/doc/saphelp_nw74/7.4.16/en-US/12/41087770d9441682e3e02958997846/content.htm?no_cache=true">SAP documentation</a> of the SAML 2.0 Bearer Assertion. This reference summarizes all the requirements and shows the implementation in the SAP environment.</p>
+<p>The following diagram illustrates the general principle with an API gateway acting as an intermediary for the SAML 2.0 Bearer Assertion grant type. It details the overall process sequence flow and assumes that user authentication and authorization have been completed. The authorization server (AAD) has already issued a SAML 2.0 token (more on this below).</p>
+
+
+  
+
+
+<picture style="display: contents;"
+     
+    id="[499 49 136 387 152 308]"
+    onclick="openModal(this.id)"
+     >
+    
+    <source srcset="/posts/img/AS-KongGateway-Saml2Bearer/SAML2AssertionPlugin-dark.png" media="none"/>
+    
+    <img    
+        class="dynamicimage modal-pic"    
+        
+        src="/posts/img/AS-KongGateway-Saml2Bearer/SAML2AssertionPlugin-light.png" 
+        
+         
+        
+        
+        
+        
+        />
+    
+</picture>
+
+<script>
+    initPicture()
+</script>
+
+<p>The diagram shows the exchange of a SAML 2.0 Bearer Assertion for an OAuth2 access token in the context of an intermediary API gateway. In order for the API gateway to use the SAML 2.0 Bearer Assertion grant type, the authorization server must be properly configured. Discussing this configuration is beyond the scope of this blog, so please refer to the official configuration information available from SAP sources. Kong has plugins to handle the standard authorization grant flows as described in the standard IETF specification (<a href="https://datatracker.ietf.org/doc/html/rfc6749">RFC 6749</a>). However, after thorough research, there is currently no official and third-party solution for implementing the SAML 2.0 Bearer Assertion grant type. Let’s explore how we can overcome this limitation.</p>
+<h1 id="problem">Problem</h1>
+<p>Let’s say a front-end application has received a token via the authorization code grant (or implicit) flow and is communicating with services through an API gateway. The gateway applies the security policies and distributes the token to the services that accept this validated token.</p>
+<p>So far so good, my challenge was a service-to-service calling scenario where the calling service comes with an AAD token and wants to call an SAP OData service via the API gateway. The difficulty was that the attached SAP OData service only accepts access tokens from the SAP authorization server. To make matters worse, while the front-end applications work with AAD JWT tokens, the SAP authorization server only accepts SAML 2.0 tokens for token exchange.</p>
+<p>To handle this at the gateway, the incoming AAD JWT token must be exchanged for the existing user identity and converted to a new, scoped SAML 2.0 token format. Next, the SAP authorization server must be called with the newly obtained SAML 2.0 token to receive a scoped SAP access token in exchange. With this SAP access token, the gateway can finally call up the SAP OData service, which can also perform an authorization check on the original user identity (ZTA key principle: &ldquo;never trust, always verify&rdquo;). However, this complexity of token handling should not be imposed on each API caller, but should be performed at a central switching point - the API Gateway. Impossible with the Kong Gateway? No, this is possible!</p>
+<h1 id="solution">Solution</h1>
+<p>The solution is to reuse the OBO plugin described in the previous <a href="https://nttdata-dach.github.io/posts/as-konggateway-onbehalfof/">blog</a> together with a new SAML 2.0 Bearer Assertion plugin to be implemented. The OBO plugin conjures up a SAML 2.0 token in the existing user context, while the subsequent SAML 2.0 Bearer Assertion plugin procures the SAP access token in exchange for the SAML 2.0 token. The transfer point between the two plugins in the Kong processing pipeline is the authorization header; the OBO plugin takes the OAuth Bearer token and replaces it with the SAML 2.0 token, which in turn is used by the SAML 2.0 Bearer Assertion plugin. This type of token handoff also ensures individual use of the plugins for all use cases where only one of the plugins is required.</p>
+<p>If successful, the SAML 2.0 Bearer Assertion plugin with the SAP authorization server configuration will generate a random string access token associated with authorization values stored on the SAP side. This is a valid approach because the OAuth2 standard does not specify a format for tokens. Therefore, it is not a self-contained token like the JWT, but a kind of reference token. Reference access tokens are opaque strings used in OAuth 2.0 for delegated authorization. The details associated with the token are stored on the authorization server, and the SAP OData service can be accessed with an opaque bearer token. The SAP OData API, as a protected resource, uses the bearer reference access token to look up the associated authorization information.</p>
+<p>The OBO plugin can process the same input OAuth 2.0 access token twice, the response is a SAML assertion with a new ID and a countdown on the <code>experies_in</code> and <code>ext_expires_in</code> timeout response parameters (and of course the validity period in the token itself). Instead, the SAML 2.0 Bearer Assertion plugin can only take one and the same input SAML 2.0 token once, otherwise you will get an SAP error message like “<em>Specified permission grant is invalid. Assertion was already consumed. More information in kernel traces or SAP Note 1688545</em>”.</p>
+<p>The following diagram outlines the OBO and SAML 2.0 Bearer Assertion flow on the gateway.</p>
+
+
+  
+
+
+<picture style="display: contents;"
+     
+    id="[359 215 201 188 402 487]"
+    onclick="openModal(this.id)"
+     >
+    
+    <source srcset="/posts/img/AS-KongGateway-Saml2Bearer/OBOandSAML2AssertionPlugin-dark.png" media="none"/>
+    
+    <img    
+        class="dynamicimage modal-pic"    
+        
+        src="/posts/img/AS-KongGateway-Saml2Bearer/OBOandSAML2AssertionPlugin-light.png" 
+        
+         
+        
+        
+        
+        
+        />
+    
+</picture>
+
+<script>
+    initPicture()
+</script>
+
+<p>Plugins can add any kind of missing functionality to the gateway. Therefore, we just need to design and implement the outlined SAML 2.0 Bearer Assertion plugin and place it behind the OBO plugin in the Kong processing pipeline. In my last <a href="https://nttdata-dach.github.io/posts/as-konggateway-onbehalfof/">OBO blog</a>, I have already discussed the general plugin programming, so we will not repeat that part.</p>
+<p>However, it should come as no surprise that I also wrote a custom Lua SAML 2.0 Bearer Assertion custom plugin. I am happy to share it with you in case you are also suffering from the loss of SAML 2.0 Bearer Assertion functionality. Please see the NTT DATA GitHub repository for the plugin source code <a href="https://github.com/NTTDATA-DACH/TECHblog_code/tree/main/Series-KongGateway/04-AS-Saml2Bearer">here</a>.</p>
+<h1 id="usage">Usage</h1>
+<p>The plugin priority determines when the plugin is executed. The plugin runs in the NGINX access phase with priority 700, so its execution in the processing pipeline follows the Kong entry and authentication plugins, which can first validate the entry token (in my case, the incoming AAD JWT access token is validated by the OpenID Connect plugin and then converted to SAML 2.0 by the OBO plugin). A valid SAML 2.0 Bearer token entry in the authorization header is important because this token must be exchanged on the authorization server via the SAML 2.0 Bearer Assertion plugin. As described, in my case the OBO plugin, which is responsible for generating the valid SAML 2.0 token, is preempted (priority 800). In general, the OBO plugin is optional; the SAML 2.0 token can also be provided directly by the calling client as a bearer token.</p>
+<p>The SAML 2.0 Bearer Assertion plugin takes the SAML 2.0 token from the authorization request header and performs a token exchange on the authorization server according to the specified plugin configuration. A method other than the authorization request header field for token transfer is not supported by the plugin.</p>
+<p>In addition to any required network and optional caching configuration, the actual SAML 2.0 Bearer Assertion configuration must be performed. The following DB-less configuration snippet shows a minimal running configuration that implements the SAML 2.0 Bearer Assertion.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">plugins</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">oauth2-saml2-bearer</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;oauth2-saml2-bearer&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">service</span><span class="p">:</span><span class="w"> </span><span class="l">&lt;configured service entity&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">config</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">enable_proxy</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">https_proxy</span><span class="p">:</span><span class="w"> </span><span class="l">&lt;proxy URL&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">https_verify</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">enable_client_certificate</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">token_endpoint</span><span class="p">:</span><span class="w"> </span><span class="l">https://&lt;host:port&gt;/sap/bc/sec/oauth2/token</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">enable_basic_authn</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">basic_authn_username</span><span class="p">:</span><span class="w"> </span><span class="l">&lt;basic authentication user&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">basic_authn_password</span><span class="p">:</span><span class="w"> </span><span class="l">&lt;basic authentication password&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">client_id</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;&lt;client id&gt;&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l">json</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">scope</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">&lt;requested scope&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">enable_caching</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">enable_factor_ttl</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">ttl_factor</span><span class="p">:</span><span class="w"> </span><span class="m">0.75</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">stopwatch</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre></div>
+<p>The configuration shown above allows an HTTPS proxy configuration to reach the authorization server for my use case. No client certificate is required. The SAML 2.0 Bearer Assertion SAP endpoint is taken from the <code>token_endpoint</code> configuration parameter. The SAP authorization server requires additional basic authentication protection. Therefore, a technical SAP user name and password must be provided.</p>
+<p>The <code>client_id</code> is the client ID assigned by SAP. The required response format is JSON (urlencoded and xml format are also possible). The scope permissions list the desired scopes as a string array. The SAML 2.0 Bearer Assertion plugin schema definition includes a description of each parameter and the default setting.</p>
+<p>The plugin also has an option to handle the CSRF protection required for manipulating (non-GET) requests. SAP requires a CSRF token and corresponding cookies for these OData requests. This <a href="https://community.sap.com/t5/technology-blogs-by-sap/how-does-csrf-token-work-sap-gateway/ba-p/13520186">link</a> gives a good explanation about the CSRF topic. But you also have the option to let the consumer manage these parameters (in this case leave the default setting of the <code>enable_scrf_protection</code> parameter disabled).</p>
+<p>To pass the next penetration test, the determined access token will be rendered unusable for logging above the debug logging level. If the token cannot be fully logged due to the existing logging character limit, the previously introduced chunking module can be used (coding is commented out in the Lua module).</p>
+<p>The SAML 2.0 Bearer Assertion plugin has its own stopwatch and shows fluctuating runtimes between about 200 and 600 milliseconds in my Google Kubernetes Engine (GKE) test environment when token caching is disabled. The plugin runtime is almost entirely due to the SAP invocation (in OAuth2 terms, the call to the authorization server). If the caching configuration is enabled and the token is already cached, the plugin runtime at the Kong info logging level is about 2 milliseconds. The cache key is formed from the configured client ID (<code>client_id</code>) and the unique SAML assertion ID determined from the incoming token (easily changeable to suit your needs).</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>Token management is complicated, but essential for communication between services in modern zero trust architectures. Therefore, easy to configure and customizable plugins are important for this task. The discussed SAML 2.0 Bearer Assertion plugin fills a gap in Kong and enables token exchange directly at the Kong Gateway. The plugin is implemented in Lua for stability and performance reasons.</p>
+<p>The presented plugin will solve your SAML 2.0 Bearer Assertion token exchange problems. It takes XML-based SAML 2.0 tokens and returns OAuth 2.0 access tokens in exchange. Again, going back to my opening statement, with the Kong Gateway you will not run into any limitations.</p>
+<p>Beyond words: Special thanks to Savas Akgol, Markus Remmet and Hans-Jürgen May for their collaborative efforts and their yielded expertise in complex AAD and SAP configuration.</p>
+<h1 id="credits">Credits</h1>
+<p>Title image by <a href="https://www.shutterstock.com/g/mikute">mikute</a> on <a href="https://www.shutterstock.com">Shutterstock</a></p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/alexander-suchier.jpg" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/alexander-suchier">Alexander Suchier</a><span>
+                    
+                </span></h3>
+                <p>Senior Managing Technical Consultant and Kong Champion </p>
+                <p calss="author-socials">
+                    
+                    
+                    
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        <div class="related-block">
+            <h3 class="related-heading" id="series-list">Check out the full series</h3>
+            
+            <ul>
+                
+                <li><a class="related-link" href="/posts/as-kongproductintroduction/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 1: Brief Product Introduction</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konglogchunking/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 2: Log Chunking</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-onbehalfof/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 3: Token Exchange On-Behalf-Of</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-saml2bearer/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0</a></li>
+                
+            </ul>
+        </div>
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/kong/">Kong</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/gateway/">Gateway</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/kong-plugin/">Kong Plugin</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/token-exchange/">Token Exchange</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/saml/">SAML</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/saml-bearer-assertion/">SAML Bearer Assertion</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/aad/">AAD</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/pdk/">PDK</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/lua-module/">Lua Module</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</html>

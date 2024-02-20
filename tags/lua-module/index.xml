@@ -7,8 +7,15 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Thu, 21 Dec 2023 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 20 Feb 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/tags/lua-module/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0</title>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-saml2bearer/</link>
+      <pubDate>Tue, 20 Feb 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/as-konggateway-saml2bearer/</guid>
+      <description>My last blog provided a solution for implementing an OAuth 2.0-based On-Behalf-Of (delegation) grant flow. This time it’s about implementing a Security Assertion Markup Language (SAML) 2.0 Profile for OAuth 2.0 Client Authentication and Authorization Grants. This flow allows OAuth 2.0 clients to obtain access tokens by presenting SAML 2.0 assertions as a form of authentication. This somewhat extended grant flow expands the scope for exchanging authentication and authorization data between different parties with seamless management, all achieved through the API Gateway.</description>
+    </item>
     <item>
       <title>Part 3: Token Exchange On-Behalf-Of</title>
       <link>https://nttdata-dach.github.io/posts/as-konggateway-onbehalfof/</link>
