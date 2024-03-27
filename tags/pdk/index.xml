@@ -7,8 +7,15 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Tue, 20 Feb 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 27 Mar 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/tags/pdk/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Part 5: mTLS Header</title>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-mtls_header/</link>
+      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/as-konggateway-mtls_header/</guid>
+      <description>Mutual transport layer security (mTLS) with consumer authentication using client certificates at the Kong Gateway plays an important role in building a zero-trust architecture. But perimeter security devices that perform TLS termination, so-called TLS terminating reverse proxies (TTRP), break the automatic mapping of client certificates to Kong consumers. This blog demonstrates mTLS consumer authentication even with preceding TTRPs, without requiring TCP passthrough.</description>
+    </item>
     <item>
       <title>Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0</title>
       <link>https://nttdata-dach.github.io/posts/as-konggateway-saml2bearer/</link>

@@ -7,48 +7,97 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Tue, 20 Feb 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 27 Mar 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>AAD</title>
-      <link>https://nttdata-dach.github.io/tags/aad/</link>
-      <pubDate>Tue, 20 Feb 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/aad/</guid>
+      <title>client certificate</title>
+      <link>https://nttdata-dach.github.io/tags/client-certificate/</link>
+      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/client-certificate/</guid>
       <description></description>
     </item>
     <item>
       <title>Gateway</title>
       <link>https://nttdata-dach.github.io/tags/gateway/</link>
-      <pubDate>Tue, 20 Feb 2024 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/gateway/</guid>
       <description></description>
     </item>
     <item>
       <title>Kong</title>
       <link>https://nttdata-dach.github.io/tags/kong/</link>
-      <pubDate>Tue, 20 Feb 2024 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/kong/</guid>
       <description></description>
     </item>
     <item>
       <title>Kong Plugin</title>
       <link>https://nttdata-dach.github.io/tags/kong-plugin/</link>
-      <pubDate>Tue, 20 Feb 2024 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/kong-plugin/</guid>
       <description></description>
     </item>
     <item>
       <title>Lua Module</title>
       <link>https://nttdata-dach.github.io/tags/lua-module/</link>
-      <pubDate>Tue, 20 Feb 2024 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/lua-module/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>mTLS</title>
+      <link>https://nttdata-dach.github.io/tags/mtls/</link>
+      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/mtls/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>mutual TLS</title>
+      <link>https://nttdata-dach.github.io/tags/mutual-tls/</link>
+      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/mutual-tls/</guid>
       <description></description>
     </item>
     <item>
       <title>PDK</title>
       <link>https://nttdata-dach.github.io/tags/pdk/</link>
-      <pubDate>Tue, 20 Feb 2024 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/pdk/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>perimeter security</title>
+      <link>https://nttdata-dach.github.io/tags/perimeter-security/</link>
+      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/perimeter-security/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>RFC 9440</title>
+      <link>https://nttdata-dach.github.io/tags/rfc-9440/</link>
+      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/rfc-9440/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>TTRP</title>
+      <link>https://nttdata-dach.github.io/tags/ttrp/</link>
+      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/ttrp/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>ZTA</title>
+      <link>https://nttdata-dach.github.io/tags/zta/</link>
+      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/zta/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>AAD</title>
+      <link>https://nttdata-dach.github.io/tags/aad/</link>
+      <pubDate>Tue, 20 Feb 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/aad/</guid>
       <description></description>
     </item>
     <item>
