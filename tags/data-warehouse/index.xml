@@ -7,14 +7,14 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Thu, 08 Feb 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 02 May 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/tags/data-warehouse/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Data Mesh as an Element of Data Strategy</title>
+      <title>Data mesh as an element of data strategy</title>
       <link>https://nttdata-dach.github.io/posts/nf-en-datameshasanelementofdatastrategy/</link>
-      <pubDate>Thu, 08 Feb 2024 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 02 May 2024 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/posts/nf-en-datameshasanelementofdatastrategy/</guid>
-      <description>In this article we discuss the challenges of storing vast amounts of data to become a value-driven organization and introduce Data Mesh, an innovative technology that addresses these challenges. We outline the four principles of Data Mesh and provide a step-by-step framework for implementing the architecture. The article also gives an example of Data Mesh implementation using serverless tools on AWS and emphasizes that the selection between Data Mesh and traditional data architectures depends on the specific needs, capabilities, and goals of the business.</description>
+      <description>In this article we discuss the challenges of storing vast amounts of data to become a value-driven organization and introduce data mesh, an innovative technology that addresses these challenges. We outline the four principles of data mesh and provide a step-by-step framework for implementing the architecture. The article also gives an example of data mesh implementation using serverless tools on AWS and emphasizes that the selection between data mesh and traditional data architectures depends on the specific needs, capabilities, and goals of the business.</description>
     </item>
   </channel>
 </rss>

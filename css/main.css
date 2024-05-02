@@ -410,6 +410,14 @@ ul.tag-list-linked li {
     cursor: pointer;
 }
 
+ol p {
+    font-size: 1em;
+}
+
+ol code span {
+    font-size: 14px;
+}
+
 h2.footer {
     margin-top: 30px;
     font-size: 13px;

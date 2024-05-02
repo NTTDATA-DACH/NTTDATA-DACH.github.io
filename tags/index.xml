@@ -7,10 +7,59 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Wed, 27 Mar 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 02 May 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>client certificate</title>
+      <title>Data Architecture</title>
+      <link>https://nttdata-dach.github.io/tags/data-architecture/</link>
+      <pubDate>Thu, 02 May 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/data-architecture/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Data Governance</title>
+      <link>https://nttdata-dach.github.io/tags/data-governance/</link>
+      <pubDate>Thu, 02 May 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/data-governance/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Data Lake</title>
+      <link>https://nttdata-dach.github.io/tags/data-lake/</link>
+      <pubDate>Thu, 02 May 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/data-lake/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Data Mesh</title>
+      <link>https://nttdata-dach.github.io/tags/data-mesh/</link>
+      <pubDate>Thu, 02 May 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/data-mesh/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Data Strategy</title>
+      <link>https://nttdata-dach.github.io/tags/data-strategy/</link>
+      <pubDate>Thu, 02 May 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/data-strategy/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Data Warehouse</title>
+      <link>https://nttdata-dach.github.io/tags/data-warehouse/</link>
+      <pubDate>Thu, 02 May 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/data-warehouse/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>ETL</title>
+      <link>https://nttdata-dach.github.io/tags/etl/</link>
+      <pubDate>Thu, 02 May 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/etl/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Client Certificate</title>
       <link>https://nttdata-dach.github.io/tags/client-certificate/</link>
       <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/client-certificate/</guid>
@@ -45,14 +94,14 @@
       <description></description>
     </item>
     <item>
-      <title>mTLS</title>
+      <title>MTLS</title>
       <link>https://nttdata-dach.github.io/tags/mtls/</link>
       <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/mtls/</guid>
       <description></description>
     </item>
     <item>
-      <title>mutual TLS</title>
+      <title>Mutual TLS</title>
       <link>https://nttdata-dach.github.io/tags/mutual-tls/</link>
       <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/mutual-tls/</guid>
@@ -66,7 +115,7 @@
       <description></description>
     </item>
     <item>
-      <title>perimeter security</title>
+      <title>Perimeter Security</title>
       <link>https://nttdata-dach.github.io/tags/perimeter-security/</link>
       <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/perimeter-security/</guid>
@@ -129,7 +178,7 @@
       <description></description>
     </item>
     <item>
-      <title>kubernetes</title>
+      <title>Kubernetes</title>
       <link>https://nttdata-dach.github.io/tags/kubernetes/</link>
       <pubDate>Fri, 19 Jan 2024 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/kubernetes/</guid>
@@ -185,7 +234,7 @@
       <description></description>
     </item>
     <item>
-      <title>AWS</title>
+      <title>Aws</title>
       <link>https://nttdata-dach.github.io/tags/aws/</link>
       <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/aws/</guid>
@@ -199,7 +248,7 @@
       <description></description>
     </item>
     <item>
-      <title>external secrets</title>
+      <title>External Secrets</title>
       <link>https://nttdata-dach.github.io/tags/external-secrets/</link>
       <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/external-secrets/</guid>
@@ -220,7 +269,7 @@
       <description></description>
     </item>
     <item>
-      <title>Kubernetes operator</title>
+      <title>Kubernetes Operator</title>
       <link>https://nttdata-dach.github.io/tags/kubernetes-operator/</link>
       <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/kubernetes-operator/</guid>
@@ -241,14 +290,14 @@
       <description></description>
     </item>
     <item>
-      <title>sealed secrets</title>
+      <title>Sealed Secrets</title>
       <link>https://nttdata-dach.github.io/tags/sealed-secrets/</link>
       <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/sealed-secrets/</guid>
       <description></description>
     </item>
     <item>
-      <title>secrets</title>
+      <title>Secrets</title>
       <link>https://nttdata-dach.github.io/tags/secrets/</link>
       <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/secrets/</guid>
@@ -332,21 +381,21 @@
       <description></description>
     </item>
     <item>
-      <title>argo-cd</title>
+      <title>Argo-Cd</title>
       <link>https://nttdata-dach.github.io/tags/argo-cd/</link>
       <pubDate>Tue, 22 Aug 2023 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/argo-cd/</guid>
       <description></description>
     </item>
     <item>
-      <title>automation</title>
+      <title>Automation</title>
       <link>https://nttdata-dach.github.io/tags/automation/</link>
       <pubDate>Tue, 22 Aug 2023 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/automation/</guid>
       <description></description>
     </item>
     <item>
-      <title>dependency management</title>
+      <title>Dependency Management</title>
       <link>https://nttdata-dach.github.io/tags/dependency-management/</link>
       <pubDate>Tue, 22 Aug 2023 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/dependency-management/</guid>
@@ -360,7 +409,7 @@
       <description></description>
     </item>
     <item>
-      <title>github actions</title>
+      <title>Github Actions</title>
       <link>https://nttdata-dach.github.io/tags/github-actions/</link>
       <pubDate>Tue, 22 Aug 2023 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/github-actions/</guid>
@@ -500,14 +549,14 @@
       <description></description>
     </item>
     <item>
-      <title>blockchain</title>
+      <title>Blockchain</title>
       <link>https://nttdata-dach.github.io/tags/blockchain/</link>
       <pubDate>Tue, 18 Oct 2022 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/blockchain/</guid>
       <description></description>
     </item>
     <item>
-      <title>decentralization</title>
+      <title>Decentralization</title>
       <link>https://nttdata-dach.github.io/tags/decentralization/</link>
       <pubDate>Tue, 18 Oct 2022 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/decentralization/</guid>
@@ -521,105 +570,105 @@
       <description></description>
     </item>
     <item>
-      <title>financial services</title>
+      <title>Financial Services</title>
       <link>https://nttdata-dach.github.io/tags/financial-services/</link>
       <pubDate>Tue, 18 Oct 2022 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/financial-services/</guid>
       <description></description>
     </item>
     <item>
-      <title>ci</title>
+      <title>Ci</title>
       <link>https://nttdata-dach.github.io/tags/ci/</link>
       <pubDate>Mon, 20 Jun 2022 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/ci/</guid>
       <description></description>
     </item>
     <item>
-      <title>container</title>
+      <title>Container</title>
       <link>https://nttdata-dach.github.io/tags/container/</link>
       <pubDate>Mon, 20 Jun 2022 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/container/</guid>
       <description></description>
     </item>
     <item>
-      <title>development</title>
+      <title>Development</title>
       <link>https://nttdata-dach.github.io/tags/development/</link>
       <pubDate>Mon, 20 Jun 2022 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/development/</guid>
       <description></description>
     </item>
     <item>
-      <title>ssh</title>
+      <title>Ssh</title>
       <link>https://nttdata-dach.github.io/tags/ssh/</link>
       <pubDate>Mon, 20 Jun 2022 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/ssh/</guid>
       <description></description>
     </item>
     <item>
-      <title>ssm</title>
+      <title>Ssm</title>
       <link>https://nttdata-dach.github.io/tags/ssm/</link>
       <pubDate>Mon, 20 Jun 2022 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/ssm/</guid>
       <description></description>
     </item>
     <item>
-      <title>vpc</title>
+      <title>Vpc</title>
       <link>https://nttdata-dach.github.io/tags/vpc/</link>
       <pubDate>Mon, 20 Jun 2022 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/vpc/</guid>
       <description></description>
     </item>
     <item>
-      <title>data</title>
+      <title>Data</title>
       <link>https://nttdata-dach.github.io/tags/data/</link>
       <pubDate>Mon, 06 Dec 2021 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/data/</guid>
       <description></description>
     </item>
     <item>
-      <title>sport</title>
+      <title>Sport</title>
       <link>https://nttdata-dach.github.io/tags/sport/</link>
       <pubDate>Mon, 06 Dec 2021 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/sport/</guid>
       <description></description>
     </item>
     <item>
-      <title>buildah</title>
+      <title>Buildah</title>
       <link>https://nttdata-dach.github.io/tags/buildah/</link>
       <pubDate>Mon, 12 Jul 2021 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/buildah/</guid>
       <description></description>
     </item>
     <item>
-      <title>cowsay</title>
+      <title>Cowsay</title>
       <link>https://nttdata-dach.github.io/tags/cowsay/</link>
       <pubDate>Mon, 12 Jul 2021 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/cowsay/</guid>
       <description></description>
     </item>
     <item>
-      <title>docker</title>
+      <title>Docker</title>
       <link>https://nttdata-dach.github.io/tags/docker/</link>
       <pubDate>Mon, 12 Jul 2021 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/docker/</guid>
       <description></description>
     </item>
     <item>
-      <title>rootless</title>
+      <title>Rootless</title>
       <link>https://nttdata-dach.github.io/tags/rootless/</link>
       <pubDate>Mon, 12 Jul 2021 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/rootless/</guid>
       <description></description>
     </item>
     <item>
-      <title>process automation</title>
+      <title>Process Automation</title>
       <link>https://nttdata-dach.github.io/tags/process-automation/</link>
       <pubDate>Thu, 01 Jul 2021 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/process-automation/</guid>
       <description></description>
     </item>
     <item>
-      <title>best practice</title>
+      <title>Best Practice</title>
       <link>https://nttdata-dach.github.io/tags/best-practice/</link>
       <pubDate>Tue, 01 Jun 2021 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/best-practice/</guid>

@@ -2,14 +2,32 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://nttdata-dach.github.io/authors/alexander-suchier/</loc>
-    <lastmod>2024-03-27T00:00:00+00:00</lastmod>
+    <loc>https://nttdata-dach.github.io/tags/data-architecture/</loc>
+    <lastmod>2024-05-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/authors/</loc>
-    <lastmod>2024-03-27T00:00:00+00:00</lastmod>
+    <loc>https://nttdata-dach.github.io/tags/data-governance/</loc>
+    <lastmod>2024-05-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/authors/</loc>
-    <lastmod>2024-03-27T00:00:00+00:00</lastmod>
+    <loc>https://nttdata-dach.github.io/tags/data-lake/</loc>
+    <lastmod>2024-05-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/data-mesh/</loc>
+    <lastmod>2024-05-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/posts/nf-en-datameshasanelementofdatastrategy/</loc>
+    <lastmod>2024-05-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/data-strategy/</loc>
+    <lastmod>2024-05-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/data-warehouse/</loc>
+    <lastmod>2024-05-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/etl/</loc>
+    <lastmod>2024-05-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/</loc>
+    <lastmod>2024-05-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/client-certificate/</loc>
     <lastmod>2024-03-27T00:00:00+00:00</lastmod>
@@ -50,9 +68,6 @@
     <loc>https://nttdata-dach.github.io/series/</loc>
     <lastmod>2024-03-27T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/tags/</loc>
-    <lastmod>2024-03-27T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://nttdata-dach.github.io/tags/ttrp/</loc>
     <lastmod>2024-03-27T00:00:00+00:00</lastmod>
   </url><url>
@@ -74,6 +89,9 @@
     <loc>https://nttdata-dach.github.io/tags/token-exchange/</loc>
     <lastmod>2024-02-20T00:00:00+00:00</lastmod>
   </url><url>
+    <loc>https://nttdata-dach.github.io/authors/</loc>
+    <lastmod>2024-01-19T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://nttdata-dach.github.io/tags/cloud/</loc>
     <lastmod>2024-01-19T00:00:00+00:00</lastmod>
   </url><url>
@@ -92,13 +110,10 @@
     <loc>https://nttdata-dach.github.io/tags/opentelemetry/</loc>
     <lastmod>2024-01-19T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics_01-intro/</loc>
+    <loc>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-01-intro/</loc>
     <lastmod>2024-01-19T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/platform-engineering/</loc>
-    <lastmod>2024-01-19T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/authors/sherief-ahmed/</loc>
     <lastmod>2024-01-19T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/series/transitioning-from-prometheus-to-opentelemetry-a-journey-of-a-clusters-metrics-evolution/</loc>
@@ -154,9 +169,6 @@
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/stefan-k%C3%BChnel/</loc>
     <lastmod>2023-11-24T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/authors/alexander-kroll/</loc>
-    <lastmod>2023-11-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/android/</loc>
     <lastmod>2023-11-03T00:00:00+00:00</lastmod>
@@ -227,9 +239,6 @@
     <loc>https://nttdata-dach.github.io/tags/infrastructure-as-code/</loc>
     <lastmod>2023-07-31T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/authors/niklas-schuster/</loc>
-    <lastmod>2023-07-31T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://nttdata-dach.github.io/posts/ns-controlplaneoperatedinfrastructure_1/</loc>
     <lastmod>2023-07-31T00:00:00+00:00</lastmod>
   </url><url>
@@ -245,9 +254,6 @@
     <loc>https://nttdata-dach.github.io/tags/lxm/</loc>
     <lastmod>2023-04-13T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/authors/markus-seidl/</loc>
-    <lastmod>2023-04-13T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://nttdata-dach.github.io/tags/multi-threading/</loc>
     <lastmod>2023-04-13T00:00:00+00:00</lastmod>
   </url><url>
@@ -259,9 +265,6 @@
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/streamapi/</loc>
     <lastmod>2023-04-13T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/authors/amulya-bhatia/</loc>
-    <lastmod>2023-03-28T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/cybersecurity/</loc>
     <lastmod>2023-03-28T00:00:00+00:00</lastmod>
@@ -302,9 +305,6 @@
     <loc>https://nttdata-dach.github.io/tags/entity-component-system/</loc>
     <lastmod>2023-03-09T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/authors/sascha-hampl/</loc>
-    <lastmod>2023-03-09T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://nttdata-dach.github.io/tags/blockchain/</loc>
     <lastmod>2022-10-18T00:00:00+00:00</lastmod>
   </url><url>
@@ -315,9 +315,6 @@
     <lastmod>2022-10-18T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/financial-services/</loc>
-    <lastmod>2022-10-18T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/authors/maja-schwarz/</loc>
     <lastmod>2022-10-18T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/posts/ms-usecasesprivateblockchain/</loc>
@@ -344,13 +341,7 @@
     <loc>https://nttdata-dach.github.io/tags/vpc/</loc>
     <lastmod>2022-06-20T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/authors/yury-kornev/</loc>
-    <lastmod>2022-06-20T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://nttdata-dach.github.io/tags/data/</loc>
-    <lastmod>2021-12-06T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/authors/oliver-koeth/</loc>
     <lastmod>2021-12-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/posts/ok-pacepredictor/</loc>
@@ -358,9 +349,6 @@
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/sport/</loc>
     <lastmod>2021-12-06T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/authors/adam-boczek/</loc>
-    <lastmod>2021-07-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/buildah/</loc>
     <lastmod>2021-07-12T00:00:00+00:00</lastmod>
@@ -409,6 +397,8 @@
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/amulya-bhatia/</loc>
   </url><url>
+    <loc>https://nttdata-dach.github.io/authors/dario-digregorio/</loc>
+  </url><url>
     <loc>https://nttdata-dach.github.io/authors/esmaeil-nikumanesh/</loc>
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/francisco-javier-lopera-machon/</loc>
@@ -426,6 +416,8 @@
     <loc>https://nttdata-dach.github.io/authors/niklas-schuster/</loc>
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/oliver-koeth/</loc>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/authors/robert-danczak/</loc>
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/samuel-wirth/</loc>
   </url><url>

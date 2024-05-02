@@ -3,16 +3,16 @@
 <html>
 
 <head>
-  <title>  Data Mesh as an Element of Data Strategy  </title>
+  <title>  Data mesh as an element of data strategy  </title>
   <meta charset="utf-8"/> 
   
   <meta property="og:type" content="article"/>
-  <meta property="og:title" content="Data Mesh as an Element of Data Strategy"/>
+  <meta property="og:title" content="Data mesh as an element of data strategy"/>
   
   <meta property="article:author" content="[Najmeh Foroozani Esmaeil Nikumanesh]"/>
   <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/NF-EN-DataMeshAsAnElementOfDataStrategy/title-image.jpg"/>
   <meta property="og:url" content="https://nttdata-dach.github.io/posts/nf-en-datameshasanelementofdatastrategy/"/>
-  <meta property="og:description" content="In this article we discuss the challenges of storing vast amounts of data to become a value-driven organization and introduce Data Mesh, an innovative technology that addresses these challenges. We outline the four principles of Data Mesh and provide a step-by-step framework for implementing the architecture. The article also gives an example of Data Mesh implementation using serverless tools on AWS and emphasizes that the selection between Data Mesh and traditional data architectures depends on the specific needs, capabilities, and goals of the business."/>
+  <meta property="og:description" content="In this article we discuss the challenges of storing vast amounts of data to become a value-driven organization and introduce data mesh, an innovative technology that addresses these challenges. We outline the four principles of data mesh and provide a step-by-step framework for implementing the architecture. The article also gives an example of data mesh implementation using serverless tools on AWS and emphasizes that the selection between data mesh and traditional data architectures depends on the specific needs, capabilities, and goals of the business."/>
   
   <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
   <script src="https://nttdata-dach.github.io/js/modal.js"></script>
@@ -70,12 +70,12 @@
 
 <div class="emobanner article">
     <h1>
-        <span class="pre">08.02.2024
+        <span class="pre">02.05.2024
         
          - Najmeh Foroozani, Esmaeil Nikumanesh - <i class="fa-solid fa-book-open"></i> 15 min read
         
         </span>
-        Data Mesh as an Element of Data Strategy
+        Data mesh as an element of data strategy
         
     </h1>
 
@@ -98,8 +98,8 @@
            
             <p>Nowadays becoming a value-driven organization is one of the top challenges of many teams and organizations. To fulfill this goal, storing vast amounts of data is a big challenge for both data scientists and data analysts.<br>
 Traditionally, data engineer teams who oversee data pipelines to store data cannot handle all the analytical questions of consumers. Most of the time they don’t have any information on the data and their focus lies on maintaining manual or automated ETL (extract, transform and load data) pipelines (see figure <a href="#fig-1">1</a>).<br>
-Here, we will provide an overview of an innovative technology called “data mesh” including its advantages and disadvantages as well as best practices for implementing a successful data mesh solution on the cloud.</p>
-<h1 id="introduction-to-data-mesh">Introduction to Data Mesh</h1>
+Here, we will provide an overview of an innovative approach called “data mesh” including its advantages and disadvantages as well as best practices for implementing a successful data mesh solution on the cloud.</p>
+<h1 id="introduction-to-data-mesh">Introduction to data mesh</h1>
 <p>The first thing you should know is that a data mesh is an abstract concept introduced in 2019 by Zhamak Dehghani (ex-director of emerging technologies for ThoughtWorks in North America), so the learning and discovering processes are still going on. That is why there is so much confusion as to what it is and what it is not. In her famous blog article she introduced the concept as follows:</p>
 <blockquote>
 	
@@ -121,7 +121,7 @@ Many enterprises are investing in their next generation data lake, with the hope
     </p>
     
 </blockquote>
-<p>Data Mesh is a framework to manage and organize data within an organization by dividing it into distinct business departments (or domains).  It provides a way to decouple data services from the applications that use them, enabling each team to own and manage their data independently. The objective of the data mesh architect is to build a scalable, secure, and reliable data infrastructure in each domain that supports the needs of multiple applications. By employing this type of solution, businesses can benefit from increased efficiency when accessing or manipulating enormous amounts of data due to its decentralized nature. It also eliminates the need for complex ETL processes which often require manual steps and thus saves time while reducing errors associated with these processes.</p>
+<p>Data mesh is a framework to manage and organize data within an organization by dividing it into distinct business departments (or domains). It provides a way to decouple data services from the applications that use them, enabling each team to own and manage their data independently. The objective of the data mesh architect is to build a scalable, secure, and reliable data infrastructure in each domain that supports the needs of multiple applications. By employing this type of solution, businesses can benefit from increased efficiency when accessing or manipulating enormous amounts of data due to its decentralized nature. It also eliminates the need for complex ETL processes which often require manual steps and thus saves time while reducing errors associated with these processes.</p>
 
 
 
@@ -149,11 +149,11 @@ Many enterprises are investing in their next generation data lake, with the hope
 </picture>
 
 <p>Data mesh is built on four main principles: 1) domain ownership, 2) data as a product, 3) self-service data platform, and 4) federated computation governance. The first two principles accentuate an organizational mind shift to treat data as a product owned by individual teams. The second two principles focus on the elements of the technical foundation. Below we explain each term in more detail.</p>
-<h2 id="principles-of-data-mesh">Principles of Data Mesh</h2>
+<h2 id="principles-of-data-mesh">Principles of data mesh</h2>
 <p>As shown in figure <a href="#fig-2">2</a>, the 4-principles are:</p>
 <ol>
-<li>Domain ownership: Traditionally, data is hosted in a Data Warehouse (DWH) or Data Lake. DWH stores cleaned, aggregated, and structured data to build dashboards on top of that by data analyst but these data cannot be used by data scientist. Data scientists need to work with raw data which has all the information. A Data Lake – in a monolithic architecture – would be responsible for storing all raw data, and a single data team supervises managing the lake and data requests of business teams. One of the challenges of these traditional data ecosystems is that there is no real ownership of the data itself. Lack of data ownership leads to data quality and consistency issues and causes confusion about who is responsible for maintaining and updating the data. In the data mesh framework, each domain team (e.g., HR, marketing, sales, finance, accounting, etc.) handles the quality and consistency of the data that they own.</li>
-<li>Data as a product: The second principle treats data as a product rather than a by-product or just an asset of organization. This product thinking means that there are consumers for the data beyond the domain. Each domain team is responsible for providing high-quality data which can be solo or shared with other domains. The Data Mesh approach puts quality first and addresses the consumer’s requirements.</li>
+<li>Domain ownership: Traditionally, data is hosted in a data warehouse (DWH) or data lake. DWH stores cleaned, aggregated, and structured data to build dashboards on top of that by data analyst but these data cannot be used by data scientist. Data scientists need to work with raw data which has all the information. A data lake – in a monolithic architecture – would be responsible for storing all raw data, and a single data team supervises managing the lake and data requests of business teams. One of the challenges of these traditional data ecosystems is that there is no real ownership of the data itself. Lack of data ownership leads to data quality and consistency issues and causes confusion about who is responsible for maintaining and updating the data. In the data mesh framework, each domain team (e.g., HR, marketing, sales, finance, accounting, etc.) handles the quality and consistency of the data that they own.</li>
+<li>Data as a product: The second principle treats data as a product rather than a by-product or just an asset of organization. This product thinking means that there are consumers for the data beyond the domain. Each domain team is responsible for providing high-quality data which can be solo or shared with other domains. The data mesh approach puts quality first and addresses the consumer’s requirements.</li>
 <li>Self-service data platform: A self-service data platform is a platform that allows the data teams to easily discover access and manage their stack in each domain. In this framework, there is one central platform with all the tools and services needed for computing, storage, and analyses of data irrespective of other domains, which are provided and managed by the data team. On the other hand, each domain has its specific infostructure to manage and to process the data product they build.</li>
 <li>Federated computational governance: The final principle aims to support all three principles mentioned above by applying governance on each domain. However, all domains still stand under one standard rule that the organization has decided upon globally.</li>
 </ol>
@@ -172,19 +172,19 @@ Many enterprises are investing in their next generation data lake, with the hope
         
          alt="The four principals of data mesh." 
         
-         caption="Data Mesh architecture is built upon 4 principles designed to address the challenges of scaling and managing data within and across organizations."
+         caption="Data mesh architecture is built upon 4 principles designed to address the challenges of scaling and managing data within and across organizations."
          ref="2" id="fig-2" 
          style="max-width:630px; position: relative; left: 50%; transform: translate(-50%, 0%);"
         />
      
     <figcaption  ref="Figure 2. " >
-        Data Mesh architecture is built upon 4 principles designed to address the challenges of scaling and managing data within and across organizations.
+        Data mesh architecture is built upon 4 principles designed to address the challenges of scaling and managing data within and across organizations.
     </figcaption> 
     
 </picture>
 
-<h1 id="data-mesh-architecture">Data Mesh architecture</h1>
-<p>A Data Mesh solution is a decentralized approach that authorizes domain teams to perform cross domain analysis and respond quickly to business needs by adjusting on-the-fly with minimal disruption to other domains. In addition, due to a decentralized approach, Data Mesh is scalable (up or down) on demand without any interference on other data domains or products. One can scale up or down the number of domains or data volume easily. By separating individual datasets into distinct domains based on their purposes, a data mesh solution ensures that all relevant requirements are met at each stage of the process. This makes it easier for companies to keep regulatory compliance while still providing efficient access to the necessary information for decision-making purposes.</p>
+<h1 id="data-mesh-architecture">Data mesh architecture</h1>
+<p>A data mesh solution is a decentralized approach that authorizes domain teams to perform cross domain analysis and respond quickly to business needs by adjusting on-the-fly with minimal disruption to other domains. In addition, due to a decentralized approach, data mesh is scalable (up or down) on demand without any interference on other data domains or products. One can scale up or down the number of domains or data volume easily. By separating individual datasets into distinct domains based on their purposes, a data mesh solution ensures that all relevant requirements are met at each stage of the process. This makes it easier for companies to keep regulatory compliance while still providing efficient access to the necessary information for decision-making purposes.</p>
 
 
   
@@ -192,7 +192,7 @@ Many enterprises are investing in their next generation data lake, with the hope
 
 <picture style="display: contents;"
      
-    id="[235 339 313 143 461 261]"
+    id="[286 47 254 458 143 40]"
     onclick="openModal(this.id)"
      >
     
@@ -201,26 +201,26 @@ Many enterprises are investing in their next generation data lake, with the hope
         
         src="/posts/img/NF-EN-DataMeshAsAnElementOfDataStrategy/Fig3.jpg" 
         
-         alt="An example of Data Mesh domains and components. Each domain is governed by the four key principles of Data Mesh." 
+         alt="An example of data mesh domains and components. Each domain is governed by the four key principles of data mesh." 
         
-         caption="An example of domains architecture in Data Mesh. It is composed of three separate components: operational data in each domain, data infostructure and governance. Each domain team ingests operational data and builds analytical data models as data products to perform their own analysis. Data products may also serve other domains. Data governance ensures consistency, quality, and security of products across domains."
+         caption="An example of domains architecture in data mesh. It is composed of three separate components: operational data in each domain, data infostructure and governance. Each domain team ingests operational data and builds analytical data models as data products to perform their own analysis. Data products may also serve other domains. Data governance ensures consistency, quality, and security of products across domains."
          ref="3" id="fig-3" 
         
         />
      
     <figcaption  ref="Figure 3. " >
-        An example of domains architecture in Data Mesh. It is composed of three separate components: operational data in each domain, data infostructure and governance. Each domain team ingests operational data and builds analytical data models as data products to perform their own analysis. Data products may also serve other domains. Data governance ensures consistency, quality, and security of products across domains.
+        An example of domains architecture in data mesh. It is composed of three separate components: operational data in each domain, data infostructure and governance. Each domain team ingests operational data and builds analytical data models as data products to perform their own analysis. Data products may also serve other domains. Data governance ensures consistency, quality, and security of products across domains.
     </figcaption> 
     
 </picture>
 
-<p>Figure <a href="#fig-3">3</a>, is an example of 3-domains within the organization. For the sake of simplicity, imagine we have only sale, finance, and marketing domains. We call domain 1, “sales domain”. The sales domain will obviously have the sales team and the sales team will consist of the head of sales, different sales specialists, the data experts within the sales department etc. The domain team is also responsible for managing the domain’s data contract with other domains (organization&rsquo;s operations). Each domain is going to be responsible for defining its own data needs and for building and supporting its own data products.</p>
-<p>First, we have the operational data. The operational data is generated by the organization&rsquo;s daily operations. All this operational data is fed into the data products. A data product is a product or even a service that is built around the data of the domain. In the context of Data Mesh, this can include anything from a dashboard that displays real-time data to a machine learning model that predicts future outcomes based on historical data. For example, a data product of sales domain could be a sale’s forecast for the next six months divided by the different regions and products representing some key metrics. Analytics is the process of using data to gain insights and make informed decisions. This will include things such as data mining, statistical analysis and even machine learning (ML). In the context of Data Mesh, each domain is responsible for defining its own analytics needs. This is important because the analysis, together with operational data, will make a data product.</p>
+<p>Figure <a href="#fig-3">3</a>, is an example of 3-domains within the organization. For the sake of simplicity, imagine we have only sales, finance, and marketing domains. We call domain 1, “sales domain”. The sales domain will obviously have the sales team and the sales team will consist of the head of sales, different sales specialists, the data experts within the sales department etc. The domain team is also responsible for managing the domain’s data contract with other domains (organization&rsquo;s operations). Each domain is going to be responsible for defining its own data needs and for building and supporting its own data products.</p>
+<p>First, we have the operational data. The operational data is generated by the organization&rsquo;s daily operations. All this operational data is fed into the data products. A data product is a product or even a service that is built around the data of the domain. In the context of data mesh, this can include anything from a dashboard that displays real-time data to a machine learning model that predicts future outcomes based on historical data. For example, a data product of sales domain could be a sales forecast for the next six months divided by the different regions and products representing some key metrics. Analytics is the process of using data to gain insights and make informed decisions. This will include things such as data mining, statistical analysis and even machine learning (ML). In the context of data mesh, each domain is responsible for defining its own analytics needs. This is important because the analysis, together with operational data, will make a data product.</p>
 <p>Moreover, each domain has its own data contract. A data contract is a form of agreement between the data producers and data consumers. Consumers are typically internal, meaning other teams within the organization besides the team that owns the product.</p>
-<p>A central data contract on top, outlines how data can be exchanged between domains. It defines the structure, format, and rules of exchange in a distributed data architecture. These formal agreements make sure that there are no uncertainties or undocumented assumptions about data. In this example, the domain team owns the data and consumers will typically be, internally, the team owning the product and other teams within the organization.</p>
-<p>In data mesh each domain is enabled to manage its own data and analytics in a decentralized and autonomous way. However, while still ensuring that the data is shared and integrated effectively across the organization.  So, this is the central and most important part of Data Mesh architecture. One needs to create logical domains and identify what products will be created within these domains and then have an agreement to share these products with other domains within the organization.</p>
-<h1 id="implementing-data-mesh-step-by-step">Implementing Data Mesh Step by Step</h1>
-<p>To implement the Data Mesh architecture, there are several steps you must consider. It is worth mentioning that although many organizations are keen on implementing the Data Mesh architecture, it can be applied at some projects only. As an instance, organizations need to answer these questions before adding more complexity to the workflow, e.g., how big is your data set, how many data teams in your organization rely on your data, how many products does your company have, how many domains you have, and how many data-driven features are being built. If these are critical points which make sense for your company, then Data Mesh architecture is a wise solution for all data across the enterprise.</p>
+<p>A central data contract on top outlines how data can be exchanged between domains. It defines the structure, format, and rules of exchange in a distributed data architecture. These formal agreements make sure that there are no uncertainties or undocumented assumptions about data. In this example, the domain team owns the data and consumers will typically be, internally, the team owning the product and other teams within the organization.</p>
+<p>In data mesh each domain is enabled to manage its own data and analytics in a decentralized and autonomous way. However, while still ensuring that the data is shared and integrated effectively across the organization.  So, this is the central and most important part of data mesh architecture. One needs to create logical domains and identify what products will be created within these domains and then have an agreement to share these products with other domains within the organization.</p>
+<h1 id="implementing-data-mesh-step-by-step">Implementing data mesh step by step</h1>
+<p>To implement the data mesh architecture, there are several steps you must consider. It is worth mentioning that although many organizations are keen on implementing the data mesh architecture, it can be applied at some projects only. As an instance, organizations need to answer these questions before adding more complexity to the workflow, e.g., how big is your data set, how many data teams in your organization rely on your data, how many products does your company have, how many domains you have, and how many data-driven features are being built. If these are critical points which make sense for your company, then data mesh architecture is a wise solution for all data across the enterprise.</p>
 <p>To just give an overview here is the list of steps:</p>
 
 
@@ -235,38 +235,38 @@ Many enterprises are investing in their next generation data lake, with the hope
         
         src="/posts/img/NF-EN-DataMeshAsAnElementOfDataStrategy/Fig4.jpg" 
         
-         alt="Setting up the Data Mesh architecture requires to follow several steps carefully." 
+         alt="Setting up the data mesh architecture requires to follow several steps carefully." 
         
-         caption="Implementing Data Mesh in an organization involves a comprehensive strategy that addresses both the technical and organizational aspects of data management. Here is a general overview of how to effectively implement data mesh."
+         caption="Implementing data mesh in an organization involves a comprehensive strategy that addresses both the technical and organizational aspects of data management. Here is a general overview of how to effectively implement data mesh."
          ref="4" id="fig-4" 
         
         />
      
     <figcaption  ref="Figure 4. " >
-        Implementing Data Mesh in an organization involves a comprehensive strategy that addresses both the technical and organizational aspects of data management. Here is a general overview of how to effectively implement data mesh.
+        Implementing data mesh in an organization involves a comprehensive strategy that addresses both the technical and organizational aspects of data management. Here is a general overview of how to effectively implement data mesh.
     </figcaption> 
     
 </picture>
 
 <p><strong>Step 1</strong> Define your domains: A domain is a specific business capability or function within an organization. Each domain will have their own data from their day-to-day operations. In addition, they also have their own solutions. It really depends on the structure of your organization. Identifying all the domains within an organization is crucial, cause it&rsquo;s going to help to understand the data needs of each domain and how these different domains are interconnected. Also defining the domains will give a clearer picture of how complex implementing data mesh is going to be and what kind of team an organization may need.</p>
-<p><strong>Step 2</strong> Define the methodology and scope: This means one should identify the goals of implementing a Data Mesh in specific domains. One should set a priority list on what are the most important domains to implement on data mesh first, before you start expanding it to the other domains. You should also identify any constraints or limitations that could impact your implementation.</p>
-<p><strong>Step 3</strong> Assign domain ownership: Assigning domain ownership for each domain to a specific team or, even better, specific people within the team is important to ensure that the accountability and responsibility for the data domain and its data products is clear from the start. This will also help ensure you have the right people responsible for the data assigned to the domain.</p>
+<p><strong>Step 2</strong> Define the methodology and scope: This means one should identify the goals of implementing a data mesh in specific domains. One should set a priority list on what are the most important domains to implement on data mesh first, before you start expanding it to the other domains. You should also identify any constraints or limitations that could impact your implementation.</p>
+<p><strong>Step 3</strong> Assign domain ownership: Assigning domain ownership for each domain to a specific team or, even better, specific people within the team, is important to ensure that the accountability and responsibility for the data domain and its data products is clear from the start. This will also help ensure you have the right people responsible for the data assigned to the domain.</p>
 <p><strong>Step 4</strong> Identify the data products and owners: Next, one should identify data products and owners in each domain. So here with the example of sales domain, you should have a look at all the different data products that are critical for the success of the domain, but not only of the domain where they reside, but the success of other domains. So, let us say, for example, under the sales domain, one of the key data products is going to be a forecasting solution where we are forecasting the sales across the company via the different verticals, such as products go-to-market types, regions, countries etc. In step four, you should identify all the different data products within each domain that is in scope for implementing data mesh and then have a clear ownership for all these data products assigned. In addition, you can identify any additional data products that can be created later. This will help you ensure that each domain has the necessary data products to meet its business needs and that the right people are managing these products.</p>
-<p><strong>Step 5</strong> Establish the data governance model:  Once different domains and the ownership of the products within the domains is defined, it is time to establish the data governance model. Data governance is critical to the success of implementing data mesh. In this step, one needs to spend some time to define how data governance will work within the Data Mesh environment. In this step, we also define all the different data policies, standards and other processes for data quality management, data security and compliance that will be needed going forward. This is one of the most complex steps.</p>
-<p><strong>Step 6</strong> Establish the Data Mesh architecture and technology: In this step, you need to establish the Data Mesh architecture and technologies that will be used. Here, you need the best technical experts within your company to take part in establishing things such as what data platform is going to be used, what APIs will be used to manage the exchange of data between the domains. It should also establish guidelines for data modeling, data integration and data exchange to ensure consistency across the domains.</p>
+<p><strong>Step 5</strong> Establish the data governance model: Once different domains and the ownership of the products within the domains is defined, it is time to establish the data governance model. Data governance is critical to the success of implementing data mesh. In this step, one needs to spend some time to define how data governance will work within the data mesh environment. In this step, we also define all the different data policies, standards and other processes for data quality management, data security and compliance that will be needed going forward. This is one of the most complex steps.</p>
+<p><strong>Step 6</strong> Establish the data mesh architecture and technology: In this step, you need to establish the data mesh architecture and technologies that will be used. Here, you need the best technical experts within your company to take part in establishing things such as what data platform is going to be used, what APIs will be used to manage the exchange of data between the domains. It should also establish guidelines for data modeling, data integration and data exchange to ensure consistency across the domains.</p>
 <p><strong>Step 7</strong> Create the data platform: Here you need to create the foundations for your product catalog and the different processes for data validation, data transformation and data enrichment to ensure data quality and consistency. This is where your technical team will need to get down to business and start creating an actual data platform that can be used by the different domains.</p>
-<p><strong>Step 8</strong> Data Mesh governance and tracking success: Once we have our Data Mesh up and running, we need to establish some processes for the governance, how are we going to track how successful our data mesh implementation is? You need to put some controls in place to monitor the data quality, ensure compliance and track some key performance indicators, KPIs, to measure the effectiveness of our data mesh. This step will also make it possible to report to the senior leadership in the company.</p>
-<p><strong>Step 9</strong> Continues improvement: Continuous improvement will usually be based on feedback from the different domains. The Data Mesh program team will usually receive ideas, escalation complaints or positive feedback from the different domains on specific parts of the Data Mesh environment. For example, the team is not going to like the data product catalog because the search function does not work properly. When you receive this kind of feedback from the different domain teams, you need to put down all the different ideas, complaints, and escalations on a list. Then you start prioritizing what&rsquo;s going to be important to improve or what is going to make sense in terms of a return on investment, because improving some things may not be a good return on investment in terms of how much time and effort is going to take.</p>
-<h1 id="solutions-for-implementing-data-mesh-on-the-cloud">Solutions for Implementing Data Mesh on the Cloud</h1>
+<p><strong>Step 8</strong> Data mesh governance and tracking success: Once we have our data mesh up and running, we need to establish some processes for the governance, how are we going to track how successful our data mesh implementation is? You need to put some controls in place to monitor the data quality, ensure compliance and track some key performance indicators, KPIs, to measure the effectiveness of our data mesh. This step will also make it possible to report to the senior leadership in the company.</p>
+<p><strong>Step 9</strong> Continues improvement: Continuous improvement will usually be based on feedback from the different domains. The data mesh program team will usually receive ideas, escalation complaints or positive feedback from the different domains on specific parts of the data mesh environment. For example, the team is not going to like the data product catalog because the search function does not work properly. When you receive this kind of feedback from the different domain teams, you need to put down all the different ideas, complaints, and escalations on a list. Then you start prioritizing what&rsquo;s going to be important to improve or what is going to make sense in terms of a return on investment, because improving some things may not be a good return on investment in terms of how much time and effort is going to take.</p>
+<h1 id="solutions-for-implementing-data-mesh-on-the-cloud">Solutions for Implementing data mesh on the cloud</h1>
 <p>To read further, here we mention two example solutions for implementing serverless data mesh on AWS and Azure. However, here we only discuss one solution using AWS services.</p>
 <ol>
-<li>Build a Data Mesh on AWS (<a href="https://catalog.us-east-1.prod.workshops.aws/workshops/23e6326b-58ee-4ab0-9bc7-3c8d730eb851/en-US/introduction#content">https://catalog.us-east-1.prod.workshops.aws/workshops/23e6326b-58ee-4ab0-9bc7-3c8d730eb851/en-US/introduction#content</a>)</li>
-<li>Build a Data Mesh on Azure: (<a href="https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/scenarios/cloud-scale-analytics/architectures/what-is-data-mesh">https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/scenarios/cloud-scale-analytics/architectures/what-is-data-mesh</a>)</li>
+<li>Build a data mesh on AWS → see <a href="https://catalog.us-east-1.prod.workshops.aws/workshops/23e6326b-58ee-4ab0-9bc7-3c8d730eb851/en-US/introduction#content">here</a></li>
+<li>Build a data mesh on Azure → see <a href="https://learn.microsoft.com/en-us/azure/cloud-adoption-framework/scenarios/cloud-scale-analytics/architectures/what-is-data-mesh">here</a></li>
 </ol>
 <h1 id="high-level-architecture-on-aws">High Level Architecture on AWS</h1>
-<p>As shown in figure <a href="#fig-5">5</a>, this architecture separates consumers, producers, and central governance domains. Expanding on the preceding diagram, we provide additional details to show how AWS services support producers, consumers, and governance. Each data domain (Data account Org 1/2/3), whether it is a producer, consumer, or both, is responsible for its own technology stack. These stacks can be independent from each other yet can be shared between other domains, and this ensures cloud costs to remain low.</p>
+<p>As shown in figure <a href="#fig-5">5</a>, this architecture separates consumers, producers, and central governance domains. Expanding on the preceding diagram, we provide additional details to show how AWS services support producers, consumers, and governance. Each data domain (Data account Org 1/2/3), whether it is a producer, consumer, or both, is responsible for its own technology stack. These stacks can be independent from each other yet can be shared between other domains, and this ensures cloud costs remain low.</p>
 <p>The producer domain may build different pipeline orchestration using Spark, Glue, Step Functions, Lambda, etc. Also, consumers in one domain based on their needs may employ Jupiter tool to analyze data where another domain applies BI report tools to visualize data.</p>
-<p>A producer domain resides in an AWS account and uses Amazon Simple Storage Service (Amazon S3) buckets to store raw and transformed data. It should be noted, that domains can use different storage services like data lake or Data warehouse. In this is simplified example all domains use S3 to store their data.</p>
+<p>A producer domain resides in an AWS account and uses Amazon Simple Storage Service (Amazon S3) buckets to store raw and transformed data. It should be noted that domains can use different storage services like data lake or data warehouse. In this simplified example all domains use S3 to store their data.</p>
 <p>Each data domain maintains its own ETL stack using AWS Glue, EMR, … to process and prepare data before being cataloged into a Lake Formation Data Catalog in the respective account. Similarly, the consumer domain includes its own set of tools to perform analytics and ML in a separate AWS account. The central data governance account is used to share datasets securely between producers and consumers. It’s important to note that sharing is done through metadata linking alone. The central catalog makes it easy for users to find data and to ask the data owner for access to a specific place.</p>
 
 
@@ -275,7 +275,7 @@ Many enterprises are investing in their next generation data lake, with the hope
 
 <picture style="display: contents;"
      
-    id="[104 291 340 35 337 443]"
+    id="[290 435 459 319 444 58]"
     onclick="openModal(this.id)"
      >
     
@@ -286,21 +286,22 @@ Many enterprises are investing in their next generation data lake, with the hope
         
          alt="The workflow from producer to consumer in data mesh using AWS Lake Formation and AWS Glue." 
         
-         caption="High-level overview of Data Mesh architecture on AWS by using different serverless tools."
+         caption="High-level overview of data mesh architecture on AWS by using different serverless tools."
          ref="5" id="fig-5" 
         
         />
      
     <figcaption  ref="Figure 5. " >
-        High-level overview of Data Mesh architecture on AWS by using different serverless tools.
+        High-level overview of data mesh architecture on AWS by using different serverless tools.
     </figcaption> 
     
 </picture>
 
-<h1 id="in-summary">In Summary</h1>
-<p>Data Mesh is not just a better paradigm than Data Warehouse or Data Lake. It is indeed another way to design and manage data within an ecosystem. A well-organized and well-managed Data Warehouse or Data Lake can provide significant value, especially for organizations with specific use patterns and use cases. The selection between Data Mesh and traditional data architectures depends on the specific needs, capabilities, and goals of the business. Each approach has its strengths and drawbacks, and what works best varies from context to context. Also, Data Mesh is a modern analytics architecture targeted at mid-sized and large organizations, which means that small organizations with small teams will most likely not benefit as much from it.</p>
+<h1 id="in-summary">In summary</h1>
+<p>Data mesh is not just a better paradigm than data warehouse or Data Lake. It is indeed another decentralized way to design and manage data within an ecosystem. A well-organized and well-managed data warehouse or data lake can provide significant value, especially for organizations with specific use patterns and use cases. The selection between data mesh and traditional data architectures depends on the specific needs, capabilities, and goals of the business. Data mesh increases agility and scalability, as well as improved data quality and better alignment between business and technical team. By distributing data ownership and responsibility across different domains, data mesh can enable faster and more efficient data processing and analysis. Proper planning and implementation of data mesh is challenging e.g., identify and define domains, define tagging, establish data governance in each domain and cross domains, and setting up the necessary technical infrastructure and tools to support the distributed data architecture.</p>
+<p>Each approach has its strengths and drawbacks, and what works best varies from context to context. Data mesh is a modern analytics architecture targeted at mid-sized and large organizations with Big data set, which means that small organizations with small teams and small number of  data producers/consumers will most likely not benefit as much from it. Building a data mesh can be time consuming, as it requires a thorough understanding of the organization&rsquo;s data landscape and a careful design and implementation process.</p>
 <h1 id="credits">Credits</h1>
-<p>Title image has been generated with AI using <a href="https://www.shutterstock.com">Adobe Firefly</a>.</p>
+<p>Title image by <a href="https://www.shutterstock.com/g/jiewang127">Jie Wang 127</a> on <a href="https://www.shutterstock.com">Shutterstock</a></p>
 
             
         </div>

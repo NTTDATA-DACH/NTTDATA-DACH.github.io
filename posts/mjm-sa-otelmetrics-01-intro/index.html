@@ -1,0 +1,369 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Part 1: A Brief Introduction  </title>
+  <meta charset="utf-8"/> 
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Transitioning from Prometheus to OpenTelemetry - A Journey of a Cluster&#39;s Metrics Evolution - Part 1: A Brief Introduction"/>
+  
+  <meta property="article:author" content="[Mikel Jason Münnekhoff Sherief Ahmed]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/MJM-SA-OtelMetrics-01-Intro/title-image.jpg"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-01-intro/"/>
+  <meta property="og:description" content="With this blog post, we kick off a series on evolving our Kubernetes metrics stack. Our journey to replace Prometheus with an OpenTelemetry solution begins with an introduction OpenTelemetry and why we see it as a valid alternative to our current implementation. After explaining the main parts of the OpenTelemetry project and briefly reviewing its history, we discuss the pros and cons. After reading this, you will be able to follow along our hands-on and deep-tech posts on how we optimize our metrics stack."/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">19.01.2024
+        
+         - Mikel Jason Münnekhoff, Sherief Ahmed - <i class="fa-solid fa-book-open"></i> 9 min read
+        
+        </span>
+        Part 1: A Brief Introduction
+        
+        
+        <a id="series-link" href="/series/transitioning-from-prometheus-to-opentelemetry-a-journey-of-a-clusters-metrics-evolution"><span class="subtitle">Transitioning from Prometheus to OpenTelemetry - A Journey of a Cluster&#39;s Metrics Evolution</span></a>
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/MJM-SA-OtelMetrics-01-Intro/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <p>You cannot dive into Kubernetes metrics without stumbling across Prometheus. With ~50k GitHub stars, the <a href="https://www.cncf.io/announcements/2016/05/09/cloud-native-computing-foundation-accepts-prometheus-as-second-hosted-project/">2nd ever hosted CNCF project</a> is a long-time major player and an obvious go-to in the world of metrics tech stacks. The Prometheus community is huge, with lots of thoughts and situations already publicly discussed and <a href="https://github.com/prometheus-community">prometheus-community</a>, the GitHub organization dedicated to the community, providing unofficial yet very sophisticated and useful components, artifacts and best practices.</p>
+<p>We have run Prometheus in our Kubernetes clusters, too. Like any piece of software, Prometheus has some drawbacks. For example, as clusters grow, the instances get huge. In our case, we are talking about managing an extra node group just for large AWS EC2 instances, as our usual, more cost-efficient instances don&rsquo;t provide enough memory to host them. With this and a few other identified use-case specific issues, we wanted to give something else a try and see if it&rsquo;s worth migrating away from Prometheus.</p>
+<p>This is the beginning of a short series of blog posts. We take you along on our journey to replace Prometheus with OpenTelemetry. This first post is a general introduction to OpenTelemetry. If you like, you can skip to one of the other, more technical and practical parts:
+
+    
+    
+    <ul>
+        
+            
+        
+    </ul>
+    
+        <p style="margin-left: 40px;"><em>No other article published yet. Stay tuned.</em></p>
+    
+</p>
+<h2 id="what-is-opentelemetry">What Is OpenTelemetry?</h2>
+<p>In platforms and operations teams, we usually talk about specific software: <em>Did we install Grafana? Is fluent-bit running properly? Have you checked the velero backups? What&rsquo;s the ArgoCD status?</em> All of these applications offer a specific, (hopefully) well-designed feature set which is the reason we run them. And there is nothing wrong with that. However, there may come the time when we want to replace something. Maybe the application we use is discontinued or the licenses have changed. Or maybe there&rsquo;s something better than what we currently deploy. In such situations, we often start from scratch, because the applications bring their own system they operate in. Custom APIs and protocols, custom formats, maybe some proprietary parts.</p>
+<p>This scenario is one you won&rsquo;t encounter when using OpenTelemetry. But why is that? OpenTelemetry has declared <a href="https://github.com/open-telemetry/community/blob/main/mission-vision-values.md#mission--our-overall-north-star-as-a-community">their mission</a> <strong>to enable effective observability by making high-quality, portable telemetry ubiquitous</strong>, and <a href="https://github.com/open-telemetry/community/blob/main/mission-vision-values.md#vision--the-world-we-imagine-for-otel-end-users">their vision</a> is to be <strong>easy</strong>, <strong>universal</strong>, <strong>vendor-neutral</strong>, <strong>loosely coupled</strong> and <strong>built-in</strong>. Now take a minute to think about how to achieve these with the <em>we&rsquo;re open-source, but please lock in and pay for our enterprise version</em> approach. It&rsquo;s pretty hard to be vendor-neutral and loosely coupled when your application is your main focus, isn&rsquo;t it? That&rsquo;s why OpenTelemetry is fundamentally different from most software we know. You can see this in the artifacts the OpenTelemetry project provides. Instead of a container and a helm chart, it consists of:</p>
+<ul>
+<li><a href="https://opentelemetry.io/docs/specs/otlp/">OpenTelemetry Protocol (OTLP)</a>: OTLP is a specification which defines observability data in-flight between two systems. Basically a protobuf schema for gRPC, it defines how data is shared between systems, thus includes a data format.</li>
+<li>SDKs: In order to contribute applications to the OpenTelemetry community or to enable your proprietary software to benefit from it, official SDKs are released. They wrap the interactions with the OTLP in handlers for various languages. With these, you can build a completely new application for OpenTelemetry or just use them for instrumentation.</li>
+<li>OpenTelemetry Collector (OTelCol): This deployable application acts as a gateway between systems. By configuring <em>pipelines</em> with <em>receivers</em>, <em>processors</em> and <em>exporters</em> as building blocks, the collector can connect the dots of an observability stack and allows loose coupling.</li>
+<li>A few auxiliary artifacts like a helm chart and a Kubernetes operator.</li>
+</ul>
+<p>Let&rsquo;s take a moment to look at the OpenTelemetry Collector. While it&rsquo;s totally optional to use, it offers to be the center of an observability stack by connecting different components as an additional layer of abstraction. To configure it for good use, you first leverage <em>components</em> to create building blocks.</p>
+<ul>
+<li><strong>Receivers</strong> represent the inbound part - you could also think of it as the E in ETL. You can provide an API where other systems push to or let OTelCol actively scrape targets.</li>
+<li><strong>Processors</strong> are the transforming pieces. They can do many different things, such as editing a label of a metric or controlling the batch throughput of the collector for performance optimization.</li>
+<li><strong>Exporters</strong> do what their name implies: Exporting the received and processed data to any system supported by the chosen exporter.</li>
+</ul>
+<p>To bring on the action, you combine these components as <strong>pipelines</strong>. You can have any number of pipelines, any numbers of components per pipeline and use a single component instance multiple times. Pipelines work in order, which may only be relevant for processors.</p>
+<p>Fortunately, we don&rsquo;t have to build these components from scratch. The open source community has an official repository where you can contribute to OpenTelemetry&rsquo;s success: <a href="https://github.com/open-telemetry/opentelemetry-collector-contrib">open-telemetry/opentelemetry-collector-contrib</a>. Here, all the fantastic integration solutions are developed and shared. From this repository, they all <a href="https://github.com/open-telemetry/opentelemetry-collector-releases">are included in a container image</a>. So, if you work with <a href="https://github.com/open-telemetry/opentelemetry-helm-charts/tree/main/charts/opentelemetry-collector">the official helm chart</a>, you get all of it out of the box - write some YAML to configure it, done! FYI: There&rsquo;s also the option to build your own image and include only the specific pieces you need. And remember: It&rsquo;s still optional, you can configure your applications to directly push data to an OTLP-supporting system, if it suits your case.</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+
+
+  
+
+
+<picture style="display: contents;"
+     
+    id="[273 118 204 250 194 214]"
+    onclick="openModal(this.id)"
+     >
+    
+    <source srcset="/posts/img/MJM-SA-OtelMetrics_01-intro/otelcol-component-pipeline-dark.png" media="none"/>
+    
+    <img    
+        class="dynamicimage modal-pic"    
+        
+        src="/posts/img/MJM-SA-OtelMetrics_01-intro/otelcol-component-pipeline-light.png" 
+        
+         alt="test" 
+        
+        
+        
+        
+        />
+    
+</picture>
+
+<script>
+    initPicture()
+</script>
+
+<p>As you might have already guess from this, integrations play a crucial role when implementing a metrics stack based on OpenTelemetry. Without at least one receiver and one exporter, the collector does not bring any value at all. Fortunately, OpenTelemetry has grown organically (we&rsquo;ll talk about the history in a moment) and is backed by many big tech players. Just to name a few: There is AWS, Azure and GCP as hyperscalers, but also well-known observability tools like Grafana, Jaeger, Datadog, Dynatrace, New Relic and Splunk (see the <a href="https://opentelemetry.io/ecosystem/vendors/">official vendors list</a>). There&rsquo;s <a href="https://aws.amazon.com/otel/">AWS Distro for OpenTelemetry</a>, a collection of software specifically for using AWS services while observing those with OpenTelemetry. <a href="https://www.datadoghq.com/blog/datadog-supports-opentelemetry-open-source/">Datadog is publicly committing to OpenTelemetry</a>, both by adding more support to its product and by contributing to the project.</p>
+<h2 id="where-does-it-come-from">Where Does It Come From?</h2>
+<p>So, where does OpenTelemetry&rsquo;s remarkably different approach come from?</p>
+<p>Distributed systems and observability have been a thing before Kubernetes and CNCF existed. In 2010, Google published a paper about <em>Dapper</em>, a tracing solution. In 2012, Twitter followed with publishing <em>Zipkin</em>, yet another distributed tracing solution. Kubernetes appeared 2014, Jaeger (guess what: distributed tracing) was introduced by Uber in 2015. That same year, Ben Sigelman, the founder of Lightstep, published <a href="https://medium.com/opentracing/towards-turnkey-distributed-tracing-5f4297d1736">a blog post, now also known as the OpenTracing manifesto</a>. He postulates that instrumenting code is broken because it always comes with a vendor lock-in (i.e. the software defining how tracing works).</p>
+<blockquote>
+	
+And there’s the rub: It is not reasonable to ask all OSS services and all OSS packages and all application-specific code to use a single tracing vendor; yet, if they don’t share a mechanism for trace description and propagation, the causal chain is broken and the traces are truncated, often severely. We need a single, standard mechanism to describe the behavior of our systems.
+
+    
+    </br>
+    <div id="reference">
+		<cite title="Source: Ben Sigelman">
+            
+                - Ben Sigelman 
+                 in 
+                  
+                    <a href="https://medium.com/opentracing/towards-turnkey-distributed-tracing-5f4297d1736" target="_blank" rel="noopener noreferrer">
+                    Towards Turnkey Distributed Tracing</a>
+                  
+                
+		</cite>
+    </p>
+    
+</blockquote>
+<p>Since you typically want to trace not only your very own software but also its auxiliary applications in a stack, it&rsquo;s critical that all these applications support exactly that one tracing vendor you chose. Thus, these open-source systems would have to support numerous different vendors which is just not realistic. So, talking about specific vendors is not good and the overall tracing has to be changed to a vendor-neutral approach.</p>
+<p>This post was published right after the acceptance of his project <em>OpenTracing</em> as CNCF&rsquo;s 3rd hosted project in 2015. Another Google turn: <em>OpenCensus</em> was released in 2017. It consisted of SDKs targeting not only traces but also metrics.</p>
+<p>What does this have to do with OpenTelemetry? Well, it&rsquo;s not an additional project in this list of projects, but instead, it is a merger of OpenTracing and OpenCensus that took place in 2019. Backed with lots of experience, battle-tested individuals, and a broad publicity, OpenTelemetry aimed to be the next major release for both of its predecessors, while <a href="https://www.cncf.io/blog/2022/01/31/cncf-archives-the-opentracing-project/">OpenTracing became the second CNCF project to be archived</a>. Although <a href="https://www.cncf.io/blog/2021/08/26/opentelemetry-becomes-a-cncf-incubating-project/">OpenTelemetry was accepted as a CNCF sandbox project in 2019 and as an incubating project in 2021</a>, it is not just another newly grown open-source project with a questionable future and too much risk to take. From the beginning, it has been supported by CNCF, Google, Microsoft, Uber and others (<a href="https://www.cncf.io/blog/2019/05/21/a-brief-history-of-opentelemetry-so-far/">announcement by CNCF</a>, <a href="https://opensource.googleblog.com/2019/05/opentelemetry-merger-of-opencensus-and.html">announcement by Google</a>). So we expect it to stay and flourish.</p>
+<h2 id="balancing-benefits-and-costs">Balancing Benefits and Costs</h2>
+<p>Circling back to the introduction: Every system has drawbacks. Benefits come at a cost or trade-off. OpenTelemetry promises abstraction. All of us have learnt loose coupling is desirable, but so is high cohesion. You have to decide for yourself, if you want to lock in to one technology and have a fairly simple stack of exactly that technology, or if you want to pay the price of higher complexity and a few more artifacts to gain some degrees of freedom with the additional layer of abstraction OpenTelemetry adds to your stack. As a platform team, operating about 80 AWS accounts and 30 Kubernetes clusters, we decided to opt for the more complex solution. It allows us</p>
+<ul>
+<li>to break apart lifecycles. Our long-term storage solution can be decoupled from the metrics collection, so we no longer have <em>big bang</em> releases.</li>
+<li>to apply <em>divide and conquer</em> to our metrics stack. Once the migration from Prometheus to OpenTelemetry has settled, we can rework our storage solution and no DevOps team will notice.</li>
+<li>to mitigate huge Prometheus instances that keep everything in memory.</li>
+<li>to easily test new features as it&rsquo;s easy to spawn a new OpenTelemetry Collector with a tiny, independent configuration and no exporter.</li>
+<li>to integrate with third-party services.</li>
+</ul>
+<p>But what do we pay for it? Earlier, we have already mentioned increased <strong>complexity</strong>, which means more configuration, more applications - more maintenance, more attack surface, more required knowledge. With complexity comes opportunity. Sneak peek: Our metrics stack has grown from one helm chart to more than 10, and we built an umbrella chart to deploy  all in matching versions (keyword: ArgoCD).</p>
+<p>We also need to talk about <strong>stability</strong>. OpenTelemetry is frequently evolving and cannot provide all the features you can get with specialized tools. We thought about replacing the Datadog agent, but the Datadog receiver does not support Datadog&rsquo;s autodiscovery. In each component&rsquo;s README, there&rsquo;s a small table telling you which feature is stable, and which is in beta or even alpha phase. Depending on your case, you may be quite limited in what you can realistically use. So, before you run and gun, please do your research, check what you really need and see what&rsquo;s already covered.</p>
+<p>Enough fly-high theoretical exegesis. In the next part, we will get our hands dirty and start replacing Prometheus with OpenTelemetry. The first challenge will be to make OpenTelemetry Collector scrape CoreOS targets (<code>ServiceMonitor</code> and <code>PodMonitor</code>), so we don&rsquo;t need to touch any existing workload and can still leverage all those nice open-source helm charts that come with these resources.</p>
+<h1 id="credits">Credits</h1>
+<p>Title image by <a href="https://www.shutterstock.com/g/AddictiveStockCreatives">Addictive Creative</a> on <a href="https://www.shutterstock.com">Shutterstock</a></p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/mikel-jason-muennekhoff.jpg" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/mikel-jason-m%c3%bcnnekhoff">Mikel Jason Münnekhoff</a><span>
+                    
+                </span></h3>
+                <p>Senior Technical Consultant </p>
+                <p calss="author-socials">
+                    
+                    
+                    <a target="_blank"  href="https://www.linkedin.com/in/mikel-jason-m%C3%BCnnekhoff-ab47a5140"><i class="fa-brands fa-linkedin"></i></a>
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/sherief-ahmed.png" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/sherief-ahmed">Sherief Ahmed</a><span>
+                    
+                </span></h3>
+                <p>Lead Consultant </p>
+                <p calss="author-socials">
+                    
+                    
+                    <a target="_blank"  href="https://www.linkedin.com/in/sherief-ahmed-msc"><i class="fa-brands fa-linkedin"></i></a>
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        <div class="related-block">
+            <h3 class="related-heading" id="series-list">Check out the full series</h3>
+            
+            <ul>
+                
+                <li><a class="related-link" href="/posts/mjm-sa-otelmetrics-01-intro/">TRANSITIONING FROM PROMETHEUS TO OPENTELEMETRY - A JOURNEY OF A CLUSTER&#39;S METRICS EVOLUTION - Part 1: A Brief Introduction</a></li>
+                
+            </ul>
+        </div>
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+                <h3 class="related-heading">You may also like</h3>
+
+                
+                
+                <ul>
+                    
+                    
+                    
+                        <li><a class="related-link" href="/posts/ns-controlplaneoperatedinfrastructure_1/">CONTROL PLANE OPERATED INFRASTRUCTURE - Part 1: Introduction to Crossplane</a></li>
+                    
+                    
+                    
+                    
+                    <li><a class="related-link" href="/posts/sk-secretshandlinginkubernetes/">Secrets Handling in Kubernetes</a></li>
+                    
+                    
+                    
+                    
+                    <li><a class="related-link" href="/posts/ak-buildingrunningflutteronaws/">Building and running Flutter mobile applications for Android on AWS Device Farm</a></li>
+                    
+                    
+                </ul>
+                
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/kubernetes/">Kubernetes</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/observability/">Observability</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/metrics/">Metrics</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/opentelemetry/">OpenTelemetry</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/cloud/">Cloud</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/platform-engineering/">Platform Engineering</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</html>

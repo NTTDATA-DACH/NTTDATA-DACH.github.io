@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Transitioning from Prometheus to OpenTelemetry - A Journey of a Cluster&#39;s Metrics Evolution on Technology Blog</title>
+    <title>Transitioning From Prometheus to OpenTelemetry - A Journey of a Cluster&#39;s Metrics Evolution on Technology Blog</title>
     <link>https://nttdata-dach.github.io/series/transitioning-from-prometheus-to-opentelemetry-a-journey-of-a-clusters-metrics-evolution/</link>
-    <description>Recent content in Transitioning from Prometheus to OpenTelemetry - A Journey of a Cluster&#39;s Metrics Evolution on Technology Blog</description>
+    <description>Recent content in Transitioning From Prometheus to OpenTelemetry - A Journey of a Cluster&#39;s Metrics Evolution on Technology Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
@@ -11,9 +11,9 @@
     <atom:link href="https://nttdata-dach.github.io/series/transitioning-from-prometheus-to-opentelemetry-a-journey-of-a-clusters-metrics-evolution/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Part 1: A Brief Introduction</title>
-      <link>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics_01-intro/</link>
+      <link>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-01-intro/</link>
       <pubDate>Fri, 19 Jan 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics_01-intro/</guid>
+      <guid>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-01-intro/</guid>
       <description>With this blog post, we kick off a series on evolving our Kubernetes metrics stack. Our journey to replace Prometheus with an OpenTelemetry solution begins with an introduction OpenTelemetry and why we see it as a valid alternative to our current implementation. After explaining the main parts of the OpenTelemetry project and briefly reviewing its history, we discuss the pros and cons. After reading this, you will be able to follow along our hands-on and deep-tech posts on how we optimize our metrics stack.</description>
     </item>
   </channel>

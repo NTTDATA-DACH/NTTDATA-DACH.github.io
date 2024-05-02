@@ -7,8 +7,15 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Tue, 02 Jun 2020 09:04:54 +0200</lastBuildDate>
+    <lastBuildDate>Thu, 02 May 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Data mesh as an element of data strategy</title>
+      <link>https://nttdata-dach.github.io/posts/nf-en-datameshasanelementofdatastrategy/</link>
+      <pubDate>Thu, 02 May 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/nf-en-datameshasanelementofdatastrategy/</guid>
+      <description>In this article we discuss the challenges of storing vast amounts of data to become a value-driven organization and introduce data mesh, an innovative technology that addresses these challenges. We outline the four principles of data mesh and provide a step-by-step framework for implementing the architecture. The article also gives an example of data mesh implementation using serverless tools on AWS and emphasizes that the selection between data mesh and traditional data architectures depends on the specific needs, capabilities, and goals of the business.</description>
+    </item>
     <item>
       <title>Part 5: mTLS Header</title>
       <link>https://nttdata-dach.github.io/posts/as-konggateway-mtls_header/</link>
@@ -25,9 +32,9 @@
     </item>
     <item>
       <title>Part 1: A Brief Introduction</title>
-      <link>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics_01-intro/</link>
+      <link>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-01-intro/</link>
       <pubDate>Fri, 19 Jan 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics_01-intro/</guid>
+      <guid>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-01-intro/</guid>
       <description>With this blog post, we kick off a series on evolving our Kubernetes metrics stack. Our journey to replace Prometheus with an OpenTelemetry solution begins with an introduction OpenTelemetry and why we see it as a valid alternative to our current implementation. After explaining the main parts of the OpenTelemetry project and briefly reviewing its history, we discuss the pros and cons. After reading this, you will be able to follow along our hands-on and deep-tech posts on how we optimize our metrics stack.</description>
     </item>
     <item>
