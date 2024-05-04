@@ -161,9 +161,10 @@
 <p>Within the SAN extension, each entry can be tagged with a specific type to indicate the type of information it contains. If the SAN has the DNS name tagging (OID 2.5.29.17.2), it must be used for identity identification according to the specification. No tagging means implicit DNS name tagging.</p>
 <p>By the way, the <code>mTLS-auth</code> plugin follows these recommendations of the standard specification:</p>
 <!-- raw HTML omitted -->
+<aside 
+ data-content="Note" 
 
-<aside data-content="Note"><br/>
-
+><br/>
     Subject names refer to the certificate’s Subject Alternative Names (SAN) or Common Name (CN). CN is only used if the SAN extension does not exist. (see <a href="https://docs.konghq.com/hub/kong-inc/mtls-auth/how-to/manual-mapping-cert-consumers/">here</a>)
 </aside>
 <p>mTLS with consumer authentication via the SAN can play an important role in implementing a zero-trust architecture (ZTA). Therefore, this security option should not be lost by perimeter security. For example, if the access token is missing or lacks sufficient information to perform an authorization check, it&rsquo;s crucial to ascertain the identity of the caller initiating the request. Alternatively, the security level of the called API is of such a high confidentiality class that both authorization concepts (mTLS and access token) are used.</p>

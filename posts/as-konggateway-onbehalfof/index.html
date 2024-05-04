@@ -105,9 +105,10 @@
 <p>The OBO flow is not part of the standard OAuth 2.0 specification (<a href="https://datatracker.ietf.org/doc/html/rfc6749">RFC 6749</a>) of the Internet Engineering Task Force (IETF). Currently, it seems to be that Microsoft has a deviating OBO implementation as part of their Microsoft Azure Active Directory (AAD) product, as described and implemented in the <a href="https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-on-behalf-of-flow">OBO Microsoft documentation</a>. In the following, I will refer to the OBO solution offered by Microsoft AAD (recently Azure AD was renamed to <a href="https://learn.microsoft.com/en-us/entra/fundamentals/new-name#product-name">Microsoft Entra ID</a>, but for this blog I will stick to the previous well-known name and the acronym AAD). While the IETF has extended its standard to include OAuth 2.0 Token Exchange (<a href="https://datatracker.ietf.org/doc/html/rfc8693">RFC 8693</a>), but AAD does not utilize the officially introduced grant type <code>urn:ietf:params:oauth:grant-type:token-exchange</code>. Microsoft’s implementation deviates from the official documentation promoted as a standard in 2020. Still, the delegation idea remains the same (at this point I would like to point out an excellent <a href="https://www.youtube.com/watch?v=Ue8HKBGkIJY">token exchange YT video</a> by Sascha Preibisch).</p>
 <p>The OBO flow enables a resource server to call another protected resource server in the background without any user interaction. This approach is particularly valuable when there are two or more resource servers that trust the same authorization server and contribute to the logic of a single application through the request chain. The idea is to propagate the delegated user identity and appropriate permissions seamlessly throughout the chain in the background. It allows the exchange of tokens from &ldquo;external&rdquo; to &ldquo;internal&rdquo; structures. Traditionally, such calls are made as machine-to-machine requests using an access token obtained via the <a href="https://datatracker.ietf.org/doc/html/rfc6749#section-1.3.4">Client Credentials grant type</a>. However, without OBO, the user context is lost when making these machine-to-machine requests.</p>
 <p>A further great advantage of the AAD solution is that the requested token can not only be a <a href="https://datatracker.ietf.org/doc/html/rfc7519">JSON Web Token (JWT)</a>, but also a <a href="https://saml.xml.org/saml-specifications">Security Assertion Markup Language (SAML)</a> v1.0 or v2.0 token. There are still a lot of systems that can only get along with a SAML token. Therefore, it is an ideal solution for exchanging the security token format. It is important to note that the AAD OBO flow works only for user principles and not for service principles.</p>
-
-<aside data-content="Note"><br/>
-
+<aside 
+ data-content="Note" 
+ id="Note-IdP" 
+><br/>
     In the context a central Identity Provider (IdP) like AAD and its role in Identity and Access Management (IAM), a &ldquo;user principal&rdquo; typically refers to an individual user, while a &ldquo;service principal&rdquo; refers to an identity associated with a service or application rather than an individual user. In practical terms, user principals are associated with human users, while service principals are associated with non-human entities like applications, scripts, or services that need to interact with other services or resources in an automated manner (for example in enterprise job scheduling and workload automation tasks).
 </aside>
 <p>The diagram below illustrates the general principle with an API Gateway acting as an intermediary for the OBO grant type. This detail from the overall process sequence flow assumes that user authentication and authorization have been completed, and that the authorization server (AAD) issued a security token that may have been used in previous resource server calls.</p>
@@ -119,7 +120,7 @@
 
 <picture style="display: contents;"
      
-    id="[311 19 196 155 496 124]"
+    id="[394 188 77 237 411 393]"
     onclick="openModal(this.id)"
      >
     
@@ -148,9 +149,10 @@
 <p>Consider a scenario where a frontend application has received a token via the authorization code grant (or implicit) flow and is communicating with services via an API Gateway. The gateway applies the security policies and distributes the token to the services that accept this token. Now a service should be called in the service-to-service chain that is subject to the security rules of another AAD registered application and only accepts SAML v2.0 tokens. However, you want to preserve the original user context and pass it on so that the called service can perform an authorization check on the original user identity. To do this, the existing token has to be exchanged for the existing user identity and converted to a new scoped SAML format. However, this complexity should not be imposed on each API caller but should be performed at a central switching point – the API Gateway. Is this achievable with the Kong Gateway? Absolutely, it is possible!</p>
 <h1 id="solution">Solution</h1>
 <p>Kong is built on top of <a href="https://www.nginx.com/">NGINX</a> using the <a href="https://www.lua.org/">Lua</a>-based <a href="https://openresty.org/">OpenResty</a> framework to enable API Gateway features (for more details, refer to my <a href="https://nttdata-dach.github.io/posts/as-kongproductintroduction/">Kong introduction blog</a>). As such, Kong is a Lua application designed to load and execute Lua modules (commonly referred to as plugins). These plugins interact with the request/response objects or streams via the Plugin Development Kit (PDK) to implement arbitrary logic. The PDK, which provides a rich set of Lua functions, allows anyone to create their own custom plugins.</p>
+<aside 
+ data-content="Note" 
 
-<aside data-content="Note"><br/>
-
+><br/>
     Plugins can also be written in the programming languages Go (&gt;= Kong v2.0), Javascript (&gt;= Kong v2.3) and Python (&gt;= Kong v2.3). However, these so-called external plugins require a concurrently running plugin server. Lua plugins are handled in local processes, external plugins imply expensive inter-process communication (Kong hints at <a href="https://docs.konghq.com/gateway/latest/plugin-development/pluginserver/performance/">implications with external plugins</a>). Unless there are compelling reasons against Lua, my recommendation is to write all custom plugins in Lua.
 </aside>
 <p>That said, the solution to our problem of missing Kong functionality is to write our own OBO custom plugin (by the way, minor enhancements requiring only few lines of Lua code can also be implemented in so-called Kong Functions, formerly called Serverless Functions). If writing custom plugins is a new topic for you, please read the chapters in the documentation &ldquo;<a href="https://docs.konghq.com/gateway/latest/plugin-development/">Develop Custom Plugins</a>&rdquo; and watch the excellent <a href="https://www.youtube.com/watch?v=RfgpqY6CVhw">plugin YT video</a> by Lokesh Chechani.<br>
