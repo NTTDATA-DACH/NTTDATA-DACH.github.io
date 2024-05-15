@@ -1091,13 +1091,14 @@ blockquote {
   }
   blockquote:before {
     color: var(--future-blue-main);
-    content: open-quote;
+    content: "\201C";
     font-size: 4em;
     line-height: 0.1em;
     margin-right: 0.25em;
     vertical-align: -0.4em;
   }
   blockquote p {
+    font-size: 1em;
     display: inline;
   }
   blockquote div {

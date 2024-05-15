@@ -1,0 +1,535 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Part 1: The Basics  </title>
+  <meta charset="utf-8"/> 
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Flutter CI/CD with Fastlane and GitHub Actions - Part 1: The Basics"/>
+  
+  <meta property="article:author" content="[Dario Digregorio]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/DD-FlutterCICD-01-Basics/title-image.png"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/dd-fluttercicd-01-basics/"/>
+  <meta property="og:description" content="TODO"/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">20.04.2024
+        
+         - Dario Digregorio - <i class="fa-solid fa-book-open"></i> 8 min read
+        
+        </span>
+        Part 1: The Basics
+        
+        
+        <a id="series-link" href="/series/flutter-ci/cd-with-fastlane-and-github-actions"><span class="subtitle">Flutter CI/CD with Fastlane and GitHub Actions</span></a>
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/DD-FlutterCICD-01-Basics/title-image.png') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <h2 id="introduction">Introduction</h2>
+<p>If you&rsquo;re looking to streamline your Flutter app&rsquo;s deployment to the AppStore and PlayStore, you&rsquo;re in the right spot. We&rsquo;ll use Fastlane and GitHub Actions to automate our workflow. By the end of this tutorial, you&rsquo;ll have a automated pipeline that builds and deploys your Flutter app to your preferred App Stores. This guide will skip all the setup and configuration of Fastlane and GitHub Actions, and will focus on the Flutter and Workflow specific parts of the setup.</p>
+<p>Repository: <a href="https://github.com/dario-digregorio/flutter_github_actions">Flutter App CI/CD with Fastlane and GitHub Actions</a></p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>A Flutter app</li>
+<li>Flavors and Environment Variables set up in your Flutter app. You can follow the <a href="https://flutter.dev/docs/deployment/flavors">official Flutter guide</a> to set this up.</li>
+<li>You should be able to build a release version for Android and iOS. You can follow the <a href="https://flutter.dev/docs/deployment/android">Android guide</a> and <a href="https://docs.flutter.dev/deployment/ios">iOS guide</a> to set this up.</li>
+<li>A GitHub account with your app&rsquo;s repo.</li>
+<li>Fastlane installed on your local machine. You can follow the <a href="https://docs.fastlane.tools/getting-started/ios/setup/">official Fastlane installation guide</a>.</li>
+<li>AppStore and PlayStore accounts ready for deployment with your apps project setup.</li>
+<li>Follow the initial <a href="https://docs.flutter.dev/deployment/cd#local-setup">CD Flutter Guide</a> to setup the Fastlane folders in your Flutter project.</li>
+</ul>
+<p>When you finished all the prerequisites, you should have following project structure with Fastlane folders in both iOS and Android folders:</p>
+<pre tabindex="0"><code>- android
+  - fastlane
+    - Appfile
+    - Fastfile
+- ios
+  - fastlane
+    - Appfile
+    - Fastfile
+</code></pre><aside 
+ data-content="Note" 
+
+><br/>
+    In this guide I will use the basic fastlane commands. It is highly recommended to use Fastlane with <code>bundle</code>. Read more about it in the Fastlane documentation
+</aside>
+<h2 id="setting-up-the-fastfiles-and-environment">Setting Up The Fastfiles and Environment</h2>
+<p>Now we will setup the Fastfiles for both iOS and Android. We will define lanes for deploying the app to the AppStore and PlayStore.</p>
+<h3 id="android">Android</h3>
+<ol>
+<li>
+<p>Open <code>android/Gemfile</code> and add the flutter version plugin which we will need to extract the version from the pubspec.yaml file:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-ruby" data-lang="ruby"><span class="line"><span class="cl"><span class="c1"># ...</span>
+</span></span><span class="line"><span class="cl"><span class="n">source</span> <span class="s2">&#34;https://rubygems.pkg.github.com/tianhaoz95&#34;</span> <span class="k">do</span>
+</span></span><span class="line"><span class="cl">  <span class="n">gem</span> <span class="s2">&#34;fastlane-plugin-flutter_version&#34;</span><span class="p">,</span> <span class="s2">&#34;1.1.15&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="k">end</span></span></span></code></pre></div>
+</li>
+<li>
+<p>Open <code>android/fastlane/Appfile</code> and define the path to your service account JSON file and the package name of your app:</p>
+<p><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-ruby" data-lang="ruby"><span class="line"><span class="cl"><span class="n">json_key_file</span><span class="p">(</span><span class="s2">&#34;path/to/your/service-account.json&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">package_name</span><span class="p">(</span><span class="s2">&#34;com.example.yourapp&#34;</span><span class="p">)</span></span></span></code></pre></div>
+You created the Service Account JSON file in the <a href="https://docs.flutter.dev/deployment/cd#local-setup">CD Flutter Guide</a>. Make sure to exclude the file from your git repository.</p>
+</li>
+<li>
+<p>Open <code>android/fastlane/Fastfile</code> and define the <code>deploy</code> lane (delete the existing content):
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-ruby" data-lang="ruby"><span class="line"><span class="cl"><span class="n">default_platform</span><span class="p">(</span><span class="ss">:android</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="n">platform</span> <span class="ss">:android</span> <span class="k">do</span>
+</span></span><span class="line"><span class="cl">  <span class="n">desc</span> <span class="s2">&#34;Deploy a new version to the Google Play&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="n">lane</span> <span class="ss">:deploy</span> <span class="k">do</span>
+</span></span><span class="line"><span class="cl">    <span class="n">version</span> <span class="o">=</span> <span class="n">flutter_version</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">upload_to_play_store</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">      <span class="ss">track</span><span class="p">:</span> <span class="s1">&#39;internal&#39;</span><span class="p">,</span> <span class="c1"># Can be &#39;internal&#39;, &#39;alpha&#39;, &#39;beta&#39;, &#39;production&#39;</span>
+</span></span><span class="line"><span class="cl">      <span class="ss">skip_upload_metadata</span><span class="p">:</span> <span class="kp">true</span><span class="p">,</span> <span class="c1"># Skip uploading metadata</span>
+</span></span><span class="line"><span class="cl">      <span class="ss">skip_upload_images</span><span class="p">:</span> <span class="kp">true</span><span class="p">,</span> <span class="c1"># Skip uploading screenshots</span>
+</span></span><span class="line"><span class="cl">      <span class="ss">skip_upload_screenshots</span><span class="p">:</span> <span class="kp">true</span><span class="p">,</span> <span class="c1"># Skip uploading screenshots</span>
+</span></span><span class="line"><span class="cl">      <span class="ss">release_status</span><span class="p">:</span> <span class="s2">&#34;completed&#34;</span><span class="p">,</span> <span class="c1"># Can be &#39;draft&#39;, &#39;completed&#39;, &#39;halted&#39;</span>
+</span></span><span class="line"><span class="cl">      <span class="ss">aab</span><span class="p">:</span> <span class="s1">&#39;../build/app/outputs/bundle/release/app-release.aab&#39;</span><span class="p">,</span> <span class="c1"># Path to your AAB file</span>
+</span></span><span class="line"><span class="cl">      <span class="ss">version_code</span><span class="p">:</span> <span class="n">version</span><span class="o">[</span><span class="s2">&#34;version_code&#34;</span><span class="o">]</span><span class="p">,</span> <span class="c1"># From pubspec.yaml</span>
+</span></span><span class="line"><span class="cl">      <span class="ss">version_name</span><span class="p">:</span> <span class="n">version</span><span class="o">[</span><span class="s2">&#34;version_name&#34;</span><span class="o">]</span> <span class="o">+</span> <span class="n">version</span><span class="o">[</span><span class="s2">&#34;version_code&#34;</span><span class="o">]</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="k">end</span>
+</span></span><span class="line"><span class="cl"><span class="k">end</span></span></span></code></pre></div>
+More information about the <code>upload_to_play_store</code> action can be found <a href="https://docs.fastlane.tools/actions/upload_to_play_store/">here</a>.</p>
+</li>
+<li>
+<p>Run <code>bundle install</code> in the <code>android</code> directory to install the required gems.</p>
+</li>
+<li>
+<p>Run <code>fastlane supply init</code> to initialize the PlayStore metadata. With this you can update the metadata like app description or screenshots without leaving your IDE. You can skip this step if you don&rsquo;t want to upload metadata.</p>
+</li>
+<li>
+<p>Build the app with <code>flutter build appbundle --release</code> and make sure the AAB file is located in the path you defined in the Fastfile and to use release signing keys. Follow the <a href="https://flutter.dev/docs/deployment/android">Android guide</a> to set up the release signing.</p>
+</li>
+<li>
+<p>Before deploying your first release you need to have at least one release already uploaded and published manually.</p>
+</li>
+<li>
+<p>Run <code>fastlane deploy</code> to start the lane and deploy your app to the PlayStore.</p>
+</li>
+</ol>
+<p>Depending on your setup, you might need to adjust the <code>upload_to_play_store</code> action to match your requirements.</p>
+<p><strong>Google Play Store Release Dashboard</strong>
+
+
+
+
+
+<picture style="display: contents;"
+     >
+    
+    <img    
+        class="dynamicimage"    
+        
+        src="/posts/img/DD-FlutterCICD-01-Basics/deploy_playstore.png" 
+        
+         alt="Play Store Deploy" 
+        
+        
+        
+        
+        />
+    
+</picture>
+</p>
+<h3 id="ios">iOS</h3>
+<ol>
+<li>
+<p>Open <code>ios/Gemfile</code> and add the flutter version plugin again:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-ruby" data-lang="ruby"><span class="line"><span class="cl"><span class="c1"># ...</span>
+</span></span><span class="line"><span class="cl"><span class="n">source</span> <span class="s2">&#34;https://rubygems.pkg.github.com/tianhaoz95&#34;</span> <span class="k">do</span>
+</span></span><span class="line"><span class="cl">  <span class="n">gem</span> <span class="s2">&#34;fastlane-plugin-flutter_version&#34;</span><span class="p">,</span> <span class="s2">&#34;1.1.15&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="k">end</span></span></span></code></pre></div>
+</li>
+<li>
+<p>Open <code>ios/fastlane/Appfile</code> and define app identifier, the Apple ID of your Apple Developer account and the Team ID:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-ruby" data-lang="ruby"><span class="line"><span class="cl"><span class="n">app_identifier</span><span class="p">(</span><span class="s2">&#34;com.example.yourapp&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">apple_id</span><span class="p">(</span><span class="s2">&#34;test@your.email.com&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl"><span class="n">itc_team_id</span><span class="p">(</span><span class="s2">&#34;123456&#34;</span><span class="p">)</span></span></span></code></pre></div>
+</li>
+<li>
+<p>Open <code>ios/fastlane/Fastfile</code> and define the <code>deploy</code> lane (delete the existing content):</p>
+<p><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-ruby" data-lang="ruby"><span class="line"><span class="cl"><span class="n">platform</span> <span class="ss">:ios</span> <span class="k">do</span>
+</span></span><span class="line"><span class="cl">  <span class="n">lane</span> <span class="ss">:deploy</span> <span class="k">do</span>
+</span></span><span class="line"><span class="cl">    <span class="n">pilot</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">      <span class="ss">skip_waiting_for_build_processing</span><span class="p">:</span> <span class="kp">true</span><span class="p">,</span> <span class="c1"># Skip waiting so we don&#39;t waist precious build time</span>
+</span></span><span class="line"><span class="cl">      <span class="ss">changelog</span><span class="p">:</span> <span class="s2">&#34;This build was uploaded using fastlane&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="ss">ipa</span><span class="p">:</span> <span class="s2">&#34;../build/ios/ipa/flutter_github_actions.ipa&#34;</span> <span class="c1"># Path to your IPA file</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="k">end</span>
+</span></span><span class="line"><span class="cl"><span class="k">end</span></span></span></code></pre></div>
+More information about <a href="https://docs.fastlane.tools/actions/pilot/"><code>pilot</code></a> can be found in the Fastlane documentation. Depending on your setup you might need to use actions like <a href="https://docs.fastlane.tools/actions/gym/"><code>gym</code></a> or <a href="https://docs.fastlane.tools/actions/match/"><code>match</code></a> to build the IPA file.</p>
+</li>
+<li>
+<p>Run <code>bundle install</code> in the <code>ios</code> directory to install the required gems.</p>
+</li>
+<li>
+<p>Run <code>fastlane deliver init</code> to initialize the AppStore metadata. With this you can update the metadata like app description or screenshots without leaving your IDE. You can skip this step if you don&rsquo;t want to upload metadata.</p>
+</li>
+<li>
+<p>Make sure you have already created an app in AppStore Connect.</p>
+</li>
+<li>
+<p>Depending on the account you use you might need to further authenticate with an app-specific password. See the <a href="https://docs.fastlane.tools/getting-started/ios/authentication/">Fastlane documentation</a> for more information.</p>
+</li>
+<li>
+<p>Run <code>fastlane deploy</code> to start the lane and deploy your app to the AppStore.</p>
+</li>
+</ol>
+<p>Depending on your setup, you might need to adjust the actions to match your requirements. Consider also to use the actions</p>
+<p><strong>AppStore TestFlight Builds Dashboard</strong></p>
+
+
+
+
+
+<picture style="display: contents;"
+     >
+    
+    <img    
+        class="dynamicimage"    
+        
+        src="/posts/img/DD-FlutterCICD-01-Basics/deploy_appstore.png" 
+        
+         alt="AppStore Deploy" 
+        
+        
+        
+        
+        />
+    
+</picture>
+
+<h3 id="setting-up-github-actions">Setting Up GitHub Actions</h3>
+<p>Now that Fastlane is set up and you successfully run the lanes manually on your local machine, we can automate the deployment process with GitHub Actions.</p>
+<aside 
+ data-content="Note" 
+
+><br/>
+    To make the guide more simple we will use a self-hosted runner in this guide. You can also use the GitHub hosted runners. Make sure to adjust the paths and the Fastfile accordingly and to also add all necessary tools to the runner.
+</aside>
+<p>Now, let&rsquo;s automate these processes with GitHub Actions:</p>
+<ol>
+<li>
+<p>In your GitHub repo, create a new directory <code>.github/workflows</code>.</p>
+</li>
+<li>
+<p>Create a new file in this directory, e.g. <code>deploy.yml</code>.</p>
+</li>
+<li>
+<p>We need to create some secrets. Go to your repository settings and add the following secrets:</p>
+<ul>
+<li><code>STORE_PASSWORD</code>: The password for your keystore file.</li>
+<li><code>KEY_JKS</code>: The base64 encoded keystore file.</li>
+<li><code>SEC_JSON</code>: The base64 encoded service account JSON file.</li>
+<li><code>FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD</code>: The app-specific password for your Apple Developer account.</li>
+</ul>
+<p>To encode the files you can use the following command:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">cat path/to/your/file <span class="p">|</span> openssl base64</span></span></code></pre></div>
+Copy the output and add it as a secret.</p>
+</li>
+<li>
+<p>Add the following content to the <code>deploy.yml</code> file:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Build and Deploy</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">on</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">workflow_dispatch</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">jobs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">build_android</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">concurrency</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l">${{ github.workflow }}-${{ github.ref }}-android</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">cancel-in-progress</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Build and Deploy Android</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l">self-hosted</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">actions/checkout@v4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">actions/setup-java@v3.3.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">with</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">distribution</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;zulu&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">java-version</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;17&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Create Key properties file</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">            cat &lt;&lt; EOF &gt; &#34;./android/key.properties&#34;
+</span></span></span><span class="line"><span class="cl"><span class="sd">            storePassword=${{ secrets.STORE_PASSWORD }} 
+</span></span></span><span class="line"><span class="cl"><span class="sd">            keyPassword=${{ secrets.STORE_PASSWORD }}
+</span></span></span><span class="line"><span class="cl"><span class="sd">            keyAlias=upload
+</span></span></span><span class="line"><span class="cl"><span class="sd">            storeFile=./key.jks
+</span></span></span><span class="line"><span class="cl"><span class="sd">            EOF</span><span class="w">            
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Decode key file</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l">echo &#34;${{ secrets.KEY_JKS }}&#34; | openssl base64 -d -out ./android/app/key.jks</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Decode sec json file</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l">echo &#34;${{ secrets.SEC_JSON }}&#34; | openssl base64 -d -out ./android/sec.json</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">subosito/flutter-action@v2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l">flutter packages pub get</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l">flutter build appbundle --release</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Fastlane Action</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">maierj/fastlane-action@v2.3.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">with</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">lane</span><span class="p">:</span><span class="w"> </span><span class="l">deploy</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">subdirectory</span><span class="p">:</span><span class="w"> </span><span class="l">android</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">build_ios</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">concurrency</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l">${{ github.workflow }}-${{ github.ref }}-ios</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">cancel-in-progress</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Build and Deploy iOS</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l">self-hosted</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">env</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l">${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">actions/checkout@v4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">subosito/flutter-action@v2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l">flutter packages pub get</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l">flutter build ipa --release</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Deploy iOS Beta to TestFlight via Fastlane</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">maierj/fastlane-action@v2.3.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">with</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">lane</span><span class="p">:</span><span class="w"> </span><span class="l">deploy</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">subdirectory</span><span class="p">:</span><span class="w"> </span><span class="l">ios</span></span></span></code></pre></div></p>
+<p>Let me break down what this workflow does. There are two jobs, <code>build_android</code> and <code>build_ios</code>. Each job builds and deploys the app to the PlayStore and AppStore respectively. The jobs are triggered manually by the <code>workflow_dispatch</code> event.
+To build the Android app we need to create the <code>key.properties</code> file and decode the keystore and service account JSON file. We then build the app bundle and run the Fastlane action with the <code>deploy</code> lane. The iOS job is simpler, we just build the IPA file and run the Fastlane action with the <code>deploy</code> lane.</p>
+</li>
+<li>
+<p>Adjust the <code>flutter-version</code> as per your project&rsquo;s requirements.</p>
+</li>
+<li>
+<p>Trigger the workflow manually by going to the Actions tab in your GitHub repository and selecting the <code>Build and Deploy</code> workflow. Click on the <code>Run workflow</code> button and select the branch you want to deploy.</p>
+</li>
+<li>
+<p>Wait and watch the magic happen! ✨</p>
+</li>
+</ol>
+
+
+
+
+
+<picture style="display: contents;"
+     >
+    
+    <img    
+        class="dynamicimage"    
+        
+        src="/posts/img/DD-FlutterCICD-01-Basics/deploy.png" 
+        
+         alt="GitHub Actions" 
+        
+        
+        
+         style="max-width:315px; position: relative; left: 50%; transform: translate(-50%, 0%);"
+        />
+    
+</picture>
+
+<p>Whenever you want to deploy a new version of your app, simply edit the version in the <code>pubspec.yaml</code> and push your changes to the main branch and trigger the workflow manually. The workflow will build and deploy your app to the AppStore and PlayStore automatically.</p>
+<h3 id="build-number">Build Number</h3>
+<p>For some projects it makes sense to use the build number which is currently used on the respective platform. For this there are actions to get the build number from the AppStore and PlayStore. You can use the <code>app_store_build_number</code> and <code>google_play_track_version_codes</code> actions to get the build number. You can then use this build number to set the version code in the Fastfile.</p>
+<h3 id="conclusion">Conclusion</h3>
+<p>And that&rsquo;s it! You&rsquo;ve now set up a CI/CD pipeline for your Flutter app using Fastlane and GitHub Actions. This setup will automatically build and deploy your app to the AppStore and PlayStore. Time to kick back, relax, and let automation handle the repetitive tasks.</p>
+
+
+
+
+
+<picture style="display: contents;"
+     >
+    
+    <img    
+        class="dynamicimage"    
+        
+        src="/posts/img/DD-FlutterCICD-01-Basics/overview_part1.png" 
+        
+         alt="Overview" 
+        
+        
+        
+        
+        />
+    
+</picture>
+
+<p>We are still not done here. The next guide will cover how to automate the versioning, testing and  of your app with Fastlane. Stay tuned! Happy coding! 🚀</p>
+<h3 id="about-the-author">About the Author</h3>
+<h4 id="dario-digregorio---senior-flutter-developer">Dario Digregorio - Senior Flutter Developer</h4>
+<p>Dario is a passionate and innovative Senior Flutter Developer at <a href="https://de.nttdata.com/">NTT Data</a> with a keen interest in crafting seamless user experiences using cutting-edge technology. You can find him on <a href="https://www.linkedin.com/in/dario-digregorio-064696241/">LinkedIn</a> and <a href="https://github.com/dario-digregorio">GitHub</a>.</p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/placeholder.png" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/dario-digregorio">Dario Digregorio</a><span>
+                    
+                </span></h3>
+                <p>Senior Flutter Developer </p>
+                <p calss="author-socials">
+                    <a target="_blank"  href="https://github.com/dario-digregorio"><i class="fa-brands fa-github"></i></a>
+                    
+                    <a target="_blank"  href="https://www.linkedin.com/in/dario-digregorio-064696241"><i class="fa-brands fa-linkedin"></i></a>
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        <div class="related-block">
+            <h3 class="related-heading" id="series-list">Check out the full series</h3>
+            
+            <ul>
+                
+                <li><a class="related-link" href="/posts/dd-fluttercicd-01-basics/">FLUTTER CI/CD WITH FASTLANE AND GITHUB ACTIONS - Part 1: The Basics</a></li>
+                
+            </ul>
+        </div>
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/tbd/">tbd</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</html>

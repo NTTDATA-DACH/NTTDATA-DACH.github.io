@@ -139,9 +139,7 @@
 
 <p>The <a href="https://datatracker.ietf.org/doc/html/rfc6125">IETF RFC 6125 specification document</a> defines a standard for validating the identities in secure communication protocols. According to RFC 6125, the SAN is the recommended field to extract, but if the <code>SAN</code> field of type <code>DNSName</code> is missing, the <code>CN</code> (subject common name) has to suffice.</p>
 <blockquote>
-	
-… If a subjectAltName extension of type dNSName is present, that MUST be used as the identity.  Otherwise, the (most specific) Common Name field in the Subject field of the certificate MUST be used.  Although the use of the Common Name is existing practice, it is deprecated and Certification Authorities are encouraged to use the `dNSName` instead.
-
+	… If a subjectAltName extension of type dNSName is present, that MUST be used as the identity.  Otherwise, the (most specific) Common Name field in the Subject field of the certificate MUST be used.  Although the use of the Common Name is existing practice, it is deprecated and Certification Authorities are encouraged to use the <code>dNSName</code> instead.
     
     </br>
     <div id="reference">

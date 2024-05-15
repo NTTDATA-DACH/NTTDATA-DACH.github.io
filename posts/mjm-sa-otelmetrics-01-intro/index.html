@@ -138,7 +138,7 @@
 
 <picture style="display: contents;"
      
-    id="[204 345 458 436 343 135]"
+    id="[422 110 265 356 6 155]"
     onclick="openModal(this.id)"
      >
     
@@ -167,9 +167,7 @@
 <p>So, where does OpenTelemetry&rsquo;s remarkably different approach come from?</p>
 <p>Distributed systems and observability have been a thing before Kubernetes and CNCF existed. In 2010, Google published a paper about <em>Dapper</em>, a tracing solution. In 2012, Twitter followed with publishing <em>Zipkin</em>, yet another distributed tracing solution. Kubernetes appeared 2014, Jaeger (guess what: distributed tracing) was introduced by Uber in 2015. That same year, Ben Sigelman, the founder of Lightstep, published <a href="https://medium.com/opentracing/towards-turnkey-distributed-tracing-5f4297d1736">a blog post, now also known as the OpenTracing manifesto</a>. He postulates that instrumenting code is broken because it always comes with a vendor lock-in (i.e. the software defining how tracing works).</p>
 <blockquote>
-	
-And there’s the rub: It is not reasonable to ask all OSS services and all OSS packages and all application-specific code to use a single tracing vendor; yet, if they don’t share a mechanism for trace description and propagation, the causal chain is broken and the traces are truncated, often severely. We need a single, standard mechanism to describe the behavior of our systems.
-
+	And there’s the rub: It is not reasonable to ask all OSS services and all OSS packages and all application-specific code to use a single tracing vendor; yet, if they don’t share a mechanism for trace description and propagation, the causal chain is broken and the traces are truncated, often severely. We need a single, standard mechanism to describe the behavior of our systems.
     
     </br>
     <div id="reference">

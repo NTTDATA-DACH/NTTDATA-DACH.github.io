@@ -2,6 +2,30 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://nttdata-dach.github.io/tags/augmented-reality/</loc>
+    <lastmod>2024-05-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/series/immersive-technologies/</loc>
+    <lastmod>2024-05-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/mixed-reality/</loc>
+    <lastmod>2024-05-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/posts/ss-immersivetechnologies-01-basics/</loc>
+    <lastmod>2024-05-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/series/</loc>
+    <lastmod>2024-05-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/</loc>
+    <lastmod>2024-05-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/virtual-reality/</loc>
+    <lastmod>2024-05-13T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/xr-technology/</loc>
+    <lastmod>2024-05-13T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://nttdata-dach.github.io/tags/data-architecture/</loc>
     <lastmod>2024-05-02T00:00:00+00:00</lastmod>
   </url><url>
@@ -24,9 +48,6 @@
     <lastmod>2024-05-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/etl/</loc>
-    <lastmod>2024-05-02T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/</loc>
     <lastmod>2024-05-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/client-certificate/</loc>
@@ -63,9 +84,6 @@
     <lastmod>2024-03-27T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/rfc-9440/</loc>
-    <lastmod>2024-03-27T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/series/</loc>
     <lastmod>2024-03-27T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/ttrp/</loc>

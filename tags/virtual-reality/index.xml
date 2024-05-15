@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Virtual Reality on Technology Blog</title>
+    <link>https://nttdata-dach.github.io/tags/virtual-reality/</link>
+    <description>Recent content in Virtual Reality on Technology Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
+    <lastBuildDate>Mon, 13 May 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://nttdata-dach.github.io/tags/virtual-reality/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Part 1: Introduction to immersive technologies</title>
+      <link>https://nttdata-dach.github.io/posts/ss-immersivetechnologies-01-basics/</link>
+      <pubDate>Mon, 13 May 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/ss-immersivetechnologies-01-basics/</guid>
+      <description>Immersive technologies, alternatively referred to as XR technologies, possess the capability to either augment or replace the physical world with a digitally simulated one. This article provides an overview by describing the three categories of immersive technologies, including relevant background information, and significant use cases.</description>
+    </item>
+  </channel>
+</rss>
