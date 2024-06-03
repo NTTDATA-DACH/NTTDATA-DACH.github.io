@@ -7,8 +7,15 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Fri, 19 Jan 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 03 Jun 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/authors/mikel-jason-m%C3%BCnnekhoff/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Part 2: Scraping The First Metrics</title>
+      <link>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-02-firstmetrics/</link>
+      <pubDate>Mon, 03 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-02-firstmetrics/</guid>
+      <description>Having explained the technical implementation of the monitoring stack in our latest blog post, this article focuses on replacing Prometheus with OpenTelemetry Collector to decouple scraping from the storage and query mechanisms. The OpenTelemetry Collector uses various building blocks to construct the telemetry pipeline and requires enabling of the target allocator. Guiding you through this process we provide various practical tips, including processor ordering and horizontal autoscaling.&amp;quot;</description>
+    </item>
     <item>
       <title>Part 1: A Brief Introduction</title>
       <link>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-01-intro/</link>

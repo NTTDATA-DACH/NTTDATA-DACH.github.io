@@ -1,0 +1,416 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Part 6: Token Validation  </title>
+  <meta charset="utf-8"/> 
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Kong - The Gateway without Limitations - Part 6: Token Validation"/>
+  
+  <meta property="article:author" content="[Alexander Suchier]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/AS-KongGateway-TokenValidation/title-image.jpg"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/as-konggateway-tokenvalidation/"/>
+  <meta property="og:description" content="This time we discuss token validation in the context of the Kong Gateway, covering topics such as OpenID Connect, OAuth 2.0, and Zero-Trust Architecture. The article explains the different types of tokens, the benefits of offline validation, and the various Kong plugins that support token validation, such as the jwt plugin, openid-connect plugin, and oauth2 plugin, along with their priorities in the processing pipeline. The article notes that architectural trade-offs may be required regarding revocation and fine-grained authorization validation, and concludes that Kong Gateway offers ample options for token validation, including the ability to write custom plugins."/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">11.05.2024
+        
+         - Alexander Suchier - <i class="fa-solid fa-book-open"></i> 21 min read
+        
+        </span>
+        Part 6: Token Validation
+        
+        
+        <a id="series-link" href="/series/kong-the-gateway-without-limitations"><span class="subtitle">Kong - The Gateway without Limitations</span></a>
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/AS-KongGateway-TokenValidation/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <p>In the previous <a href="https://nttdata-dach.github.io/posts/as-konggateway-mtls_header/" title="Part 5: mTLS Header">blog post</a>, we discussed the topic of mutual transport layer security (mTLS) with consumer authentication even when perimeter security terminates incoming TLS communications. Now, we turn our attention towards implementing and enforcing security policies around the token validation process. Token validation is a fundamental responsibility of an API gateway and enables the implementation of a <a href="https://en.wikipedia.org/wiki/Zero_trust_security_model">Zero-Trust Architecture (ZTA)</a>. In the context of the &rsquo;never trust, always verify&rsquo; core principle of ZTA, API gateways in particular have a unique responsibility and should perform an appropriate token validation process.</p>
+<h1 id="overview---the-external-perspective">Overview - the external perspective</h1>
+<p>This technical blog is about token validation on the <a href="https://nttdata-dach.github.io/posts/as-kongproductintroduction/">Kong Gateway</a>. Token validation is one of the core tasks when implementing security policies in a <a href="https://en.wikipedia.org/wiki/Zero_trust_security_model">ZTA</a>, touching on the principles of &lsquo;<em>never trust, always verify</em>&rsquo; and ‘<em>inspect and log all traffic</em>’. But before we get into the details of token validation, let’s take a quick look at the tokens used in <a href="https://en.wikipedia.org/wiki/OpenID#OpenID_Connect_(OIDC)">OpenID Connect (OIDC)</a> and <a href="https://en.wikipedia.org/wiki/OAuth#OAuth_2.0">OAuth 2.0</a>, which are widely adopted standards used for authentication and authorization in modern architectures, especially in web applications with an underlying <a href="https://en.wikipedia.org/wiki/Microservices">microservice architecture</a> approach. The Internet Engineering Task Force (IETF) OAuth 2.0 core specification <a href="https://datatracker.ietf.org/doc/html/rfc6749">RFC 6749</a> defines several ways for a client to obtain tokens. These standards distinguish between identity, access, and refresh tokens.</p>
+<aside 
+ data-content="Note" 
+
+><br/>
+    Security Assertion Markup Language (SAML) tokens and Kerberos tickets are still used in many architectures, especially in heterogeneous environments with diverse technologies (we discussed SAML scenarios in my <a href="https://nttdata-dach.github.io/posts/as-konggateway-onbehalfof/" title="Part 3: Token Exchange On-Behalf-Of">OBO</a> and <a href="https://nttdata-dach.github.io/posts/as-konggateway-saml2bearer/" title="Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0">SAML bearer assertion</a> blog posts). But SAML and Kerberos can be complex to implement and manage. OpenID Connect and OAuth 2.0 have gained popularity due to their flexibility and suitability for modern cloud-based and web-centric authentication and authorization scenarios.
+</aside>
+<p>An <strong>identity token</strong> (ID token for short) is always a <a href="https://en.wikipedia.org/wiki/JSON_Web_Token">JSON Web Token (JWT)</a> that contains information about the identity of the authenticated user. A JWT is a by-value token, also known as a self-contained token. The token is a <a href="https://en.wikipedia.org/wiki/JSON">JSON</a> string which is encoded but unencrypted by default. These tokens are used to verify the user&rsquo;s identity and obtain profile information. The ID token, issued by an authorization server acting as an <a href="https://en.wikipedia.org/wiki/Identity_provider">Identity Provider (IdP)</a>, is intended for the client application and provides information about the authenticated user.</p>
+<p>An <strong>access token</strong> is typically also a JWT, although it can be an <a href="https://auth0.com/docs/secure/tokens/access-tokens#opaque-access-tokens">opaque</a> or by-reference token. Interestingly, the underlying OAuth 2.0 standard does not define a specific format for access tokens (see <a href="https://datatracker.ietf.org/doc/html/rfc6749#section-1.4">RFC 6749, Access Token</a>). When an opaque token is involved, it is typically a by-reference token. This token consists of a randomly generated string that identifies information in the token issuer’s data store. Unlike ID tokens, the access token is used to make authorized requests to protected resources on behalf of a user or client application. Thus, it’s about selectively restricting access to a resource. An access token is also called a bearer token because these tokens grant access to resources based on possession of the token itself. However, the token must still satisfy the authorization requirements to gain access to the requested resources. Therefore, access tokens contain or point to information about privileges and scopes.</p>
+<aside 
+ data-content="Note" 
+
+><br/>
+    Understanding of permissions, privileges and scopes is complex. That’s why I want to point you to an excellent <a href="https://www.youtube.com/watch?v=vULfBEn8N7E">video</a> by Ben Dechrai from Okta, which explains these terms and the differences in great detail. Here is the gist: A permission is a declaration of an action that can be performed on a resource. Permissions are tied to resources. Privileges are permissions assigned to users or applications. Scopes provide a mechanism for defining what an application (or API consumer) can do on behalf of the user. It allows for fine-grained authorization with partially granted or limited access. In practice, scopes are strings which represent what an application (or API consumer) intends to do in behalf of the user (for example: <code>scope=read:email</code>).
+</aside>
+<p>Often, access tokens also contain identity information reducing the dependency on IdPs and allowing authorization decisions to be made in the additional identity context. Therefore, whether an access token contains so-called Personally Identifiable Information (PII) or not is a decision that depends on the security architecture and the requirements of the system.</p>
+<p><strong>Refresh tokens</strong> are long-lived tokens used to obtain new access tokens without requiring the user to re-authenticate. They are commonly used in OAuth 2.0 to obtain fresh access tokens. When an access token is paired with a refresh token, it facilitates the generation of short-lived access tokens without the need for frequent re-authentication. Configuring refresh token rotation is a best practice for regularly replacing refresh tokens to improve security. Both JWT and opaque token formats are possible.</p>
+<p>A JWT has a compact, self-contained data structure and supports cryptographic signing which guarantees a tamper-proof token. The <a href="https://datatracker.ietf.org/doc/html/rfc7515">JSON Web Signature (JWS)</a> standard describes the details of digital signing (<a href="https://datatracker.ietf.org/doc/html/rfc7515">RFC 7515</a>). Self-contained means that all necessary information is contained within the JWT itself. Furthermore, a JWT can be encrypted using the <a href="https://www.rfc-editor.org/rfc/rfc7516">JSON Web Encryption (JWE)</a> standard (<a href="https://www.rfc-editor.org/rfc/rfc7516">RFC 7516</a>) for higher security requirements, but typically JWTs are only base64-encoded and not encrypted since they should be transported over an encrypted connection anyway (TLS communication).</p>
+<p>However, the self-contained data structure allows offline validation without a verification call to the token issuer. Hence, there are two options to validate tokens: online and offline. Online validation involves verification with the help of the token issuer, while offline validation verifies locally without making a network call to the token issuer (hence the alternative term of local validation). A JWT access token can, while an opaque or reference access token must, be verified via online validation at the introspection endpoint (defined in its own token introspection specification, <a href="https://www.rfc-editor.org/rfc/rfc7662">RFC 7662</a>). Online validation at the token issuer verifies whether a token is well-formed, not tampered with and not expired or revoked. Additional token payload information can be returned to the caller for further verification.</p>
+<p>This verification can also be outsourced to a specialized Externalized Authorization Management (EAM) system aka “Dynamic Authorization” approach. In technical terms and in our context, the API gateway acts as a Policy Enforcement Point (PEP) which calls a Policy Decision Point (PDP) executed by an EAM system. The <a href="https://www.openpolicyagent.org/">Open Policy Agent (OPA)</a> provides an open-source REGO-conform authorization engine that can act as an EAM. OPA is a policy engine moved to the <a href="https://www.openpolicyagent.org/docs/latest/policy-language/#what-is-rego">Cloud Native Computing Foundation (CNCF) graduated maturity level</a> on January 29, 2021. OPA offloads the policy decision-making process when dynamic and complex fine-grained access control policies need to be enforced at the API gateway or any other PEP. If desired, the <a href="https://docs.konghq.com/hub/kong-inc/opa/">Kong OPA plugin</a> can route requests to an Open Policy Agent. At this point, I would like to refer to an interesting <a href="https://konghq.com/blog/engineering/token-based-access-control">blog from the Kong engineering team</a>, where the <a href="https://curity.io/resources/learn/phantom-token-pattern/">Phantom Token Approach</a> which combines the usage of opaque and JWT tokens for special security reasons, is presented together with OPA.</p>
+<p>However, please note that offline validation has tremendous advantages because of</p>
+<ul>
+<li>the reduced dependency on the token issuer (and, where appropriate, the OPA server) which results in improved robustness and reliability (temporary IdP and/or OPA slowdowns or even outages or any network failures will not affect the validation process),</li>
+<li>an improved performance because there is no latency from additional validation network calls, which also</li>
+<li>improves confidentiality by minimizing exposure to network-based attacks such as man-in-the-middle attacks or DNS spoofing, since the validation is performed locally only, and</li>
+<li>offline token validation can be more scalable, especially in distributed systems or microservices architectures, where numerous components may need to validate tokens simultaneously.</li>
+</ul>
+<p>The drawback of not being notified about revoked tokens may be negligible and can be ignored in environments where tokens have short lifespans (e.g., between 5 and 15 minutes) and the impact of a compromised token is minimal (more about token revocation in <a href="https://datatracker.ietf.org/doc/html/rfc7009">RFC 7009</a>).<br>
+However, the two approaches of online and offline validation can also be used in combination in a ZTA architecture. A possible API gateway and service interaction with balanced token validation is also explained in the excellent <a href="https://youtu.be/i2wK-cTD_f0?t=3546">Okta video by Aaron Parecki</a>. I have illustrated the principle in the following diagram:</p>
+
+
+
+
+
+<picture style="display: contents;"
+     >
+    
+    <source srcset="/posts/img/AS-KongGateway-TokenValidation/tokenValidation-dark.png" media="none"/>
+    
+    <img    
+        class="dynamicimage"    
+        
+        src="/posts/img/AS-KongGateway-TokenValidation/tokenValidation-light.png" 
+        
+         
+        
+        
+        
+        
+        />
+    
+</picture>
+
+<script>
+    initPicture()
+</script>
+
+<p>An API gateway must be a high-speed component making quick authorization decisions for countless invocations. If an API gateway is slow, it can become a bottleneck for the entire system and non-functional performance needs. Additionally, slower API gateways may require more instances or resources to handle the same amount of traffic, resulting in higher operational costs. The idea from the aforementioned Okta video for a combined approach is simple and effective: the gateway performs a fast, coarse-gained authorization validation while the services themselves decide whether a finer-grained authorization check with online validation (revoke token verification) - even with the help of an EAM - is necessary for critical and high security classified operations.</p>
+<p>Thus, in the spirit of ZTA, each component in the communication chain independently verifies the access token, possibly to a different degree. In my opinion and for the reasons mentioned above, the API gateway should always carry out local/offline validations whenever possible and leave the fine-grained authorization validation to the services themselves. However, special circumstances may require special online validations at the gateway as well (but you get the basic idea).</p>
+<aside 
+ data-content="Some general architectural thoughts" 
+ id="architectural-thoughts-about-token-validation-at-the-API-gateway" 
+><br/>
+    From the history of Service-Oriented Architecture (SOA) and Enterprise Service Bus (ESB) usage, we have learned the following concept: &ldquo;Smart Endpoints and Dumb Pipes&rdquo; (<a href="https://martinfowler.com/articles/microservices.html#SmartEndpointsAndDumbPipes">Martin Fowler, James Lewis in 2014</a>). The API gateway acts as an intermediary between clients/consumers and backend/upstream services, therefore the gateway should embody this principle by being more of a &ldquo;dumb pipe&rdquo; component. This means that the intelligence in a system should primarily reside in the endpoints (applications, services, etc.), while the communication channels between them (the pipes) should be kept simple and focused on facilitating communication. Fine-grained authorization logic can be considered part of the business logic when it directly affects business operations and processes. Mixing business logic with access control policies can make policies more difficult to understand and maintain. It can blur the line between security concerns and business requirements, leading to confusion and potential security risks. In such cases, business-logic deployment and updates become closely tightly coupled with the gateway deployment and updates. Tight coupling of business logic and gateway implementation will compromise the flexibility and maintainability of the system. The former leader of the Netflix Cloud Gateway team, Mikey Cohen, also strongly advised against integrating business logic into the gateway, citing valuable lessons learned (<a href="https://youtu.be/mHHHpxJuTAo?t=3029">refer to the related YouTube video</a> recorded at the SpringOne Platform 2016).
+</aside>
+<h1 id="details---the-inside-perspective">Details - the inside perspective</h1>
+<p>JWTs consist of three main parts: a header, a payload, and a signature. The header specifies the type of token and the signing algorithm, the payload contains data, and the signature is used to verify the authenticity of the token. These parts are base64-encoded and concatenated with dots to form the JWT (<code>header.payload.signature</code>).</p>
+<p>In the context of JWTs, pieces of information or data are transported using so-called claims in the context of JWTs (like assertions in SAML). These claims provide metadata about the JWT itself and any custom data that is relevant to the application (ID token) or for the secure invocation handling of protected resources (access token). Claims can be categorized as registered, public, or private, depending on their standardization and intended use.</p>
+<p><strong>Registered claims</strong> are predefined by the JWT specification (see <a href="https://datatracker.ietf.org/doc/html/rfc7519#section-4.1">IETF RFC 7519, Section 4.1</a>). They play a crucial role in establishing the basic semantics of JWTs and enhance the security of the authentication and authorization process. The <a href="https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.1"><code>iss</code> (issuer)</a>, <a href="https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.4"><code>exp</code> (expiration time)</a> and <a href="https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.3"><code>aud</code> (audience)</a> are essential for basic token validation. These claims ensure that the token was issued by a trusted party (<code>iss</code>), has not expired (<code>exp</code>), and is intended for consumption by the specified recipient (<code>aud</code>). According to the RFC standard, the <code>aud</code> claim can contain a list of audiences meaning that the security token is intended for multiple recipients. It provides a standardized way to handle multi-party authorization scenarios. Therefore, it is also possible to include intermediaries such as API gateways in the <code>aud</code> claim. The API gateway serves as an important authorization boundary and can validate both its own and the upstream recipient audience (ultimately a security architecture decision).</p>
+<p><strong>Public claims</strong> in JWTs are custom claims defined by the parties implementing the JWT. These claims are not standardized. However, commonly used public claims may be registered with the Internet Assigned Numbers Authority (IANA) in the <a href="https://www.iana.org/assignments/jwt/jwt.xhtml">JSON Web Token Claims Registry</a>, providing a way to document and share their definitions with the community. For example, the claim registry will contain commonly used profile or user-specific information (claims such as <code>family_name</code>, <code>preferred_name</code>, or <code>email</code> claims). Some claims have a significant authorization meaning, such as <code>client_id</code> (client identifier), <code>azp</code> (authorized party), <code>scope</code>, <code>roles</code> and <code>groups</code> claims.<br>
+The <code>client_id</code> and <code>azp</code> claims are important because they identify the party that requested and authorized the access token. This helps prevent unauthorized access and ensures that the token was issued by a trusted party. The <code>scope</code> claim specifies an array of general privileges granted to the access token (certain scopes of actions). This facilitates the management of resource access by ensuring that only authorized actions (operations) are performed. In my point of view, that validation tends to be around fine-grained authorization. Also, the <code>role</code> and <code>groups</code> claims allow for fine-grained access control based on a user&rsquo;s role or group membership. Users or applications only have access to the resources they need to do their job. For example, an access token with a &ldquo;manager&rdquo; role would have access to sensitive financial data, while a &ldquo;customer representative&rdquo; role would only have access to customer information and not sensitive financial data.</p>
+<p><strong>Private claims</strong> are additional information included in a security token, not defined in any existing specification, such as arbitrary user attributes or roles. These claims can be customized based on the specific needs of the application or system. This allows for greater flexibility and control over access to resources for the client and services. In my opinion an API gateway could do claim existence and syntactical pre-validations on these claims, but not deep semantic validation (ultimately a security architecture decision).</p>
+<aside 
+ data-content="Note" 
+
+><br/>
+    At this point, I would like to briefly remind you of the ZTA ‘last privilege access’ principle, which of course also applies to tokens. Tokens should only contain &rsquo;need-to-know&rsquo; information to enable token recipients to effectively perform their duties and tasks. No more, no less.
+</aside>
+<p>These days, however, the <a href="https://www.rfc-editor.org/rfc/rfc9068">RFC 9068</a> standard (<a href="https://www.rfc-editor.org/rfc/rfc9068">JSON Web Token Profile for OAuth 2.0 Access Tokens</a>) provides clear guidelines on which claims must, should or may be included in a JWT access token. In my opinion, you should follow this standard; the claims listed in Section <a href="https://www.rfc-editor.org/rfc/rfc9068#section-2.2">2.2</a> are mandatory, while the optional authentication information claims are listed in Section <a href="https://www.rfc-editor.org/rfc/rfc9068#section-2.2.1">2.2.1</a>. Other optional identity and authorization claim recommendations are listed in following Sections <a href="https://www.rfc-editor.org/rfc/rfc9068#section-2.2.2">2.2.2</a> and <a href="https://www.rfc-editor.org/rfc/rfc9068#section-2.2.3">2.2.3</a>. Here are the access token payload claims classified as mandatory by the RFC 9068 specification.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Claim Name</th>
+<th style="text-align:left">Claim Meaning</th>
+<th style="text-align:left">Claim Description</th>
+<th style="text-align:left">Reference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left"><code>iss</code></td>
+<td style="text-align:left">issuer</td>
+<td style="text-align:left">Identifies the principal issuing the JWT</td>
+<td style="text-align:left">Section <a href="https://www.rfc-editor.org/rfc/rfc7519#section-4.1.1">4.1.1</a> of [<a href="https://www.rfc-editor.org/rfc/rfc9068#RFC7519">RFC7519</a>]</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>exp</code></td>
+<td style="text-align:left">expiration time</td>
+<td style="text-align:left">Identifies the expiration time on or after which the JWT must not be accepted for processing.</td>
+<td style="text-align:left">Section <a href="https://www.rfc-editor.org/rfc/rfc7519#section-4.1.4">4.1.4</a> of [<a href="https://www.rfc-editor.org/rfc/rfc9068#RFC7519">RFC7519</a>]</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>iat</code></td>
+<td style="text-align:left">issued at</td>
+<td style="text-align:left">Identifies the time the JWT was issued. Determines the age of the JWT.</td>
+<td style="text-align:left">Section <a href="https://www.rfc-editor.org/rfc/rfc7519#section-4.1.6">4.1.6</a> of [<a href="https://www.rfc-editor.org/rfc/rfc9068#RFC7519">RFC7519</a>]</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>aud</code></td>
+<td style="text-align:left">audiences</td>
+<td style="text-align:left">Identifies the recipients for whom the JWT is intended. Each principal intended to process the JWT MUST identify itself with a value in the audience claim.</td>
+<td style="text-align:left">Section <a href="https://www.rfc-editor.org/rfc/rfc7519#section-4.1.3">4.1.3</a> of [<a href="https://www.rfc-editor.org/rfc/rfc9068#RFC7519">RFC7519</a>]</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>sub</code></td>
+<td style="text-align:left">subject</td>
+<td style="text-align:left">Identifies the principal that is the subject of the JWT.</td>
+<td style="text-align:left">Section <a href="https://www.rfc-editor.org/rfc/rfc7519#section-4.1.2">4.1.2</a> of [<a href="https://www.rfc-editor.org/rfc/rfc9068#RFC7519">RFC7519</a>]</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>jti</code></td>
+<td style="text-align:left">JWT id</td>
+<td style="text-align:left">Provides a unique identifier for the JWT. The <code>jti</code> claim can be used to prevent the JWT from being replayed.</td>
+<td style="text-align:left">Section <a href="https://www.rfc-editor.org/rfc/rfc7519#section-4.1.7">4.1.7</a> of [<a href="https://www.rfc-editor.org/rfc/rfc9068#RFC7519">RFC7519</a>]</td>
+</tr>
+<tr>
+<td style="text-align:left"><code>client_id</code></td>
+<td style="text-align:left">client identifier</td>
+<td style="text-align:left">Provides the client identifier that requested the token (not a secret, unique to the authorization server).</td>
+<td style="text-align:left">Section <a href="https://www.rfc-editor.org/rfc/rfc8693#section-4.3">4.3</a> of [<a href="https://www.rfc-editor.org/rfc/rfc9068#RFC8693">RFC8693</a>]</td>
+</tr>
+</tbody>
+</table>
+<p>Other documents about JWT token validation include the <a href="https://www.rfc-editor.org/rfc/rfc8725">IETF RFC 8725 specification (JSON Web Token Best Current Practices)</a> and the highly recommended book <a href="https://auth0.com/resources/ebooks/jwt-handbook#!">&ldquo;The JWT Handbook&rdquo;</a> by Sebastián E. Peyrott. Also take a look at the <a href="https://owasp.org/API-Security/editions/2023/en/0x11-t10/">OWASP (Open Web Application Security Project)</a> Top 10 API security risks, which points out the most critical security risks facing APIs. Several list items are related to tokens or token management.</p>
+<h1 id="kong---token-validation-related-plugins">Kong - token validation related plugins</h1>
+<p>Now that we understand the JWT details, we can look at the validation and implementation inside the Kong Gateway. As discussed, the correct way to prevent attacks is to only consider a token valid if both the signature and the content are valid. Therefore, we look at the standard Kong plugins that take both aspects into account. But if the standard plugins are not sufficient, writing your own custom plugins with additional validation logic is always a possible solution. From my <a href="https://nttdata-dach.github.io/series/kong-the-gateway-without-limitations/">previous blogs in the Kong series</a>, where I also presented self-implemented custom plugins for various use cases, it is known that priority determines the order of plugin execution. Therefore, we will go through the relevant Kong plugins for token validation according to their predefined <a href="https://docs.konghq.com/konnect/reference/plugins/#plugin-execution-order">execution priority</a>.</p>
+<p><strong>jwe-decrypt plugin</strong>: The first out-of-the-box plugin in the processing pipeline could be the <a href="https://docs.konghq.com/hub/kong-inc/jwe-decrypt/">jwe-decrypt plugin</a> (priority 1999). This Kong plugin allows decrypting an encrypted incoming token in the request. The plugin works unspectacularly, taking the token, decrypting it, and passing it on for further processing. So, if you have to deal with JWE tokens, this is the solution provided by Kong to make offline validation possible.</p>
+<p><strong>outh2-introspection plugin</strong>: The next Kong plugin in priority order is the <a href="https://docs.konghq.com/hub/kong-inc/oauth2-introspection/">outh2-introspection plugin</a> (priority 1700). The plugin enables the discussed online validation by the token issuer (the third-party OAuth 2.0 server) through the standardized server introspection endpoint. Authentication of a Kong consumer is optionally facilitated, and the registered claims can be proxied to the upstream service. As with other authentication plugins in the Kong plugin portfolio, the OAuth2 introspection plugin seamlessly manages anonymous users.</p>
+<p><strong>jwt plugin</strong>: The next Kong plugin in line is the <a href="https://docs.konghq.com/hub/kong-inc/jwt/">jwt plugin</a> (priority 1450). The plugin checks signed incoming tokens, verifies the token’s signature, and can check the registered claims <code>exp</code> (expiration time) and <code>nbf</code> (not before).  The plugin is primarily used to authenticate consumers via a token claim to be defined (default is the <code>iss</code> claim), which contains a JWT credential key and refers to a RSA public key or secret for token validation. The optional anonymous configuration parameter allows in the event of a failed authentication that the request is not terminated and an anonymous consumer is determined. The use of the plugin is explained in detail in a <a href="https://www.youtube.com/watch?v=OjF95vVldxY">Kong video</a>. Note that there are some special requirements for decK and Kong Ingress Controller users mentioned in the plugin documentation.</p>
+<p><strong>openid-connect plugin</strong>: The <a href="https://docs.konghq.com/hub/kong-inc/openid-connect/">openid-connect plugin</a> (priority 1050) is also able to check the token signature, along with the <code>iss</code> and <code>exp</code> claims (default behavior). This plugin has the most token validation options, although it does not have a fully-fledged validation engine. The plugin parameter <code>issuers_allowed</code> prevents tokens from unknown issuers from being processed. The exp claim check allows some configurable leeway in expiration verification. The <code>verify_claims</code> parameter allows for “standard” claim validation (unfortunately,  at this point the Kong documentation is not sufficiently detailed to allow a quick and trouble-free configuration). But I found out from Kong support and own research that at least the following claims can be verified (for completeness, sometimes with repeated explanation):</p>
+<ul>
+<li><code>alg</code>, algorithm, cryptographic algorithm used to sign the token.</li>
+<li><code>iss</code>, issuer, identifies the principal issuing the JWT, see also RFC 9068 mandatory access token claims.</li>
+<li><code>sub</code>, subject, identifies the principal that is the subject of the JWT, see also RFC 9068 mandatory access token claims.</li>
+<li><code>aud</code>, audiences, identifies the recipients for whom the JWT is intended. Each principal intended to process the JWT MUST identify itself with a value in the audience claim, see also RFC 9068 mandatory access token claims.</li>
+<li><code>azp</code>, authorized party, identifies the party that requested and authorized the access token.</li>
+<li><code>exp</code>, expiration time, identifies the expiration epoch time on or after which the JWT must not be accepted for processing.</li>
+<li><code>iat</code>, issued at, identifies the epoch time the JWT was issued. Determines the age of the JWT.</li>
+<li><code>nbf</code>, not before, defines the earliest epoch time at which the JWT should start being considered valid, indicating the token&rsquo;s readiness for processing.</li>
+<li><code>auth_time</code>, authentication time, represents the epoch time when the user authentication occured. Useful for security policies which require a certain freshness of authentication.</li>
+<li><code>hd</code>, hosted domain, used in Google’s authentication, specifies the hosted domain of the user’s Google account (typically the domain associated with the email address)</li>
+<li><code>at_hash</code>, access token hash, the hash of the access token used to mitigate token substitution attacks.</li>
+<li><code>c_hash</code>, code hash, the hash of the authorization code used to mitigate code interception or substitution attacks.</li>
+</ul>
+<p>Additionally, there are several configuration properties in the plugin that allow you to check a specific claim for a specific value. In each case this is done with two properties, one for the claim name and one for the value, e.g. <code>roles_claim</code> and <code>roles_required</code>. The names of these properties typically correspond with some functionality that has been added, such as <a href="https://docs.konghq.com/gateway/latest/kong-manager/auth/oidc/mapping/">OIDC Authenticated Group Mapping</a>. This configuration approach also applies to the group claim, audience claim, and scope claim.
+Let us walk through the configuration approach using the roles claim as a guide and provide an example what the AND/OR cases mentioned in the documentation are all about. The roles claim is a public claim and part of the IANA JSON Web Token Claims Registry, which references the <a href="https://www.rfc-editor.org/rfc/rfc7643.html#section-4.1.2">IETF RFC 7643 specification, Section 4.1.2</a>, which in turn reads:</p>
+<p>“<em>A list of roles for the user that collectively represent who the user is, e.g., &ldquo;Student&rdquo;, &ldquo;Faculty&rdquo;.  No vocabulary or syntax is specified, although it is expected that a role value is a String or label representing a collection of entitlements. This value has no canonical types.</em>”</p>
+<p>You can define which claim in your tokens contains the roles if it differs from the roles naming convention, and then you can define with <code>roles_required</code> the claim values that you want to make mandatory for token verification to be successful. Here is an example of an aggregated claim where multiple pieces of information are aggregated into a single claim:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl">{<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">&#34;user&#34;: </span>{<span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">     </span><span class="nt">&#34;name&#34;: </span><span class="s2">&#34;karl&#34;</span><span class="p">,</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">     </span><span class="nt">&#34;assignments&#34;: </span><span class="p">[</span><span class="w"> </span><span class="s2">&#34;student&#34;</span><span class="p">,</span><span class="w"> </span><span class="s2">&#34;mathematics&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>}<span class="w">	
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>}</span></span></code></pre></div>
+<p>With a token that has this kind of structure, you would set <code>&quot;roles_claim&quot;: [&quot;user&quot;, &quot;assignments&quot;]</code> so that the openid-connect plugin tries to find the &ldquo;assignments&rdquo; subclaim under the “user” claim.
+Once the openid-connect plugin knows where to read the roles value from (the <code>&quot;assignments&quot;</code> subclaim under <code>&quot;user&quot;</code> in the above example), <code>&quot;roles_required&quot;</code> can be used to check if the roles a token has are valid. Values separated by spaces must all be present (AND), and of the values separated by commas only one must be present (OR). For example with roles_required:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="l">roles_required = [ &#34;student mathematics&#34;, &#34;administrators&#34; ]</span></span></span></code></pre></div>
+<p>The token sent to Kong must have both roles <code>&quot;student&quot;</code> AND <code>&quot;mathematics&quot;</code> OR the <code>&quot;administrators&quot;</code> value to be allowed access.</p>
+<p>In this way, for roles, groups, audiences, and scopes, you can specify <em>any</em> claim name as either <code>roles_claim</code>, <code>groups_claim</code>, <code>audience_claim</code>, or <code>scopes_claim</code>, and any value you want to make sure exists in that claim in <code>roles_required</code>, <code>groups_required</code>, <code>audience_required</code>, or <code>scopes_required</code>. In other words, you can repurpose these parameters for other claims if you don&rsquo;t necessarily want to verify &ldquo;real&rdquo; roles, groups, audiences, or scope claims.<br>
+The <code>admin_claim</code> and <code>authenticated_groups_claim</code> parameters were introduced to allow oidc group mapping when logging into the Kong Manager, so this is a very specific use case.
+Regarding &ldquo;introspection&rdquo;, Kong determines whether to use introspection depending on what auth_methods you have defined. If you have only <code>auth_methods: introspection</code> then opaque tokens and JWT should be introspected assuming your IdP has an introspection endpoint. In other words, the auth methods configuration determines whether JWT validation is done online (<code>auth_methods: introspection</code>) or offline (<code>auth-methods: bearer</code>).<br>
+The plugin is also able to refresh access tokens if a refresh token is available.</p>
+<p><strong>jwt-signer plugin</strong>: The <a href="https://docs.konghq.com/hub/kong-inc/jwt-signer/">jwt-signer plugin</a> (priority 1020) allows you to verify, sign, or re-sign tokens in a request. This plugin uses the same openid-connect library as the openid-connect plugin and allows similar verifications. Like the openid-connect plugin, the jwt-signer plugin offers several validation configuration options, but the main purpose of the plugin is to sign access tokens with the keys configured at the gateway, so that the upstream services can then validate those tokens.  The plugin makes the Kong Gateway appear as a token issuer for upstream services, it exchanges the <code>iss</code> claim and also provides an endpoint for public key retrieval. If you just want to validate tokens and do not need to re-sign them for the upstream services to validate, then the JWT-signer plugin is probably not something you need to consider.</p>
+<p><strong>oauth2 plugin</strong>: The <a href="https://docs.konghq.com/hub/kong-inc/oauth2/">oauth2 authentication plugin</a> turns Kong into an IdP for oauth2 tokens, i.e. it manages the token creation process, stores the tokens, and needs to handle refreshing tokens. The OAuth2 plugin does not work in <a href="https://docs.konghq.com/gateway/latest/production/deployment-topologies/db-less-and-declarative-config/">db-less</a> and <a href="https://docs.konghq.com/gateway/latest/production/deployment-topologies/#hybrid-mode">hybrid mode</a>, it only works in a <a href="https://docs.konghq.com/gateway/latest/production/deployment-topologies/#traditional-database-mode">traditional deployment architecture</a> where each Kong node has access to the Postgres configuration database where the tokens are stored.</p>
+<p>That’s it for JWT token handling on the Kong gateway using the standard means.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>Token validation is a complex topic and plays an important role in ZTA. Architectural trade-offs are required, as we discovered with the topic of revocation and fine-grained authorization validation. As we have seen, Kong offers a lot of ready-made plugins around JWT and validation. If there are requirements that are not covered, you can always write custom plugins for further validation. To return to my oft-repeated statement, with Kong Gateway you will not run into any limitations.</p>
+<p>Beyond words: Thanks to Johannes Franken and Andreas Bittorf for contributing their many years of experience in this area and challenging me to implement the full range of token validation. Special thanks also to Karl Kalckstein for his overview and in-depth details about the Kong plugins in the context of token validation.</p>
+<h1 id="credits">Credits</h1>
+<p>Title image by <a href="https://www.shutterstock.com/g/chaylek">chaylek</a> on <a href="https://www.shutterstock.com">Shutterstock</a></p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/alexander-suchier.jpg" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/alexander-suchier">Alexander Suchier</a><span>
+                    
+                </span></h3>
+                <p>Senior Managing Technical Consultant and Kong Champion </p>
+                <p calss="author-socials">
+                    
+                    
+                    
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        <div class="related-block">
+            <h3 class="related-heading" id="series-list">Check out the full series</h3>
+            
+            <ul>
+                
+                <li><a class="related-link" href="/posts/as-kongproductintroduction/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 1: Brief Product Introduction</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konglogchunking/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 2: Log Chunking</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-onbehalfof/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 3: Token Exchange On-Behalf-Of</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-saml2bearer/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-mtls_header/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 5: mTLS Header</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-tokenvalidation/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 6: Token Validation</a></li>
+                
+            </ul>
+        </div>
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/kong/">Kong</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/gateway/">Gateway</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/token-validation/">Token Validation</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/zero-trust-architecture/">Zero-Trust Architecture</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/openid-connect/">OpenID Connect</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/oauth-2.0/">OAuth 2.0</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/api-security/">API Security</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/jwt/">JWT</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/api-gateway/">API Gateway</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/microservices/">Microservices</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</html>

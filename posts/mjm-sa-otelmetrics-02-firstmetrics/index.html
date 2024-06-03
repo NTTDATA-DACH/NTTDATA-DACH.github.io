@@ -1,0 +1,593 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Part 2: Scraping The First Metrics  </title>
+  <meta charset="utf-8"/> 
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Transitioning from Prometheus to OpenTelemetry - A Journey of a Cluster&#39;s Metrics Evolution - Part 2: Scraping The First Metrics"/>
+  
+  <meta property="article:author" content="[Sherief Ahmed Mikel Jason Münnekhoff]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/MJM-SA-OtelMetrics-02-FirstMetrics/title-image.jpg"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-02-firstmetrics/"/>
+  <meta property="og:description" content="Having explained the technical implementation of the monitoring stack in our latest blog post, this article focuses on replacing Prometheus with OpenTelemetry Collector to decouple scraping from the storage and query mechanisms. The OpenTelemetry Collector uses various building blocks to construct the telemetry pipeline and requires enabling of the target allocator. Guiding you through this process we provide various practical tips, including processor ordering and horizontal autoscaling.&quot;"/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">03.06.2024
+        
+         - Sherief Ahmed, Mikel Jason Münnekhoff - <i class="fa-solid fa-book-open"></i> 10 min read
+        
+        </span>
+        Part 2: Scraping The First Metrics
+        
+        
+        <a id="series-link" href="/series/transitioning-from-prometheus-to-opentelemetry-a-journey-of-a-clusters-metrics-evolution"><span class="subtitle">Transitioning from Prometheus to OpenTelemetry - A Journey of a Cluster&#39;s Metrics Evolution</span></a>
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/MJM-SA-OtelMetrics-02-FirstMetrics/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <p>In the previous blog post (<a href="https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-01-Intro/">Part 1: A Brief Introduction</a>), we gave a theoretical overview of the OpenTelemetry project and mentioned our intention to replace Prometheus with OpenTelemtery because of its advantages.</p>
+<p>Here, we will focus on the technical implementation of our monitoring stack and how we replace Prometheus&rsquo; metrics scraping with OpenTelemetry Collector. But before we delve into the technical details, it&rsquo;s important to clarify where we’re coming from.</p>
+<h1 id="initial-situation-our-prometheus-based-metrics-stack">Initial situation: Our Prometheus-based metrics stack</h1>
+<p>We start with a simple metrics stack based on generic Prometheus and enriched with <a href="https://thanos.io/">Thanos</a> for high availability and long term storage. As you can see below, we can divide our stack into three main functionalities: Scraping metrics, storing metrics, and querying metrics.
+
+
+  
+
+
+<picture style="display: contents;"
+     
+    id="[105 64 277 329 328 447]"
+    onclick="openModal(this.id)"
+     >
+    
+    <source srcset="/posts/img/MJM-SA-OtelMetrics-02-FirstMetrics/prometheus-monitorin-stack-dark.png" media="none"/>
+    
+    <img    
+        class="dynamicimage modal-pic"    
+        
+        src="/posts/img/MJM-SA-OtelMetrics-02-FirstMetrics/prometheus-monitorin-stack-light.png" 
+        
+         alt="Prometheus-stack" 
+        
+        
+        
+        
+        />
+    
+</picture>
+
+<script>
+    initPicture()
+</script>
+</p>
+<h2 id="scraping-metrics">Scraping metrics</h2>
+<p>Prometheus uses two custom resource definitions, which are extensions to the Kubernetes API, to enable auto discovery of metrics endpoints while still allowing fine-grained configuration. These can be integrated into arbitrary Kubernetes workloads, e.g. helm charts, to tell Prometheus how to scrape metrics from a particular application. Today, many open source projects offer this for their helm charts.</p>
+<p>A <code>PodMonitor</code> represents a custom resource that specifies how a group of pods is scraped for metrics. It declares pods that match the <code>selector</code> section as scrape targets. The <code>podMetricsEndpoints</code> setting allows you to specify more details about the corresponding endpoints, such as ports or HTTP paths. A fully functional <code>PodMonitor</code> can look as simple as this (source: <a href="https://github.com/prometheus-operator/prometheus-operator/blob/6fb3385f82ed27775307a4433dd2ea877aba4e31/example/user-guides/getting-started/example-app-pod-monitor.yaml">Prometheus Operator</a>):</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">monitoring.coreos.com/v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">PodMonitor</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">example-app</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">team</span><span class="p">:</span><span class="w"> </span><span class="l">frontend</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l">example-app</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">podMetricsEndpoints</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l">web</span></span></span></code></pre></div>
+<p>See the <a href="https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.PodMonitor">PodMonitorSpec</a> section of the Prometheus Operator documentation for further specification details.</p>
+<p>The second custom resource definition is called <code>ServiceMonitor</code>. Instead of matching pods directly, <code>ServiceMonitor</code>s reference Kubernetes services and declare all pods supporting these services as scrape targets. Again, the <code>selector</code> is used to identify the desired services by label and the <code>endpoints</code> object allows for a more detailed configuration (see <a href="https://prometheus-operator.dev/docs/operator/api/#monitoring.coreos.com/v1.ServiceMonitor">the corresponding docs</a>). A small yet working minimal example of a ServiceMonitor is this (source: <a href="https://github.com/prometheus-operator/prometheus-operator/blob/6fb3385f82ed27775307a4433dd2ea877aba4e31/example/user-guides/getting-started/example-app-service-monitor.yaml">Prometheus Operator</a>):</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">monitoring.coreos.com/v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ServiceMonitor</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">example-app</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">team</span><span class="p">:</span><span class="w"> </span><span class="l">frontend</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l">example-app</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">endpoints</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l">web</span></span></span></code></pre></div>
+<p>If you are interested in learning more about the difference between <code>PodMonitor</code> and <code>ServiceMonitor</code>, and when to use which, you can read this <a href="https://github.com/prometheus-operator/prometheus-operator/issues/3119">GitHub issue</a>.</p>
+<h2 id="storing-metrics">Storing metrics</h2>
+<p>After metrics are scraped, Prometheus stores those metrics in its local time-series database (TSDB). This data is kept for 15 days by default, as described in <a href="https://prometheus.io/docs/prometheus/latest/storage/#operational-aspects">Prometheus operational aspects</a>. Since we are running multiple instances of Prometheus for high availability, we need an additional solution to aggregate and maintain the data and make it available to users. There are many solutions in the Prometheus ecosystem that can be used, such as Thanos (our choice). Cortex or Grafana Mimir are two other popular options. They all integrate with Prometheus and use a remote object service such as AWS S3 for centralized storage.</p>
+<h2 id="querying-metrics-and-alerting">Querying metrics and alerting</h2>
+<p>The stack needs a centralized query endpoint for further processing such as analysis (rules, alerts) and visualization (dashboards). This is important to work with all data, meaning in long-term storage and in distributed memory, when making business decisions or firing alerts about misbehaving applications. In our case, this is also covered by Thanos.</p>
+<h1 id="the-new-world-our-opentelemetry-metrics-stack">The new world: Our OpenTelemetry metrics stack</h1>
+<p>As mentioned in the previous post, one advantage of using OpenTelemetry is the ability to decouple the scraping part from the storage and query mechanisms. We replace Prometheus with OpenTelmetry Collector in the scraping part of the stack. To do one thing at a time, we keep the changes to the storing and querying part as minimal as possible. With the old stack, we added sidecars to the Prometheus pods to pull data into Thanos. With OpenTelemetry Collector, the pull approach changes to a push mechanism, and we needed a new way to accept data sent to Thanos. So, we added the optional <a href="https://thanos.io/tip/components/receive.md/">Thanos Receiver</a> component, as it accepts data via <a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/#remote_write">Prometheus Remote Write</a>. This should be sufficient for data sink systems. If you need more information or options, please find a data sink of your choice <a href="https://opentelemetry.io/ecosystem/registry/?component=exporter">from the existing OTelCol exporters</a>.</p>
+
+
+  
+
+
+<picture style="display: contents;"
+     
+    id="[394 389 144 177 388 55]"
+    onclick="openModal(this.id)"
+     >
+    
+    <source srcset="/posts/img/MJM-SA-OtelMetrics-02-FirstMetrics/otel-metrics-OtelCol-dark.png" media="none"/>
+    
+    <img    
+        class="dynamicimage modal-pic"    
+        
+        src="/posts/img/MJM-SA-OtelMetrics-02-FirstMetrics/otel-metrics-OtelCol-light.png" 
+        
+         alt="Otel-stack" 
+        
+        
+        
+        
+        />
+    
+</picture>
+
+<script>
+    initPicture()
+</script>
+
+<h2 id="scraping-metrics-1">Scraping metrics</h2>
+<p>OpenTelemetry Collector uses a different mechanism to work with the aforementioned Kubernetes CRDs. It decouples the discovery of the custom resources from the metrics collection capabilities of Prometheus, allowing them to scale independently. The OpenTelemetry project introduces an additional component called the <a href="https://opentelemetry.io/docs/kubernetes/operator/target-allocator/">Target Allocator</a>.</p>
+<blockquote>
+	<p>The Target Allocator serves two functions:</p>
+<ul>
+<li>Discovery of Prometheus Custom Resources (ServiceMonitor and PodMonitor)</li>
+<li>Even distribution of Prometheus targets among a pool of Collectors</li>
+</ul>
+    
+    </br>
+    <div id="reference">
+		<cite title="Source: OpenTelemetry Authors">
+            
+                - OpenTelemetry Authors 
+                 in 
+                  
+                    <a href="https://opentelemetry.io/docs/kubernetes/operator/target-allocator/" target="_blank" rel="noopener noreferrer">
+                    Documentation: Target Allocator</a>
+                  
+                
+		</cite>
+    </p>
+    
+</blockquote>
+<p>The Target Allocator is responsible for discovering scrape targets and offering them as a scrape configuration via an HTTP endpoint. The collector itself periodically polls the target allocator for available so-called jobs. This mechanism has been a feature of Prometheus, known as <a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/#http_sd_config"><code>http_sd_config</code></a>. OpenTelemetry&rsquo;s Prometheus receiver simply elevates this option as a critical step in its scraping process.</p>
+<h2 id="implementation-details">Implementation details</h2>
+<p>We are finally going to get our hands dirty. We start with an up-and-running Kubernetes cluster, which contains the <a href="https://github.com/open-telemetry/opentelemetry-operator/">OpenTelemetry Operator</a> and the <a href="https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-operator-crds">required metrics CRDs</a>. If you want to follow along with your own cluster, make sure to match this setup.
+For more information on installing the OpenTelemetry Operator, see the <a href="https://opentelemetry.io/docs/kubernetes/helm/operator/">official documentation on installing via Helm</a>.</p>
+<p>Following the operator approach, we need to create a custom resource to tell the OpenTelemetry operator to deploy a collector. Here, it is called <code>OpenTelemetryCollector</code>. The custom resource contains the configuration for both, specifically what to deploy and how it should behave. You can find the details of this and the other OTel operator CRDs as part of <a href="https://github.com/open-telemetry/opentelemetry-operator">the official repository</a>. Since the target allocator is an optional component, we will start building our custom resource by enabling the TA:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">opentelemetry.io/v1alpha1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">OpenTelemetryCollector</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">o11y-metrics-collector</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">o11y-metrics</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l">statefulset</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">targetAllocator</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">prometheusCR</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre></div>
+<p>This configuration enables the deployment of the target allocator and makes it monitor the metrics’ custom resources. We also proactively set the deployment mode of the collector to <code>StatefulSet</code>. While there are multiple modes, e.g. <code>DaemonSet</code> for log collection, the combination of Prometheus receiver &amp; target allocator only works with a StatefulSet. Unfortunately, this is not enough to make the target allocator work. In addition, we need to allow the target allocator to work with the resources from Kubernetes side - meaning RBAC. We do this by creating a <code>ClusterRole</code> and a corresponding <code>ClusterRoleBinding</code>, which adds the necessary permissions to the ServiceAccounts created by the operator from our OpenTelemetryCollector resource. The OpenTelemetry project lists the minimum required permissions <a href="https://github.com/open-telemetry/opentelemetry-operator/blob/main/cmd/otel-allocator/README.md#rbac">in their docs</a>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">rbac.authorization.k8s.io/v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ClusterRole</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;metrics-collector-clusterrole&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">rules</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">nodes</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">nodes/proxy</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">nodes/metrics</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">services</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">endpoints</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">pods</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;get&#34;</span><span class="p">,</span><span class="w"> </span><span class="s2">&#34;list&#34;</span><span class="p">,</span><span class="w"> </span><span class="s2">&#34;watch&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;monitoring.coreos.com&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">servicemonitors</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">podmonitors</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;get&#34;</span><span class="p">,</span><span class="w"> </span><span class="s2">&#34;list&#34;</span><span class="p">,</span><span class="w"> </span><span class="s2">&#34;watch&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">apiGroups</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">networking.k8s.io</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">ingresses</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;get&#34;</span><span class="p">,</span><span class="w"> </span><span class="s2">&#34;list&#34;</span><span class="p">,</span><span class="w"> </span><span class="s2">&#34;watch&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">apiGroups</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;discovery.k8s.io&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">resources</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="l">endpointslices</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;get&#34;</span><span class="p">,</span><span class="w"> </span><span class="s2">&#34;list&#34;</span><span class="p">,</span><span class="w"> </span><span class="s2">&#34;watch&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">nonResourceURLs</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;/metrics&#34;</span><span class="p">,</span><span class="w"> </span><span class="s2">&#34;/metrics/cadvisor&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">verbs</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;get&#34;</span><span class="p">]</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nn">---</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">rbac.authorization.k8s.io/v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ClusterRoleBinding</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;metrics-collector-clusterrolebinding&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">roleRef</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">apiGroup</span><span class="p">:</span><span class="w"> </span><span class="l">rbac.authorization.k8s.io</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ClusterRole</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">metrics-collector-clusterrole</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">subjects</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ServiceAccount</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">o11y-metrics-collector</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">o11y-collector-metrics</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span>- <span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ServiceAccount</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">o11y-metrics-collector-targetallocator</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">o11y-metrics</span></span></span></code></pre></div>
+<p>As mentioned in our <a href="https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics_01-intro/">Part 1: A Brief Introduction</a>, OpenTelemetry Collector has 3 building blocks, receivers, processors and exporters, which will be used to construct our telemetry pipeline.</p>
+<h3 id="receivers">Receivers</h3>
+<p>The first building block of our pipeline, our receiver, collects telemetry data from various sources. The <a href="https://github.com/open-telemetry/opentelemetry-collector-contrib">open-telemetry/opentelemetry-collector-contrib repository</a> provides us with a variety of receivers to choose from, as listed in <a href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/receiver">opentelemetry-collector-contrib/receivers</a>. Since we are interested in receiving metrics from Prometheus-compatible endpoints, <a href="https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/receiver/prometheusreceiver/README.md">Prometheus Receiver</a> is the way to go.</p>
+<p>Prometheus Receiver supports <a href="https://github.com/prometheus/prometheus/blob/v2.28.1/docs/configuration/configuration.md#scrape_config">prometheus scrape_config</a>, which we will use to create a static job for self-scraping. In addition to that, we need to allow the receiver to query target allocator jobs. We also need to set a <code>collector_id</code>. This is used to distribute jobs to multiple collectors, for example when using horizontal autoscaling. This is out of scope for now, though.
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">    receivers:
+</span></span></span><span class="line"><span class="cl"><span class="sd">      prometheus:
+</span></span></span><span class="line"><span class="cl"><span class="sd">        config:
+</span></span></span><span class="line"><span class="cl"><span class="sd">          scrape_configs:
+</span></span></span><span class="line"><span class="cl"><span class="sd">            - job_name: &#39;self&#39;
+</span></span></span><span class="line"><span class="cl"><span class="sd">              scrape_interval: 10s
+</span></span></span><span class="line"><span class="cl"><span class="sd">              static_configs:
+</span></span></span><span class="line"><span class="cl"><span class="sd">              - targets: [ &#39;0.0.0.0:8888&#39; ]
+</span></span></span><span class="line"><span class="cl"><span class="sd">        target_allocator:
+</span></span></span><span class="line"><span class="cl"><span class="sd">          endpoint: http://o11y-metrics-collector-targetallocator:80
+</span></span></span><span class="line"><span class="cl"><span class="sd">          interval: 30s
+</span></span></span><span class="line"><span class="cl"><span class="sd">          collector_id: collector-0
+</span></span></span><span class="line"><span class="cl"><span class="sd">    [...]</span><span class="w">    </span></span></span></code></pre></div></p>
+<h3 id="processors">Processors</h3>
+<p>After successfully receiving metrics, processors proces the collected metrics before exporting them.</p>
+<p>Similar to receivers, there is an <a href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor">extensive list of processors</a>.</p>
+<p>We will start by using <a href="https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor/batchprocessor">Batch Processor</a> to buffer metrics for traffic optimization. We also want to add the name of the collector itself as a label. We can do this with <a href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/attributesprocessor">attributes Processor</a>. When working with the Batch Processor, please note this recommendation about processor ordering:
+<blockquote>
+	It is highly recommended to configure the batch processor on every collector. The batch processor should be defined in the pipeline after the <code>memory_limiter</code> as well as any sampling processors. This is because batching should happen after any data drops such as sampling.
+    
+    </br>
+    <div id="reference">
+		<cite title="Source: OpenTelemetry Authors">
+            
+                - OpenTelemetry Authors 
+                 in 
+                  
+                    <a href="https://github.com/open-telemetry/opentelemetry-collector/blob/b8690b6c3b01594522776ab2c9baa64338c7b9a1/processor/batchprocessor/README.md" target="_blank" rel="noopener noreferrer">
+                    README: Batch Processor</a>
+                  
+                
+		</cite>
+    </p>
+    
+</blockquote></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">    processors:
+</span></span></span><span class="line"><span class="cl"><span class="sd">      batch:
+</span></span></span><span class="line"><span class="cl"><span class="sd">        send_batch_size: 1000
+</span></span></span><span class="line"><span class="cl"><span class="sd">        timeout: 15s
+</span></span></span><span class="line"><span class="cl"><span class="sd">      attributes:
+</span></span></span><span class="line"><span class="cl"><span class="sd">        actions:
+</span></span></span><span class="line"><span class="cl"><span class="sd">          - action: insert
+</span></span></span><span class="line"><span class="cl"><span class="sd">            key: collector
+</span></span></span><span class="line"><span class="cl"><span class="sd">            value: ${env:POD_NAME}
+</span></span></span><span class="line"><span class="cl"><span class="sd">    [...]</span><span class="w">    </span></span></span></code></pre></div>
+<p>To use <code>POD_NAME</code> here, we need to make it available as an environment variable. This is done as usual in Kubernetes - the configuration is passed directly down from the custom resource:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">env</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">POD_NAME</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">valueFrom</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">fieldRef</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">fieldPath</span><span class="p">:</span><span class="w"> </span><span class="l">metadata.name</span></span></span></code></pre></div>
+<h3 id="exporters">Exporters</h3>
+<p>After our metrics are processed, exporters send the prepared metrics to the data sink of our choice. In our case, we use the <a href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/prometheusremotewriteexporter"><code>prometheusremotewrite</code> exporter</a>. For quick and independent validation, you can also use the <a href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/exporter/prometheusexporter"><code>prometheus</code> exporter</a>. It creates a scrapable endpoint at the OpenTelemetry Collector and exposes all collected and processed metrics there. It is important to note that the operator will not create a <code>ServiceMonitor</code> or <code>PodMonitor</code> for this, so we don&rsquo;t create an infinite scraping loop here.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">    exporters:
+</span></span></span><span class="line"><span class="cl"><span class="sd">      prometheusremotewrite: # this is specific to our environment 
+</span></span></span><span class="line"><span class="cl"><span class="sd">        endpoint: http://thanos-receiver:9091/api/v1/receive
+</span></span></span><span class="line"><span class="cl"><span class="sd">      prometheus: # this is for demo purposes only
+</span></span></span><span class="line"><span class="cl"><span class="sd">        endpoint: 0.0.0.0:8080
+</span></span></span><span class="line"><span class="cl"><span class="sd">    [...]</span><span class="w">    </span></span></span></code></pre></div>
+<p>Now, we are ready to connect the dots and build the pipeline section. The complete configuration is shown below:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">opentelemetry.io/v1alpha1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">OpenTelemetryCollector</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">o11y-metrics-collector</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">o11y-metrics</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l">statefulset</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">targetAllocator</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">prometheusCR</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">env</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">POD_NAME</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">valueFrom</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">fieldRef</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">fieldPath</span><span class="p">:</span><span class="w"> </span><span class="l">metadata.name</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">    receivers:
+</span></span></span><span class="line"><span class="cl"><span class="sd">      prometheus:
+</span></span></span><span class="line"><span class="cl"><span class="sd">        config:
+</span></span></span><span class="line"><span class="cl"><span class="sd">          scrape_configs:
+</span></span></span><span class="line"><span class="cl"><span class="sd">            - job_name: &#39;self&#39;
+</span></span></span><span class="line"><span class="cl"><span class="sd">              scrape_interval: 10s
+</span></span></span><span class="line"><span class="cl"><span class="sd">              static_configs:
+</span></span></span><span class="line"><span class="cl"><span class="sd">              - targets: [ &#39;0.0.0.0:8888&#39; ]
+</span></span></span><span class="line"><span class="cl"><span class="sd">        target_allocator:
+</span></span></span><span class="line"><span class="cl"><span class="sd">          endpoint: http://o11y-metrics-collector-targetallocator:80
+</span></span></span><span class="line"><span class="cl"><span class="sd">          interval: 30s
+</span></span></span><span class="line"><span class="cl"><span class="sd">          collector_id: collector-0
+</span></span></span><span class="line"><span class="cl"><span class="sd">    processors:
+</span></span></span><span class="line"><span class="cl"><span class="sd">      batch:
+</span></span></span><span class="line"><span class="cl"><span class="sd">        send_batch_size: 1000
+</span></span></span><span class="line"><span class="cl"><span class="sd">        timeout: 15s
+</span></span></span><span class="line"><span class="cl"><span class="sd">      attributes:
+</span></span></span><span class="line"><span class="cl"><span class="sd">        actions:
+</span></span></span><span class="line"><span class="cl"><span class="sd">          - action: insert
+</span></span></span><span class="line"><span class="cl"><span class="sd">            key: collector
+</span></span></span><span class="line"><span class="cl"><span class="sd">            value: ${env:POD_NAME}
+</span></span></span><span class="line"><span class="cl"><span class="sd">    exporters:
+</span></span></span><span class="line"><span class="cl"><span class="sd">      prometheusremotewrite: # this is specific to our environment 
+</span></span></span><span class="line"><span class="cl"><span class="sd">        endpoint: http://thanos-receiver:9091/api/v1/receive
+</span></span></span><span class="line"><span class="cl"><span class="sd">      prometheus: # this is for demo purposes only
+</span></span></span><span class="line"><span class="cl"><span class="sd">        endpoint: 0.0.0.0:8080
+</span></span></span><span class="line"><span class="cl"><span class="sd">    service:
+</span></span></span><span class="line"><span class="cl"><span class="sd">      pipelines:
+</span></span></span><span class="line"><span class="cl"><span class="sd">        metrics:
+</span></span></span><span class="line"><span class="cl"><span class="sd">          receivers: [prometheus]
+</span></span></span><span class="line"><span class="cl"><span class="sd">          processors: [batch,attributes]
+</span></span></span><span class="line"><span class="cl"><span class="sd">          exporters: [prometheusremotewrite,prometheus]</span><span class="w">    </span></span></span></code></pre></div>
+<h2 id="validating-our-scraping-pipeline">Validating our scraping pipeline</h2>
+<p>We can verify the functionality of our stack in scraping metrics by comparing the metrics exposed by any ServiceMonitor and scraped by the OtelCol Prometheus receiver by confirming the presence of a specific metric on the exporter side of our pipeline. This is what we added the Prometheus exporter for. Obviously, we need to have some metric producers that we can scrape data from. For this, we choose <a href="https://github.com/kubernetes/kube-state-metrics">kube-state-metrics</a>. It exposes metrics about the state of Kubernetes objects, such as <code>kube_deployment_created</code>. If you and your cluster are still with us, please check out the <a href="https://github.com/kubernetes/kube-state-metrics#kubernetes-deployment">Kubernetes deployment section of the KSM repository</a>.</p>
+<p>To verify, we simply port forward to kube-state-metrics with</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ kubectl --namespace o11y-metrics port-forward o11y-metrics-collector-collector-0 8080:8080</span></span></code></pre></div>
+<p>and take a look at the KSM metrics:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="cl">$ curl http://localhost:8080/metrics <span class="p">|</span> grep <span class="s1">&#39;kube_deployment_created&#39;</span>
+</span></span><span class="line"><span class="cl">kube_deployment_created<span class="o">{</span><span class="nv">collector</span><span class="o">=</span><span class="s2">&#34;o11y-metrics-collector-collector-0&#34;</span>,container<span class="o">=</span><span class="s2">&#34;kube-state-metrics&#34;</span>,deployment<span class="o">=</span><span class="s2">&#34;kube-state-metrics&#34;</span>,endpoint<span class="o">=</span><span class="s2">&#34;http&#34;</span>,instance<span class="o">=</span><span class="s2">&#34;100.124.227.255:8080&#34;</span>,job<span class="o">=</span><span class="s2">&#34;kube-state-metrics&#34;</span>,namespace<span class="o">=</span><span class="s2">&#34;default&#34;</span>,pod<span class="o">=</span><span class="s2">&#34;kube-state-metrics-766c44b7c5-6pm7t&#34;</span>,service<span class="o">=</span><span class="s2">&#34;kube-state-metrics&#34;</span><span class="o">}</span> 1.708012279e+09</span></span></code></pre></div>
+<p>Here, we can see that we successfully scraped metrics by auto-discovering the kube-state-metrics endpoint and adding our collector name as a label to each metric. With this approach, you should be able to scrape the vast majority of your Prometheus-compatible metrics endpoints without touching them one by one. In the next blog post, we will cover another scraping method: Auto-discovering scrape targets through pod annotations. Stay tuned!</p>
+<h1 id="bonus-useful-tips-for-getting-started">Bonus: Useful tips for getting started</h1>
+<p>If this is your first contact with OpenTelemetry, you should read the following topics. We have outlined a minimal configuration for scraping Prometheus metrics. The goal here was not to have a production-ready configuration.</p>
+<ul>
+<li><a href="https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor/memorylimiterprocessor"><code>memorylimiter</code> processor</a>. But we warned: It will deny data instead of going OOMKilled, so you need to have proper alerting in place.</li>
+<li>Autoscaling: The OpenTelemetry Collector CRD provides <code>spec.autoscaler</code> for horizontal autoscaling. As the CRD implements the <code>ScaledObject</code> definition, you can also use <a href="https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/">VPA</a> to scale your collector vertically. <!-- raw HTML omitted --></li>
+<li><a href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/healthcheckextension"><code>healthcheck</code> extension</a>: Add a health check endpoint to your collectors.</li>
+</ul>
+<h1 id="credits">Credits</h1>
+<p>Title image by <a href="https://www.shutterstock.com/g/Gumpanat">Gumpanat</a> on <a href="https://www.shutterstock.com">Shutterstock</a></p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/sherief-ahmed.png" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/sherief-ahmed">Sherief Ahmed</a><span>
+                    
+                </span></h3>
+                <p>Lead Consultant </p>
+                <p calss="author-socials">
+                    
+                    
+                    <a target="_blank"  href="https://www.linkedin.com/in/sherief-ahmed-msc"><i class="fa-brands fa-linkedin"></i></a>
+                    
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/mikel-jason-muennekhoff.jpg" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/mikel-jason-m%c3%bcnnekhoff">Mikel Jason Münnekhoff</a><span>
+                    
+                </span></h3>
+                <p>Senior Technical Consultant </p>
+                <p calss="author-socials">
+                    
+                    
+                    <a target="_blank"  href="https://www.linkedin.com/in/mikel-jason-m%C3%BCnnekhoff-ab47a5140"><i class="fa-brands fa-linkedin"></i></a>
+                    
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        <div class="related-block">
+            <h3 class="related-heading" id="series-list">Check out the full series</h3>
+            
+            <ul>
+                
+                <li><a class="related-link" href="/posts/mjm-sa-otelmetrics-01-intro/">TRANSITIONING FROM PROMETHEUS TO OPENTELEMETRY - A JOURNEY OF A CLUSTER&#39;S METRICS EVOLUTION - Part 1: A Brief Introduction</a></li>
+                
+                <li><a class="related-link" href="/posts/mjm-sa-otelmetrics-02-firstmetrics/">TRANSITIONING FROM PROMETHEUS TO OPENTELEMETRY - A JOURNEY OF A CLUSTER&#39;S METRICS EVOLUTION - Part 2: Scraping The First Metrics</a></li>
+                
+            </ul>
+        </div>
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+                <h3 class="related-heading">You may also like</h3>
+
+                
+                
+                <ul>
+                    
+                    
+                    
+                        <li><a class="related-link" href="/posts/ns-controlplaneoperatedinfrastructure_1/">CONTROL PLANE OPERATED INFRASTRUCTURE - Part 1: Introduction to Crossplane</a></li>
+                    
+                    
+                    
+                    
+                    <li><a class="related-link" href="/posts/sk-secretshandlinginkubernetes/">Secrets Handling in Kubernetes</a></li>
+                    
+                    
+                    
+                    
+                    <li><a class="related-link" href="/posts/ak-buildingrunningflutteronaws/">Building and running Flutter mobile applications for Android on AWS Device Farm</a></li>
+                    
+                    
+                </ul>
+                
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/kubernetes/">Kubernetes</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/observability/">Observability</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/metrics/">Metrics</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/opentelemetry/">OpenTelemetry</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/cloud/">Cloud</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/platform-engineering/">Platform Engineering</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</html>
