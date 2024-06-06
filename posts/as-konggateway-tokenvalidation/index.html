@@ -12,7 +12,7 @@
   <meta property="article:author" content="[Alexander Suchier]"/>
   <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/AS-KongGateway-TokenValidation/title-image.jpg"/>
   <meta property="og:url" content="https://nttdata-dach.github.io/posts/as-konggateway-tokenvalidation/"/>
-  <meta property="og:description" content="This time we discuss token validation in the context of the Kong Gateway, covering topics such as OpenID Connect, OAuth 2.0, and Zero-Trust Architecture. The article explains the different types of tokens, the benefits of offline validation, and the various Kong plugins that support token validation, such as the jwt plugin, openid-connect plugin, and oauth2 plugin, along with their priorities in the processing pipeline. The article notes that architectural trade-offs may be required regarding revocation and fine-grained authorization validation, and concludes that Kong Gateway offers ample options for token validation, including the ability to write custom plugins."/>
+  <meta property="og:description" content="This time we discuss token validation in the context of the Kong Gateway, covering topics such as OpenID Connect, OAuth 2.0, and Zero-Trust Architecture. The article explains the different types of tokens, the benefits of offline validation, and the various Kong plugins that support token validation. The article notes that architectural trade-offs may be required regarding revocation and fine-grained authorization validation, and concludes that Kong Gateway offers ample options for token validation, including the ability to write custom plugins."/>
   
   <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
   <script src="https://nttdata-dach.github.io/js/modal.js"></script>
@@ -70,7 +70,7 @@
 
 <div class="emobanner article">
     <h1>
-        <span class="pre">11.05.2024
+        <span class="pre">05.06.2024
         
          - Alexander Suchier - <i class="fa-solid fa-book-open"></i> 21 min read
         
@@ -138,12 +138,12 @@ However, the two approaches of online and offline validation can also be used in
 <picture style="display: contents;"
      >
     
-    <source srcset="/posts/img/AS-KongGateway-TokenValidation/tokenValidation-dark.png" media="none"/>
+    <source srcset="/posts/img/AS-KongGateway-TokenValidation/TokenValidation-dark.png" media="none"/>
     
     <img    
         class="dynamicimage"    
         
-        src="/posts/img/AS-KongGateway-TokenValidation/tokenValidation-light.png" 
+        src="/posts/img/AS-KongGateway-TokenValidation/TokenValidation-light.png" 
         
          
         
@@ -280,7 +280,7 @@ The plugin is also able to refresh access tokens if a refresh token is available
 <p>Token validation is a complex topic and plays an important role in ZTA. Architectural trade-offs are required, as we discovered with the topic of revocation and fine-grained authorization validation. As we have seen, Kong offers a lot of ready-made plugins around JWT and validation. If there are requirements that are not covered, you can always write custom plugins for further validation. To return to my oft-repeated statement, with Kong Gateway you will not run into any limitations.</p>
 <p>Beyond words: Thanks to Johannes Franken and Andreas Bittorf for contributing their many years of experience in this area and challenging me to implement the full range of token validation. Special thanks also to Karl Kalckstein for his overview and in-depth details about the Kong plugins in the context of token validation.</p>
 <h1 id="credits">Credits</h1>
-<p>Title image by <a href="https://www.shutterstock.com/g/chaylek">chaylek</a> on <a href="https://www.shutterstock.com">Shutterstock</a></p>
+<p>Title image by <a href="https://www.gettyimages.de/search/photographer?photographer=simonkr">simonkr</a> on <a href="https://www.gettyimages.com">Getty Images</a></p>
 
             
         </div>
@@ -297,6 +297,7 @@ The plugin is also able to refresh access tokens if a refresh token is available
                 <p calss="author-socials">
                     
                     
+                    <a target="_blank"  href="https://www.linkedin.com/in/alexander-suchier-0608481"><i class="fa-brands fa-linkedin"></i></a>
                     
                 </p>
                 
@@ -370,6 +371,8 @@ The plugin is also able to refresh access tokens if a refresh token is available
   <li><a href="https://nttdata-dach.github.io/tags/api-gateway/">API Gateway</a> </li>
   
   <li><a href="https://nttdata-dach.github.io/tags/microservices/">Microservices</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/rfc-9068/">RFC 9068</a> </li>
   
 </ul>
         </div>

@@ -2,6 +2,51 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://nttdata-dach.github.io/tags/api-gateway/</loc>
+    <lastmod>2024-06-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/api-security/</loc>
+    <lastmod>2024-06-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/gateway/</loc>
+    <lastmod>2024-06-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/jwt/</loc>
+    <lastmod>2024-06-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/kong/</loc>
+    <lastmod>2024-06-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/series/kong-the-gateway-without-limitations/</loc>
+    <lastmod>2024-06-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/microservices/</loc>
+    <lastmod>2024-06-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/oauth-2.0/</loc>
+    <lastmod>2024-06-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/openid-connect/</loc>
+    <lastmod>2024-06-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/posts/as-konggateway-tokenvalidation/</loc>
+    <lastmod>2024-06-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/rfc-9068/</loc>
+    <lastmod>2024-06-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/series/</loc>
+    <lastmod>2024-06-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/</loc>
+    <lastmod>2024-06-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/token-validation/</loc>
+    <lastmod>2024-06-05T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/zero-trust-architecture/</loc>
+    <lastmod>2024-06-05T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://nttdata-dach.github.io/authors/</loc>
     <lastmod>2024-06-03T00:00:00+00:00</lastmod>
   </url><url>
@@ -27,12 +72,6 @@
     <lastmod>2024-06-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/platform-engineering/</loc>
-    <lastmod>2024-06-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/series/</loc>
-    <lastmod>2024-06-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/</loc>
     <lastmod>2024-06-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/series/transitioning-from-prometheus-to-opentelemetry-a-journey-of-a-clusters-metrics-evolution/</loc>
@@ -83,15 +122,6 @@
     <loc>https://nttdata-dach.github.io/tags/client-certificate/</loc>
     <lastmod>2024-03-27T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/tags/gateway/</loc>
-    <lastmod>2024-03-27T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/kong/</loc>
-    <lastmod>2024-03-27T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/series/kong-the-gateway-without-limitations/</loc>
-    <lastmod>2024-03-27T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://nttdata-dach.github.io/tags/kong-plugin/</loc>
     <lastmod>2024-03-27T00:00:00+00:00</lastmod>
   </url><url>
@@ -139,9 +169,6 @@
   </url><url>
     <loc>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-01-intro/</loc>
     <lastmod>2024-01-19T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/jwt/</loc>
-    <lastmod>2023-12-21T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/obo/</loc>
     <lastmod>2023-12-21T00:00:00+00:00</lastmod>
@@ -206,13 +233,7 @@
     <loc>https://nttdata-dach.github.io/tags/api-developer-portal/</loc>
     <lastmod>2023-10-25T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/tags/api-gateway/</loc>
-    <lastmod>2023-10-25T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://nttdata-dach.github.io/tags/api-management/</loc>
-    <lastmod>2023-10-25T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/api-security/</loc>
     <lastmod>2023-10-25T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/posts/as-konglogchunking/</loc>
