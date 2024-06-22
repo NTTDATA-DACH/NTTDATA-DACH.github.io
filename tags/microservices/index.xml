@@ -16,5 +16,12 @@
       <guid>https://nttdata-dach.github.io/posts/as-konggateway-tokenvalidation/</guid>
       <description>This time we discuss token validation in the context of the Kong Gateway, covering topics such as OpenID Connect, OAuth 2.0, and Zero-Trust Architecture. The article explains the different types of tokens, the benefits of offline validation, and the various Kong plugins that support token validation. The article notes that architectural trade-offs may be required regarding revocation and fine-grained authorization validation, and concludes that Kong Gateway offers ample options for token validation, including the ability to write custom plugins.</description>
     </item>
+    <item>
+      <title>Hazelcast Metrics via Prometheus</title>
+      <link>https://nttdata-dach.github.io/posts/rd-hazelcastmetricsviaprometheus/</link>
+      <pubDate>Sun, 14 Apr 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/rd-hazelcastmetricsviaprometheus/</guid>
+      <description>A step-by-step guide on how to collect Hazelcast metrics via Prometheus. The tutorial is aimed at those who are running a customized Hazelcast microservice, rather than the full-blown zip-file/dockers. The guide covers all the necessary steps, from adding the Prometheus dependency to Java code configuration, updating application YAML and Dockerfile, to updating the ServiceMonitor. The article also offers helpful hints and sources for further reading.</description>
+    </item>
   </channel>
 </rss>

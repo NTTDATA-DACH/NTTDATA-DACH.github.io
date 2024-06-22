@@ -38,6 +38,13 @@
       <description>In this article we discuss the challenges of storing vast amounts of data to become a value-driven organization and introduce data mesh, an innovative technology that addresses these challenges. We outline the four principles of data mesh and provide a step-by-step framework for implementing the architecture. The article also gives an example of data mesh implementation using serverless tools on AWS and emphasizes that the selection between data mesh and traditional data architectures depends on the specific needs, capabilities, and goals of the business.</description>
     </item>
     <item>
+      <title>Hazelcast Metrics via Prometheus</title>
+      <link>https://nttdata-dach.github.io/posts/rd-hazelcastmetricsviaprometheus/</link>
+      <pubDate>Sun, 14 Apr 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/rd-hazelcastmetricsviaprometheus/</guid>
+      <description>A step-by-step guide on how to collect Hazelcast metrics via Prometheus. The tutorial is aimed at those who are running a customized Hazelcast microservice, rather than the full-blown zip-file/dockers. The guide covers all the necessary steps, from adding the Prometheus dependency to Java code configuration, updating application YAML and Dockerfile, to updating the ServiceMonitor. The article also offers helpful hints and sources for further reading.</description>
+    </item>
+    <item>
       <title>Part 5: mTLS Header</title>
       <link>https://nttdata-dach.github.io/posts/as-konggateway-mtls_header/</link>
       <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
