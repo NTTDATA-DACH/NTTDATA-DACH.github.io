@@ -140,21 +140,22 @@
 <p>The <a href="https://datatracker.ietf.org/doc/html/rfc6125">IETF RFC 6125 specification document</a> defines a standard for validating the identities in secure communication protocols. According to RFC 6125, the SAN is the recommended field to extract, but if the <code>SAN</code> field of type <code>DNSName</code> is missing, the <code>CN</code> (subject common name) has to suffice.</p>
 <blockquote>
 	… If a subjectAltName extension of type dNSName is present, that MUST be used as the identity.  Otherwise, the (most specific) Common Name field in the Subject field of the certificate MUST be used.  Although the use of the Common Name is existing practice, it is deprecated and Certification Authorities are encouraged to use the <code>dNSName</code> instead.
-    
     </br>
     <div id="reference">
 		<cite title="Source: RFC 6125, Appendix B, HTTP">
+        - 
+            RFC 6125, Appendix B, HTTP 
+             in 
+          
+          
             
-                - RFC 6125, Appendix B, HTTP 
-                 in 
-                  
-                    <a href="https://datatracker.ietf.org/doc/html/rfc6125#appendix-B.2" target="_blank" rel="noopener noreferrer">
-                    Representation and Verification of Domain-Based Application Service</a>
-                  
-                
+              <a href="https://datatracker.ietf.org/doc/html/rfc6125#appendix-B.2" target="_blank" rel="noopener noreferrer">
+              Representation and Verification of Domain-Based Application Service</a>
+            
+          
+          
 		</cite>
     </p>
-    
 </blockquote>
 <p>Within the SAN extension, each entry can be tagged with a specific type to indicate the type of information it contains. If the SAN has the DNS name tagging (OID 2.5.29.17.2), it must be used for identity identification according to the specification. No tagging means implicit DNS name tagging.</p>
 <p>By the way, the <code>mTLS-auth</code> plugin follows these recommendations of the standard specification:</p>

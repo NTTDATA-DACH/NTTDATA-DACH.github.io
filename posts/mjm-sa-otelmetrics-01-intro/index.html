@@ -143,7 +143,7 @@
 
 <picture style="display: contents;"
      
-    id="[206 63 64 311 174 181]"
+    id="[263 28 336 469 348 86]"
     onclick="openModal(this.id)"
      >
     
@@ -173,21 +173,22 @@
 <p>Distributed systems and observability have been a thing before Kubernetes and CNCF existed. In 2010, Google published a paper about <em>Dapper</em>, a tracing solution. In 2012, Twitter followed with publishing <em>Zipkin</em>, yet another distributed tracing solution. Kubernetes appeared 2014, Jaeger (guess what: distributed tracing) was introduced by Uber in 2015. That same year, Ben Sigelman, the founder of Lightstep, published <a href="https://medium.com/opentracing/towards-turnkey-distributed-tracing-5f4297d1736">a blog post, now also known as the OpenTracing manifesto</a>. He postulates that instrumenting code is broken because it always comes with a vendor lock-in (i.e. the software defining how tracing works).</p>
 <blockquote>
 	And there’s the rub: It is not reasonable to ask all OSS services and all OSS packages and all application-specific code to use a single tracing vendor; yet, if they don’t share a mechanism for trace description and propagation, the causal chain is broken and the traces are truncated, often severely. We need a single, standard mechanism to describe the behavior of our systems.
-    
     </br>
     <div id="reference">
 		<cite title="Source: Ben Sigelman">
+        - 
+            Ben Sigelman 
+             in 
+          
+          
             
-                - Ben Sigelman 
-                 in 
-                  
-                    <a href="https://medium.com/opentracing/towards-turnkey-distributed-tracing-5f4297d1736" target="_blank" rel="noopener noreferrer">
-                    Towards Turnkey Distributed Tracing</a>
-                  
-                
+              <a href="https://medium.com/opentracing/towards-turnkey-distributed-tracing-5f4297d1736" target="_blank" rel="noopener noreferrer">
+              Towards Turnkey Distributed Tracing</a>
+            
+          
+          
 		</cite>
     </p>
-    
 </blockquote>
 <p>Since you typically want to trace not only your very own software but also its auxiliary applications in a stack, it&rsquo;s critical that all these applications support exactly that one tracing vendor you chose. Thus, these open-source systems would have to support numerous different vendors which is just not realistic. So, talking about specific vendors is not good and the overall tracing has to be changed to a vendor-neutral approach.</p>
 <p>This post was published right after the acceptance of his project <em>OpenTracing</em> as CNCF&rsquo;s 3rd hosted project in 2015. Another Google turn: <em>OpenCensus</em> was released in 2017. It consisted of SDKs targeting not only traces but also metrics.</p>
@@ -292,12 +293,12 @@
                     
                     
                     
-                    <li><a class="related-link" href="/posts/rd-hazelcastmetricsviaprometheus/">Hazelcast Metrics via Prometheus</a></li>
-                    
-                    
-                    
-                    
                     <li><a class="related-link" href="/posts/sk-secretshandlinginkubernetes/">Secrets Handling in Kubernetes</a></li>
+                    
+                    
+                    
+                    
+                    <li><a class="related-link" href="/posts/ak-buildingrunningflutteronaws/">Building and running Flutter mobile applications for Android on AWS Device Farm</a></li>
                     
                     
                 </ul>

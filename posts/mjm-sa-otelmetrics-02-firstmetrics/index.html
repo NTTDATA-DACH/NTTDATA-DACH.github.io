@@ -110,7 +110,7 @@
 
 <picture style="display: contents;"
      
-    id="[296 47 325 145 212 448]"
+    id="[176 368 449 326 3 417]"
     onclick="openModal(this.id)"
      >
     
@@ -177,7 +177,7 @@
 
 <picture style="display: contents;"
      
-    id="[245 354 68 7 73 415]"
+    id="[169 447 245 364 306 140]"
     onclick="openModal(this.id)"
      >
     
@@ -209,21 +209,22 @@
 <li>Discovery of Prometheus Custom Resources (ServiceMonitor and PodMonitor)</li>
 <li>Even distribution of Prometheus targets among a pool of Collectors</li>
 </ul>
-    
     </br>
     <div id="reference">
 		<cite title="Source: OpenTelemetry Authors">
+        - 
+            OpenTelemetry Authors 
+             in 
+          
+          
             
-                - OpenTelemetry Authors 
-                 in 
-                  
-                    <a href="https://opentelemetry.io/docs/kubernetes/operator/target-allocator/" target="_blank" rel="noopener noreferrer">
-                    Documentation: Target Allocator</a>
-                  
-                
+              <a href="https://opentelemetry.io/docs/kubernetes/operator/target-allocator/" target="_blank" rel="noopener noreferrer">
+              Documentation: Target Allocator</a>
+            
+          
+          
 		</cite>
     </p>
-    
 </blockquote>
 <p>The Target Allocator is responsible for discovering scrape targets and offering them as a scrape configuration via an HTTP endpoint. The collector itself periodically polls the target allocator for available so-called jobs. This mechanism has been a feature of Prometheus, known as <a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/#http_sd_config"><code>http_sd_config</code></a>. OpenTelemetry&rsquo;s Prometheus receiver simply elevates this option as a critical step in its scraping process.</p>
 <h2 id="implementation-details">Implementation details</h2>
@@ -313,21 +314,22 @@ For more information on installing the OpenTelemetry Operator, see the <a href="
 <p>We will start by using <a href="https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor/batchprocessor">Batch Processor</a> to buffer metrics for traffic optimization. We also want to add the name of the collector itself as a label. We can do this with <a href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/attributesprocessor">attributes Processor</a>. When working with the Batch Processor, please note this recommendation about processor ordering:
 <blockquote>
 	It is highly recommended to configure the batch processor on every collector. The batch processor should be defined in the pipeline after the <code>memory_limiter</code> as well as any sampling processors. This is because batching should happen after any data drops such as sampling.
-    
     </br>
     <div id="reference">
 		<cite title="Source: OpenTelemetry Authors">
+        - 
+            OpenTelemetry Authors 
+             in 
+          
+          
             
-                - OpenTelemetry Authors 
-                 in 
-                  
-                    <a href="https://github.com/open-telemetry/opentelemetry-collector/blob/b8690b6c3b01594522776ab2c9baa64338c7b9a1/processor/batchprocessor/README.md" target="_blank" rel="noopener noreferrer">
-                    README: Batch Processor</a>
-                  
-                
+              <a href="https://github.com/open-telemetry/opentelemetry-collector/blob/b8690b6c3b01594522776ab2c9baa64338c7b9a1/processor/batchprocessor/README.md" target="_blank" rel="noopener noreferrer">
+              README: Batch Processor</a>
+            
+          
+          
 		</cite>
     </p>
-    
 </blockquote></p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">spec</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
@@ -511,12 +513,12 @@ For more information on installing the OpenTelemetry Operator, see the <a href="
                     
                     
                     
-                    <li><a class="related-link" href="/posts/rd-hazelcastmetricsviaprometheus/">Hazelcast Metrics via Prometheus</a></li>
-                    
-                    
-                    
-                    
                     <li><a class="related-link" href="/posts/sk-secretshandlinginkubernetes/">Secrets Handling in Kubernetes</a></li>
+                    
+                    
+                    
+                    
+                    <li><a class="related-link" href="/posts/ak-buildingrunningflutteronaws/">Building and running Flutter mobile applications for Android on AWS Device Farm</a></li>
                     
                     
                 </ul>

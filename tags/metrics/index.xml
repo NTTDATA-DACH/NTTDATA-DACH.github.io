@@ -17,13 +17,6 @@
       <description>Having explained the technical implementation of the monitoring stack in our latest blog post, this article focuses on replacing Prometheus with OpenTelemetry Collector to decouple scraping from the storage and query mechanisms. The OpenTelemetry Collector uses various building blocks to construct the telemetry pipeline and requires enabling of the target allocator. Guiding you through this process we provide various practical tips, including processor ordering and horizontal autoscaling.&amp;quot;</description>
     </item>
     <item>
-      <title>Hazelcast Metrics via Prometheus</title>
-      <link>https://nttdata-dach.github.io/posts/rd-hazelcastmetricsviaprometheus/</link>
-      <pubDate>Sun, 14 Apr 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/posts/rd-hazelcastmetricsviaprometheus/</guid>
-      <description>A step-by-step guide on how to collect Hazelcast metrics via Prometheus. The tutorial is aimed at those who are running a customized Hazelcast microservice, rather than the full-blown zip-file/dockers. The guide covers all the necessary steps, from adding the Prometheus dependency to Java code configuration, updating application YAML and Dockerfile, to updating the ServiceMonitor. The article also offers helpful hints and sources for further reading.</description>
-    </item>
-    <item>
       <title>Part 1: A Brief Introduction</title>
       <link>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-01-intro/</link>
       <pubDate>Fri, 19 Jan 2024 00:00:00 +0000</pubDate>
