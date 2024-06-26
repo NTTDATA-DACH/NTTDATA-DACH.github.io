@@ -38,10 +38,10 @@
       
       <guid>https://nttdata-dach.github.io/posts/as-konggateway-tokenvalidation/</guid>
       <description>This time we discuss token validation in the context of the Kong Gateway, covering topics such as OpenID Connect, OAuth 2.0, and Zero-Trust Architecture. The article explains the different types of tokens, the benefits of offline validation, and the various Kong plugins that support token validation. The article notes that architectural trade-offs may be required regarding revocation and fine-grained authorization validation, and concludes that Kong Gateway offers ample options for token validation, including the ability to write custom plugins.</description>
-      <image>
-          <url>https://nttdata-dach.github.io//posts/img/AS-KongGateway-TokenValidation/title-image.jpg</url>
-          
-      </image>
+      
+      <media:content type="image/*" medium="image" width="500" height="500"
+                url="https://nttdata-dach.github.io//posts/img/AS-KongGateway-TokenValidation/title-image.jpg" />
+        
     </item>
     
     
@@ -77,10 +77,10 @@
       
       <guid>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-02-firstmetrics/</guid>
       <description>Having explained the technical implementation of the monitoring stack in our latest blog post, this article focuses on replacing Prometheus with OpenTelemetry Collector to decouple scraping from the storage and query mechanisms. The OpenTelemetry Collector uses various building blocks to construct the telemetry pipeline and requires enabling of the target allocator. Guiding you through this process we provide various practical tips, including processor ordering and horizontal autoscaling.&amp;quot;</description>
-      <image>
-          <url>https://nttdata-dach.github.io//posts/img/MJM-SA-OtelMetrics-02-FirstMetrics/title-image.jpg</url>
-          
-      </image>
+      
+      <media:content type="image/*" medium="image" width="500" height="500"
+                url="https://nttdata-dach.github.io//posts/img/MJM-SA-OtelMetrics-02-FirstMetrics/title-image.jpg" />
+        
     </item>
     
     
@@ -102,10 +102,10 @@
       
       <guid>https://nttdata-dach.github.io/posts/ss-immersivetechnologies-01-basics/</guid>
       <description>Immersive technologies, alternatively referred to as XR technologies, possess the capability to either augment or replace the physical world with a digitally simulated one. This article provides an overview by describing the three categories of immersive technologies, including relevant background information, and significant use cases.</description>
-      <image>
-          <url>https://nttdata-dach.github.io//posts/img/SS-ImmersiveTechnologies-01-Basics/title-image.jpg</url>
-          
-      </image>
+      
+      <media:content type="image/*" medium="image" width="500" height="500"
+                url="https://nttdata-dach.github.io//posts/img/SS-ImmersiveTechnologies-01-Basics/title-image.jpg" />
+        
     </item>
     
     
@@ -129,10 +129,10 @@
       
       <guid>https://nttdata-dach.github.io/posts/nf-en-datameshasanelementofdatastrategy/</guid>
       <description>In this article we discuss the challenges of storing vast amounts of data to become a value-driven organization and introduce data mesh, an innovative technology that addresses these challenges. We outline the four principles of data mesh and provide a step-by-step framework for implementing the architecture. The article also gives an example of data mesh implementation using serverless tools on AWS and emphasizes that the selection between data mesh and traditional data architectures depends on the specific needs, capabilities, and goals of the business.</description>
-      <image>
-          <url>https://nttdata-dach.github.io//posts/img/NF-EN-DataMeshAsAnElementOfDataStrategy/title-image.jpg</url>
-          
-      </image>
+      
+      <media:content type="image/*" medium="image" width="500" height="500"
+                url="https://nttdata-dach.github.io//posts/img/NF-EN-DataMeshAsAnElementOfDataStrategy/title-image.jpg" />
+        
     </item>
     
     
@@ -160,10 +160,10 @@
       
       <guid>https://nttdata-dach.github.io/posts/as-konggateway-mtls_header/</guid>
       <description>Mutual transport layer security (mTLS) with consumer authentication using client certificates at the Kong Gateway plays an important role in building a zero-trust architecture. But perimeter security devices that perform TLS termination, so-called TLS terminating reverse proxies (TTRP), break the automatic mapping of client certificates to Kong consumers. This blog demonstrates mTLS consumer authentication even with preceding TTRPs, without requiring TCP passthrough.</description>
-      <image>
-          <url>https://nttdata-dach.github.io//posts/img/AS-KongGateway-mTLS_Header/title-image.jpg</url>
-          
-      </image>
+      
+      <media:content type="image/*" medium="image" width="500" height="500"
+                url="https://nttdata-dach.github.io//posts/img/AS-KongGateway-mTLS_Header/title-image.jpg" />
+        
     </item>
     
     
@@ -187,10 +187,10 @@
       
       <guid>https://nttdata-dach.github.io/posts/as-konggateway-saml2bearer/</guid>
       <description>My last blog provided a solution for implementing an OAuth 2.0-based On-Behalf-Of (delegation) grant flow. This time it’s about implementing a Security Assertion Markup Language (SAML) 2.0 Profile for OAuth 2.0 Client Authentication and Authorization Grants. This flow allows OAuth 2.0 clients to obtain access tokens by presenting SAML 2.0 assertions as a form of authentication. This somewhat extended grant flow expands the scope for exchanging authentication and authorization data between different parties with seamless management, all achieved through the API Gateway.</description>
-      <image>
-          <url>https://nttdata-dach.github.io//posts/img/AS-KongGateway-Saml2Bearer/title-image.jpg</url>
-          
-      </image>
+      
+      <media:content type="image/*" medium="image" width="500" height="500"
+                url="https://nttdata-dach.github.io//posts/img/AS-KongGateway-Saml2Bearer/title-image.jpg" />
+        
     </item>
     
     
@@ -208,10 +208,10 @@
       
       <guid>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-01-intro/</guid>
       <description>With this blog post, we kick off a series on evolving our Kubernetes metrics stack. Our journey to replace Prometheus with an OpenTelemetry solution begins with an introduction OpenTelemetry and why we see it as a valid alternative to our current implementation. After explaining the main parts of the OpenTelemetry project and briefly reviewing its history, we discuss the pros and cons. After reading this, you will be able to follow along our hands-on and deep-tech posts on how we optimize our metrics stack.</description>
-      <image>
-          <url>https://nttdata-dach.github.io//posts/img/MJM-SA-OtelMetrics-01-Intro/title-image.jpg</url>
-          
-      </image>
+      
+      <media:content type="image/*" medium="image" width="500" height="500"
+                url="https://nttdata-dach.github.io//posts/img/MJM-SA-OtelMetrics-01-Intro/title-image.jpg" />
+        
     </item>
     
     
@@ -227,10 +227,10 @@
       
       <guid>https://nttdata-dach.github.io/posts/as-konggateway-onbehalfof/</guid>
       <description>In the last blog, I provided a solution on how to overcome the character limit when logging. This time, I would like to show how to implement an OAuth 2.0-based On-Behalf-Of (delegation) grant flow. Such complex token orchestration tasks can be easily handled on the API gateway while ensuring the highest security standards which even make zero-trust architectures possible in the first place.</description>
-      <image>
-          <url>https://nttdata-dach.github.io//posts/img/AS-KongGateway-OnBehalfOf/title-image.jpg</url>
-          
-      </image>
+      
+      <media:content type="image/*" medium="image" width="500" height="500"
+                url="https://nttdata-dach.github.io//posts/img/AS-KongGateway-OnBehalfOf/title-image.jpg" />
+        
     </item>
     
     
@@ -262,10 +262,10 @@
       
       <guid>https://nttdata-dach.github.io/posts/sk-secretshandlinginkubernetes/</guid>
       <description>Committing plain .yaml files which defines Kubernetes secrets definitions to a source code management system is not very secure. This article explains why and shows two better alternatives.</description>
-      <image>
-          <url>https://nttdata-dach.github.io//posts/img/SK-SecretsHandlingInKubernetes/title-image.jpg</url>
-          
-      </image>
+      
+      <media:content type="image/*" medium="image" width="500" height="500"
+                url="https://nttdata-dach.github.io//posts/img/SK-SecretsHandlingInKubernetes/title-image.jpg" />
+        
     </item>
     
     
@@ -283,10 +283,10 @@
       
       <guid>https://nttdata-dach.github.io/posts/ak-buildingrunningflutteronaws/</guid>
       <description>This article will give you an overview on how to build and run a Flutter cross-platform mobile application for the Android OS platform in the cloud. We will cover all the steps from the basic app itself to the integration with Appium, and ultimately the deployment and testing on several devices in the AWS Device Farm.</description>
-      <image>
-          <url>https://nttdata-dach.github.io//posts/img/AK-BuildingRunningFlutterOnAWS/title-image.jpg</url>
-          
-      </image>
+      
+      <media:content type="image/*" medium="image" width="500" height="500"
+                url="https://nttdata-dach.github.io//posts/img/AK-BuildingRunningFlutterOnAWS/title-image.jpg" />
+        
     </item>
     
     
@@ -306,10 +306,10 @@
       
       <guid>https://nttdata-dach.github.io/posts/as-konglogchunking/</guid>
       <description>In the last blog, I briefly introduced Kong as a sophisticated API gateway product. This time, I will discuss a problem related to logging message size limitation and offer a solution. This problem significantly limits root cause analysis and ultimately solution development.</description>
-      <image>
-          <url>https://nttdata-dach.github.io//posts/img/AS-KongLogChunking/title-image.jpg</url>
-          
-      </image>
+      
+      <media:content type="image/*" medium="image" width="500" height="500"
+                url="https://nttdata-dach.github.io//posts/img/AS-KongLogChunking/title-image.jpg" />
+        
     </item>
     
     
@@ -337,10 +337,10 @@
       
       <guid>https://nttdata-dach.github.io/posts/mjm-renovateautomaticpullrequest/</guid>
       <description>See how we use the dependency update tool Renovate to distribute helm charts with ArgoCD applications in a GitOps fashion. This article shows how to set up Renovate for several kubernetes clusters with a centralized configuration as a GitHub action.</description>
-      <image>
-          <url>https://nttdata-dach.github.io//posts/img/MJM-RenovateAutomaticPullRequest/title-image.jpg</url>
-          
-      </image>
+      
+      <media:content type="image/*" medium="image" width="500" height="500"
+                url="https://nttdata-dach.github.io//posts/img/MJM-RenovateAutomaticPullRequest/title-image.jpg" />
+        
     </item>
     
     
@@ -362,10 +362,10 @@
       
       <guid>https://nttdata-dach.github.io/posts/ns-controlplaneoperatedinfrastructure_1/</guid>
       <description>This tech blog article introduces Crossplane, an open-source Kubernetes add-on that extends the capabilities of infrastructure management by leveraging Kubernetes as a control plane. Crossplane uses Kubernetes&amp;rsquo; extensible API design and Custom Resource Definitions (CRDs) to manage not only services and applications but also cloud infrastructure. The article provides step-by-step instructions on how to get started with Crossplane and provision your first resources in the cloud using Kubernetes as a control plane.</description>
-      <image>
-          <url>https://nttdata-dach.github.io//posts/img/NS-ControlPlaneOperatedInfrastructure/title-image.jpg</url>
-          
-      </image>
+      
+      <media:content type="image/*" medium="image" width="500" height="500"
+                url="https://nttdata-dach.github.io//posts/img/NS-ControlPlaneOperatedInfrastructure/title-image.jpg" />
+        
     </item>
     
     
@@ -377,10 +377,10 @@
       
       <guid>https://nttdata-dach.github.io/posts/as-kongproductintroduction/</guid>
       <description>Kong Gateway is a lightweight, fast, and flexible API Gateway. It acts as an intermediary between API providers and consumers, enabling them to communicate based on policies. It also provides observability features, allowing to track API usage and performance. Overall it is a convincing and outstanding product which is briefly introduced in the following blog.</description>
-      <image>
-          <url>https://nttdata-dach.github.io//posts/img/AS-KongProductIntroduction/title-image.jpg</url>
-          
-      </image>
+      
+      <media:content type="image/*" medium="image" width="500" height="500"
+                url="https://nttdata-dach.github.io//posts/img/AS-KongProductIntroduction/title-image.jpg" />
+        
     </item>
     
     
@@ -400,10 +400,10 @@
       
       <guid>https://nttdata-dach.github.io/posts/ms-newrandomgeneratorsinjava17/</guid>
       <description>Java 17 introduced new random number generators. These provide longer cycles, improved statistical uniform distribution, improved threading support, and Streams API integration. This article provides a short introduction to random number generators and an overview of the improvements made in Java 17.</description>
-      <image>
-          <url>https://nttdata-dach.github.io//posts/img/MS-NewRandomGeneratorInJava17/title-image.jpg</url>
-          
-      </image>
+      
+      <media:content type="image/*" medium="image" width="500" height="500"
+                url="https://nttdata-dach.github.io//posts/img/MS-NewRandomGeneratorInJava17/title-image.jpg" />
+        
     </item>
     
     
