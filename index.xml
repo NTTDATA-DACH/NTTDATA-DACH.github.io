@@ -32,7 +32,7 @@
     
     
     <item>
-      <title>Part 6: Token Validation</title>
+      <title>Kong - The Gateway without Limitations - Part 6: Token Validation</title>
       <link>https://nttdata-dach.github.io/posts/as-konggateway-tokenvalidation/</link>
       <pubDate>Thu, 06 Jun 2024 00:00:00 +0000</pubDate>
       
@@ -71,7 +71,7 @@
     
     
     <item>
-      <title>Part 2: Scraping The First Metrics</title>
+      <title>Transitioning from Prometheus to OpenTelemetry - A Journey of a Cluster&#39;s Metrics Evolution - Part 2: Scraping The First Metrics</title>
       <link>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-02-firstmetrics/</link>
       <pubDate>Mon, 03 Jun 2024 00:00:00 +0000</pubDate>
       
@@ -96,7 +96,7 @@
     
     
     <item>
-      <title>Part 1: Introduction to immersive technologies</title>
+      <title>Immersive Technologies - Part 1: Introduction to immersive technologies</title>
       <link>https://nttdata-dach.github.io/posts/ss-immersivetechnologies-01-basics/</link>
       <pubDate>Wed, 15 May 2024 00:00:00 +0000</pubDate>
       
@@ -154,7 +154,7 @@
     
     
     <item>
-      <title>Part 5: mTLS Header</title>
+      <title>Kong - The Gateway without Limitations - Part 5: mTLS Header</title>
       <link>https://nttdata-dach.github.io/posts/as-konggateway-mtls_header/</link>
       <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
       
@@ -181,7 +181,7 @@
     
     
     <item>
-      <title>Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0</title>
+      <title>Kong - The Gateway without Limitations - Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0</title>
       <link>https://nttdata-dach.github.io/posts/as-konggateway-saml2bearer/</link>
       <pubDate>Tue, 20 Feb 2024 00:00:00 +0000</pubDate>
       
@@ -202,7 +202,7 @@
     
     
     <item>
-      <title>Part 1: A Brief Introduction</title>
+      <title>Transitioning from Prometheus to OpenTelemetry - A Journey of a Cluster&#39;s Metrics Evolution - Part 1: A Brief Introduction</title>
       <link>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-01-intro/</link>
       <pubDate>Fri, 19 Jan 2024 00:00:00 +0000</pubDate>
       
@@ -221,7 +221,7 @@
     
     
     <item>
-      <title>Part 3: Token Exchange On-Behalf-Of</title>
+      <title>Kong - The Gateway without Limitations - Part 3: Token Exchange On-Behalf-Of</title>
       <link>https://nttdata-dach.github.io/posts/as-konggateway-onbehalfof/</link>
       <pubDate>Thu, 21 Dec 2023 00:00:00 +0000</pubDate>
       
@@ -300,7 +300,7 @@
     
     
     <item>
-      <title>Part 2: Log Chunking</title>
+      <title>Kong - The Gateway without Limitations - Part 2: Log Chunking</title>
       <link>https://nttdata-dach.github.io/posts/as-konglogchunking/</link>
       <pubDate>Wed, 25 Oct 2023 00:00:00 +0000</pubDate>
       
@@ -356,7 +356,7 @@
     
     
     <item>
-      <title>Part 1: Introduction to Crossplane</title>
+      <title>CONTROL PLANE OPERATED INFRASTRUCTURE - Part 1: Introduction to Crossplane</title>
       <link>https://nttdata-dach.github.io/posts/ns-controlplaneoperatedinfrastructure_1/</link>
       <pubDate>Mon, 31 Jul 2023 00:00:00 +0000</pubDate>
       
@@ -371,7 +371,7 @@
     
     
     <item>
-      <title>Part 1: Brief Product Introduction</title>
+      <title>Kong - The Gateway without Limitations - Part 1: Brief Product Introduction</title>
       <link>https://nttdata-dach.github.io/posts/as-kongproductintroduction/</link>
       <pubDate>Mon, 15 May 2023 00:00:00 +0000</pubDate>
       
