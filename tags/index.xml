@@ -7,13 +7,69 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Thu, 06 Jun 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 03 Jul 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title> RFC 9068 </title>
+      <link>https://nttdata-dach.github.io/tags/-rfc-9068-/</link>
+      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/-rfc-9068-/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>“JWT Signer”</title>
+      <link>https://nttdata-dach.github.io/tags/jwt-signer/</link>
+      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/jwt-signer/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>“OpenID Connect”</title>
+      <link>https://nttdata-dach.github.io/tags/openid-connect/</link>
+      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/openid-connect/</guid>
+      <description></description>
+    </item>
     <item>
       <title>API Gateway</title>
       <link>https://nttdata-dach.github.io/tags/api-gateway/</link>
-      <pubDate>Thu, 06 Jun 2024 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/api-gateway/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Gateway</title>
+      <link>https://nttdata-dach.github.io/tags/gateway/</link>
+      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/gateway/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>JWT</title>
+      <link>https://nttdata-dach.github.io/tags/jwt/</link>
+      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/jwt/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Kong</title>
+      <link>https://nttdata-dach.github.io/tags/kong/</link>
+      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/kong/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Token Cloning</title>
+      <link>https://nttdata-dach.github.io/tags/token-cloning/</link>
+      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/token-cloning/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Zero-Trust Architecture</title>
+      <link>https://nttdata-dach.github.io/tags/zero-trust-architecture/</link>
+      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/zero-trust-architecture/</guid>
       <description></description>
     </item>
     <item>
@@ -21,27 +77,6 @@
       <link>https://nttdata-dach.github.io/tags/api-security/</link>
       <pubDate>Thu, 06 Jun 2024 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/api-security/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Gateway</title>
-      <link>https://nttdata-dach.github.io/tags/gateway/</link>
-      <pubDate>Thu, 06 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/gateway/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>JWT</title>
-      <link>https://nttdata-dach.github.io/tags/jwt/</link>
-      <pubDate>Thu, 06 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/jwt/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Kong</title>
-      <link>https://nttdata-dach.github.io/tags/kong/</link>
-      <pubDate>Thu, 06 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/kong/</guid>
       <description></description>
     </item>
     <item>
@@ -77,13 +112,6 @@
       <link>https://nttdata-dach.github.io/tags/token-validation/</link>
       <pubDate>Thu, 06 Jun 2024 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/token-validation/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Zero-Trust Architecture</title>
-      <link>https://nttdata-dach.github.io/tags/zero-trust-architecture/</link>
-      <pubDate>Thu, 06 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/zero-trust-architecture/</guid>
       <description></description>
     </item>
     <item>

@@ -29,6 +29,35 @@
     
     
     
+    <item>
+      <title>Kong - The Gateway without Limitations - Part 7: Token Cloning</title>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-tokencloning/</link>
+      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/AS-KongGateway-TokenCloning/title-image.jpg</guid>
+      <description>Building on the previous post, we discuss an architectural pattern for token handling called &amp;rsquo;therapeutic token cloning&amp;rsquo;, which is particularly effective in environments that use multiple identity and access management products. The pattern involves duplicating, correcting, and then re-signing access tokens to make them functional and more secure. This article details the steps involved in the token cloning process, as well as the pros and cons of this approach.</description>
+
+      
+      
+        
+    </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     <item>
@@ -43,12 +72,6 @@
       
         
     </item>
-    
-    
-    
-    
-    
-    
     
     
     
@@ -377,29 +400,6 @@
       
       <guid>https://nttdata-dach.github.io//posts/img/AS-KongProductIntroduction/title-image.jpg</guid>
       <description>Kong Gateway is a lightweight, fast, and flexible API Gateway. It acts as an intermediary between API providers and consumers, enabling them to communicate based on policies. It also provides observability features, allowing to track API usage and performance. Overall it is a convincing and outstanding product which is briefly introduced in the following blog.</description>
-
-      
-      
-        
-    </item>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <item>
-      <title>New Random Generators in Java 17</title>
-      <link>https://nttdata-dach.github.io/posts/ms-newrandomgeneratorsinjava17/</link>
-      <pubDate>Thu, 13 Apr 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://nttdata-dach.github.io//posts/img/MS-NewRandomGeneratorInJava17/title-image.jpg</guid>
-      <description>Java 17 introduced new random number generators. These provide longer cycles, improved statistical uniform distribution, improved threading support, and Streams API integration. This article provides a short introduction to random number generators and an overview of the improvements made in Java 17.</description>
 
       
       

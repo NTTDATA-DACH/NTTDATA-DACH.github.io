@@ -1,0 +1,295 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Part 7: Token Cloning  </title>
+  <meta charset="utf-8"/> 
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Kong - The Gateway without Limitations - Part 7: Token Cloning"/>
+  
+  <meta property="article:author" content="[Alexander Suchier]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/AS-KongGateway-TokenCloning/title-image.jpg"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/as-konggateway-tokencloning/"/>
+  <meta property="og:description" content="Building on the previous post, we discuss an architectural pattern for token handling called &rsquo;therapeutic token cloning&rsquo;, which is particularly effective in environments that use multiple identity and access management products. The pattern involves duplicating, correcting, and then re-signing access tokens to make them functional and more secure. This article details the steps involved in the token cloning process, as well as the pros and cons of this approach."/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">03.07.2024
+        
+         - Alexander Suchier - <i class="fa-solid fa-book-open"></i> 10 min read
+        
+        </span>
+        Part 7: Token Cloning
+        
+        
+        <a id="series-link" href="/series/kong-the-gateway-without-limitations"><span class="subtitle">Kong - The Gateway without Limitations</span></a>
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/AS-KongGateway-TokenCloning/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <p>In our previous <a href="https://nttdata-dach.github.io/posts/as-konggateway-tokenvalidation/" title="Part 6: Token Validation">blog post</a>, we discussed the topic of token validation in the context of the Zero-Trust Architecture (ZTA) principle &rsquo;never trust, always verify&rsquo;. This time, I would like to introduce an architecture pattern for token handling that is particularly effective in environments that use multiple <a href="https://www.csoonline.com/article/518296/what-is-iam-identity-and-access-management-explained.html">identity and access management (IAM)</a> products. With this pattern, the <a href="https://nttdata-dach.github.io/posts/as-kongproductintroduction/" title="Part 1: Brief Product Introduction">API gateway</a> acts as a benign token cloner, repairs claim defects and leads service provider to believe it is a token-issuing <a href="https://developer.okta.com/docs/concepts/auth-servers/#what-is-an-authorization-server">authorization server</a>. This pattern has several advantages, which I will explain in detail.</p>
+<h1 id="overview">Overview</h1>
+<p>This blog post is about token cloning on the Kong Gateway (see our introductory article <a href="https://nttdata-dach.github.io/posts/as-kongproductintroduction/" title="Part 1: Brief Product Introduction">here</a>), which is also conceivable on other API gateways. More precisely, it is an architectural gateway pattern that could be referred to as ‘therapeutic token cloning’. &lsquo;Therapeutic token cloning&rsquo; is an apt metaphor to describe the process of copying access tokens, making necessary corrections, and thereafter re-signing them. This metaphor is based on the advanced concept of therapeutic cloning from the fields of biomedicine and genetic engineering, where clones are created to correct genetic defects. Similarly, therapeutic token cloning at the gateway involves duplicating, correcting, and then re-signing access tokens to make them functional and (more) secure. Fortunately, we can ignore the ethical and legal discussions about cloning in our consideration.</p>
+<aside 
+ data-content="Note" 
+
+><br/>
+    Identity and access management (IAM), identity provider (IdP) and authorization server are interrelated components that work together to ensure security through the management of identities and access rights. IAM serves as an overarching framework for managing user identities and controlling their access to various resources. The identity provider (IdP) is a specialized service within the IAM framework responsible for authenticating users. The authorization server, also known as the access management service, is another essential component of IAM. It works in conjunction with the IdP to authorize user access to resources based on their authenticated identity. The terms are often confused with each other or used interchangeably. Some platforms and products combine the various functionalities into one product, such as Microsoft <a href="https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id#overview">Entry ID</a>, <a href="https://www.okta.com/">Okta</a> or <a href="https://www.keycloak.org/">Keycloak</a>, an open-source IAM solution under the stewardship of Red Hat.
+</aside>
+<p><strong>Step 1:</strong> At the beginning of the gateway processing pipeline, token validation of the incoming access token takes place. The insights from our previous <a href="https://nttdata-dach.github.io/posts/as-konggateway-tokenvalidation/" title="Part 6: Token Validation">blog post</a> on fast token validation and the described Kong plugins will help us identify an optimal validation solution. The Kong Enterprise <a href="https://docs.konghq.com/hub/kong-inc/openid-connect/">openid-connect plugin</a> offers good validation options as it can validate the issuer (parameter <code>issuers_allowed</code>), the expiration time claim (<code>exp</code>) and the signature of the token issuer. As described in the previous blog, in addition to these basic verifications, the plugin offers further options for registered, public and even private claim validation. Additionally, it can handle <a href="https://auth0.com/docs/secure/tokens/json-web-tokens/json-web-key-sets">JSON Web Key Sets (JWKS)</a> endpoints from different IdPs whose public keys are trusted (parameter <code>extra_jwks_uris</code>). This is especially helpful in environments where access tokens originate from different IdPs.</p>
+<p><strong>Step 2:</strong> In the past, Kong&rsquo;s default options were not sufficient for my extensive token validation requirements, especially for private claims, so I turned to <a href="https://konghq.com/events/user-calls/custom-plugin-development-with-kong-gateway">custom plugins</a> for advanced validation of input tokens. It is important to note that the plugins work together, i.e. the openid-connect plugin performs the basic validations, while a subsequent custom token validation plugin checks the various claims in detail depending on the issuer and its characteristics. Using the openid-connect plugin just makes sense, especially due to its built-in signature verification functionality, including (proxy-aware) collection and caching of public keys following a “key rediscovery when needed strategy”.<br>
+As mentioned in our previous blog, I recommend to follow the <a href="https://www.rfc-editor.org/rfc/rfc9068">RFC 9068</a> standard (<a href="https://www.rfc-editor.org/rfc/rfc9068">JSON Web Token Profile for OAuth 2.0 Access Tokens</a>) and perform at least the recommended mandatory validations. The blog also mentions the <a href="https://curity.io/resources/learn/phantom-token-pattern/">phantom token pattern</a> that can be used along with the cloning pattern.</p>
+<p><strong>Step 3:</strong> If the input token is validated (not malformed, not tampered, not expired, plus any extended validations), an identical token clone is created from the input token. All existing claims are transferred to the new access token. Since it is a new token, at least the timestamp (<code>exp</code>, <code>iat</code>, <code>nbf</code>) and unique identifier (<code>jti</code>) claims are renewed in a custom plugin. It is this special custom plugin that duplicates the input access token and then applies a set of pre-defined transformations or corrections to fix any issues or inconsistencies. Two separate custom plugins, one for validation and one for transformation, work well in practice because they can be put together like a construction kit or work individually. For example, I had a requirement that the input token should be checked in all details via the validating custom plugin, but then a silent authorization via a token exchange had to take place through a client credential grant flow at the gateway. In this case I skipped the token cloning und re-signing step.<br>
+On the cloned token, all “therapeutic measures” (to use the metaphor term) can generally be taken via the custom plugin. For example, in a specific use case, it was necessary to set the subject claim (<code>sub</code>) from an aggregated custom claim within a substructure for certain input tokens. In another example, for audience claims provided by Microsoft Entra ID using Client IDs, it was necessary to perform name resolution to unique recipient names. This ensured that each principal processing the JWT could identify itself with a string value in the audience claim as is common with other IdPs.</p>
+<p><strong>Step 4:</strong> After processing the new token, it is passed to the Kong enterprise <a href="https://docs.konghq.com/hub/kong-inc/jwt-signer/">jwt-signer plugin</a> for re-signing. The plugin performs the re-signing work while also providing an endpoint for upstream services to retrieve the public key needed for the signature verification. The plugin also ensures that the signing token header information is updated together with the gateway issuer at the token payload.</p>
+<p>Here is an architectural diagram showing the described gateway pattern.</p>
+
+
+
+
+
+<picture style="display: contents;"
+     >
+    
+    <source srcset="/posts/img/AS-KongGateway-TokenCloning/token_resigning-dark.png" media="none"/>
+    
+    <img    
+        class="dynamicimage"    
+        
+        src="/posts/img/AS-KongGateway-TokenCloning/token_resigning-light.png" 
+        
+         
+        
+        
+        
+        
+        />
+    
+</picture>
+
+<script>
+    initPicture()
+</script>
+
+<p>The diagram shows the strict separation between the incoming and outgoing token processing using the token cloning approach. All claims can be retained, supplemented, or modified.</p>
+<h1 id="details">Details</h1>
+<p>As mentioned earlier, standard and custom plugins working together is beneficial for processing incoming tokens and generating outgoing tokens. This division of tasks between pairs of plugins that share the work optimizes efficiency and reduces the need for extensive programming within the custom plugins. Finally, during the fine-tuning phase, I developed custom issuer-based plugins for enhanced validation and cloning/transformation steps, using a set of Lua modules to cover the reused basic functionality. This approach ensured that the custom plugins remained compact and versatile. I assigned all these plugins to the service entity according to the type of incoming token issuer for appropriate processing.</p>
+<p>Configuring the jwt-signer plugin can be somewhat complex, so here are some details about its crucial parameters. The token to be signed is passed to the jwt-signer plugin via a request temporary field in the header. Fortunately, the JWT-signer plugin allows you to configure any header name that contains the access token to be signed (<code>access_token_request_header</code> parameter). I deliberately avoided using the standard “Authorization” header name for this purpose to avoid any conflict or confusion with the incoming access token from the consumer. If for some reason a token clone has not been created (from the predecessor custom plugin, step 3 in the diagram), the jwt-signer plugin will intentionally fail because no token header has been passed. Processing of the incoming access token is mandatory and cannot be bypassed (<code>access_token_optional: false</code>). The static private key for the jwt-signer plugin used to sign tokens comes from a nginx server block that provides a secure local endpoint for the gateway plugin (that endpoint is only available within the Kong <a href="https://kubernetes.io/docs/concepts/workloads/pods/">Pod</a> and is not exposed to the outside world). This local endpoint for private key retrieval in jwks format is created during gateway startup and assigned to the <code>access_token_keyset</code> parameter. Additionally, the token gateway issuer URL must be configured by adding it to the <code>iss</code> claim of the token (parameter <code>access_token_issuer</code>). I configured a beautified URL (using the Kong Enterprise <a href="https://docs.konghq.com/hub/kong-inc/request-transformer-advanced/">request-transformer-advanced plugin</a>) at a loopback proxy endpoint (configured on the local admin endpoint) that points to the jwt-signer key endpoint from the gateway, replying with a standard JWKS endpoint response. As with the token input, a special header can be configured for the token output. To ensure seamless integration with backend services, the finalized and signed output access token is placed back into the standard Authorization header (<code>access_token_upstream_header</code>: Authorization: bearer).</p>
+<h1 id="my-perspective-on-the-pros-and-cons">My perspective on the Pros and Cons</h1>
+<p>One of the major advantages of this pattern is that it relieves upstream services of the need to manage key procurement and caching from multiple, potentially external, IdPs. Instead, upstream services trust the API gateway and obtain the public key exclusively from the (internal) gateway. From the services’ point of view, the gateway acts as a single trusted IdP. This approach increases stability and security, while simplifying security configuration for service providers.</p>
+<p>Another unbeatable advantage is the ability to customize or extend the incoming access token intended for the services without any limitations (always consider: “with great power comes great responsibility”). This has proven to be very effective in practice when tokens from different IdPs, each with distinct claims, arrive at the gateway, are harmoniously processed and sent to the backend services as uniformly structured access tokens. A consistent token format reduces complexity and simplifies maintenance.</p>
+<p>Using this pattern, it is possible to keep sensitive or detailed information within the system while sharing only necessary data in external tokens. This approach helps protect privacy by ensuring that only essential information is exposed to external services or at least that highly security-relevant information required by the services is deliberately omitted, reducing the risk of data leakage and the attack surface. Although this aspect is not the primary focus of the pattern, it is a beneficial side effect. In addition, external tokens with minimal information are simpler and easier to manage, reducing overhead and complexity.</p>
+<p>A disadvantage is the custom plugin code that needs to be written and customized for each token issuer. However, with some expertise in Lua programming, this can be easily accomplished.
+Although the gateway adds latency compared to a token passthrough, which is a factor to consider, experience shows that the custom plugins typically execute within a few milliseconds.
+Is therapeutic token cloning compatible with Zero-Trust Architecture (ZTA)? I believe it is, as the gateway is subject to the same rigorous security controls, continuous verification, and dynamic trust assessments as any other component within a ZTA. Importantly, the gateway must validate the original token&rsquo;s integrity and the identity of the requester, which is assured with the pattern as described. To maintain zero-trust conformance, any modifications to claims, particularly authorization claims, must adhere to the principle of least privilege. When an API Gateway clones a token and re-signs it with its own key, it essentially reissues the token under its own authority. This underscores the ZTA API Gateway&rsquo;s role in enforcing security policies, authenticating and authorizing requests, and managing access to resources.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>Token processing is complex, but in my opinion it plays an important, if not central, role in a Zero-Trust Architecture. The gateway, acting as a gatekeeper, plays a crucial role in determining which “guests” are allowed to enter and which are not. Consider a metaphor that Mikey Cohen, former head of the Netflix Cloud Gateway team, <a href="https://youtu.be/mHHHpxJuTAo?t=291">once used in a talk</a>: the gateway is a &ldquo;bouncer at the club”. In addition to other checks such as client certificates with mTLS or API keys, access tokens are now essential for mature security measures. Different patterns of token processing are possible: token pass-through, using phantom tokens to switch from opaque to JWT tokens, silent token acquisition or renewal (see also my blogs on <a href="https://nttdata-dach.github.io/posts/as-konggateway-onbehalfof/" title="Part 3: Token Exchange On-Behalf-Of">on-behalf-of token exchange</a> and the <a href="https://nttdata-dach.github.io/posts/as-konggateway-saml2bearer/" title="Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0">SAML 2.0 bearer assertion flow for OAuth 2.0</a>), or the presented &ldquo;therapeutic&rdquo; token cloning. Architectural tradeoffs are required, but the pattern presented here has worked well in practice for several years. The &ldquo;therapeutic token cloning” pattern allows straightforward, gateway-centered and fast handling of different tokens arriving at the gateway from different internal and external IdPs. Most importantly, this pattern simplifies token processing for service providers; the complexity of token handling is managed at the outer boundary and not carried into the internal architecture.</p>
+<p>And as we have seen once again with the implementation of a new architectural pattern on the Kong gateway, with Kong Gateway you will not run into any limitations.</p>
+<h1 id="credits">Credits</h1>
+<p>Title image by <a href="https://www.shutterstock.com/g/Javidestock">Javidestock</a> on <a href="https://www.shutterstock.com">Shutterstock</a></p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/alexander-suchier.jpg" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/alexander-suchier">Alexander Suchier</a><span>
+                    
+                </span></h3>
+                <p>Senior Managing Technical Consultant and Kong Champion </p>
+                <p calss="author-socials">
+                    
+                    
+                    <a target="_blank"  href="https://www.linkedin.com/in/alexander-suchier-0608481"><i class="fa-brands fa-linkedin"></i></a>
+                    
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        <div class="related-block">
+            <h3 class="related-heading" id="series-list">Check out the full series</h3>
+            
+            <ul>
+                
+                <li><a class="related-link" href="/posts/as-kongproductintroduction/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 1: Brief Product Introduction</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konglogchunking/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 2: Log Chunking</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-onbehalfof/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 3: Token Exchange On-Behalf-Of</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-saml2bearer/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-mtls_header/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 5: mTLS Header</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-tokenvalidation/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 6: Token Validation</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-tokencloning/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 7: Token Cloning</a></li>
+                
+            </ul>
+        </div>
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/kong/">Kong</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/gateway/">Gateway</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/token-cloning/">Token Cloning</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/zero-trust-architecture/">Zero-Trust Architecture</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/jwt/">JWT</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/rfc-9068/"> RFC 9068 </a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/api-gateway/">API Gateway</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/openid-connect/">“OpenID Connect”</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/jwt-signer/">“JWT Signer”</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</html>

@@ -7,8 +7,15 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Thu, 06 Jun 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 03 Jul 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Part 7: Token Cloning</title>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-tokencloning/</link>
+      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/as-konggateway-tokencloning/</guid>
+      <description>Building on the previous post, we discuss an architectural pattern for token handling called &amp;rsquo;therapeutic token cloning&amp;rsquo;, which is particularly effective in environments that use multiple identity and access management products. The pattern involves duplicating, correcting, and then re-signing access tokens to make them functional and more secure. This article details the steps involved in the token cloning process, as well as the pros and cons of this approach.</description>
+    </item>
     <item>
       <title>Part 6: Token Validation</title>
       <link>https://nttdata-dach.github.io/posts/as-konggateway-tokenvalidation/</link>
