@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Flutter CI/CD With Fastlane and GitHub Actions on Technology Blog</title>
+    <link>https://nttdata-dach.github.io/series/flutter-ci/cd-with-fastlane-and-github-actions/</link>
+    <description>Recent content in Flutter CI/CD With Fastlane and GitHub Actions on Technology Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
+    <lastBuildDate>Fri, 19 Jul 2024 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://nttdata-dach.github.io/series/flutter-ci/cd-with-fastlane-and-github-actions/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Part 1: The Basics</title>
+      <link>https://nttdata-dach.github.io/posts/dd-fluttercicd-01-basics/</link>
+      <pubDate>Fri, 19 Jul 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/dd-fluttercicd-01-basics/</guid>
+      <description>Automate your Flutter app deployment with this step-by-step guide using Fastlane and GitHub Actions. The article provides the necessary code snippets, for setting up the Fastlane files and environment, defining lanes for deployment to the App Store and Play Store, and automating the process using GitHub Actions. Overall, this article is an essential guide to streamlining the app deployment process, and it&amp;rsquo;s perfect for Flutter developers looking to automate their workflow.</description>
+    </item>
+  </channel>
+</rss>

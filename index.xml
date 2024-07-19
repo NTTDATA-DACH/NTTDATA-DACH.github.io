@@ -29,6 +29,43 @@
     
     
     
+    
+    
+    <item>
+      <title>Flutter CI/CD with Fastlane and GitHub Actions - Part 1: The Basics</title>
+      <link>https://nttdata-dach.github.io/posts/dd-fluttercicd-01-basics/</link>
+      <pubDate>Fri, 19 Jul 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/DD-FlutterCICD-01-Basics/title-image.jpg</guid>
+      <description>Automate your Flutter app deployment with this step-by-step guide using Fastlane and GitHub Actions. The article provides the necessary code snippets, for setting up the Fastlane files and environment, defining lanes for deployment to the App Store and Play Store, and automating the process using GitHub Actions. Overall, this article is an essential guide to streamlining the app deployment process, and it&amp;rsquo;s perfect for Flutter developers looking to automate their workflow.</description>
+
+      
+      
+        
+    </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <item>
       <title>Kong - The Gateway without Limitations - Part 7: Token Cloning</title>
       <link>https://nttdata-dach.github.io/posts/as-konggateway-tokencloning/</link>
@@ -56,10 +93,6 @@
     
     
     
-    
-    
-    
-    
     <item>
       <title>Kong - The Gateway without Limitations - Part 6: Token Validation</title>
       <link>https://nttdata-dach.github.io/posts/as-konggateway-tokenvalidation/</link>
@@ -72,8 +105,6 @@
       
         
     </item>
-    
-    
     
     
     
@@ -320,8 +351,6 @@
     
     
     
-    
-    
     <item>
       <title>Kong - The Gateway without Limitations - Part 2: Log Chunking</title>
       <link>https://nttdata-dach.github.io/posts/as-konglogchunking/</link>
@@ -334,10 +363,6 @@
       
         
     </item>
-    
-    
-    
-    
     
     
     
@@ -367,44 +392,6 @@
     </item>
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <item>
-      <title>CONTROL PLANE OPERATED INFRASTRUCTURE - Part 1: Introduction to Crossplane</title>
-      <link>https://nttdata-dach.github.io/posts/ns-controlplaneoperatedinfrastructure_1/</link>
-      <pubDate>Mon, 31 Jul 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://nttdata-dach.github.io//posts/img/NS-ControlPlaneOperatedInfrastructure/title-image.jpg</guid>
-      <description>This tech blog article introduces Crossplane, an open-source Kubernetes add-on that extends the capabilities of infrastructure management by leveraging Kubernetes as a control plane. Crossplane uses Kubernetes&amp;rsquo; extensible API design and Custom Resource Definitions (CRDs) to manage not only services and applications but also cloud infrastructure. The article provides step-by-step instructions on how to get started with Crossplane and provision your first resources in the cloud using Kubernetes as a control plane.</description>
-
-      
-      
-        
-    </item>
-    
-    
-    
-    <item>
-      <title>Kong - The Gateway without Limitations - Part 1: Brief Product Introduction</title>
-      <link>https://nttdata-dach.github.io/posts/as-kongproductintroduction/</link>
-      <pubDate>Mon, 15 May 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://nttdata-dach.github.io//posts/img/AS-KongProductIntroduction/title-image.jpg</guid>
-      <description>Kong Gateway is a lightweight, fast, and flexible API Gateway. It acts as an intermediary between API providers and consumers, enabling them to communicate based on policies. It also provides observability features, allowing to track API usage and performance. Overall it is a convincing and outstanding product which is briefly introduced in the following blog.</description>
-
-      
-      
-        
-    </item>
     
     
   </channel>

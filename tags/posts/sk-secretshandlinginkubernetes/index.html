@@ -1,0 +1,619 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Secrets Handling in Kubernetes  </title>
+  <meta charset="utf-8"/> 
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Secrets Handling in Kubernetes"/>
+  
+  <meta property="article:author" content="[Stefan Kühnel]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/SK-SecretsHandlingInKubernetes/title-image.jpg"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/sk-secretshandlinginkubernetes/"/>
+  <meta property="og:description" content="Committing plain .yaml files which defines Kubernetes secrets definitions to a source code management system is not very secure. This article explains why and shows two better alternatives."/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">24.11.2023
+        
+         - Stefan Kühnel - <i class="fa-solid fa-book-open"></i> 11 min read
+        
+        </span>
+        Secrets Handling in Kubernetes
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/SK-SecretsHandlingInKubernetes/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <h1 id="introduction">Introduction</h1>
+<p>Running microservices in Kubernetes (also known as k8s) on managed clusters, such as the AWS Elastic Kubernetes Service (<a href="https://aws.amazon.com/eks/">EKS</a>) is the current state of the art way for running enterprise software.</p>
+<p>With EKS, you can use <a href="https://aws.amazon.com/iam/">IAM</a> to control which resources can be used by your EKS workloads. However, sometimes, classic resources such as relational databases, either on-prem or provided by AWS <a href="https://aws.amazon.com/rds/">RDS</a>, which use classic authentication mechanisms, need to be integrated with Kubernetes workloads.</p>
+<p>For this use case, Kubernetes provides a very simple mechanism called a &ldquo;secret&rdquo;. A secret is a Kubernetes resource that can be accessed from a config map or environment definition and which can be passed into a pod to provide information such as usernames, passwords, API-keys and other credentials to the applications within the pod.</p>
+<p>This default approach with Kubernetes &ldquo;secrets&rdquo; is not very secure, because a Kubernetes secret is just a <a href="https://en.wikipedia.org/wiki/Base64">Base64</a>-encoded string.</p>
+<p>This becomes especially problematic if all resources for deploying the application and the infrastructure are to be kept in a source code mangement system (<a href="https://en.wikipedia.org/wiki/Version_control">SCM</a> for short) like git, which is required for the <a href="https://www.gitops.tech/">GitOps</a> model, for example.</p>
+<p>A typical <a href="https://yaml.org/">YAML</a> (yet another markup language) definition for such a secret is</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Secret</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">secret-demo</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">nttdata-dach-techblog-secrets-demo</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">data</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">secretvalue</span><span class="p">:</span><span class="w"> </span><span class="l">NjNoMzFt</span><span class="w">
+</span></span></span></code></pre></div><p>When this yaml file is checked into a git repository, anyone with access to the repository can easily decode the secret value:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ <span class="nb">echo</span> -n <span class="s2">&#34;NjNoMzFt&#34;</span> <span class="p">|</span> base64 -d
+</span></span><span class="line"><span class="cl">63h31m
+</span></span></code></pre></div><p>In this article, we will discuss two methods for keeping secrets for a Kubernetes deployment despite checking all resources in an SCM:</p>
+<ul>
+<li><a href="https://github.com/bitnami-labs/sealed-secrets">Sealed Secrets</a></li>
+<li><a href="https://external-secrets.io/latest/">External Secrets</a></li>
+</ul>
+<p>The examples in this article have been tested with <a href="https://git-scm.com/">git-bash</a>, <a href="https://github.com/adoptium/temurin17-binaries/releases/tag/jdk-17.0.8.1%2B1">Java JDK 17</a>, <a href="https://quarkus.io/">Quarkus 3.4.2</a> and <a href="https://github.com/rancher-sandbox/rancher-desktop/releases/tag/v1.10.0">Rancher Desktop 1.10.0</a> on Windows 10 and 11 machines.</p>
+<p>In case you prefer a video over an article, check out the live demo at the end of the article.</p>
+<h1 id="demo-application">Demo application</h1>
+<p>The demo application is a very simple REST service implemented as a <a href="https://quarkus.io">Quarkus</a> app which just returns the value of the Quarkus configuration option &ldquo;secretvalue&rdquo; in a JSON structure.</p>
+<p>The GET method of the SecretsResource (full source code will be available on <a href="https://github.com/NTTDATA-DACH/TECHblog_code/tree/main/SK-SecretsHandlingInKubernetes">github.com/NTTDATA-DACH/TECHblog_code</a>) is quite simple:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-java" data-lang="java"><span class="line"><span class="cl"><span class="nd">@Path</span><span class="p">(</span><span class="s">&#34;/secrets&#34;</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">SecretsResource</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Inject</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="n">Config</span><span class="w"> </span><span class="n">config</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@GET</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nd">@Produces</span><span class="p">(</span><span class="n">MediaType</span><span class="p">.</span><span class="na">APPLICATION_JSON</span><span class="p">)</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">Secrets</span><span class="w"> </span><span class="nf">secrets</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="n">Secrets</span><span class="w"> </span><span class="n">secrets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Secrets</span><span class="p">(</span><span class="n">config</span><span class="p">.</span><span class="na">getValue</span><span class="p">(</span><span class="s">&#34;secretvalue&#34;</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="p">.</span><span class="na">class</span><span class="p">));</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">secrets</span><span class="p">;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="p">}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="p">}</span><span class="w">
+</span></span></span></code></pre></div><p>When started as a quarkus application like this</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">java -Dsecretvalue<span class="o">=</span>63h31m -jar target/secrets-demo-1.0.0-runner.jar
+</span></span></code></pre></div><p>one can get the response from the simple REST service using curl:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">$ curl http://localhost:8080/secrets
+</span></span><span class="line"><span class="cl"><span class="o">{</span><span class="s2">&#34;secretValue&#34;</span>:<span class="s2">&#34;63h31m&#34;</span><span class="o">}</span>
+</span></span></code></pre></div><h1 id="standard-deployment-insecure-secrets">Standard Deployment: Insecure Secrets</h1>
+<p>First of all, we will create a standard deployment with a &ldquo;normal&rdquo; secret definition in a .yaml file, as a baseline.</p>
+<p>In order to deploy the simple demo app in a Kubernetes cluster (e.g. k3s which is part of <a href="https://rancherdesktop.io/">Rancher Desktop</a>), we need a Dockerfile to create a container image from the application:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Dockerfile" data-lang="Dockerfile"><span class="line"><span class="cl"><span class="k">FROM</span><span class="s"> amazoncorretto:17.0.8-al2023-headless</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">ENV</span> <span class="nv">LANGUAGE</span><span class="o">=</span><span class="s1">&#39;en_US:en&#39;</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">ENV</span> <span class="nv">SECRETVALUE</span><span class="o">=</span><span class="s1">&#39;default_from_image&#39;</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">COPY</span> target/secrets-demo-1.0.0-runner.jar secrets-demo-1.0.0-runner.jar<span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">EXPOSE</span><span class="s"> 8080</span><span class="err">
+</span></span></span><span class="line"><span class="cl"><span class="err"></span><span class="k">CMD</span> <span class="p">[</span><span class="s2">&#34;java&#34;</span><span class="p">,</span><span class="s2">&#34;-jar&#34;</span><span class="p">,</span> <span class="s2">&#34;secrets-demo-1.0.0-runner.jar&#34;</span><span class="p">]</span><span class="err">
+</span></span></span></code></pre></div><p>To create a container image from the Dockerfile use:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">docker build -f src/main/docker/Dockerfile.jvm -t nttdata-dach-techblog/secrets-demo .
+</span></span></code></pre></div><p>With the following Kubernetes yaml files in the folder src/main/k8s/standard</p>
+<ul>
+<li>00_namespace.yaml</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Namespace</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">nttdata-dach-techblog-secrets-demo</span><span class="w">
+</span></span></span></code></pre></div><ul>
+<li>01_secret.yaml</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Secret</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">secrets-demo</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">nttdata-dach-techblog-secrets-demo</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">data</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">secretvalue</span><span class="p">:</span><span class="w"> </span><span class="l">NjNoMzFt</span><span class="w">
+</span></span></span></code></pre></div><ul>
+<li>02_deployment.yaml</li>
+</ul>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="ln" id="1"><a class="lnlinks" href="#1"> 1</a></span><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">apps/v1</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="2"><a class="lnlinks" href="#2"> 2</a></span><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Deployment</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="3"><a class="lnlinks" href="#3"> 3</a></span><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="4"><a class="lnlinks" href="#4"> 4</a></span><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">secrets-demo-deployment</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="5"><a class="lnlinks" href="#5"> 5</a></span><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">nttdata-dach-techblog-secrets-demo</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="6"><a class="lnlinks" href="#6"> 6</a></span><span class="cl"><span class="w">  </span><span class="nt">labels</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="7"><a class="lnlinks" href="#7"> 7</a></span><span class="cl"><span class="w">    </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l">quarkus-app</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="8"><a class="lnlinks" href="#8"> 8</a></span><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="9"><a class="lnlinks" href="#9"> 9</a></span><span class="cl"><span class="w">  </span><span class="nt">replicas</span><span class="p">:</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="10"><a class="lnlinks" href="#10">10</a></span><span class="cl"><span class="w">  </span><span class="nt">selector</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="11"><a class="lnlinks" href="#11">11</a></span><span class="cl"><span class="w">    </span><span class="nt">matchLabels</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="12"><a class="lnlinks" href="#12">12</a></span><span class="cl"><span class="w">      </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l">quarkus-app</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="13"><a class="lnlinks" href="#13">13</a></span><span class="cl"><span class="w">  </span><span class="nt">template</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="14"><a class="lnlinks" href="#14">14</a></span><span class="cl"><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="15"><a class="lnlinks" href="#15">15</a></span><span class="cl"><span class="w">      </span><span class="nt">labels</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="16"><a class="lnlinks" href="#16">16</a></span><span class="cl"><span class="w">        </span><span class="nt">app</span><span class="p">:</span><span class="w"> </span><span class="l">quarkus-app</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="17"><a class="lnlinks" href="#17">17</a></span><span class="cl"><span class="w">    </span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="18"><a class="lnlinks" href="#18">18</a></span><span class="cl"><span class="w">      </span><span class="nt">containers</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="19"><a class="lnlinks" href="#19">19</a></span><span class="cl"><span class="w">        </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">quarkus-app</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="20"><a class="lnlinks" href="#20">20</a></span><span class="cl"><span class="w">          </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l">nttdata-dach-techblog/secrets-demo:latest</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="21"><a class="lnlinks" href="#21">21</a></span><span class="cl"><span class="w">          </span><span class="nt">imagePullPolicy</span><span class="p">:</span><span class="w"> </span><span class="l">Never</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="22"><a class="lnlinks" href="#22">22</a></span><span class="cl"><span class="w">          </span><span class="nt">env</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="23"><a class="lnlinks" href="#23">23</a></span><span class="cl"><span class="w">            </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">SECRETVALUE</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="24"><a class="lnlinks" href="#24">24</a></span><span class="cl"><span class="w">              </span><span class="nt">valueFrom</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="25"><a class="lnlinks" href="#25">25</a></span><span class="cl"><span class="w">                </span><span class="nt">secretKeyRef</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="26"><a class="lnlinks" href="#26">26</a></span><span class="cl"><span class="w">                  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">secrets-demo</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="27"><a class="lnlinks" href="#27">27</a></span><span class="cl"><span class="w">                  </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l">secretvalue</span></span></span></code></pre></div>
+<p>we can deploy our container to our Kubernetes cluster using kubectl:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl apply -f src/main/k8s/standard/
+</span></span></code></pre></div><p>In the &ldquo;env&rdquo; section (lines 23 ff) the Kubernetes secret &ldquo;secrets-demo&rdquo; is mapped to an environment variable &ldquo;SECRETVALUE&rdquo;.
+With the Quarkus configuration mechanism, the environment variable &ldquo;SECRETVALUE&rdquo; is made available as a configuration option &ldquo;secretvalue&rdquo;.</p>
+<p>Using</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl -n nttdata-dach-techblog-secrets-demo get all
+</span></span></code></pre></div><p>we can check, if all resources have been created successfully.</p>
+<p>When everything is up and running, we can start a port-forwarding, to enable the access to the pod in our deployment using curl:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl -n nttdata-dach-techblog-secrets-demo port-forward pod/&lt;pod-name&gt; 8080:8080
+</span></span></code></pre></div><p>&lt;pod-name&gt; needs to be replaced with the name of the actual pod!</p>
+<p>If you are using <a href="https://k9scli.io/">k9s</a>, you can also create a temporary port forwarding in k9s, by navigating to the pod and pressing Shift-F:</p>
+<p>
+  <img src="/posts/img/SK-SecretsHandlingInKubernetes/k9s_port_forward.png" alt="create port forwarding in k9s">
+
+</p>
+<p>In the <a href="https://git.altemista.cloud/stefan.kuehnel/techblog_kubernetes_secrets/-/tree/master/secrets-demo">git repository</a> you&rsquo;ll also find a bash script &ldquo;start_port_forwarding.sh&rdquo; which determines the podname and then starts the forwarding.</p>
+<p>By the way: Instead of checking all the resources we create in this article using kubectl on the commandline you can also use k9s to browse them.</p>
+<p>With</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">curl http://localhost:8080/secrets
+</span></span></code></pre></div><p>we should now get the same result:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span><span class="nt">&#34;secretValue&#34;</span><span class="p">:</span><span class="s2">&#34;63h31m&#34;</span><span class="p">}</span>
+</span></span></code></pre></div><p>Because the string &ldquo;NjNoMzFt&rdquo; is just the Base64 encoded value of &ldquo;63h31m&rdquo;, as we can easily check with this commands:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">echo</span> -n <span class="s2">&#34;NjNoMzFt&#34;</span> <span class="p">|</span> base64 -d
+</span></span></code></pre></div><h1 id="sealed-secrets">Sealed Secrets</h1>
+<p>The idea with sealed secrets is, that an kubernetes operator is deployed to the cluster which uses private/public key encryption.</p>
+<p>Part of the solution is a command line tool <a href="https://github.com/bitnami-labs/sealed-secrets#kubeseal">kubeseal</a> which makes a call to the sealed secrets operator within your cluster and returns an encrypted version of your secret, for which the yaml definition can be checked in to the SCM, without exposing the actual secret.</p>
+<p>The operator will decrypt the secret and expose it to your deployments in the same way as with the standard configuration.</p>
+<h2 id="installation-of-the-sealed-secrets-operator">Installation of the sealed secrets operator</h2>
+<p>To install the sealed secrets operator via <a href="helm.sh">helm</a>, we first have to add the repository where the Helm-Chart for the operator is stored to the list of known chart repositories:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">helm repo add sealed-secrets https://bitnami-labs.github.io/sealed-secrets
+</span></span></code></pre></div><p>To check, which repositories are already registered with the k8s cluster, use</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">helm repo list
+</span></span></code></pre></div><p>After the repository has been added, the operator can be installed:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">helm install sealed-secrets sealed-secrets/sealed-secrets
+</span></span></code></pre></div><h2 id="encryption">Encryption</h2>
+<p>After the operator for sealed secrets has been installed successfully, the kubeseal command line utility can be used to encrypt our secret value.</p>
+<p>The command</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl -n nttda-dach-techblog-secrets-demo create secret generic secret-name --dry-run<span class="o">=</span>client --from-literal<span class="o">=</span>secretva
+</span></span><span class="line"><span class="cl"><span class="nv">lue</span><span class="o">=</span>63h31m -o yaml
+</span></span></code></pre></div><p>creates the .yaml for a normal insecure secret, as we have seen it already in the introductory example:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">data</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">secretvalue</span><span class="p">:</span><span class="w"> </span><span class="l">NjNoMzFt</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Secret</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">creationTimestamp</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">secret-name</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">nttda-dach-techblog-secrets-demo</span><span class="w">
+</span></span></span></code></pre></div><p>The kubeseal command line utility takes this definition as an input and writes an encrypted version to the output. The encryption uses the k8s cluster which is defined in the current context. Therefore, the created .yaml file can be used for a specific cluster only.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl -n nttdata-dach-techblog-secrets-demo create secret generic secret-demo --dry-run<span class="o">=</span>client --from-literal<span class="o">=</span>secretva
+</span></span><span class="line"><span class="cl"><span class="nv">lue</span><span class="o">=</span>63h31m -o yaml <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>  kubeseal --namespace nttdata-dach-techblog-secrets-demo --controller-name<span class="o">=</span>sealed-secrets --controller-namespace<span class="o">=</span>kube-system --format<span class="o">=</span>yaml &gt; 04_sealed_secret.yaml
+</span></span></code></pre></div><p>The content of the file &ldquo;04_sealed_secret.yaml&rdquo; is:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">bitnami.com/v1alpha1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">SealedSecret</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">creationTimestamp</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">secrets-demo</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">nttdata-dach-techblog-secrets-demo</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">encryptedData</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">secretvalue</span><span class="p">:</span><span class="w"> </span><span class="l">AgAupxhzCsAUKyLKs+iLvrH30HhHMaNL7xVyyhwo7xi8PufB62ndGZnak2FPSt+i5zqN7uscA2G7UbNAwsGguoivISS0Pj01nJJnxRZBe40IzqLthNR9HK8Osau+E2Y/GL/EmO4PA61h2Anf3PCOAV4n6ZNPXxwfOBTY/QVlHMi9X7xDsatJClqY6nxfBsdPZghYIymXOC2IkJyXZD5rFaxKDeV00O8n/Bl+IYU42UTh64gAvyhR2ChsVWWy/XrO3+C5bYozSyFuocP8Id5rwTqeIrqAGMAxJGHjUY/175+2TH3XKwcraiRJcmahABcgOd6S3d/4kZF4dLCaYhNJuq88enZBcLffvzuVSbmWH2zaHtt2YL02Fr874oA0fnI3kUmTxlLLdQBHiGCy3bpCAsGJFMOZG1qpfCFfb+DZmsn6YxD4hjZqAQY4QTSPuezZRRQuv3IWL+FQ/vQAk7V56NlGwCwwPPwGF4iAW3GHGO0bZ+S12alpqk1Q1UbIMldLoDki5dMi+bNvt51nQ/Z9oi6bdLUD2ODhs3n+w7e/rLvd0TT0fau5b35RYh52Co+/dvIb1vQS9ny/2rE147ly8YRDXsGW3PYwoLsJYch91mAJypz29W41ISx0E9bg2ZR7WYrtwdTjkgs9c5PTzENTAikb8eCwW+MjEUwL6jpw3mR2m+HTK0nLGciIclvgU9yPISWtl7bEb3Y=</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">template</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">creationTimestamp</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">secrets-demo</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">nttdata-dach-techblog-secrets-demo</span><span class="w">
+</span></span></span></code></pre></div><p>The new .yaml file for the sealed secret can now be applied:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl -n nttdata-dach-techblog-secrets-demo apply -f 04_sealed_secret.yaml
+</span></span></code></pre></div><p>To check, that the SealedSecrets custom resource has been created, we run</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">$ kubectl -n nttdata-dach-techblog-secrets-demo get sealedsecrets
+</span></span><span class="line"><span class="cl">NAME           STATUS   SYNCED   AGE
+</span></span><span class="line"><span class="cl">secrets-demo            True     5m38s
+</span></span></code></pre></div><p>The sealed secrets operator will decrypt the SealedSecret resource and creates a &ldquo;normal&rdquo; secret, which can be checked using kubectl:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl -n nttdata-dach-techblog-secrets-demo get secrets
+</span></span></code></pre></div><p>The result is:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-txt" data-lang="txt"><span class="line"><span class="cl">NAME           TYPE     DATA   AGE
+</span></span><span class="line"><span class="cl">secrets-demo   Opaque   1      7m55s
+</span></span></code></pre></div><p>When we get the secret definition using</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl -n nttdata-dach-techblog-secrets-demo get secret/secrets-demo -o json
+</span></span></code></pre></div><p>we will get</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;apiVersion&#34;</span><span class="p">:</span> <span class="s2">&#34;v1&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;data&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;secretvalue&#34;</span><span class="p">:</span> <span class="s2">&#34;NjNoMzFt&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;kind&#34;</span><span class="p">:</span> <span class="s2">&#34;Secret&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;metadata&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;creationTimestamp&#34;</span><span class="p">:</span> <span class="s2">&#34;2023-10-13T16:32:00Z&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;secrets-demo&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;namespace&#34;</span><span class="p">:</span> <span class="s2">&#34;nttdata-dach-techblog-secrets-demo&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;ownerReferences&#34;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="cl">            <span class="p">{</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;apiVersion&#34;</span><span class="p">:</span> <span class="s2">&#34;bitnami.com/v1alpha1&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;controller&#34;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;kind&#34;</span><span class="p">:</span> <span class="s2">&#34;SealedSecret&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;secrets-demo&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">                <span class="nt">&#34;uid&#34;</span><span class="p">:</span> <span class="s2">&#34;e9fcdfd1-1403-4a9a-825a-9aee04b2adef&#34;</span>
+</span></span><span class="line"><span class="cl">            <span class="p">}</span>
+</span></span><span class="line"><span class="cl">        <span class="p">],</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;resourceVersion&#34;</span><span class="p">:</span> <span class="s2">&#34;414404&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="nt">&#34;uid&#34;</span><span class="p">:</span> <span class="s2">&#34;4144785b-00aa-41dd-b277-4231719f04fa&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&#34;type&#34;</span><span class="p">:</span> <span class="s2">&#34;Opaque&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>In the output of the last kubectl, we see again the now familiar Base64 encoded string of &ldquo;63h31m&rdquo; which is &ldquo;NjNoMzFt&rdquo;</p>
+<p>Since the sealed secret is &ldquo;translated&rdquo; to a conventional k8s secret by the operator, the application must not be changed at all.</p>
+<p>In most setups one will have to deal with multiple cluster like dev, test, int and prod. With sealed secrets, the encryption needs to be done for each cluster separately.</p>
+<p>Here is a convenience script for bash to create a sealed secret with interactive input (it assumes the kubeseal CLI command to be installed in the &ldquo;gopath&rdquo;):</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="cp">#!/usr/bin/env bash
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="o">[</span> <span class="nv">$#</span> -lt <span class="m">1</span> <span class="o">]</span> <span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> -n <span class="s2">&#34;Enter Secret Value: &#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">read</span> -s VALUE
+</span></span><span class="line"><span class="cl"><span class="k">else</span> 
+</span></span><span class="line"><span class="cl">    <span class="nv">VALUE</span><span class="o">=</span><span class="nv">$1</span>
+</span></span><span class="line"><span class="cl"><span class="k">fi</span>
+</span></span><span class="line"><span class="cl"> 
+</span></span><span class="line"><span class="cl"><span class="nv">SECRET_NAME</span><span class="o">=</span>secrets-demo
+</span></span><span class="line"><span class="cl"><span class="nv">TARGET_NAMESPACE</span><span class="o">=</span>nttdata-dach-techblog-secrets-demo
+</span></span><span class="line"><span class="cl"><span class="nv">CONTROLLER_NAMESPACE</span><span class="o">=</span>default
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">OS</span><span class="o">=</span><span class="k">$(</span>uname -a<span class="k">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="o">[[</span> <span class="s2">&#34;</span><span class="si">${</span><span class="nv">OS</span><span class="si">}</span><span class="s2">&#34;</span> <span class="o">=</span>~ ^MINGW.* <span class="o">]]</span> <span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">KUBESEAL</span><span class="o">=</span><span class="s1">&#39;/c/Program Files/Go/go/bin/kubeseal.exe&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="k">else</span>
+</span></span><span class="line"><span class="cl">    <span class="nv">KUBESEAL</span><span class="o">=</span><span class="si">${</span><span class="nv">GOPATH</span><span class="si">}</span>/bin/kubeseal
+</span></span><span class="line"><span class="cl"><span class="k">fi</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">kubectl create secret generic <span class="si">${</span><span class="nv">SECRET_NAME</span><span class="si">}</span> --dry-run<span class="o">=</span>client --from-literal<span class="o">=</span><span class="nv">secretvalue</span><span class="o">=</span><span class="s2">&#34;</span><span class="si">${</span><span class="nv">VALUE</span><span class="si">}</span><span class="s2">&#34;</span> -o yaml <span class="p">|</span> <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    <span class="s2">&#34;</span><span class="si">${</span><span class="nv">KUBESEAL</span><span class="si">}</span><span class="s2">&#34;</span> --namespace<span class="o">=</span><span class="si">${</span><span class="nv">TARGET_NAMESPACE</span><span class="si">}</span> --controller-name<span class="o">=</span>sealed-secrets --controller-namespace<span class="o">=</span><span class="si">${</span><span class="nv">CONTROLLER_NAMESPACE</span><span class="si">}</span> --format<span class="o">=</span>yaml <span class="se">\
+</span></span></span><span class="line"><span class="cl"><span class="se"></span>    &gt; src/main/k8s/sealed_secrets/04_sealed_secret.yaml
+</span></span></code></pre></div><h3 id="deployment-definition">Deployment definition</h3>
+<p>The deployment file for our java app will be the same as before, because we still refer to the &ldquo;normal&rdquo; secret &ldquo;secrets-demo&rdquo;.</p>
+<p>The only difference is, that the &ldquo;secrets-demo&rdquo; secret is automatically provided by the sealed secrets operator with the definition in the SealedSecret resource definition file. A .yaml file with an Base64 encoded password for the &ldquo;secret-demo&rdquo; secret is not required anymore.</p>
+<p>You can check this by deleting the secret</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl -n nttdata-dach-techblog-secrets-demo delete secret/secrets-demo
+</span></span></code></pre></div><p>If you then run</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl -n nttdata-dach-techblog-secrets-demo get secrets
+</span></span></code></pre></div><p>you will see the secret again, because it has immediately been re-created by the sealed secrets operator after deletion.</p>
+<p>As the encrypted secret is part of the deployment definition files (in this case 04_sealed_secret.yaml), any change of the secret value requires a change of the deployment YAML files in the SCM.</p>
+<h2 id="clean-up-sealed-secrets">Clean up &ldquo;sealed secrets&rdquo;</h2>
+<p>Before we can start with the demo of the external secrets operator, we should clean up:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">helm delete sealed-secrets
+</span></span></code></pre></div><p>We will also delete the secret, which has been created by the sealed secrets operator:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">kubectl -n nttdata-dach-techblog-secrets-demo delete secret/secret-demo
+</span></span></code></pre></div><h1 id="external-secrets-operator">External Secrets Operator</h1>
+<p>In a corporate environment you will probably already have established tools for handling secrets, such as</p>
+<ul>
+<li><a href="https://www.vaultproject.io/">HashiCorp Vault</a></li>
+<li><a href="https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html">AWS SSM Parameter Store</a></li>
+<li><a href="https://docs.aws.amazon.com/secretsmanager/">AWS Secrets Manager</a></li>
+</ul>
+<p>and many more.</p>
+<p>The idea with External Secrets is, to use one of those existing and proven solutions in conjunction with your Kubernetes workloads.</p>
+<p>To use this external tools with the &ldquo;external secrets&rdquo; operator, many &ldquo;providers&rdquo; exist, for example:</p>
+<ul>
+<li><a href="https://external-secrets.io/latest/provider/hashicorp-vault/">HashiCorp Vault Provider</a></li>
+<li><a href="https://external-secrets.io/latest/provider/aws-parameter-store/">Provider for AWS Parameter Store</a></li>
+<li><a href="https://external-secrets.io/latest/provider/aws-secrets-manager/">Provider for AWS Secrets Manager</a></li>
+</ul>
+<h2 id="installation-of-the-external-secrets-operator">Installation of the external secrets operator</h2>
+<p>The <a href="https://external-secrets.io/latest/">external secrets operator</a> is installed using helm.</p>
+<p>First, the chart repository for the external secrets operator must be added to the list of the helm repositories:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">helm repo add --force-update external-secrets https://charts.external-secrets.io
+</span></span></code></pre></div><p>Then installed the operator in a separate namespace &ldquo;external-secrets&rdquo;</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">helm install external-secrets external-secrets/external-secrets -n external-secrets --create-namespace
+</span></span></code></pre></div><h2 id="demo-setup-with-the-fake-provider">Demo setup with the &ldquo;fake&rdquo; provider</h2>
+<p>With the external secrets operator, we need &ldquo;store&rdquo; resources for each &ldquo;store&rdquo;, we want to integrate our cluster.
+You can define different stores for the same type of provider, e.g. if you want to define different secrets in different AWS regions.
+For local testing purposes, we will use the &ldquo;fake&rdquo; provider, which allows to define fixed values in its resource definition (see src/main/k8s/external_secrets/03_external_secret_store.yaml in the git repository):</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">external-secrets.io/v1beta1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ClusterSecretStore</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">demo-store</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">nttdata-dach-techblog-secrets-demo</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">provider</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">fake</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">data</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;secretvalue&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;63h31m&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;v1&#34;</span><span class="w">
+</span></span></span></code></pre></div><p>In this case, the provider is the &ldquo;fake&rdquo; provider and the store is defined in the namespace &ldquo;nttdata-dach-techblog-secrets-demo&rdquo; as &ldquo;demo-store&rdquo;.</p>
+<p>In the target namespace, a resource of type &ldquo;ExternalSecret&rdquo; is defined to map values from the store to the conventional secrets (see src/main/k8s/external_secrets/04_external_secret_resource.yaml in the git repository):</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">external-secrets.io/v1beta1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ExternalSecret</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">secrets-demo-external-secret</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">nttdata-dach-techblog-secrets-demo</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">refreshInterval</span><span class="p">:</span><span class="w"> </span><span class="l">5m</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">secretStoreRef</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">demo-store</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ClusterSecretStore</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">target</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">secrets-demo    </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">data</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">secretKey</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;secretvalue&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">remoteRef</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;secretvalue&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">version</span><span class="p">:</span><span class="w"> </span><span class="l">v1</span><span class="w">
+</span></span></span></code></pre></div><p>In this example, the refresh interval is 5 minutes, so you should see the updated secret in the target namespace after 5 minutes.</p>
+<p>After deploying everything, we can start a port forwarding as in the previous examples and should get the same results.</p>
+<h2 id="clean-up-external-secrets">Clean up &ldquo;external secrets&rdquo;</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">helm -n external-secrets delete external-secrets
+</span></span></code></pre></div><h1 id="summary">Summary</h1>
+<p>&ldquo;secrets&rdquo; in Kubernetes are not very secure:</p>
+<ul>
+<li>Values are just Base64 encoded strings</li>
+<li>Secrets can be revealed when the corresponding .yaml file is checked in to an SCM</li>
+</ul>
+<p>Sealed Secrets and the External Secrets Operator both provide a way to more securely handle secrets outside of the cluster (e.g., in configuration files which are checked into a source code management system). The Kubernetes &ldquo;secrets&rdquo; resource is created by the operator at runtime.</p>
+<p>However, within the cluster, the secrets are still made available as the default Kubernetes secret, so that anyone with sufficient access rights can see the values of the secret.</p>
+<p>The advantage of this approach is that applications created for default Kubernetes secrets do not need to be modified when one of the operators is introduced.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Sealed Secrets</th>
+<th>External Secrets Operator</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PROS</strong></td>
+<td>Self-contained (no external secrets store required)</td>
+<td>Large number of supported external secret stores</td>
+</tr>
+<tr>
+<td></td>
+<td>No need to change application</td>
+<td>No need to change application</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>Deployment files cluster independent</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>No additional command line tool required</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>Automatic refresh with configurable interval</td>
+</tr>
+<tr>
+<td><strong>CONS</strong></td>
+<td>Command line tool required</td>
+<td>External secret store required</td>
+</tr>
+<tr>
+<td></td>
+<td>Change of secret value requires commit</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Encryption for a specific cluster</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>As promised, here is a demo and comparison of the three configurations:
+<script src="https://fast.wistia.com/embed/medias/t9830pc51y.jsonp" async></script><script src="https://fast.wistia.com/assets/external/E-v1.js" async></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><div class="wistia_embed wistia_async_t9830pc51y seo=true videoFoam=true" style="height:100%;position:relative;width:100%"><div class="wistia_swatch" style="height:100%;left:0;opacity:0;overflow:hidden;position:absolute;top:0;transition:opacity 200ms;width:100%;"><img src="https://fast.wistia.com/embed/medias/t9830pc51y/swatch" style="filter:blur(5px);height:100%;object-fit:contain;width:100%;" alt="" aria-hidden="true" onload="this.parentNode.style.opacity=1;" /></div></div></div></div></p>
+<h1 id="recommendation">Recommendation</h1>
+<p>For a simple use case, sealed secrets are a good solution that does not require additional infrastructure, but they have some drawbacks.
+For an enterprise environment (or when running on a large public cloud like AWS, Azure or GCP) the
+external secrets operator is the much more versatile solution and should be used.</p>
+<h1 id="credits">Credits</h1>
+<p>Title image by <a href="https://www.shutterstock.com/de/g/Blackboard">Blackboard</a> on <a href="https://www.shutterstock.com">Shutterstock</a></p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/stefan-kuehnel.png" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/stefan-k%c3%bchnel">Stefan Kühnel</a><span>
+                    
+                </span></h3>
+                <p>Managing Technical Consultant </p>
+                <p calss="author-socials">
+                    <a target="_blank"  href="https://github.com/eska-muc"><i class="fa-brands fa-github"></i></a>
+                    
+                    
+                    
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+                <h3 class="related-heading">You may also like</h3>
+
+                
+                
+                <ul>
+                    
+                    
+                    
+                        <li><a class="related-link" href="/posts/ns-controlplaneoperatedinfrastructure_1/">CONTROL PLANE OPERATED INFRASTRUCTURE - Part 1: Introduction to Crossplane</a></li>
+                    
+                    
+                    
+                    
+                        <li><a class="related-link" href="/posts/mjm-sa-otelmetrics-02-firstmetrics/">TRANSITIONING FROM PROMETHEUS TO OPENTELEMETRY - A JOURNEY OF A CLUSTER&#39;S METRICS EVOLUTION - Part 2: Scraping The First Metrics</a></li>
+                    
+                    
+                    
+                    
+                        <li><a class="related-link" href="/posts/mjm-sa-otelmetrics-01-intro/">TRANSITIONING FROM PROMETHEUS TO OPENTELEMETRY - A JOURNEY OF A CLUSTER&#39;S METRICS EVOLUTION - Part 1: A Brief Introduction</a></li>
+                    
+                    
+                </ul>
+                
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/kubernetes/">Kubernetes</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/secrets/">secrets</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/kubernetes-operator/">Kubernetes operator</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/sealed-secrets/">sealed secrets</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/external-secrets/">external secrets</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/hashicorp-vault/">HashiCorp Vault</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/aws/">AWS</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/quarkus/">Quarkus</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/eks/">EKS</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/parameter-store/">Parameter Store</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/secrets-manager/">Secrets Manager</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/gitops/">GitOps</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</html>

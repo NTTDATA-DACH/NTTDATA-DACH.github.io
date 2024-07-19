@@ -1,0 +1,394 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Part 1: Introduction to Crossplane  </title>
+  <meta charset="utf-8"/> 
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="CONTROL PLANE OPERATED INFRASTRUCTURE - Part 1: Introduction to Crossplane"/>
+  
+  <meta property="article:author" content="[Niklas Schuster]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/NS-ControlPlaneOperatedInfrastructure/title-image.jpg"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/ns-controlplaneoperatedinfrastructure_1/"/>
+  <meta property="og:description" content="This tech blog article introduces Crossplane, an open-source Kubernetes add-on that extends the capabilities of infrastructure management by leveraging Kubernetes as a control plane. Crossplane uses Kubernetes&rsquo; extensible API design and Custom Resource Definitions (CRDs) to manage not only services and applications but also cloud infrastructure. The article provides step-by-step instructions on how to get started with Crossplane and provision your first resources in the cloud using Kubernetes as a control plane."/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">31.07.2023
+        
+         - Niklas Schuster - <i class="fa-solid fa-book-open"></i> 9 min read
+        
+        </span>
+        Part 1: Introduction to Crossplane
+        
+        
+        <a id="series-link" href="/series/control-plane-operated-infrastructure"><span class="subtitle">CONTROL PLANE OPERATED INFRASTRUCTURE</span></a>
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/NS-ControlPlaneOperatedInfrastructure/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <p>When it comes to operating applications in the cloud, infrastructure as code tools such as Terraform or Pulumi have established themselves as the de facto standard for infrastructure management in recent years. And these tools work excellently to quickly spin up complex infrastructure and resources in the cloud, but using these tools have a major drawback, in my opinion. They are purely push based and resources or corresponding changes are applied manually or are invoked by any kind of CICD pipeline. They do not take into account the actual state of resources, changes are planned and evaluated against an artificially created state file to keep track of the desired state of resources instead of relying on the actual resources running in the live environment. Or to put it more briefly, resources are provisioned but not managed. So how do we ensure that resources remain the same in the cloud as they were originally provisioned?</p>
+<p>In this blog series we will take a look at the Cloud Native Computing Foundation (CNCF) project Crossplane that is able to solve this issue by leveraging Kubernetes as the most common control plane as of today and its extensible API design to elevate our infrastructure management to a whole new level. The Kubernetes API itself is extensible by design and can be extended arbitrarily with Custom Resource Definitions (CRDs) and custom controllers. Crossplane, as claimed by the developers, is an open-source Kubernetes add-on that makes use of this extensibility and lets you transforms your cluster into a universal control plane.</p>
+<p>More precisely, this means we can use Crossplane to easily extend our Kubernetes cluster to support orchestrating any kind of external resource or managed service. That way we can use Kubernetes to not only manage services and applications, but also all kinds of cloud infrastructure we might need to run them. Without further ado, let us see how exactly Crossplane works by spinning up our first resource in the cloud. In our case, our cloud provider of choice today will be AWS. Before we can start, we need a Kubernetes cluster that we want to use as our control plane and in which we can install Crossplane. When we have a suitable Kubernetes cluster available, we can create a new namespace named “crossplane-system” and use Helm to install Crossplane with the provided Helm chart as shown below:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="ln" id="1"><a class="lnlinks" href="#1">1</a></span><span class="cl">$ kubectl create namespace crossplane-system
+</span></span><span class="line"><span class="ln" id="2"><a class="lnlinks" href="#2">2</a></span><span class="cl">$ helm repo add crossplane-stable https://charts.crossplane.io/stable
+</span></span><span class="line"><span class="ln" id="3"><a class="lnlinks" href="#3">3</a></span><span class="cl">$ helm repo update
+</span></span><span class="line"><span class="ln" id="4"><a class="lnlinks" href="#4">4</a></span><span class="cl">
+</span></span><span class="line"><span class="ln" id="5"><a class="lnlinks" href="#5">5</a></span><span class="cl">$ helm install crossplane --namespace crossplane-system crossplane-stable/crossplane</span></span></code></pre></div>
+<p>To check the status of the installation, we can use the Helm command line tool to check the status of our Helm release for Crossplane, and we can also check if all resources are properly running in our newly created namespace with the following commands:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="ln" id="1"><a class="lnlinks" href="#1"> 1</a></span><span class="cl"><span class="c1"># list Helm release for Crossplane</span>
+</span></span><span class="line"><span class="ln" id="2"><a class="lnlinks" href="#2"> 2</a></span><span class="cl">$ helm list -n crossplane-system
+</span></span><span class="line"><span class="ln" id="3"><a class="lnlinks" href="#3"> 3</a></span><span class="cl">NAME        NAMESPACE           REVISION    UPDATED     STATUS    CHART
+</span></span><span class="line"><span class="ln" id="4"><a class="lnlinks" href="#4"> 4</a></span><span class="cl">Crossplane  crossplane-system   <span class="m">1</span>           2023-07-01  deployed  crossplane-1.12.2
+</span></span><span class="line"><span class="ln" id="5"><a class="lnlinks" href="#5"> 5</a></span><span class="cl">
+</span></span><span class="line"><span class="ln" id="6"><a class="lnlinks" href="#6"> 6</a></span><span class="cl"><span class="c1"># get all running Crossplane resources                                    </span>
+</span></span><span class="line"><span class="ln" id="7"><a class="lnlinks" href="#7"> 7</a></span><span class="cl">$ kubectl get all -n crossplane-system
+</span></span><span class="line"><span class="ln" id="8"><a class="lnlinks" href="#8"> 8</a></span><span class="cl">NAME                                               READY   STATUS    RESTARTS   AGE
+</span></span><span class="line"><span class="ln" id="9"><a class="lnlinks" href="#9"> 9</a></span><span class="cl">pod/crossplane-cb755467b-lv6vm                     1/1     Running   <span class="m">0</span>          25s
+</span></span><span class="line"><span class="ln" id="10"><a class="lnlinks" href="#10">10</a></span><span class="cl">pod/crossplane-rbac-manager-69ff585d75-74wdz       1/1     Running   <span class="m">0</span>          25s
+</span></span><span class="line"><span class="ln" id="11"><a class="lnlinks" href="#11">11</a></span><span class="cl">
+</span></span><span class="line"><span class="ln" id="12"><a class="lnlinks" href="#12">12</a></span><span class="cl">NAME                                            READY   UP-TO-DATE  AVAILABLE   AGE
+</span></span><span class="line"><span class="ln" id="13"><a class="lnlinks" href="#13">13</a></span><span class="cl">deployment.apps/crossplane                      1/1     <span class="m">1</span>           <span class="m">1</span>           40s
+</span></span><span class="line"><span class="ln" id="14"><a class="lnlinks" href="#14">14</a></span><span class="cl">deployment.apps/crossplane-rbac-manager         1/1     <span class="m">1</span>           <span class="m">1</span>           40s
+</span></span><span class="line"><span class="ln" id="15"><a class="lnlinks" href="#15">15</a></span><span class="cl">
+</span></span><span class="line"><span class="ln" id="16"><a class="lnlinks" href="#16">16</a></span><span class="cl">NAME                                                DESIRED   CURRENT   READY   AGE
+</span></span><span class="line"><span class="ln" id="17"><a class="lnlinks" href="#17">17</a></span><span class="cl">replicaset.apps/crossplane-cb755467b                <span class="m">1</span>         <span class="m">1</span>         <span class="m">1</span>       40s
+</span></span><span class="line"><span class="ln" id="18"><a class="lnlinks" href="#18">18</a></span><span class="cl">replicaset.apps/crossplane-rbac-manager-69ff585d75  <span class="m">1</span>         <span class="m">1</span>         <span class="m">1</span>       40s</span></span></code></pre></div>
+<p>The output should show us a new Helm release named &ldquo;crossplane&rdquo;, which should be in the state “deployed” and a deployment/replicaset showing two running pods in our namespace one for the general Crossplane controller and one for the RBAC manager.</p>
+<p>The core of Crossplane are Managed Resources (MRs), which are the fundamental building blocks of Crossplane, with a MR being a granular Crossplane representation of a resource in an external system like in our example AWS. Therefore, ideally every AWS resource we want to manage should have an associated MR available in Crossplane. Whereas a MR directly translates to a Kubernetes CRD, resulting in a vast number of CRDs that our Kubernetes cluster potentially has to handle. In order to reduce overhead and keep the number of CRDs manageable, Crossplane does not ship pre-installed with all kinds of different MRs that are available but follows an extensible approach with packages. In Crossplane, there are two different types of packages available to extend Crossplane&rsquo;s scope of things it can manage, the type of packages that are currently relevant for us are Providers.</p>
+<p>Providers bundle a set of MRs and a respective controller to allow Crossplane to provision and manage new kinds of infrastructure resources, or to put it more clearly, a provider extends Crossplane by installing Kubernetes CRDs and controllers for new kinds of MRs. Providers can either be installed via the Crossplane CLI which is available as a kubectl plugin, or we create a new Provider Kubernetes resource via a corresponding YAML manifest, introduced by one of Crossplane&rsquo;s internal CRDs.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="ln" id="1"><a class="lnlinks" href="#1"> 1</a></span><span class="cl"><span class="c"># possibility 1:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="2"><a class="lnlinks" href="#2"> 2</a></span><span class="cl"><span class="w"></span><span class="l">$ kubectl crossplane install provider xpkg.upbound.io/upbound/provider-aws:v0.37.0</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="3"><a class="lnlinks" href="#3"> 3</a></span><span class="cl"><span class="w"></span><span class="c"># possibility 2:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="4"><a class="lnlinks" href="#4"> 4</a></span><span class="cl"><span class="w"></span><span class="l">$ cat &lt;&lt;EOT &gt;&gt; provider.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="5"><a class="lnlinks" href="#5"> 5</a></span><span class="cl"><span class="w"></span><span class="nn">---</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="6"><a class="lnlinks" href="#6"> 6</a></span><span class="cl"><span class="w"></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">pkg.crossplane.io/v1</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="7"><a class="lnlinks" href="#7"> 7</a></span><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">Provider</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="8"><a class="lnlinks" href="#8"> 8</a></span><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="9"><a class="lnlinks" href="#9"> 9</a></span><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">provider-aws</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="10"><a class="lnlinks" href="#10">10</a></span><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="11"><a class="lnlinks" href="#11">11</a></span><span class="cl"><span class="w">  </span><span class="nt">package</span><span class="p">:</span><span class="w"> </span><span class="s1">&#39;xpkg.upbound.io/upbound/provider-aws:v0.37.0&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="12"><a class="lnlinks" href="#12">12</a></span><span class="cl"><span class="w"></span><span class="l">EOT</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="13"><a class="lnlinks" href="#13">13</a></span><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="ln" id="14"><a class="lnlinks" href="#14">14</a></span><span class="cl"><span class="w"></span><span class="l">$ kubectl apply -f provider.yaml</span></span></span></code></pre></div>
+<p>If the installation was successful, we should then see a new provider resource created which should output the status installed and healthy and within our &ldquo;crossplane-system&rdquo; namespace. We will also see new pods running for our additional controller and have a range of new CRDs available for each MR our provider has to offer with the following commands:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="ln" id="1"><a class="lnlinks" href="#1"> 1</a></span><span class="cl"><span class="c1"># list installed Crossplane providers</span>
+</span></span><span class="line"><span class="ln" id="2"><a class="lnlinks" href="#2"> 2</a></span><span class="cl">$ kubectl get providers
+</span></span><span class="line"><span class="ln" id="3"><a class="lnlinks" href="#3"> 3</a></span><span class="cl">NAME          INSTALLED   HEALTHY   PACKAGE                                     AGE
+</span></span><span class="line"><span class="ln" id="4"><a class="lnlinks" href="#4"> 4</a></span><span class="cl">provider-aws  True        True      xpkg.upbound.io/cross…/provider-aws:v0.33.0 40s
+</span></span><span class="line"><span class="ln" id="5"><a class="lnlinks" href="#5"> 5</a></span><span class="cl">
+</span></span><span class="line"><span class="ln" id="6"><a class="lnlinks" href="#6"> 6</a></span><span class="cl"><span class="c1"># get all running Crossplane resources</span>
+</span></span><span class="line"><span class="ln" id="7"><a class="lnlinks" href="#7"> 7</a></span><span class="cl">$ kubectl get all -n crossplane-system
+</span></span><span class="line"><span class="ln" id="8"><a class="lnlinks" href="#8"> 8</a></span><span class="cl">
+</span></span><span class="line"><span class="ln" id="9"><a class="lnlinks" href="#9"> 9</a></span><span class="cl">NAME                                              READY   STATUS    RESTARTS   AGE
+</span></span><span class="line"><span class="ln" id="10"><a class="lnlinks" href="#10">10</a></span><span class="cl">pod/crossplane-cb755467b-lv6vm                    1/1     Running   <span class="m">0</span>          14m
+</span></span><span class="line"><span class="ln" id="11"><a class="lnlinks" href="#11">11</a></span><span class="cl">pod/crossplane-rbac-manager-69ff585d75-74wdz      1/1     Running   <span class="m">0</span>          14m
+</span></span><span class="line"><span class="ln" id="12"><a class="lnlinks" href="#12">12</a></span><span class="cl">pod/provider-aws-55f4b7e3267e-6cdb597b94-gjtsb    1/1     Running   <span class="m">0</span>          40s
+</span></span><span class="line"><span class="ln" id="13"><a class="lnlinks" href="#13">13</a></span><span class="cl">
+</span></span><span class="line"><span class="ln" id="14"><a class="lnlinks" href="#14">14</a></span><span class="cl">NAME                                          READY   UP-TO-DATE   AVAILABLE   AGE
+</span></span><span class="line"><span class="ln" id="15"><a class="lnlinks" href="#15">15</a></span><span class="cl">deployment.apps/crossplane                    1/1     <span class="m">1</span>            <span class="m">1</span>           14m
+</span></span><span class="line"><span class="ln" id="16"><a class="lnlinks" href="#16">16</a></span><span class="cl">deployment.apps/crossplane-rbac-manager       1/1     <span class="m">1</span>            <span class="m">1</span>           14m
+</span></span><span class="line"><span class="ln" id="17"><a class="lnlinks" href="#17">17</a></span><span class="cl">deployment.apps/provider-aws-55f4b7e3267e     1/1     <span class="m">1</span>            <span class="m">1</span>           40s
+</span></span><span class="line"><span class="ln" id="18"><a class="lnlinks" href="#18">18</a></span><span class="cl">
+</span></span><span class="line"><span class="ln" id="19"><a class="lnlinks" href="#19">19</a></span><span class="cl">NAME                                               DESIRED   CURRENT   READY   AGE
+</span></span><span class="line"><span class="ln" id="20"><a class="lnlinks" href="#20">20</a></span><span class="cl">replicaset.apps/crossplane-cb755467b               <span class="m">1</span>         <span class="m">1</span>         <span class="m">1</span>       14m
+</span></span><span class="line"><span class="ln" id="21"><a class="lnlinks" href="#21">21</a></span><span class="cl">replicaset.apps/crossplane-rbac-manager-69ff585    <span class="m">1</span>         <span class="m">1</span>         <span class="m">1</span>       14m
+</span></span><span class="line"><span class="ln" id="22"><a class="lnlinks" href="#22">22</a></span><span class="cl">replicaset.apps/provider-aws-55f4b7e3267e-6cdb597  <span class="m">1</span>         <span class="m">1</span>         <span class="m">1</span>       40s
+</span></span><span class="line"><span class="ln" id="23"><a class="lnlinks" href="#23">23</a></span><span class="cl">
+</span></span><span class="line"><span class="ln" id="24"><a class="lnlinks" href="#24">24</a></span><span class="cl"><span class="c1"># get all Crossplane CRDs for AWS EC2 resources</span>
+</span></span><span class="line"><span class="ln" id="25"><a class="lnlinks" href="#25">25</a></span><span class="cl">$ kubectl get crds <span class="p">|</span> grep ec2.aws
+</span></span><span class="line"><span class="ln" id="26"><a class="lnlinks" href="#26">26</a></span><span class="cl">addresses.ec2.aws.crossplane.io                   2023-07-01T15:18:10Z
+</span></span><span class="line"><span class="ln" id="27"><a class="lnlinks" href="#27">27</a></span><span class="cl">amicopies.ec2.aws.upbound.io                      2023-07-01T10:31:30Z
+</span></span><span class="line"><span class="ln" id="28"><a class="lnlinks" href="#28">28</a></span><span class="cl">amilaunchpermissions.ec2.aws.upbound.io           2023-07-01T10:31:30Z
+</span></span><span class="line"><span class="ln" id="29"><a class="lnlinks" href="#29">29</a></span><span class="cl">amis.ec2.aws.upbound.io                           2023-07-01T10:31:29Z
+</span></span><span class="line"><span class="ln" id="30"><a class="lnlinks" href="#30">30</a></span><span class="cl">availabilityzonegroups.ec2.aws.upbound.io         2023-07-01T10:31:29Z
+</span></span><span class="line"><span class="ln" id="31"><a class="lnlinks" href="#31">31</a></span><span class="cl">capacityreservations.ec2.aws.upbound.io           2023-07-01T10:31:29Z
+</span></span><span class="line"><span class="ln" id="32"><a class="lnlinks" href="#32">32</a></span><span class="cl">customergateways.ec2.aws.upbound.io               2023-07-01T10:31:30Z
+</span></span><span class="line"><span class="ln" id="33"><a class="lnlinks" href="#33">33</a></span><span class="cl">defaultnetworkacls.ec2.aws.upbound.io             2023-07-01T10:31:29Z
+</span></span><span class="line"><span class="ln" id="34"><a class="lnlinks" href="#34">34</a></span><span class="cl">defaultroutetables.ec2.aws.upbound.io             2023-07-01T10:31:30Z
+</span></span><span class="line"><span class="ln" id="35"><a class="lnlinks" href="#35">35</a></span><span class="cl">defaultsecuritygroups.ec2.aws.upbound.io          2023-07-01T10:31:30Z
+</span></span><span class="line"><span class="ln" id="36"><a class="lnlinks" href="#36">36</a></span><span class="cl">defaultsubnets.ec2.aws.upbound.io                 2023-07-01T10:31:30Z
+</span></span><span class="line"><span class="ln" id="37"><a class="lnlinks" href="#37">37</a></span><span class="cl">defaultvpcs.ec2.aws.upbound.io                    2023-07-01T10:31:30Z
+</span></span><span class="line"><span class="ln" id="38"><a class="lnlinks" href="#38">38</a></span><span class="cl">ebsdefaultkmskeys.ec2.aws.upbound.io              2023-07-01T10:31:30Z
+</span></span><span class="line"><span class="ln" id="39"><a class="lnlinks" href="#39">39</a></span><span class="cl">ebsencryptionbydefaults.ec2.aws.upbound.io        2023-07-01T10:31:30Z
+</span></span><span class="line"><span class="ln" id="40"><a class="lnlinks" href="#40">40</a></span><span class="cl">ebssnapshotcopies.ec2.aws.upbound.io              2023-07-01T10:31:30Z
+</span></span><span class="line"><span class="ln" id="41"><a class="lnlinks" href="#41">41</a></span><span class="cl">ebssnapshotimports.ec2.aws.upbound.io             2023-07-01T10:31:30Z
+</span></span><span class="line"><span class="ln" id="42"><a class="lnlinks" href="#42">42</a></span><span class="cl">ebssnapshots.ec2.aws.upbound.io                   2023-07-01T10:31:30Z
+</span></span><span class="line"><span class="ln" id="43"><a class="lnlinks" href="#43">43</a></span><span class="cl">ebsvolumes.ec2.aws.upbound.io                     2023-07-01T10:31:30Z
+</span></span><span class="line"><span class="ln" id="44"><a class="lnlinks" href="#44">44</a></span><span class="cl">...</span></span></code></pre></div>
+<p>Since a Crossplane provider extends Kubernetes with CRDs representing resources in an external system, we also need some sort of authentication to talk to the API of the corresponding external system in which we want to provision resources - in our case AWS. For the authentication of the controller of our AWS provider we need a ProviderConfig in addition to the provider itself. In terms of AWS we can create a Kubernetes secret containing an AWS Access Key and Secret Access key which we can reference in our ProviderConfig as shown below:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="ln" id="1"><a class="lnlinks" href="#1"> 1</a></span><span class="cl"><span class="c"># create file containing AWS access credentials</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="2"><a class="lnlinks" href="#2"> 2</a></span><span class="cl"><span class="w"></span><span class="l">$ cat &lt;&lt;EOT &gt;&gt; creds.conf</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="3"><a class="lnlinks" href="#3"> 3</a></span><span class="cl"><span class="w"></span><span class="p">[</span><span class="l">default]</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="4"><a class="lnlinks" href="#4"> 4</a></span><span class="cl"><span class="w"></span><span class="l">aws_access_key_id = &lt;aws_access_key&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="5"><a class="lnlinks" href="#5"> 5</a></span><span class="cl"><span class="w"></span><span class="l">aws_secret_access_key = &lt;aws_secret_access_key&gt;</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="6"><a class="lnlinks" href="#6"> 6</a></span><span class="cl"><span class="w"></span><span class="l">EOT</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="7"><a class="lnlinks" href="#7"> 7</a></span><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="ln" id="8"><a class="lnlinks" href="#8"> 8</a></span><span class="cl"><span class="w"></span><span class="c"># create Kubernetes secret</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="9"><a class="lnlinks" href="#9"> 9</a></span><span class="cl"><span class="w"></span><span class="l">$ kubectl create secret generic aws-secret -n crossplane-system \</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="10"><a class="lnlinks" href="#10">10</a></span><span class="cl"><span class="w"></span>--<span class="l">from-file=creds=./creds.conf</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="11"><a class="lnlinks" href="#11">11</a></span><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="ln" id="12"><a class="lnlinks" href="#12">12</a></span><span class="cl"><span class="w"></span><span class="c"># create Crossplane ProviderConfig</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="13"><a class="lnlinks" href="#13">13</a></span><span class="cl"><span class="w"></span><span class="l">$ cat &lt;&lt;EOF | kubectl apply -f -</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="14"><a class="lnlinks" href="#14">14</a></span><span class="cl"><span class="w"></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">aws.upbound.io/v1beta1</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="15"><a class="lnlinks" href="#15">15</a></span><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">ProviderConfig</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="16"><a class="lnlinks" href="#16">16</a></span><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="17"><a class="lnlinks" href="#17">17</a></span><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">default</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="18"><a class="lnlinks" href="#18">18</a></span><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="19"><a class="lnlinks" href="#19">19</a></span><span class="cl"><span class="w">  </span><span class="nt">credentials</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="20"><a class="lnlinks" href="#20">20</a></span><span class="cl"><span class="w">    </span><span class="nt">source</span><span class="p">:</span><span class="w"> </span><span class="l">Secret</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="21"><a class="lnlinks" href="#21">21</a></span><span class="cl"><span class="w">    </span><span class="nt">secretRef</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="22"><a class="lnlinks" href="#22">22</a></span><span class="cl"><span class="w">      </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">crossplane-system</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="23"><a class="lnlinks" href="#23">23</a></span><span class="cl"><span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">aws-secret</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="24"><a class="lnlinks" href="#24">24</a></span><span class="cl"><span class="w">      </span><span class="nt">key</span><span class="p">:</span><span class="w"> </span><span class="l">creds</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="25"><a class="lnlinks" href="#25">25</a></span><span class="cl"><span class="w"></span><span class="l">EOF</span></span></span></code></pre></div>
+<p>As soon as our AWS provider is installed and healthy and we have created a valid ProviderConfig, we can start provisioning resources in AWS. For our example, we will provision a new VPC named &ldquo;sample-vpc&rdquo;. In order to do so we will create a corresponding Kubernetes manifest for our Crossplane MR which represents a new VPC in AWS in the region eu-central-1 with a CIDR block of 172.16.0.0/16 and apply it to our Kubernetes cluster like the example below.</p>
+<p><strong>TIP</strong>: In each MR definition we have the option to reference a specific ProviderConfig, so for example we can also create several different ProviderConfigs pointing to different AWS accounts, but if no ProviderConfig is referenced, a ProviderConfig named default is searched for and automatically assigned, which we created for our example above. A detailed API reference for each provider, including all available MRs and their attributes, can be viewed via the Upbound Marketplace or via doc.crds.dev. In our case, for our AWS provider, via the following link: <a href="https://doc.crds.dev/github.com/upbound/provider-aws">API Reference Provider AWS</a>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="ln" id="1"><a class="lnlinks" href="#1"> 1</a></span><span class="cl"><span class="c"># create Crossplane MR manifest</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="2"><a class="lnlinks" href="#2"> 2</a></span><span class="cl"><span class="w"></span><span class="l">$ cat &lt;&lt;EOT &gt;&gt; vpc.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="3"><a class="lnlinks" href="#3"> 3</a></span><span class="cl"><span class="w"></span><span class="nn">---</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="4"><a class="lnlinks" href="#4"> 4</a></span><span class="cl"><span class="w"></span><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">ec2.aws.upbound.io/v1beta1</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="5"><a class="lnlinks" href="#5"> 5</a></span><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">VPC</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="6"><a class="lnlinks" href="#6"> 6</a></span><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="7"><a class="lnlinks" href="#7"> 7</a></span><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">sample-vpc</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="8"><a class="lnlinks" href="#8"> 8</a></span><span class="cl"><span class="w"></span><span class="nt">spec</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="9"><a class="lnlinks" href="#9"> 9</a></span><span class="cl"><span class="w">  </span><span class="nt">forProvider</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="10"><a class="lnlinks" href="#10">10</a></span><span class="cl"><span class="w">    </span><span class="nt">cidrBlock</span><span class="p">:</span><span class="w"> </span><span class="m">172.16.0.0</span><span class="l">/16</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="11"><a class="lnlinks" href="#11">11</a></span><span class="cl"><span class="w">    </span><span class="nt">region</span><span class="p">:</span><span class="w"> </span><span class="l">eu-central-1</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="12"><a class="lnlinks" href="#12">12</a></span><span class="cl"><span class="w">    </span><span class="nt">tags</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="13"><a class="lnlinks" href="#13">13</a></span><span class="cl"><span class="w">      </span><span class="nt">Name</span><span class="p">:</span><span class="w"> </span><span class="l">sample-vpc</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="14"><a class="lnlinks" href="#14">14</a></span><span class="cl"><span class="w"></span><span class="l">EOT</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="15"><a class="lnlinks" href="#15">15</a></span><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="ln" id="16"><a class="lnlinks" href="#16">16</a></span><span class="cl"><span class="w"></span><span class="c"># create Crossplane MR</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="17"><a class="lnlinks" href="#17">17</a></span><span class="cl"><span class="w"></span><span class="l">$ kubectl apply -f vpc.yaml</span><span class="w">
+</span></span></span><span class="line"><span class="ln" id="18"><a class="lnlinks" href="#18">18</a></span><span class="cl"><span class="w"></span><span class="l">vpc.ec2.aws.upbound.io/sample-vpc created</span></span></span></code></pre></div>
+<p>After we have handed over our manifest to our Kubernetes control plane, we can query our new Kubernetes VPC resource on our cluster and see our new MR, which shows the status READY and SYNCED as &ldquo;True&rdquo;. The status SYNCED is an indicator if our manifest is valid and shows that our MR has been successfully transferred to the Crossplane controller and the status READY shows that our resource has been successfully rolled out in AWS:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="ln" id="1"><a class="lnlinks" href="#1">1</a></span><span class="cl"><span class="c1"># get status of Crossplane VPC MR</span>
+</span></span><span class="line"><span class="ln" id="2"><a class="lnlinks" href="#2">2</a></span><span class="cl">$ kubectl get vpc.ec2.aws.upbound.io
+</span></span><span class="line"><span class="ln" id="3"><a class="lnlinks" href="#3">3</a></span><span class="cl">NAME            READY       SYNCED      EXTERNAL-NAME             AGE
+</span></span><span class="line"><span class="ln" id="4"><a class="lnlinks" href="#4">4</a></span><span class="cl">sample-vpc      True        True        vpc-0f91fce394b874d1e     15s</span></span></code></pre></div>
+<p>Our MR also outputs an attribute EXTERNAL-NAME. Under the hood, that is an annotation which has special meaning to Crossplane MRs and specifies the identifier of the resource in the external system. In our case it refers to the ID of our AWS VPC which Crossplane uses to identify and keep track of the resource. Since our resource was successfully synced and provisioned, our new VPC with the corresponding ID should now also be visible in the AWS management console:</p>
+<p>
+  <img src="/posts/img/NS-ControlPlaneOperatedInfrastructure/p1_AWS_management_console.png" alt="AWS management console">
+
+</p>
+<p>With that, we have successfully provisioned our first cloud resource using Crossplane, managed via Kubernetes as the control plane.</p>
+<p>In theory that&rsquo;s all we need to manage our cloud infrastructure on a control plane operated level. With the available MRs we can provision and manage every kind of resource we want. However, in my opinion, when it comes to more complex infrastructure setups, such as a fully production ready Kubernetes setup in AWS including a lot of resources, rolling out individual MRs is not really practical. Therefore, Crossplane also offers a feature called Composite Resources (XRs), which can be used to compose multiple MRs and expose it as a new custom Kubernetes resource we can use to provision and manage our infrastructure. How we can create XRs and what we need for this will be covered in the second part of this blog series.</p>
+<h1 id="credits">Credits</h1>
+<p>Title image by <a href="https://www.shutterstock.com/de/g/ESB+Professional">ESB Professional</a> on <a href="https://www.shutterstock.com">Shutterstock</a></p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/niklas-schuster.png" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/niklas-schuster">Niklas Schuster</a><span>
+                    
+                </span></h3>
+                <p>Cloud Solution Architect </p>
+                <p calss="author-socials">
+                    
+                    
+                    <a target="_blank"  href="https://www.linkedin.com/in/niklas-schuster"><i class="fa-brands fa-linkedin"></i></a>
+                    
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        <div class="related-block">
+            <h3 class="related-heading" id="series-list">Check out the full series</h3>
+            
+            <ul>
+                
+                <li><a class="related-link" href="/posts/ns-controlplaneoperatedinfrastructure_1/">CONTROL PLANE OPERATED INFRASTRUCTURE - Part 1: Introduction to Crossplane</a></li>
+                
+            </ul>
+        </div>
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+                <h3 class="related-heading">You may also like</h3>
+
+                
+                
+                <ul>
+                    
+                    
+                    
+                        <li><a class="related-link" href="/posts/mjm-sa-otelmetrics-02-firstmetrics/">TRANSITIONING FROM PROMETHEUS TO OPENTELEMETRY - A JOURNEY OF A CLUSTER&#39;S METRICS EVOLUTION - Part 2: Scraping The First Metrics</a></li>
+                    
+                    
+                    
+                    
+                        <li><a class="related-link" href="/posts/mjm-sa-otelmetrics-01-intro/">TRANSITIONING FROM PROMETHEUS TO OPENTELEMETRY - A JOURNEY OF A CLUSTER&#39;S METRICS EVOLUTION - Part 1: A Brief Introduction</a></li>
+                    
+                    
+                    
+                    
+                    <li><a class="related-link" href="/posts/sk-secretshandlinginkubernetes/">Secrets Handling in Kubernetes</a></li>
+                    
+                    
+                </ul>
+                
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/crossplane/">Crossplane</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/kubernetes/">Kubernetes</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/aws/">AWS</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/cloud/">Cloud</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/infrastructure/">Infrastructure</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/control-plane/">Control Plane</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/infrastructure-as-code/">Infrastructure as Code</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/devops/">DevOps</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</html>

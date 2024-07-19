@@ -1,0 +1,226 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Three use cases highlighting the business value of private blockchain  </title>
+  <meta charset="utf-8"/> 
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Three use cases highlighting the business value of private blockchain"/>
+  
+  <meta property="article:author" content="[Maja Schwarz]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/MS-UseCasesPrivateBlockchain/title-image.jpg"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/ms-usecasesprivateblockchain/"/>
+  <meta property="og:description" content="Rarely do we find a technology as controversial as blockchain. It seems there are as many blockchain sceptics as blockchain enthusiasts. The sceptics are concerned with unlawful behavior that occurred in public blockchain networks, as well as with extremely high current or past energy consumption of certain public blockchains."/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">18.10.2022
+        
+         - Maja Schwarz - <i class="fa-solid fa-book-open"></i> 9 min read
+        
+        </span>
+        Three use cases highlighting the business value of private blockchain
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/MS-UseCasesPrivateBlockchain/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <p>Rarely do we find a technology as controversial as blockchain. It seems there are as many blockchain sceptics as blockchain enthusiasts. The sceptics are concerned with unlawful behavior that occurred in public blockchain networks, as well as with extremely high current or past energy consumption of certain public blockchains. Most importantly, it is not always clear what is the real value of the technology. At the same time, there is also a relatively high number of common misconceptions related to blockchain platforms and their types.</p>
+<p>To understand the value of the technology and decentralization, we will investigate three examples of private blockchains and see that arguments against public blockchains do not hold in their case. Let’s start with the technical grounds and then explore financial service uses cases that can indeed profit from the use of this technology.</p>
+<h2 id="the-emergence-of-various-blockchain-platforms">The emergence of various blockchain platforms</h2>
+<p>Is blockchain invention a new technology or rather a novel system design built from existing methods? Regardless, the innovativeness of Bitcoin as the first blockchain is immense. Its novelty lies in a specific combination of cryptographic methods, which is supported by an incentive system rooted in game theory. When one puts aside cryptographic concepts such as hash functions and Merkle trees, Bitcoin is simply a system that allows a ledger maintained by unknown parties, embodied through miners/validation nodes, to reliably record executed transactions.</p>
+<p>The consensus protocol plays a central role in how these dynamically joining and leaving parties agree on which transactions are valid, as well as on the transaction order. Being based on a P2P network over the Internet, asynchrony in communication in a network with thousands of miners/validation nodes together with the dynamically changing number of anonymous nodes required the design of a novel consensus protocol, in order to ensure that the ledger can be trusted. Due to system differences, the already existing consensus protocols from other distributed systems were not suitable for Bitcoin. The trust in the ledger’s validity is partially based on the decentralization of the control over the ledger status, and therefore a viable proxy of identity in the anonymous world for the purpose of ensuring decentralization is needed.</p>
+<p>Sybil attack describes a situation in which a single malicious adversary creates fake identities to make it look like there are many different participants. To prevent such a malicious actor to take control over the network, proof of control over an asset with a limited supply is needed. This is how we come to the Proof-of-Work consensus protocol that is based on control over computational power as a proxy of real identity. The idea is rooted in the assumption that a single party could not control so much costly computational power, and therefore there is no centralized control over the network. Miners with the goal to ensure probabilistically that the network is decentralized and not controlled by a single actor perform unnecessary and very intensive computations. This results in an enormous waste of energy. Therefore, other alternatives appeared, such as Proof-of-Stake in which the proxy of decentralization can be the control over the native network currency and in this way limits the power of a single party.</p>
+<p>Blockchain development started with Bitcoin in 2008. Since then, various blockchain platforms appeared, with Ethereum being especially notable due to the extension of programming capabilities, which allow the implementation of Turing-complete code on blockchain. Transactions evolved into much more than a simple coin transfer, as they can trigger the execution of arbitrary code that was previously deployed in a form of a smart contract.</p>
+<p>The evolution did not only concern consensus protocols and execution capabilities, but it also led to different types and governance models of blockchains. Private blockchains emerged to cater to industry use cases that are too sensitive to existing challenges of public blockchains, such as reliability, throughput, transaction fees, transaction finality, or clear line of responsibility. They share many characteristics with public networks, e.g. nodes also have replicas of append-only ledgers in which digitally signed transactions are stored with cryptographic mechanisms providing certain guarantees that the data has not been tampered with. These replicas are also maintained in sync through a consensus protocol, but since the nodes holding the ledger are authenticated and known in advance, private blockchains solve challenges typical for public blockchains. Additionally, these protocols do not require excessive computations that lead to energy waste.</p>
+<p>Consortia are formed by use case stakeholders with an interest in ledger maintenance. Therefore, financial incentives in the form of transaction fees are not necessary for private blockchains, although they can be introduced as a part of the business model. Another difference between these two basic types of blockchains is the decentralization level. Private blockchains are considered less decentralized than public ones, but full decentralization is not a benefit per se, at least not in enterprise use cases. The advantages of decentralization in enterprise use cases can be rather seen through the opportunity to implement new business processes without the need to establish a new intermediary in charge of a centralized solution. Moreover, the actual level of current decentralization of public blockchains is also often questioned, both in terms of miners/validator nodes, as well as of service providers on the platform such as exchanges.</p>
+<p>The term Distributed Ledger Technology (DLT) is often used interchangeably with blockchain, but it can be used to describe a more general category of systems that do not necessarily store transactions in blocks. For completeness, one should acknowledge that the classification into public and private blockchains is slightly simplified. There are also hybrid blockchains that are public permissioned, meaning that their validators need an invitation to join as network operators, but anyone is welcome to make transactions on the network.</p>
+<p>Private blockchains do not suffer from common weaknesses of public blockchains, but how do they help enterprises to reinvent their operations in the digital world and generate value for the involved stakeholders? Let’s focus on three use cases for financial services, to answer this question.</p>
+<h2 id="use-case-1-trade-finance">Use case #1: Trade finance</h2>
+<p>Trade finance is one of the early blockchain use cases in the enterprise blockchain world, where operational inefficiencies needed to be removed. This use case targets a broad ecosystem of international trade participants including exporters, importers, their banks, insurers, customs, freight carriers, and forwarders. Their complex operation over decades was driven by paper-intensive processes making the use case a great candidate for efficiency improvement through digital transformation.</p>
+<p>There are already numerous trade finance networks based on blockchain. One example is “Tradewaltz” a trading platform launched in 2017 by NTT DATA that turned into a startup with joint investment by NTT DATA, Toyota Tsusho, Mitsubishi Corporation, and others. The blockchain platform used for the implementation is Hyperledger Fabric. This private blockchain network is run by a consortium representing the participating countries with one node per country that can be operated by official authorities or a comparably trusted party. In this way blockchain helps decentralize trust needed in international trade to the country level.</p>
+<p>Ecosystem participants such as banks, insurers, and carriers continue using their in-house systems for the issuance of documents, as they connect through APIs to the trading network. The underlying blockchain ensures document originality since it records the documents’ hash values that can be used to resolve any possible dispute. This is how blockchain can help remove paper-based documents from international trade enabling digital transformation in complex settings with a multitude of entities distributed in various countries.</p>
+<h2 id="use-case-2-tokenization-of-assets">Use case #2: Tokenization of assets</h2>
+<p>A token on a blockchain is a digital representation of an asset or a right. Common examples of assets that can be tokenized are financial instruments, such as shares and bonds. However, proposals to tokenize traditionally non-bankable assets are also frequently emerging over the last few years. There are some expectations that the liquidity of some asset classes could be increased through their tokenization and fractional ownership that can be easily supported through the tokenization process.</p>
+<p>Using blockchain technology for asset digitalization can transform settlement, collateralization, and reconciliation processes. The settlement process traditionally uses an intermediary to ensure that either both payment and asset ownership transfer happen, or none happen. Smart contracts allow to execute Delivery versus Payment (DvP) in an atomic swap that is ensured by the network, instead of a direct intermediary. Furthermore, a smart contract can lock certain assets as a collateral and release them upon fulfillment of certain conditions, allowing parties to interact directly with the trust being rooted in the platform. Finally, since blockchain ledger provides a single source of truth to which the involved parties have agreed, the need for reconciliation is removed.</p>
+<p>Reconciliation is a common problem that also occurs with interbank payments. NTT DATA has implemented a DLT-based solution on Corda to solve the reconciliation problem in the Spunta project for the Italian banking industry. The network is live with the participation of roughly 90% of the country’s banks.</p>
+<h2 id="use-case-3-wholesale-cbdc-on-blockchain">Use case #3: Wholesale CBDC on blockchain</h2>
+<p>Central Bank Digital Currency (CBDC) can be considered a special case of the previous one since it can be implemented as a token on a DLT. Here we should distinguish between retail and wholesale CBDC, as the latter especially can benefit from blockchain to improve the efficiency of cross-border interbank payments and security settlements in central bank money.</p>
+<p>International interbank payments are normally facilitated through correspondent banks that play the role of intermediaries which hold accounts of respondents to be credited and debited as a part of the payment processing chain. Through these networks, a bank can make a payment to another bank in a different country. However, these processes are still highly expensive and inefficient for some countries. Blockchain can help to improve these processes and there are multiple different approaches being studied, such as having central banks operating their respective nodes on a single blockchain platform or having separate platforms for which interoperability methods are developed.</p>
+<p>Most central banks are actively exploring various approaches to implement CBDC on DLT through PoCs, to be ready for a potential launch. Having wholesale CBDC on a DLT platform would allow for on-chain DvP settlement against central bank money. Similarly, a foreign exchange could be done without direct intermediation in the form of Payment versus Payment (PvP). Having a broader ecosystem of assets and services directly on-chain and interoperability mechanisms in place would certainly amplify the isolated benefits of the technology.</p>
+<p>These three use cases are interesting examples of how blockchain can help transform existing processes in the financial services industry. However, there are also other financial and applications in other industries that already profit from blockchain technology. Furthermore, the rapid developments in this space will very likely give rise to other use cases that we do not envision yet.</p>
+<h1 id="credits">Credits</h1>
+<p>Title image by <a href="https://www.shutterstock.com/g/phive">phive</a> on <a href="https://www.shutterstock.com">Shutterstock</a></p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/maja-schwarz.jpg" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/dr.-maja-schwarz">Dr. Maja Schwarz</a><span>
+                    
+                </span></h3>
+                <p>Managing Consultant | CTO Team </p>
+                <p calss="author-socials">
+                    
+                    
+                    
+                    
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/blockchain/">blockchain</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/dlt/">DLT</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/financial-services/">financial services</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/decentralization/">decentralization</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</html>

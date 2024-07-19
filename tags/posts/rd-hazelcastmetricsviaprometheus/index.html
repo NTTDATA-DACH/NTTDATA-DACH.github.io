@@ -1,0 +1,333 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Hazelcast Metrics via Prometheus  </title>
+  <meta charset="utf-8"/> 
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Hazelcast Metrics via Prometheus"/>
+  
+  <meta property="article:author" content="[Robert Danczak]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/RD-HazelcastMetricsViaPrometheus/title-image.jpg"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/rd-hazelcastmetricsviaprometheus/"/>
+  <meta property="og:description" content="A step-by-step guide on how to collect Hazelcast metrics via Prometheus. The tutorial is aimed at those who are running a customized Hazelcast microservice, rather than the full-blown zip-file/dockers. The guide covers all the necessary steps, from adding the Prometheus dependency to Java code configuration, updating application YAML and Dockerfile, to updating the ServiceMonitor. The article also offers helpful hints and sources for further reading."/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">14.04.2024
+        
+         - Robert Danczak - <i class="fa-solid fa-book-open"></i> 3 min read
+        
+        </span>
+        Hazelcast Metrics via Prometheus
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/RD-HazelcastMetricsViaPrometheus/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <p>In this tutorial we want to show you, how to collect Hazelcast metrics via Prometheus. The main reason for this how-to is, that the <a href="https://docs.hazelcast.com/hazelcast/5.2/maintain-cluster/monitoring#exposing-metrics">manual</a> provided by Hazelcast does not give any hints on how to obtain the metrics in detail. They refer to their full-blown zip-file / Docker images and start it with one parameter. However, if you are running in a K8s (sidecar) container or with your own microservice, this will not help much.
+You can also get the metrics through the Management Center if it is available, but this is limited to Hazelcast Enterprise and a license.</p>
+<h1 id="prerequisites">Prerequisites</h1>
+<p>You have a customised Hazelcast Microservice and are not using the full-blown zip-file / Docker images.</p>
+<h1 id="step-by-step-guide">Step-by-Step Guide</h1>
+<p>To collect metrics from Hazelcast, we need to extend an existing Hazelcast microservice with the following steps:</p>
+<ol>
+<li>
+<p>Add the Prometheus dependency to the <code>pom.xml</code>
+pom.xml
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-xml" data-lang="xml"><span class="line"><span class="cl"><span class="nt">&lt;dependency&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;groupId&gt;</span>io.micrometer<span class="nt">&lt;/groupId&gt;</span>
+</span></span><span class="line"><span class="cl">    <span class="nt">&lt;artifactId&gt;</span>micrometer-registry-prometheus<span class="nt">&lt;/artifactId&gt;</span>
+</span></span><span class="line"><span class="cl"><span class="nt">&lt;/dependency&gt;</span></span></span></code></pre></div></p>
+</li>
+<li>
+<p>Update <code>template.yaml</code></p>
+<ol>
+<li>Add the Prometheus label(s) from your configured Prometheus to the service, so Prometheus can see it, e.g.,
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">monitored</span><span class="p">:</span><span class="w"> </span><span class="l">Prometheus</span></span></span></code></pre></div>
+or
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">prometheus.io/scrape</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;true&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">prometheus.io/path</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;/actuator/prometheus&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">prometheus.io/port</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;8081&#34;</span></span></span></code></pre></div></li>
+<li>Add an additional port to the service:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl">- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">http-prometheus</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l">TCP</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="m">8081</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">targetPort</span><span class="p">:</span><span class="w"> </span><span class="m">8081</span></span></span></code></pre></div></li>
+</ol>
+</li>
+<li>
+<p>Add the lines below to your Hazelcast microservice configuration, either with Java code or in the yaml file to activate the metrics. They should be already activated by default and we explicitly disable the Management Center as we do not use it:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-Java" data-lang="Java"><span class="line"><span class="cl"><span class="n">c</span><span class="p">.</span><span class="na">getMetricsConfig</span><span class="p">().</span><span class="na">setEnabled</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">c</span><span class="p">.</span><span class="na">getMetricsConfig</span><span class="p">().</span><span class="na">getJmxConfig</span><span class="p">().</span><span class="na">setEnabled</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="n">c</span><span class="p">.</span><span class="na">getMetricsConfig</span><span class="p">().</span><span class="na">getManagementCenterConfig</span><span class="p">().</span><span class="na">setEnabled</span><span class="p">(</span><span class="kc">false</span><span class="p">);</span></span></span></code></pre></div></p>
+</li>
+<li>
+<p>Create or update - if it already exists - the <code>application.yml</code> file to pass the metrics through the web server:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">management</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">endpoints</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">web</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">exposure</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">include</span><span class="p">:</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="l">info</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="l">health</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="l">prometheus</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">metrics</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">prometheus</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">metrics</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">export</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">prometheus</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">info</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">env</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre></div></p>
+</li>
+<li>
+<p>Add the JMX Prometheus Agent</p>
+<ol>
+<li>Download the latest version and add it to the folder <code>libs</code> inside your microservice. (<a href="https://central.sonatype.com/artifact/io.prometheus.jmx/jmx_prometheus_javaagent/overview">link</a>)</li>
+<li>Download the configuration (<a href="https://github.com/hazelcast/hazelcast-docker/blob/master/hazelcast-oss/jmx_agent_config.yaml">link</a>) and add it also into the folder <code>libs</code>.</li>
+</ol>
+</li>
+<li>
+<p>Update the Dockerfile to inject the agent.</p>
+<ol>
+<li>Copy the files from step 5 in the root directory:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">COPY libs/jmx_prometheus_javaagent-0.17.2.jar /jmx_prometheus_javaagent.jar
+</span></span><span class="line"><span class="cl">COPY libs/jmx_agent_config.yaml /jmx_agent_config.yaml</span></span></code></pre></div></li>
+<li>Inject the agent via JAVA_OPTS:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl">-<span class="l">javaagent:/jmx_prometheus_javaagent.jar=8081:/jmx_agent_config.yaml</span></span></span></code></pre></div></li>
+</ol>
+</li>
+<li>
+<p>Update your ServiceMonitor under &ldquo;endpoints&rdquo;, so that Prometheus can find and poll for Hazelcast metrics:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl">- <span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l">/actuator/prometheus</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l">http-prometheus</span></span></span></code></pre></div></p>
+</li>
+<li>
+<p>The metrics in Prometheus are now available and are prefixed with
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="l">hazelcast_</span></span></span></code></pre></div></p>
+</li>
+</ol>
+<h1 id="hints">Hints</h1>
+<ul>
+<li>If you are using a port other than <code>8081</code>, you need to update it in the Dockerfile as well.</li>
+<li>If the <code>libs</code> folder is named differently, you need to update it in the Dockerfile as well.</li>
+<li>If you have downloaded a newer version of the agent, you need to update it in the Dockerfile as well.</li>
+<li>In the ServiceMonitor, the port name must match the name in the service.</li>
+</ul>
+<h1 id="sources">Sources</h1>
+<ul>
+<li>Monitoring (hazelcast.com) (<a href="https://docs.hazelcast.com/hazelcast/5.2/maintain-cluster/monitoring#exposing-metrics">link</a>)</li>
+<li>GitHub - prometheus/jmx_exporter: A process for exposing JMX Beans via HTTP for Prometheus consumption (<a href="https://github.com/prometheus/jmx_exporter">link</a>)</li>
+<li>hazelcast/distribution/src/bin-filemode-755/hz at master · hazelcast/hazelcast · GitHub (<a href="https://github.com/hazelcast/hazelcast/blob/master/distribution/src/bin-filemode-755/hz#L70">link</a>)</li>
+<li>Jmx exporter is not showing hazelcast related information · Issue #119 · hazelcast/hazelcast-docker · GitHub (<a href="https://github.com/hazelcast/hazelcast-docker/issues/119">link</a>)</li>
+<li>Spring boot - Prometheus endpoint error when using micrometer - Stack Overflow (<a href="https://stackoverflow.com/questions/51765772/prometheus-endpoint-error-when-using-micrometer">link</a>)</li>
+</ul>
+<h1 id="credits">Credits</h1>
+<p>Title image by <a href="https://stock.adobe.com/contributor/207041160/travel-mania">Travel mania</a> on <a href="https://stock.adobe.com">Adobe Stock</a></p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/robert-danczak.jpg" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/robert-danczak">Robert Danczak</a><span>
+                    
+                </span></h3>
+                <p>Software Architect </p>
+                <p calss="author-socials">
+                    
+                    
+                    <a target="_blank"  href="https://www.linkedin.com/in/robert-danczak-0137b025b"><i class="fa-brands fa-linkedin"></i></a>
+                    <a target="_blank"  href="https://www.xing.com/profile/Robert_Danczak"><i class="fa-brands fa-xing"></i></a>
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+                <h3 class="related-heading">You may also like</h3>
+
+                
+                
+                <ul>
+                    
+                    
+                    
+                        <li><a class="related-link" href="/posts/mjm-sa-otelmetrics-03-annotationbasedscraping/">TRANSITIONING FROM PROMETHEUS TO OPENTELEMETRY - A JOURNEY OF A CLUSTER&#39;S METRICS EVOLUTION - Part 3: Enabling annotation-based scraping</a></li>
+                    
+                    
+                    
+                    
+                        <li><a class="related-link" href="/posts/as-konggateway-tokenvalidation/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 6: Token Validation</a></li>
+                    
+                    
+                    
+                    
+                        <li><a class="related-link" href="/posts/mjm-sa-otelmetrics-02-firstmetrics/">TRANSITIONING FROM PROMETHEUS TO OPENTELEMETRY - A JOURNEY OF A CLUSTER&#39;S METRICS EVOLUTION - Part 2: Scraping The First Metrics</a></li>
+                    
+                    
+                </ul>
+                
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/hazelcast/">Hazelcast</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/prometheus/">Prometheus</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/metrics/">Metrics</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/microservices/">Microservices</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/monitoring/">Monitoring</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/docker/">Docker</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/servicemonitor/">ServiceMonitor</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</html>

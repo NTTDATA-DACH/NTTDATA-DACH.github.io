@@ -1,0 +1,339 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Part 5: mTLS Header  </title>
+  <meta charset="utf-8"/> 
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Kong - The Gateway without Limitations - Part 5: mTLS Header"/>
+  
+  <meta property="article:author" content="[Alexander Suchier]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/AS-KongGateway-mTLS_Header/title-image.jpg"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/as-konggateway-mtls_header/"/>
+  <meta property="og:description" content="Mutual transport layer security (mTLS) with consumer authentication using client certificates at the Kong Gateway plays an important role in building a zero-trust architecture. But perimeter security devices that perform TLS termination, so-called TLS terminating reverse proxies (TTRP), break the automatic mapping of client certificates to Kong consumers. This blog demonstrates mTLS consumer authentication even with preceding TTRPs, without requiring TCP passthrough."/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">27.03.2024
+        
+         - Alexander Suchier - <i class="fa-solid fa-book-open"></i> 11 min read
+        
+        </span>
+        Part 5: mTLS Header
+        
+        
+        <a id="series-link" href="/series/kong-the-gateway-without-limitations"><span class="subtitle">Kong - The Gateway without Limitations</span></a>
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/AS-KongGateway-mTLS_Header/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <p>In the last <a href="https://nttdata-dach.github.io/posts/as-konggateway-saml2bearer/">blog post</a>, we discussed the topic of Security Assertion Markup Language (SAML) 2.0 assertions as a form of authentication. This time, we focus on another important security authentication topic that also plays an important role in building a zero-trust architecture (ZTA). Mutual transport layer security (mTLS) with consumer authentication using client certificates at the Kong Gateway is essential in the context of perimeter security. This is still true, even if components that act as TLS terminating reverse proxies (TTRP) are used.</p>
+<h1 id="overview">Overview</h1>
+<p>My previous blog articles ended with the saying that Kong is the <a href="https://nttdata-dach.github.io/posts/as-kongproductintroduction/">API gateway</a> without limits. This technical blog is about <a href="https://en.wikipedia.org/wiki/Mutual_authentication#mTLS">mTLS (Mutual Transport Layer Security)</a> in an advanced way or to be more precise, in an extended distributed way. mTLS is an extension of <a href="https://en.wikipedia.org/wiki/Transport_Layer_Security">TLS (Transport Layer Security)</a> that is designed to provide authentication and encryption for communication between two parties, such as an API client and an API gateway. Kong refers to API clients and users as &ldquo;consumers&rdquo;. In Kong&rsquo;s terminology, a consumer is an entity that consumes or accesses APIs managed by Kong. This entity  embodies a user, an application, or a group of users or applications. So, it&rsquo;s about the secure communication and authentication of the API consumer which can be implemented on the gateway via mTLS.</p>
+<p>In a mutual TLS setup, both the API consumer and the gateway authenticate each other using digital certificates (details on the structure of X.509 certificates can be found in the <a href="https://datatracker.ietf.org/doc/html/rfc5280">IETF RFC 5280 specification document</a>). This means that not only does the gateway act as a server presenting a certificate to prove its identity to the consumer (that’s the default part of the TLS protocol), but the consumer also presents a certificate to prove its identity to the gateway (this is the mutual or two-way part of the authentication). This mutual authentication adds an extra layer of security to ensure that both parties are who they claim to be. This extra step of consumer-to-server authentication is commonly used in scenarios where a high level of security is required.</p>
+<p>Kong supports the mutual TLS handshake to authenticate the consumer based on the client certificate provided by the <a href="https://docs.konghq.com/hub/kong-inc/mtls-auth/">Mutual TLS Authentication plugin</a>. The Kong consumer entity has the ability to attach plugins to customize request behavior, similar to service or route entities (details about Kong consumers, plugins, services, and routes can be found in my <a href="https://nttdata-dach.github.io/posts/as-kongproductintroduction/">introductory blog</a>). Basic (meaning username and password), API key, or mTLS credentials can also be assigned to a consumer. These credentials then play a role in authenticating the consumer via HTTP Basic AuthN, API keys AuthN, or <a href="https://docs.konghq.com/hub/kong-inc/mtls-auth/how-to/manual-mapping-cert-consumers/">mTLS AuthN</a>, as in the considered case.</p>
+<h1 id="problem">Problem</h1>
+<p>But what about the advanced way I mentioned at the beginning? A problem can arise from the protection of the outer boundaries of a network, the perimeter security. IT perimeter security protects an organization’s network, systems and data from unauthorized access and external threats by establishing barriers at the network edge. These barriers can include firewalls, intrusion detection equipment, access controls and other security technologies designed to monitor and control traffic entering the network to be protected.</p>
+<p>Perimeter security can terminate SSL/TLS connections to inspect the content of encrypted traffic to detect security threats. This process is called <a href="https://en.wikipedia.org/wiki/Deep_packet_inspection">Deep Packet Inspection (DPI)</a>, also known as packet sniffing, and is a type of network packet filtering performed by perimeter security components. DPI is only possible by intercepting the SSL/TLS connection and then decrypting and inspecting the payload of the data packet. If there is no security issue, then the data packet is re-encrypted before being forwarded to the intended destination. This process breaks the intended SSL handshake with the gateway because the security device acts as a man-in-the-middle safeguard  between the API consumer and the API gateway. This means that the original client certificate does not even arrive at the gateway. As a result, the gateway loses the ability to authenticate the consumer based on the information contained in the client certificate.</p>
+<p>Fortunately, advanced SSL/TLS-terminating network components like load balancers (LBs) or web application firewalls (WAFs) can be configured to pass the entire client cert as request header to the originally intended server. Even more advanced is the ability to extract selected fields from the client certificate and inject them as headers into the request being forwarded to the API gateway. For example, one of these advanced products that can pass client certificate fields as request headers is the <a href="https://cloud.google.com/load-balancing/docs/https/setting-up-mtls-global-ext-https">Google Cloud Platform (GCP) external application load balancer</a>. When mTLS is enabled on this load balancer, <a href="https://cloud.google.com/load-balancing/docs/https/setting-up-mtls-global-ext-https#add-custom-header">custom request headers</a> can be configured to pass information about the mTLS connection to backend services, in our case the API gateway. Therefore, the GCP external application load balancer follows the new standard of <a href="https://www.rfc-editor.org/rfc/rfc9440.html">IETF RFC 9440</a> as a TLS terminating reverse proxy (TTRP). This RFC document describes the process of forwarding client certificate information with HTTP extension header fields. The standard only mentions the header fields <code>Client-Cert</code> and <code>Client-Cert-Chain</code>. Of course, the GCP load balancer can extract and forward these <a href="https://cloud.google.com/load-balancing/docs/https/custom-headers-global#mtls-variables">mTLS fields</a>, but it can also extract individual certification information. We will take advantage of this feature.  The load balancer behavior in the event of missing or invalid certificates can also be <a href="https://cloud.google.com/load-balancing/docs/mtls#mtls_errors">configured</a> accordingly. The most important one for authentication is the <code>X-Client-Cert-DNSName-SANs</code> field, which contains a comma-separated base64-encoded list of subject alternative name (SAN) extensions of type <code>DNSName</code>. These SAN extensions are extracted from the client certificate by the load balancer.</p>
+<p>The diagram below illustrates a common DMZ setup in the GCP, with perimeter security provided by an external load balancer connected to Cloud Armor, a dedicated web application firewall (WAF), and the Kong API gateway. This setup includes the transport of mTLS client certificate information to the gateway as request headers.</p>
+
+
+
+
+
+<picture style="display: contents;"
+     >
+    
+    <source srcset="/posts/img/AS-KongGateway-mTLS_Header/mTLSHeader-dark.png" media="none"/>
+    
+    <img    
+        class="dynamicimage"    
+        
+        src="/posts/img/AS-KongGateway-mTLS_Header/mTLSHeader-light.png" 
+        
+         
+        
+        
+        
+        
+        />
+    
+</picture>
+
+<script>
+    initPicture()
+</script>
+
+<p>The <a href="https://datatracker.ietf.org/doc/html/rfc6125">IETF RFC 6125 specification document</a> defines a standard for validating the identities in secure communication protocols. According to RFC 6125, the SAN is the recommended field to extract, but if the <code>SAN</code> field of type <code>DNSName</code> is missing, the <code>CN</code> (subject common name) has to suffice.</p>
+<blockquote>
+	… If a subjectAltName extension of type dNSName is present, that MUST be used as the identity.  Otherwise, the (most specific) Common Name field in the Subject field of the certificate MUST be used.  Although the use of the Common Name is existing practice, it is deprecated and Certification Authorities are encouraged to use the <code>dNSName</code> instead.
+    </br>
+    <div id="reference">
+		<cite title="Source: RFC 6125, Appendix B, HTTP">
+        - 
+            RFC 6125, Appendix B, HTTP 
+             in 
+          
+          
+            
+              <a href="https://datatracker.ietf.org/doc/html/rfc6125#appendix-B.2" target="_blank" rel="noopener noreferrer">
+              Representation and Verification of Domain-Based Application Service</a>
+            
+          
+          
+		</cite>
+    </p>
+</blockquote>
+<p>Within the SAN extension, each entry can be tagged with a specific type to indicate the type of information it contains. If the SAN has the DNS name tagging (OID 2.5.29.17.2), it must be used for identity identification according to the specification. No tagging means implicit DNS name tagging.</p>
+<p>By the way, the <code>mTLS-auth</code> plugin follows these recommendations of the standard specification:</p>
+<!-- raw HTML omitted -->
+<aside 
+ data-content="Note" 
+
+><br/>
+    Subject names refer to the certificate’s Subject Alternative Names (SAN) or Common Name (CN). CN is only used if the SAN extension does not exist. (see <a href="https://docs.konghq.com/hub/kong-inc/mtls-auth/how-to/manual-mapping-cert-consumers/">here</a>)
+</aside>
+<p>mTLS with consumer authentication via the SAN can play an important role in implementing a zero-trust architecture (ZTA). Therefore, this security option should not be lost by perimeter security. For example, if the access token is missing or lacks sufficient information to perform an authorization check, it&rsquo;s crucial to ascertain the identity of the caller initiating the request. Alternatively, the security level of the called API is of such a high confidentiality class that both authorization concepts (mTLS and access token) are used.</p>
+<p>What does this mean for the API gateway? The perimeter security component placed at the network edge can be trusted and the consumer can be identified based on the transmitted SAN header field. However, within the Kong ecosystem there is currently no official and third-party solution to implement consumer identification based on a SAN request header field. Kong has received related demands from customers already and a feature request has been submitted (Kong feature request <a href="https://konghq.aha.io/ideas/ideas/GTWY-I-524">GTWY-I_524</a>) but as far as I know, it has not yet been implemented. Let us see how we can overcome this limitation.</p>
+<h1 id="solution">Solution</h1>
+<p>Once again, the solution is to develop your own plugin. I have already covered plugin development in my <a href="https://nttdata-dach.github.io/posts/as-konggateway-onbehalfof/">OBO blog</a>, but in this context I would like to point out a new excellent YouTube video on plugin development by Lokesh Chechani. The Kong video contribution <a href="https://www.youtube.com/watch?v=yx_5RQiivP8">&ldquo;Kong Plugins Unleashed: A Tech Odyssey into API Mastery&rdquo;</a> is ideal for getting started with plugin development.</p>
+<p>The new plugin should be set up and used on top of the existing Kong <a href="https://docs.konghq.com/hub/kong-inc/mtls-auth/">mutual TLS authentication</a> configuration. It is intended that the new plugin will work hand-in-hand and preceding the <code>mtls-auth</code> plugin provided by Kong out of the box. First the <code>mtls-header</code> plugin will try a consumer authentication, if that fails and further anonymous processing is allowed, then the <a href="https://docs.konghq.com/hub/kong-inc/mtls-auth/"><code>mtls-auth</code> plugin</a> can optionally try to authenticate from the SSL/TLS-handshake. This means that mTLS can work for both “outside” and “inside” calls to the same service. Since the <code>mtls-auth</code> plugin is an enterprise plugin and the new plugin builds on the existing structures, an enterprise license is also required for this new <code>mtls-header</code> plugin.</p>
+<p>This time, the new plugin does not identify the consumer directly on the client certificate taken from the SSL/TLS-handshake, but on the request SAN header, which has been passed on by perimeter security. The plugin should take the SAN from the request header and look for the appropriate subject name within the configured <code>mtls-auth</code> credentials. The SAN request header name used to look up the SAN value should be configurable. If there is a match, the referenced consumer is set. If no matching subject name is found in the configured mTLS credentials, authentication with an anonymous user can be allowed as a configurable fallback option in the plugin configuration. If the anonymous fallback option is not configured and the plugin cannot find a suitable SAN match, the request fails with the authentication failure code 401 (unauthorized). The way it works with the anonymous configuration should be like the other Kong authentication plugins with <a href="https://docs.konghq.com/gateway/latest/kong-plugins/authentication/reference/#anonymous-access">anonymous processing</a>.</p>
+<p>However, it should come as no surprise that I have already written a Lua <code>mtls-header</code> custom plugin. The implemented plugin is designed to process the certification <code>X-Client-Cert</code> request headers created by the aforementioned <a href="https://cloud.google.com/load-balancing/docs/https/setting-up-mtls-global-ext-https">Google Load Balancer</a>. However, the plugin should also be applicable to other perimeter security solutions or products. As mentioned above, the request header field names are configurable. Otherwise, the source code can be easily customized.</p>
+<p>I am happy to share it with you in case you are also suffering from loss of mTLS functionality due to perimeter security. Please see the NTT DATA GitHub repository for the plugin source code <a href="https://github.com/NTTDATA-DACH/TECHblog_code/tree/main/Series-KongGateway/05-AS-mTLS-header">here</a>.</p>
+<h1 id="usage">Usage</h1>
+<p>The execution order is determined by the priority of the plugin. The plugin runs in the NGINX access phase with priority 20000, so its execution in the processing pipeline is ahead of the standard authentication plugins.</p>
+<p>The mTLS header plugin is easy to configure. Only the mTLS header name for the SAN with DNS names is mandatory, while the anonymous user configuration and the certificate validity period are optional. The plugin assumes that the SAN information comes from the DNS name tag which is used for consumer authentication. The following<a href="https://docs.konghq.com/gateway/latest/production/deployment-topologies/db-less-and-declarative-config/"> DB-less configuration</a> snippet shows a running configuration that implements the mtls-header plugin with the anonymous user option allowed and a certificate expiration checking enabled.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">plugins</span><span class="p">:</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">mlts-header </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&#34;mtls-header&#34;</span><span class="p">]</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">service</span><span class="p">:</span><span class="w"> </span><span class="l">&lt;configured service entity&gt; </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">config</span><span class="p">:</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">anonymous</span><span class="p">:</span><span class="w"> </span><span class="l">anonymous </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">mtls_san_header_name</span><span class="p">:</span><span class="w"> </span><span class="l">X-Client-Cert-DNSName-SANs </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">mtls_valid_period_check_enabled</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">mtls_valid_nbf_header_name</span><span class="p">:</span><span class="w"> </span><span class="l">X-Client-Cert-Valid-Not-Before </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">mtls_valid_naf_header_name</span><span class="p">:</span><span class="w"> </span><span class="l">X-Client-Cert-Valid-Not-After </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">stopwatch</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w"> </span></span></span></code></pre></div>
+<p>The configuration shown above allows consumer authentication based on the SAN DNS name taken from the <code>X-Client-Cert-DNSName-SANs</code> request header field. If no consumer can be identified, the request will proceed as an anonymous user (and other authentication plugins will optionally get a second chance). Additionally, the plugin will check the validity period of the client certificate. The <code>X-Client-Cert-Valid-Not-Before</code> and <code>X-Client-Cert-Valid-Not-After</code> fields specify the bounds of validity.</p>
+<p>The mtls-header plugin has its own stopwatch and shows varying runtimes between 1 and 3 milliseconds in my Google Kubernetes Engine (GKE) test environment. Kong itself caches the <code>mtls-auth</code> credentials and consumer entities, hence the good plugin performance.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>mTLS rigorously verifies the identity of the communicating parties in a two-way fashion, reducing the risk of unauthorized access and data breaches. Perimeter security combined with mTLS consumer authentication at the gateway improves the overall security posture of the system, making it more resilient to various threats in today&rsquo;s dynamic and distributed computing environments. Therefore, easy-to-configure and customizable plugins are important for this task. The discussed <code>mtls-header</code> plugin fills a gap in the Kong plugin portfolio and enables mTLS consumer authentication at the Kong Gateway. The plugin is implemented in Lua for stability and performance.</p>
+<p>The presented plugin will solve your mTLS problems that may be triggered by perimeter security. Once again, coming back to my opening statement, with the Kong Gateway you will not run into any limitations. The latest Gartner Magic Quadrant for API Management (<a href="https://konghq.com/blog/news/gartner-magic-quadrant-lifecycle-api-management-leader">here</a>) also highlights this strength of Kong: <em>&ldquo;Kong takes a developer-focused approach by offering an API management solution with high deployment flexibility, programmability and performance&rdquo;</em>.</p>
+<p>Beyond words: Special thanks to Maximilian Rettig for his yielded expertise in perimeter security and GCP load balancer configuration options.</p>
+<h1 id="credits">Credits</h1>
+<p>Title image by <a href="https://www.shutterstock.com/g/gorodenkoff">Gorodenkoff</a> on <a href="https://www.shutterstock.com">Shutterstock</a></p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/alexander-suchier.jpg" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/alexander-suchier">Alexander Suchier</a><span>
+                    
+                </span></h3>
+                <p>Senior Managing Technical Consultant and Kong Champion </p>
+                <p calss="author-socials">
+                    
+                    
+                    <a target="_blank"  href="https://www.linkedin.com/in/alexander-suchier-0608481"><i class="fa-brands fa-linkedin"></i></a>
+                    
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        <div class="related-block">
+            <h3 class="related-heading" id="series-list">Check out the full series</h3>
+            
+            <ul>
+                
+                <li><a class="related-link" href="/posts/as-kongproductintroduction/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 1: Brief Product Introduction</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konglogchunking/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 2: Log Chunking</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-onbehalfof/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 3: Token Exchange On-Behalf-Of</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-saml2bearer/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-mtls_header/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 5: mTLS Header</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-tokenvalidation/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 6: Token Validation</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-tokencloning/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 7: Token Cloning</a></li>
+                
+            </ul>
+        </div>
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/kong/">Kong</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/gateway/">Gateway</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/kong-plugin/">Kong Plugin</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/mtls/">mTLS</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/mutual-tls/">mutual TLS</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/client-certificate/">client certificate</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/perimeter-security/">perimeter security</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/rfc-9440/">RFC 9440</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/ttrp/">TTRP</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/zta/">ZTA</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/pdk/">PDK</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/lua-module/">Lua Module</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</html>

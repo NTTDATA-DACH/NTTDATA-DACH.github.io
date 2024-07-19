@@ -1,776 +1,398 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on Technology Blog</title>
-    <link>https://nttdata-dach.github.io/tags/</link>
-    <description>Recent content in Tags on Technology Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
+    <title>Driving innovation | Where Ideas Come to Life | Creating innovation together on Technology Blog</title>
+    <link>https://nttdata-dach.github.io/</link>
+    <description>Die neuesten Inhalte auf Technology Blog</description>
+    
     <language>en-us</language>
+    
     <copyright>Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Wed, 03 Jul 2024 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    <lastBuildDate>Mon, 22 Jun 2020 09:26:55 +0200</lastBuildDate>
+    
+    <atom:link href="https://nttdata-dach.github.io/" rel="self" type="application/rss+xml" />
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <item>
-      <title> RFC 9068 </title>
-      <link>https://nttdata-dach.github.io/tags/-rfc-9068-/</link>
-      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/-rfc-9068-/</guid>
-      <description></description>
+      <title>Flutter CI/CD with Fastlane and GitHub Actions - Part 1: The Basics</title>
+      <link>https://nttdata-dach.github.io/posts/dd-fluttercicd-01-basics/</link>
+      <pubDate>Fri, 19 Jul 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/DD-FlutterCICD-01-Basics/title-image.jpg</guid>
+      <description>Automate your Flutter app deployment with this step-by-step guide using Fastlane and GitHub Actions. The article provides the necessary code snippets, for setting up the Fastlane files and environment, defining lanes for deployment to the App Store and Play Store, and automating the process using GitHub Actions. Overall, this article is an essential guide to streamlining the app deployment process, and it&amp;rsquo;s perfect for Flutter developers looking to automate their workflow.</description>
+
+      
+      
+        
     </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <item>
-      <title>“JWT Signer”</title>
-      <link>https://nttdata-dach.github.io/tags/jwt-signer/</link>
+      <title>Kong - The Gateway without Limitations - Part 7: Token Cloning</title>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-tokencloning/</link>
       <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/jwt-signer/</guid>
-      <description></description>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/AS-KongGateway-TokenCloning/title-image.jpg</guid>
+      <description>Building on the previous post, we discuss an architectural pattern for token handling called &amp;rsquo;therapeutic token cloning&amp;rsquo;, which is particularly effective in environments that use multiple identity and access management products. The pattern involves duplicating, correcting, and then re-signing access tokens to make them functional and more secure. This article details the steps involved in the token cloning process, as well as the pros and cons of this approach.</description>
+
+      
+      
+        
     </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <item>
-      <title>“OpenID Connect”</title>
-      <link>https://nttdata-dach.github.io/tags/openid-connect/</link>
-      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/openid-connect/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>API Gateway</title>
-      <link>https://nttdata-dach.github.io/tags/api-gateway/</link>
-      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/api-gateway/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Gateway</title>
-      <link>https://nttdata-dach.github.io/tags/gateway/</link>
-      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/gateway/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>JWT</title>
-      <link>https://nttdata-dach.github.io/tags/jwt/</link>
-      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/jwt/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Kong</title>
-      <link>https://nttdata-dach.github.io/tags/kong/</link>
-      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/kong/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Token Cloning</title>
-      <link>https://nttdata-dach.github.io/tags/token-cloning/</link>
-      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/token-cloning/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Zero-Trust Architecture</title>
-      <link>https://nttdata-dach.github.io/tags/zero-trust-architecture/</link>
-      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/zero-trust-architecture/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>API Security</title>
-      <link>https://nttdata-dach.github.io/tags/api-security/</link>
+      <title>Kong - The Gateway without Limitations - Part 6: Token Validation</title>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-tokenvalidation/</link>
       <pubDate>Thu, 06 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/api-security/</guid>
-      <description></description>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/AS-KongGateway-TokenValidation/title-image.jpg</guid>
+      <description>This time we discuss token validation in the context of the Kong Gateway, covering topics such as OpenID Connect, OAuth 2.0, and Zero-Trust Architecture. The article explains the different types of tokens, the benefits of offline validation, and the various Kong plugins that support token validation. The article notes that architectural trade-offs may be required regarding revocation and fine-grained authorization validation, and concludes that Kong Gateway offers ample options for token validation, including the ability to write custom plugins.</description>
+
+      
+      
+        
     </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <item>
-      <title>Microservices</title>
-      <link>https://nttdata-dach.github.io/tags/microservices/</link>
-      <pubDate>Thu, 06 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/microservices/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>OAuth 2.0</title>
-      <link>https://nttdata-dach.github.io/tags/oauth-2.0/</link>
-      <pubDate>Thu, 06 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/oauth-2.0/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>OpenID Connect</title>
-      <link>https://nttdata-dach.github.io/tags/openid-connect/</link>
-      <pubDate>Thu, 06 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/openid-connect/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>RFC 9068</title>
-      <link>https://nttdata-dach.github.io/tags/rfc-9068/</link>
-      <pubDate>Thu, 06 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/rfc-9068/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Token Validation</title>
-      <link>https://nttdata-dach.github.io/tags/token-validation/</link>
-      <pubDate>Thu, 06 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/token-validation/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Cloud</title>
-      <link>https://nttdata-dach.github.io/tags/cloud/</link>
+      <title>Transitioning from Prometheus to OpenTelemetry - A Journey of a Cluster&#39;s Metrics Evolution - Part 2: Scraping The First Metrics</title>
+      <link>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-02-firstmetrics/</link>
       <pubDate>Mon, 03 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/cloud/</guid>
-      <description></description>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/MJM-SA-OtelMetrics-02-FirstMetrics/title-image.jpg</guid>
+      <description>Having explained the technical implementation of the monitoring stack in our latest blog post, this article focuses on replacing Prometheus with OpenTelemetry Collector to decouple scraping from the storage and query mechanisms. The OpenTelemetry Collector uses various building blocks to construct the telemetry pipeline and requires enabling of the target allocator. Guiding you through this process we provide various practical tips, including processor ordering and horizontal autoscaling.&amp;quot;</description>
+
+      
+      
+        
     </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <item>
-      <title>Kubernetes</title>
-      <link>https://nttdata-dach.github.io/tags/kubernetes/</link>
-      <pubDate>Mon, 03 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/kubernetes/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Metrics</title>
-      <link>https://nttdata-dach.github.io/tags/metrics/</link>
-      <pubDate>Mon, 03 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/metrics/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Observability</title>
-      <link>https://nttdata-dach.github.io/tags/observability/</link>
-      <pubDate>Mon, 03 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/observability/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>OpenTelemetry</title>
-      <link>https://nttdata-dach.github.io/tags/opentelemetry/</link>
-      <pubDate>Mon, 03 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/opentelemetry/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Platform Engineering</title>
-      <link>https://nttdata-dach.github.io/tags/platform-engineering/</link>
-      <pubDate>Mon, 03 Jun 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/platform-engineering/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Augmented Reality</title>
-      <link>https://nttdata-dach.github.io/tags/augmented-reality/</link>
+      <title>Immersive Technologies - Part 1: Introduction to immersive technologies</title>
+      <link>https://nttdata-dach.github.io/posts/ss-immersivetechnologies-01-basics/</link>
       <pubDate>Wed, 15 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/augmented-reality/</guid>
-      <description></description>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/SS-ImmersiveTechnologies-01-Basics/title-image.jpg</guid>
+      <description>Immersive technologies, alternatively referred to as XR technologies, possess the capability to either augment or replace the physical world with a digitally simulated one. This article provides an overview by describing the three categories of immersive technologies, including relevant background information, and significant use cases.</description>
+
+      
+      
+        
     </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <item>
-      <title>Mixed Reality</title>
-      <link>https://nttdata-dach.github.io/tags/mixed-reality/</link>
-      <pubDate>Wed, 15 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/mixed-reality/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Virtual Reality</title>
-      <link>https://nttdata-dach.github.io/tags/virtual-reality/</link>
-      <pubDate>Wed, 15 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/virtual-reality/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>XR Technology</title>
-      <link>https://nttdata-dach.github.io/tags/xr-technology/</link>
-      <pubDate>Wed, 15 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/xr-technology/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Data Architecture</title>
-      <link>https://nttdata-dach.github.io/tags/data-architecture/</link>
+      <title>Data mesh as an element of data strategy</title>
+      <link>https://nttdata-dach.github.io/posts/nf-en-datameshasanelementofdatastrategy/</link>
       <pubDate>Thu, 02 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/data-architecture/</guid>
-      <description></description>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/NF-EN-DataMeshAsAnElementOfDataStrategy/title-image.jpg</guid>
+      <description>In this article we discuss the challenges of storing vast amounts of data to become a value-driven organization and introduce data mesh, an innovative technology that addresses these challenges. We outline the four principles of data mesh and provide a step-by-step framework for implementing the architecture. The article also gives an example of data mesh implementation using serverless tools on AWS and emphasizes that the selection between data mesh and traditional data architectures depends on the specific needs, capabilities, and goals of the business.</description>
+
+      
+      
+        
     </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <item>
-      <title>Data Governance</title>
-      <link>https://nttdata-dach.github.io/tags/data-governance/</link>
-      <pubDate>Thu, 02 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/data-governance/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Data Lake</title>
-      <link>https://nttdata-dach.github.io/tags/data-lake/</link>
-      <pubDate>Thu, 02 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/data-lake/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Data Mesh</title>
-      <link>https://nttdata-dach.github.io/tags/data-mesh/</link>
-      <pubDate>Thu, 02 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/data-mesh/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Data Strategy</title>
-      <link>https://nttdata-dach.github.io/tags/data-strategy/</link>
-      <pubDate>Thu, 02 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/data-strategy/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Data Warehouse</title>
-      <link>https://nttdata-dach.github.io/tags/data-warehouse/</link>
-      <pubDate>Thu, 02 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/data-warehouse/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>ETL</title>
-      <link>https://nttdata-dach.github.io/tags/etl/</link>
-      <pubDate>Thu, 02 May 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/etl/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Client Certificate</title>
-      <link>https://nttdata-dach.github.io/tags/client-certificate/</link>
+      <title>Kong - The Gateway without Limitations - Part 5: mTLS Header</title>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-mtls_header/</link>
       <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/client-certificate/</guid>
-      <description></description>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/AS-KongGateway-mTLS_Header/title-image.jpg</guid>
+      <description>Mutual transport layer security (mTLS) with consumer authentication using client certificates at the Kong Gateway plays an important role in building a zero-trust architecture. But perimeter security devices that perform TLS termination, so-called TLS terminating reverse proxies (TTRP), break the automatic mapping of client certificates to Kong consumers. This blog demonstrates mTLS consumer authentication even with preceding TTRPs, without requiring TCP passthrough.</description>
+
+      
+      
+        
     </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <item>
-      <title>Kong Plugin</title>
-      <link>https://nttdata-dach.github.io/tags/kong-plugin/</link>
-      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/kong-plugin/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Lua Module</title>
-      <link>https://nttdata-dach.github.io/tags/lua-module/</link>
-      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/lua-module/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>MTLS</title>
-      <link>https://nttdata-dach.github.io/tags/mtls/</link>
-      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/mtls/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Mutual TLS</title>
-      <link>https://nttdata-dach.github.io/tags/mutual-tls/</link>
-      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/mutual-tls/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>PDK</title>
-      <link>https://nttdata-dach.github.io/tags/pdk/</link>
-      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/pdk/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Perimeter Security</title>
-      <link>https://nttdata-dach.github.io/tags/perimeter-security/</link>
-      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/perimeter-security/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>RFC 9440</title>
-      <link>https://nttdata-dach.github.io/tags/rfc-9440/</link>
-      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/rfc-9440/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>TTRP</title>
-      <link>https://nttdata-dach.github.io/tags/ttrp/</link>
-      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/ttrp/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>ZTA</title>
-      <link>https://nttdata-dach.github.io/tags/zta/</link>
-      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/zta/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>AAD</title>
-      <link>https://nttdata-dach.github.io/tags/aad/</link>
+      <title>Kong - The Gateway without Limitations - Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0</title>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-saml2bearer/</link>
       <pubDate>Tue, 20 Feb 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/aad/</guid>
-      <description></description>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/AS-KongGateway-Saml2Bearer/title-image.jpg</guid>
+      <description>My last blog provided a solution for implementing an OAuth 2.0-based On-Behalf-Of (delegation) grant flow. This time it’s about implementing a Security Assertion Markup Language (SAML) 2.0 Profile for OAuth 2.0 Client Authentication and Authorization Grants. This flow allows OAuth 2.0 clients to obtain access tokens by presenting SAML 2.0 assertions as a form of authentication. This somewhat extended grant flow expands the scope for exchanging authentication and authorization data between different parties with seamless management, all achieved through the API Gateway.</description>
+
+      
+      
+        
     </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <item>
-      <title>SAML</title>
-      <link>https://nttdata-dach.github.io/tags/saml/</link>
-      <pubDate>Tue, 20 Feb 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/saml/</guid>
-      <description></description>
+      <title>Transitioning from Prometheus to OpenTelemetry - A Journey of a Cluster&#39;s Metrics Evolution - Part 1: A Brief Introduction</title>
+      <link>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-01-intro/</link>
+      <pubDate>Fri, 19 Jan 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/MJM-SA-OtelMetrics-01-Intro/title-image.jpg</guid>
+      <description>With this blog post, we kick off a series on evolving our Kubernetes metrics stack. Our journey to replace Prometheus with an OpenTelemetry solution begins with an introduction OpenTelemetry and why we see it as a valid alternative to our current implementation. After explaining the main parts of the OpenTelemetry project and briefly reviewing its history, we discuss the pros and cons. After reading this, you will be able to follow along our hands-on and deep-tech posts on how we optimize our metrics stack.</description>
+
+      
+      
+        
     </item>
+    
+    
+    
+    
+    
+    
+    
     <item>
-      <title>SAML Bearer Assertion</title>
-      <link>https://nttdata-dach.github.io/tags/saml-bearer-assertion/</link>
-      <pubDate>Tue, 20 Feb 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/saml-bearer-assertion/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Token Exchange</title>
-      <link>https://nttdata-dach.github.io/tags/token-exchange/</link>
-      <pubDate>Tue, 20 Feb 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/token-exchange/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>OBO</title>
-      <link>https://nttdata-dach.github.io/tags/obo/</link>
+      <title>Kong - The Gateway without Limitations - Part 3: Token Exchange On-Behalf-Of</title>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-onbehalfof/</link>
       <pubDate>Thu, 21 Dec 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/obo/</guid>
-      <description></description>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/AS-KongGateway-OnBehalfOf/title-image.jpg</guid>
+      <description>In the last blog, I provided a solution on how to overcome the character limit when logging. This time, I would like to show how to implement an OAuth 2.0-based On-Behalf-Of (delegation) grant flow. Such complex token orchestration tasks can be easily handled on the API gateway while ensuring the highest security standards which even make zero-trust architectures possible in the first place.</description>
+
+      
+      
+        
     </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <item>
-      <title>On-Behalf-Of</title>
-      <link>https://nttdata-dach.github.io/tags/on-behalf-of/</link>
-      <pubDate>Thu, 21 Dec 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/on-behalf-of/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Aws</title>
-      <link>https://nttdata-dach.github.io/tags/aws/</link>
+      <title>Secrets Handling in Kubernetes</title>
+      <link>https://nttdata-dach.github.io/posts/sk-secretshandlinginkubernetes/</link>
       <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/aws/</guid>
-      <description></description>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/SK-SecretsHandlingInKubernetes/title-image.jpg</guid>
+      <description>Committing plain .yaml files which defines Kubernetes secrets definitions to a source code management system is not very secure. This article explains why and shows two better alternatives.</description>
+
+      
+      
+        
     </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <item>
-      <title>EKS</title>
-      <link>https://nttdata-dach.github.io/tags/eks/</link>
-      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/eks/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>External Secrets</title>
-      <link>https://nttdata-dach.github.io/tags/external-secrets/</link>
-      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/external-secrets/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>GitOps</title>
-      <link>https://nttdata-dach.github.io/tags/gitops/</link>
-      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/gitops/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>HashiCorp Vault</title>
-      <link>https://nttdata-dach.github.io/tags/hashicorp-vault/</link>
-      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/hashicorp-vault/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Kubernetes Operator</title>
-      <link>https://nttdata-dach.github.io/tags/kubernetes-operator/</link>
-      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/kubernetes-operator/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Parameter Store</title>
-      <link>https://nttdata-dach.github.io/tags/parameter-store/</link>
-      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/parameter-store/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Quarkus</title>
-      <link>https://nttdata-dach.github.io/tags/quarkus/</link>
-      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/quarkus/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Sealed Secrets</title>
-      <link>https://nttdata-dach.github.io/tags/sealed-secrets/</link>
-      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/sealed-secrets/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Secrets</title>
-      <link>https://nttdata-dach.github.io/tags/secrets/</link>
-      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/secrets/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Secrets Manager</title>
-      <link>https://nttdata-dach.github.io/tags/secrets-manager/</link>
-      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/secrets-manager/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Android</title>
-      <link>https://nttdata-dach.github.io/tags/android/</link>
+      <title>Building and running Flutter mobile applications for Android on AWS Device Farm</title>
+      <link>https://nttdata-dach.github.io/posts/ak-buildingrunningflutteronaws/</link>
       <pubDate>Fri, 03 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/android/</guid>
-      <description></description>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/AK-BuildingRunningFlutterOnAWS/title-image.jpg</guid>
+      <description>This article will give you an overview on how to build and run a Flutter cross-platform mobile application for the Android OS platform in the cloud. We will cover all the steps from the basic app itself to the integration with Appium, and ultimately the deployment and testing on several devices in the AWS Device Farm.</description>
+
+      
+      
+        
     </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <item>
-      <title>Flutter</title>
-      <link>https://nttdata-dach.github.io/tags/flutter/</link>
-      <pubDate>Fri, 03 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/flutter/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Mobile</title>
-      <link>https://nttdata-dach.github.io/tags/mobile/</link>
-      <pubDate>Fri, 03 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/mobile/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>API Developer Portal</title>
-      <link>https://nttdata-dach.github.io/tags/api-developer-portal/</link>
+      <title>Kong - The Gateway without Limitations - Part 2: Log Chunking</title>
+      <link>https://nttdata-dach.github.io/posts/as-konglogchunking/</link>
       <pubDate>Wed, 25 Oct 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/api-developer-portal/</guid>
-      <description></description>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/AS-KongLogChunking/title-image.jpg</guid>
+      <description>In the last blog, I briefly introduced Kong as a sophisticated API gateway product. This time, I will discuss a problem related to logging message size limitation and offer a solution. This problem significantly limits root cause analysis and ultimately solution development.</description>
+
+      
+      
+        
     </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <item>
-      <title>API Management</title>
-      <link>https://nttdata-dach.github.io/tags/api-management/</link>
-      <pubDate>Wed, 25 Oct 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/api-management/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>RESTful API</title>
-      <link>https://nttdata-dach.github.io/tags/restful-api/</link>
-      <pubDate>Wed, 25 Oct 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/restful-api/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Routing</title>
-      <link>https://nttdata-dach.github.io/tags/routing/</link>
-      <pubDate>Wed, 25 Oct 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/routing/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Traffic Management</title>
-      <link>https://nttdata-dach.github.io/tags/traffic-management/</link>
-      <pubDate>Wed, 25 Oct 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/traffic-management/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Argo-Cd</title>
-      <link>https://nttdata-dach.github.io/tags/argo-cd/</link>
+      <title>Using Renovate to scale up automatic pull request creation on GitHub</title>
+      <link>https://nttdata-dach.github.io/posts/mjm-renovateautomaticpullrequest/</link>
       <pubDate>Tue, 22 Aug 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/argo-cd/</guid>
-      <description></description>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/MJM-RenovateAutomaticPullRequest/title-image.jpg</guid>
+      <description>See how we use the dependency update tool Renovate to distribute helm charts with ArgoCD applications in a GitOps fashion. This article shows how to set up Renovate for several kubernetes clusters with a centralized configuration as a GitHub action.</description>
+
+      
+      
+        
     </item>
-    <item>
-      <title>Automation</title>
-      <link>https://nttdata-dach.github.io/tags/automation/</link>
-      <pubDate>Tue, 22 Aug 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/automation/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Dependency Management</title>
-      <link>https://nttdata-dach.github.io/tags/dependency-management/</link>
-      <pubDate>Tue, 22 Aug 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/dependency-management/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>DevOps</title>
-      <link>https://nttdata-dach.github.io/tags/devops/</link>
-      <pubDate>Tue, 22 Aug 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/devops/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Github Actions</title>
-      <link>https://nttdata-dach.github.io/tags/github-actions/</link>
-      <pubDate>Tue, 22 Aug 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/github-actions/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Control Plane</title>
-      <link>https://nttdata-dach.github.io/tags/control-plane/</link>
-      <pubDate>Mon, 31 Jul 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/control-plane/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Crossplane</title>
-      <link>https://nttdata-dach.github.io/tags/crossplane/</link>
-      <pubDate>Mon, 31 Jul 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/crossplane/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Infrastructure</title>
-      <link>https://nttdata-dach.github.io/tags/infrastructure/</link>
-      <pubDate>Mon, 31 Jul 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/infrastructure/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Infrastructure as Code</title>
-      <link>https://nttdata-dach.github.io/tags/infrastructure-as-code/</link>
-      <pubDate>Mon, 31 Jul 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/infrastructure-as-code/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Java 17</title>
-      <link>https://nttdata-dach.github.io/tags/java-17/</link>
-      <pubDate>Thu, 13 Apr 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/java-17/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>LCG</title>
-      <link>https://nttdata-dach.github.io/tags/lcg/</link>
-      <pubDate>Thu, 13 Apr 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/lcg/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>LXM</title>
-      <link>https://nttdata-dach.github.io/tags/lxm/</link>
-      <pubDate>Thu, 13 Apr 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/lxm/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Multi-Threading</title>
-      <link>https://nttdata-dach.github.io/tags/multi-threading/</link>
-      <pubDate>Thu, 13 Apr 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/multi-threading/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Random</title>
-      <link>https://nttdata-dach.github.io/tags/random/</link>
-      <pubDate>Thu, 13 Apr 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/random/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>StreamAPI</title>
-      <link>https://nttdata-dach.github.io/tags/streamapi/</link>
-      <pubDate>Thu, 13 Apr 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/streamapi/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Cybersecurity</title>
-      <link>https://nttdata-dach.github.io/tags/cybersecurity/</link>
-      <pubDate>Tue, 28 Mar 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/cybersecurity/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>DevSecOps</title>
-      <link>https://nttdata-dach.github.io/tags/devsecops/</link>
-      <pubDate>Tue, 28 Mar 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/devsecops/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Software Lifecycle</title>
-      <link>https://nttdata-dach.github.io/tags/software-lifecycle/</link>
-      <pubDate>Tue, 28 Mar 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/software-lifecycle/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Software Supply Chain</title>
-      <link>https://nttdata-dach.github.io/tags/software-supply-chain/</link>
-      <pubDate>Tue, 28 Mar 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/software-supply-chain/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Array of Struct</title>
-      <link>https://nttdata-dach.github.io/tags/array-of-struct/</link>
-      <pubDate>Thu, 09 Mar 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/array-of-struct/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Computing</title>
-      <link>https://nttdata-dach.github.io/tags/computing/</link>
-      <pubDate>Thu, 09 Mar 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/computing/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Data-Oriented Design</title>
-      <link>https://nttdata-dach.github.io/tags/data-oriented-design/</link>
-      <pubDate>Thu, 09 Mar 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/data-oriented-design/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Data-Streams</title>
-      <link>https://nttdata-dach.github.io/tags/data-streams/</link>
-      <pubDate>Thu, 09 Mar 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/data-streams/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Entity Component System</title>
-      <link>https://nttdata-dach.github.io/tags/entity-component-system/</link>
-      <pubDate>Thu, 09 Mar 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/entity-component-system/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Blockchain</title>
-      <link>https://nttdata-dach.github.io/tags/blockchain/</link>
-      <pubDate>Tue, 18 Oct 2022 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/blockchain/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Decentralization</title>
-      <link>https://nttdata-dach.github.io/tags/decentralization/</link>
-      <pubDate>Tue, 18 Oct 2022 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/decentralization/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>DLT</title>
-      <link>https://nttdata-dach.github.io/tags/dlt/</link>
-      <pubDate>Tue, 18 Oct 2022 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/dlt/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Financial Services</title>
-      <link>https://nttdata-dach.github.io/tags/financial-services/</link>
-      <pubDate>Tue, 18 Oct 2022 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/financial-services/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Ci</title>
-      <link>https://nttdata-dach.github.io/tags/ci/</link>
-      <pubDate>Mon, 20 Jun 2022 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/ci/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Container</title>
-      <link>https://nttdata-dach.github.io/tags/container/</link>
-      <pubDate>Mon, 20 Jun 2022 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/container/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Development</title>
-      <link>https://nttdata-dach.github.io/tags/development/</link>
-      <pubDate>Mon, 20 Jun 2022 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/development/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Ssh</title>
-      <link>https://nttdata-dach.github.io/tags/ssh/</link>
-      <pubDate>Mon, 20 Jun 2022 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/ssh/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Ssm</title>
-      <link>https://nttdata-dach.github.io/tags/ssm/</link>
-      <pubDate>Mon, 20 Jun 2022 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/ssm/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Vpc</title>
-      <link>https://nttdata-dach.github.io/tags/vpc/</link>
-      <pubDate>Mon, 20 Jun 2022 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/vpc/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Data</title>
-      <link>https://nttdata-dach.github.io/tags/data/</link>
-      <pubDate>Mon, 06 Dec 2021 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/data/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Sport</title>
-      <link>https://nttdata-dach.github.io/tags/sport/</link>
-      <pubDate>Mon, 06 Dec 2021 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/sport/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Buildah</title>
-      <link>https://nttdata-dach.github.io/tags/buildah/</link>
-      <pubDate>Mon, 12 Jul 2021 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/buildah/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Cowsay</title>
-      <link>https://nttdata-dach.github.io/tags/cowsay/</link>
-      <pubDate>Mon, 12 Jul 2021 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/cowsay/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Docker</title>
-      <link>https://nttdata-dach.github.io/tags/docker/</link>
-      <pubDate>Mon, 12 Jul 2021 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/docker/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Rootless</title>
-      <link>https://nttdata-dach.github.io/tags/rootless/</link>
-      <pubDate>Mon, 12 Jul 2021 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/rootless/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Process Automation</title>
-      <link>https://nttdata-dach.github.io/tags/process-automation/</link>
-      <pubDate>Thu, 01 Jul 2021 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/process-automation/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Best Practice</title>
-      <link>https://nttdata-dach.github.io/tags/best-practice/</link>
-      <pubDate>Tue, 01 Jun 2021 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/best-practice/</guid>
-      <description></description>
-    </item>
+    
+    
+    
+    
   </channel>
 </rss>

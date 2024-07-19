@@ -1,0 +1,433 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Pace Predictor  </title>
+  <meta charset="utf-8"/> 
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Pace Predictor"/>
+  
+  <meta property="article:author" content="[Oliver Koeth]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/OK-PacePredictor/title-image.jpg"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/ok-pacepredictor/"/>
+  <meta property="og:description" content="At NTT DATA, some of us are sporty spices and we like to record our running, cycling, and swimming in this Strava Club. And of course trail running is also growing very popular in our club."/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">06.12.2021
+        
+         - Oliver Koeth - <i class="fa-solid fa-book-open"></i> 6 min read
+        
+        </span>
+        Pace Predictor
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/OK-PacePredictor/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <h1 id="pace-predictor">Pace Predictor</h1>
+<h2 id="introduction">Introduction</h2>
+<p>At NTT DATA, some of us are sporty spices and we like to record our running, cycling, and swimming in this <a href="https://www.strava.com/clubs/nttdata">Strava Club</a>. And of course trail running is also growing very popular in our club.</p>
+<p>One challenge with trail running is that the pace of course depends on your fitness, but more so on conditions like elevation gain or surface of the trail. Hence, the available pacing strategies that rely on extrapolation of shorter distances do not work very well. Even more advanced approaches like Garmin&rsquo;s PacePro(TM) do not consider all factors relevant for trail running as the impact of the surface of a trail cannot be configured in the UI and the impact of elevation can only be configured within bounds which are too limited for steep uphill or technically challenging downhill passages. This example shows Garmin&rsquo;s pacing strategy for the quite challenging <a href="https://fastestknowntime.com/route/geburg-trail-germany">GebürgTrail</a>
+in Franconia. For someone running at 6:00min/km pace on even grounds, 8:00 to 9:00 min/km pace on the steep ascents of the GebürgTrail is not feasible at all.</p>
+<p>
+  <img src="/posts/img/OK-PacePredictor/pacepro.png" alt="pacepro">
+
+</p>
+<p>So why not base the pace prediction on your personal experiences on the trail. This is exactly what this little project is doing: based on a previous run (hereafter referred to as &ldquo;reference run&rdquo;) on similar terrain with comparable elevation and surface, a pacing strategy for a future run is provided (hereafter referred to as &ldquo;target run&rdquo;, e.g. an upcoming ultra marathon race).</p>
+<p>This blog post gives a brief overview of the implementation of the &ldquo;Pace Predictor&rdquo; and allows you to further adjust or improve the implementation to your own needs. The main sections of this post are:</p>
+<ul>
+<li>
+<p>Data Loading Reference Run</p>
+</li>
+<li>
+<p>Data Preparation</p>
+</li>
+<li>
+<p>Creation of the Model</p>
+</li>
+<li>
+<p>Data Loading Target Run</p>
+</li>
+<li>
+<p>Application of the Model</p>
+</li>
+</ul>
+<p>The full source code is avail on <a href="https://github.com/okoeth/pacer-project">GitHub</a> and advanced readery may prefer to just read this <a href="https://github.com/okoeth/pacer-project/blob/master/Pacer.ipynb">Jupyter Notebook</a> instead of this chatty blog post.</p>
+<h2 id="data-loading-reference-run">Data Loading Reference Run</h2>
+<p>The reference run is provided as a GPX file with a GPS track and respective timings. This implementation uses the <a href="https://github.com/tkrajina/gpxpy">gpxpy</a> library for procession the GPX file format. The data is collected in an array and then converted in a Pandas data frame.</p>
+<pre tabindex="0"><code>import gpxpy
+import gpxpy.gpx
+
+gpx_file = open(&#39;data/osterfeld.gpx&#39;, &#39;r&#39;)
+gpx = gpxpy.parse(gpx_file)
+
+cols = [ &#39;lat&#39;, &#39;lon&#39;, &#39;elevation&#39;, &#39;time&#39; ]
+idx = []
+rows = []
+
+row = 0
+for track in gpx.tracks:
+    for segment in track.segments:
+        for point in segment.points:
+            idx.append(row)
+            rows.append([point.latitude, point.longitude, point.elevation, point.time])
+            row = row + 1
+            
+base = pd.DataFrame(data=rows, index=idx, columns=cols)
+</code></pre><h2 id="data-preparation">Data Preparation</h2>
+<p>The data provided in the GPX file is just a series of discrete points. So to turn this into a continuous stream of data, some additional fields need to be calculated:</p>
+<ul>
+<li>
+<p>Elevation Delta: The difference in elevation to the previous track point.</p>
+</li>
+<li>
+<p>Time Delta: The time difference to the previous track point (Note: With a Garmin Fenix 6 in hires recording, this is always one second).</p>
+</li>
+<li>
+<p>Distance Delta: The distance to the previous track point (line of sight).</p>
+</li>
+<li>
+<p>Distance Sum: The accumulated distance of the track up to this trackpoint.</p>
+</li>
+<li>
+<p>Distance Segment: The number of the 100m segment this trackpoint belongs to.</p>
+</li>
+</ul>
+<pre tabindex="0"><code>base[&#39;elevation_delta&#39;] = 
+    base.elevation.diff().shift(0)
+base[&#39;time_prev&#39;] = 
+    base.time.shift(+1)
+base[&#39;time_delta&#39;] = 
+    base.apply(lambda row: time_delta(row[&#39;time&#39;],row[&#39;time_prev&#39;]), axis=1)
+base[&#39;lat_prev&#39;] = 
+    base.lat.shift(+1)
+base[&#39;lon_prev&#39;] = 
+    base.lon.shift(+1)
+base[&#39;distance_delta&#39;] = 
+    base.apply(lambda row: 
+        distance(row[&#39;lat&#39;],row[&#39;lon&#39;],row[&#39;lat_prev&#39;],row[&#39;lon_prev&#39;]), axis=1)
+base[&#39;distance_sum&#39;] = 
+    base[&#39;distance_delta&#39;].cumsum(axis = 0)
+base[&#39;distance_segment&#39;] = 
+    base.apply(lambda row: distance_to_segment(row[&#39;distance_sum&#39;]), axis=1)
+</code></pre><p>As a next step we group the track points by 100m segments and create a data frame that gives us elevation and timings for each segment. We also convert speed (in m/s) in pace (in min/km).</p>
+<pre tabindex="0"><code>base_g = 
+    base.groupby(&#39;distance_segment&#39;).agg(
+        {
+            &#39;elevation_delta&#39;: [&#39;sum&#39;],
+            &#39;distance_delta&#39;: [&#39;sum&#39;], 
+            &#39;time_delta&#39;: [&#39;sum&#39;]})
+base_g[&#39;pace_segment&#39;] = 
+    16.7/(base_g[(&#39;distance_delta&#39;,&#39;sum&#39;)]/base_g[(&#39;time_delta&#39;,&#39;sum&#39;)])
+</code></pre><p>When plotting the result it becomes evident that the pace per segment depends on the elevation gain (or loss) of the segment with slight elevation losses still speeding up the base pace, but steeper decents also take their toll on the pace.</p>
+<p>
+  <img src="/posts/img/OK-PacePredictor/segments.png" alt="segments">
+
+</p>
+<h2 id="creation-of-the-model">Creation of the Model</h2>
+<p>Based on the data prepared from the reference run, we can now train simple regression models (marketing speak: machine learning models!). Based on the visual inspection of the data, one could either use two linear regression models (there is a different slope for uphill and downhill) or a parabolic regression model, or a combination of both.</p>
+<p>Hence we create data sets for uphill, downhill, and both.</p>
+<pre tabindex="0"><code>base_g_sorted = base_g.sort_values(by=(&#39;elevation_delta&#39;,&#39;sum&#39;))
+x_arr = base_g_sorted[(&#39;elevation_delta&#39;,&#39;sum&#39;)].values
+y_arr = base_g_sorted[&#39;pace_segment&#39;].values
+
+x_all_arr = []
+y_all_arr = []
+x_up_arr = []
+y_up_arr = []
+x_down_arr = []
+y_down_arr = []
+
+for i in range(0, len(x_arr)):
+    if y_arr[i] &lt; 20:
+        x_all_arr.append(x_arr[i])
+        y_all_arr.append(y_arr[i])
+        if x_arr[i] &gt; 0:
+            x_up_arr.append(x_arr[i])
+            y_up_arr.append(y_arr[i])
+        else:
+            x_down_arr.append(x_arr[i])
+            y_down_arr.append(y_arr[i])
+</code></pre><p>Now the creation of the models is pretty straight forward.</p>
+<pre tabindex="0"><code>(a_para,b_para,c_para) = polyfit(x_all_arr, y_all_arr, 2)
+(a_lin_up,b_lin_up) = polyfit(x_up_arr, y_up_arr, 1)    
+(a_lin_down,b_lin_down) = polyfit(x_down_arr, y_down_arr, 1)
+(a_para_down,b_para_down,c_para_down) = polyfit(x_down_arr, y_down_arr, 2)
+</code></pre><p>When reviewing the models against the points representing the individual segments, we see a relatively good fit for all aproaches.</p>
+<p>
+  <img src="/posts/img/OK-PacePredictor/models.png" alt="models">
+
+</p>
+<p>For now, we do not commit to one particular model, but create a wrapper function, that allows the selection of a model at runtime. For checking, a manual linear model has been hard-coded as well.</p>
+<pre tabindex="0"><code>uphill_penalty_per_m=6/20
+downhill_penalty_per_m=3/20
+
+def predict_pace_raw(elevation, base_pace, model):
+    if model==&#39;manual&#39;:
+        if elevation &gt; 0:
+            return base_pace+elevation*uphill_penalty_per_m
+        else:
+            return base_pace+abs(elevation)*downhill_penalty_per_m
+
+    elif model==&#39;parabolic&#39;:
+        return a_para*elevation**2+b_para*elevation+c_para
+    
+    elif model==&#39;linear&#39;:
+        if elevation &gt;= 0:
+            return a_lin_up*elevation+b_lin_up
+        else:
+            return a_lin_down*elevation+b_lin_down
+    
+    elif model==&#39;mixed&#39;:
+        if elevation &gt; 0:
+            return a_lin_up*elevation+b_lin_up
+        else:
+            return a_para_down*elevation**2+b_para_down*elevation+c_para_down
+        
+def predict_pace(elevation, base_pace, model, min_pace=19):
+    pace = predict_pace_raw(elevation, base_pace, model)
+    if pace &gt; min_pace:
+        return min_pace
+    else:
+        return pace
+</code></pre><h2 id="data-loading-target-run">Data Loading Target Run</h2>
+<p>Preparing the target run follows the same approaches used for the reference run.</p>
+<pre tabindex="0"><code>target_gpx_file = open(&#39;data/supertrail.gpx&#39;, &#39;r&#39;)
+target_gpx = gpxpy.parse(target_gpx_file)
+
+cols = [ &#39;lat&#39;, &#39;lon&#39;, &#39;elevation&#39; ]
+idx = []
+rows = []
+
+row = 0
+for track in target_gpx.tracks:
+    for segment in track.segments:
+        for point in segment.points:
+            idx.append(row)
+            rows.append([point.latitude, point.longitude, point.elevation])
+            row = row + 1
+
+target = pd.DataFrame(data=rows, index=idx, columns=cols)
+</code></pre><p>Accodringly, additional columns are prepared and the data frame is grouped.</p>
+<pre tabindex="0"><code>target[&#39;elevation_delta&#39;] = 
+    target.elevation.diff().shift(0)
+target[&#39;lat_prev&#39;] = 
+    target.lat.shift(+1)
+target[&#39;lon_prev&#39;] = 
+    target.lon.shift(+1)
+target[&#39;distance_delta&#39;] = 
+    target.apply(
+        lambda row: distance(row[&#39;lat&#39;],row[&#39;lon&#39;], row[&#39;lat_prev&#39;],row[&#39;lon_prev&#39;]), axis=1)
+target[&#39;distance_sum&#39;] = 
+    target[&#39;distance_delta&#39;].cumsum(axis = 0)
+target[&#39;distance_segment&#39;] = target.apply(
+    lambda row: distance_to_segment(row[&#39;distance_sum&#39;]), axis=1)
+
+target_g = target.groupby(&#39;distance_segment&#39;).agg(
+    {
+        &#39;elevation&#39;: [&#39;mean&#39;],
+        &#39;elevation_delta&#39;: [&#39;sum&#39;],
+        &#39;distance_delta&#39;: [&#39;sum&#39;]})
+</code></pre><h2 id="application-of-the-model">Application of the Model</h2>
+<p>Now everything gets very simple (as always when you are well prepared):</p>
+<pre tabindex="0"><code>target_g[&#39;pace_segment&#39;] = target_g.apply(
+    lambda row: predict_pace(row[(&#39;elevation_delta&#39;,&#39;sum&#39;)], 6.5, &#39;parabolic&#39;), axis=1)
+
+target_g[&#39;time_delta&#39;] = target_g[(&#39;distance_delta&#39;,&#39;sum&#39;)]/(16.7/target_g[&#39;pace_segment&#39;])
+target_g[&#39;time_sum&#39;] = target_g[&#39;time_delta&#39;].cumsum(axis = 0)/3600
+</code></pre><p>And we create the final plot, where multiple dimensions are put together in a single diagram:</p>
+<pre tabindex="0"><code>fig,ax = plt.subplots()
+
+ax.set_ylabel(&#39;elevation [m]&#39;)
+ax.set_xlabel(&#39;segments [100m]&#39;)
+
+ax2 = ax.twinx()
+ax2.set_ylim(4, 20)
+ax2.set_ylabel(&#39;pace [min/km]&#39;)
+ax3 = ax.twinx()
+rspine = ax3.spines[&#39;right&#39;]
+rspine.set_position((&#39;axes&#39;, 1.05))
+ax3.set_frame_on(True)
+ax3.patch.set_visible(False)
+ax3.set_ylabel(&#39;duration [h]&#39;)
+
+
+target_g[&#39;elevation&#39;].plot(ax=ax, style=&#39;b-&#39;, figsize=(20,5))
+target_g[&#39;pace_segment&#39;].plot(ax=ax2, style=&#39;g-&#39;)
+target_g[&#39;time_sum&#39;].plot(ax=ax3, style=&#39;r-&#39;)
+</code></pre><p>
+  <img src="/posts/img/OK-PacePredictor/result.png" alt="result">
+
+</p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/oliver-koeth.jpg" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/oliver-koeth">Oliver Koeth</a><span>
+                    
+                </span></h3>
+                <p>CTO </p>
+                <p calss="author-socials">
+                    <a target="_blank"  href="https://github.com/okoeth"><i class="fa-brands fa-github"></i></a>
+                    
+                    
+                    
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/sport/">sport</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/data/">data</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/development/">development</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</html>

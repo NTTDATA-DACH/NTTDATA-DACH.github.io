@@ -1,0 +1,275 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Part 1: Brief Product Introduction  </title>
+  <meta charset="utf-8"/> 
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Kong - The Gateway without Limitations - Part 1: Brief Product Introduction"/>
+  
+  <meta property="article:author" content="[Alexander Suchier]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/AS-KongProductIntroduction/title-image.jpg"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/as-kongproductintroduction/"/>
+  <meta property="og:description" content="Kong Gateway is a lightweight, fast, and flexible API Gateway. It acts as an intermediary between API providers and consumers, enabling them to communicate based on policies. It also provides observability features, allowing to track API usage and performance. Overall it is a convincing and outstanding product which is briefly introduced in the following blog."/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">15.05.2023
+        
+         - Alexander Suchier - <i class="fa-solid fa-book-open"></i> 5 min read
+        
+        </span>
+        Part 1: Brief Product Introduction
+        
+        
+        <a id="series-link" href="/series/kong-the-gateway-without-limitations"><span class="subtitle">Kong - The Gateway without Limitations</span></a>
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/AS-KongProductIntroduction/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <h2 id="the-api-gateway-without-limits">The API Gateway without limits</h2>
+<p>In the past, I have rarely worked with such a convincing and outstanding product like the Kong API Gateway. Before I start writing further blogs about Kong, let me first describe the Kong Gateway briefly. At the time of writing this blog, Kong 3.2 was the actual and latest version.</p>
+<h1 id="overview">Overview</h1>
+<p>Kong is built on top of NGINX using the OpenResty framework to enable API Gateway features. This design approach enables an exceptionally fast Gateway with low-latency and low-memory footprint.<br>
+Kong can be operated as free version of the Community Edition (CE) or the extended and licensed Enterprise Edition (EE). Customers who opted for the enterprise version have access to support services, additional graphical user interfaces and enterprise plugins with enriched feature sets. It should be noted that the Kong support is excellent, usually fast and provides real problem-solving answers.<br>
+The EE Kong Manager UI makes the configuration easier for beginners and the so-called Vitals feature integrates analytics and health monitoring. The customizable EE Developer Portal is intended to discover, learn and use APIs.</p>
+<h1 id="persistence">Persistence</h1>
+<p>Up to Kong version 2.4, the Enterprise Edition required the use of a database (PostgreSQL or Cassandra). Since version 2.4 there is a further DB-less configuration variant available (configuration without a database), which has not yet enabled the use of the Developer Portal and RBAC-security.<br>
+I assume that most Kong customers with persistence requirements select the PostgreSQL database because of the lower resource requirements and the ease of installation, as well as the &ldquo;maintenance-free&rdquo; operation mode. Probably Kong tends towards the same direction because they deprecated Cassandra usage and announced a sunset at product version 4.0. Kong customers with pure traffic routing requirements simply go for a DB-less configuration. There is an additional deployment option called hybrid mode. Here you have so-called data planes (DP) running distributed without a database which retrieve the configuration from so-called control planes (CP) which need database persistence. Kong speaks of increased flexibility and reliability<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>, but on the other side you add distributed communication and increase the setup complexity.</p>
+<h1 id="product-flexibility">Product flexibility</h1>
+<p>The product line is completed by a special Kong version called Kong Ingress Controller (KIC), which operates as ingress controller of a Kubernetes (K8s) cluster. KIC is designed to scale with your traffic and infrastructure but the configuration differs, as you have to use K8s manifests as configuration artifacts. Late 2020 also a PaaS product option was introduced as Kong Konnect.</p>
+<h1 id="core-components">Core components</h1>
+<p>In essence, the Kong configuration consists of the description of processing pipelines, which always include a route and service entity. A route determines the entry point and to which target service a request is routed (the service provider or backend). The authentication (AuthN) of so-called consumers with possible authorization rules (AuthZ) can be part of the processing. These security AuthN/AuthZ tasks are realized by corresponding plugins that can pull security-related configuration from vault entities. Plugins are functional building blocks and belong to the Kong core entities in addition to the mentioned service, route and consumer entities.<br>
+In general, plugins determine the sequenced processing steps and functionalities during a request-response lifecycle. They are assigned to NGINX operation phases with a given priority determining the order of processing. Recently Kong offers a dynamic plugin ordering feature limited to the NGINX access phase, which allows to change the priority to implement dynamic dependencies between plugins (previously this could only be achieved through plugin cloning or patching).</p>
+<h1 id="plugins">Plugins</h1>
+<p>The Kong plugin system is open, meaning that out-of-the-box plugins, additional enterprise plugins, community supported plugins or self-written custom plugins can be used. So-called serverless functions are special cases in which individual source code modules can be integrated without the need of writing plugins. Plugins implement all kind of policies and can be declarated as &ldquo;global&rdquo;, meaning always running, or mapped to a route, service, or consumer entity for targeted execution.<br>
+An upstream entity includes optional load balancer functionality. When running on a K8s cluster an upstream entity can be omitted since the pod routing is delegated by the service entity directly to the K8s service object. The balancer functionality is therefore transferred to the K8s cluster.</p>
+<p>
+  <figure>
+    <img src="/posts/img/AS-KongProductIntroduction/architecture.png" alt="Architecture">
+    <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Kong Gateway overview showing interfaces and foundational components</figcaption>
+  </br>
+  </figure>
+
+</p>
+<h1 id="configuration">Configuration</h1>
+<p>Kong configuration may be realized by using the interactive Kong Manager UI or via REST calls against the Admin API. The decK tool and the Kong CLI (Command Line Interface) offer further ways of configuration. Both can receive and execute a declarative configuration description which can also be given at the start time.<br>
+The abbreviation decK stands for “declarative Kong” and provides additional configuration and so-called drift detection features. In my opinion the best CI/CD-friendly configuration for a DB-less pure traffic-routing approach is the Kong CLI import of a declarative YAML configuration file. The decK tool is often advertised by Kong but still not part of the product itself and the advanced features are simply unnecessary when taking an immutable deployment approach.</p>
+<h1 id="observability">Observability</h1>
+<p>Off the shelf, Kong offers Prometheus monitoring and Zipkin tracing features. Since version 3.0 Kong also offers an OpenTelemetry plugin. These plugins are supplemented by two statsD plugins, an open-sourced and EE advanced plugin that is deprecated since 3.0. Several logging plugins complete the important observability functionality of Kong.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>After more than three years of dealing with the Kong Gateway in a challenging environment with multiple complex policy demands, I can safely say that Kong is the right API Gateway. Especially in a pure traffic routing approach where additional API management features are not playing an important part (like a socialized or monetized API). Missing functionality can be easily added by a serverless function or writing a custom plugin utilizing one of the the plugin development kits (PDK). Lua, the original plugin programming language, is quickly learned, but recently also support for Go, JavaScript and Python has been introduced.
+Coming back to my opening statement, with the Kong Gateway you will not run into any limitations.</p>
+<h1 id="credits">Credits</h1>
+<p>Title image by <a href="https://www.shutterstock.com/es/g/jamesteohart">jamesteohart</a> on <a href="https://www.shutterstock.com">Shutterstock</a></p>
+<h1 id="references">References</h1>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p>Benefits stated in docs for Kong <a href="https://docs.konghq.com/gateway/latest/production/deployment-topologies/hybrid-mode/#benefits">Link</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/alexander-suchier.jpg" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/alexander-suchier">Alexander Suchier</a><span>
+                    
+                </span></h3>
+                <p>Senior Managing Technical Consultant and Kong Champion </p>
+                <p calss="author-socials">
+                    
+                    
+                    <a target="_blank"  href="https://www.linkedin.com/in/alexander-suchier-0608481"><i class="fa-brands fa-linkedin"></i></a>
+                    
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        <div class="related-block">
+            <h3 class="related-heading" id="series-list">Check out the full series</h3>
+            
+            <ul>
+                
+                <li><a class="related-link" href="/posts/as-kongproductintroduction/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 1: Brief Product Introduction</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konglogchunking/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 2: Log Chunking</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-onbehalfof/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 3: Token Exchange On-Behalf-Of</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-saml2bearer/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-mtls_header/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 5: mTLS Header</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-tokenvalidation/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 6: Token Validation</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-tokencloning/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 7: Token Cloning</a></li>
+                
+            </ul>
+        </div>
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/api-gateway/">API Gateway</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/api-management/">API Management</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/api-security/">API Security</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/api-developer-portal/">API Developer Portal</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/restful-api/">RESTful API</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/traffic-management/">Traffic Management</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/routing/">Routing</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</html>

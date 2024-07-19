@@ -1,0 +1,497 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Building Container Images Dockerless and Rootless with Buildah  </title>
+  <meta charset="utf-8"/> 
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Building Container Images Dockerless and Rootless with Buildah"/>
+  
+  <meta property="article:author" content="[Adam Boczek]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/AB-ContainerRootlessBuildah/title-image.png"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/ab-containerrootlessbuildah/"/>
+  <meta property="og:description" content="“You cannot use Docker in our enterprise CI platform, now way! It needs root rights, thus is not secure; forget it!”, said our DevOps Chief some months ago… So we had a problem."/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">12.07.2021
+        
+         - Adam Boczek - <i class="fa-solid fa-book-open"></i> 11 min read
+        
+        </span>
+        Building Container Images Dockerless and Rootless with Buildah
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/AB-ContainerRootlessBuildah/title-image.png') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <p><em>“You cannot use Docker in our enterprise CI platform, now way! It needs root rights, thus is not secure; forget it!”</em>,
+said our DevOps Chief some months ago… So we had a problem.</p>
+<p>At the beginning of this year, our customer started the initiative to move the entire on-premise CICD platform to the cloud.
+One of the first tasks we got as the CI team was to create a new pipeline, still using our on-premise solution,
+for building container images for the tests of the build agents running in the containers. However rootless, thus without docker…</p>
+<h1 id="before-we-start">Before We Start</h1>
+<p>For the demonstration purposes for this post I created a simple <a href="https://github.com/NTTDATA-EMEA/tech-blog-aboczek/blob/main/202010-building-container-images-with-buildah/Dockerfile">Dockerfile</a>,
+which creates a container image running program <code>cowsay</code>,
+which is as we all know <a href="https://medium.com/@jasonrigden/cowsay-is-the-most-important-unix-like-command-ever-35abdbc22b7f#:~:text=cowsay%20is%20a%20classic%20program,It%20just%20provides%20amusment.">&ldquo;The Most Important Unix-like Command Ever”</a>:</p>
+<pre tabindex="0"><code>FROM library/debian:latest
+LABEL maintainer=&#34;Adam Boczek&#34;
+LABEL version=&#34;1.0.0&#34;
+LABEL description=&#34;Blog post example image. Uses &#39;cowsay&#39; 
+application to demonstrate Buildah.&#34;
+RUN apt-get update &amp;&amp; \                              
+    apt-get install -y cowsay                          
+                          
+COPY entrypoint.sh /                          
+                          
+ENTRYPOINT [&#34;/entrypoint.sh&#34;]
+</code></pre><p>As you can see it uses a popular pattern with an external <a href="https://github.com/NTTDATA-EMEA/tech-blog-aboczek/blob/main/202010-building-container-images-with-buildah/entrypoint.sh">entrypoint.sh</a> script to make this example a little more complicated
+(it may happen that the entrypoint.sh will need execution rights in the container; you can set these with the help of <code>chmod +x entrypoint.sh</code> as the last RUN command):</p>
+<pre tabindex="0"><code>#!/bin/bash
+if [ $# -eq 0 ]; then
+  /usr/games/cowsay &#34;Moo Buildah!&#34;
+else
+  /usr/games/cowsay &#34;$@&#34;
+fi
+</code></pre><p>So, if we run the container with no parameter, our cow should say “Moo Buildah!”. When we provide some text as a parameter, it will say exactly that.</p>
+<p>The above example is not the perfect one, it’s true. According to the <a href="https://docs.docker.com/develop/develop-images/dockerfile_best-practices/">“Best practices for writing Dockerfiles”</a> it can be improved at some places
+(e.g. by replacing <code>:latest</code> tag with specific version or introducing the <code>USER</code> command etc.), but for the sake of simplicity let us use it as it is defined now.</p>
+<p>Additionally, we omit configuration parameters typical for an enterprise environment like setting proxy, registry mirrors, etc.</p>
+<h1 id="building-container-image-with-docker">Building Container Image with Docker</h1>
+<h2 id="the-procedure">The Procedure</h2>
+<p>Having <a href="https://github.com/NTTDATA-EMEA/tech-blog-aboczek/blob/main/202010-building-container-images-with-buildah/Dockerfile">Dockerfile</a> defined, we can build our container image using Docker:</p>
+<pre tabindex="0"><code>$ docker build -t test/cowsay:1.0.0 .
+Sending build context to Docker daemon   16.9kB
+Step 1/7 : FROM library/debian:latest
+ ---&gt; 1510e8501783
+Step 2/7 : LABEL maintainer=&#34;Adam Boczek&#34;
+ ---&gt; Running in 7af53635b00d
+Removing intermediate container 7af53635b00d
+ ---&gt; f82a93bf267c
+Step 3/7 : LABEL version=&#34;1.0.0&#34;
+ ---&gt; Running in ec46b27e4500
+[...]
+</code></pre><p>If you analyze the <code>docker build</code> output (it may look slightly different on your computer, depending on the operating system and Docker version you are running),
+you will notice the first line informing us about sending of the build context to the Docker daemon.
+Then follow lines notifying about creation of some intermediate images
+(lines like <code>---&gt; 1510e8501783</code>), which are used to avoid altering of the state of the image being build. Some commands like <code>LABEL</code>,
+<code>RUN</code> or <code>ENTRYPOINT</code> cause creation of an intermediate container (lines like <code>---&gt; Running in 7af53635b00d</code>)
+using latest intermediate image. Such container is then committed as the next intermediate image and removed
+(e.g. <code>Removing intermediate container 7af53635b00d</code>) if not explicitly suppressed by <code>--rm=false</code> option.</p>
+<p>Let us run a container based on the created image to check if it works as expected:</p>
+<pre tabindex="0"><code>$ docker run test/cowsay:1.0.0 &#39;Moo Docker!&#39;
+ _____________
+&lt; Moo Docker! &gt;
+ -------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+</code></pre><h2 id="the-root-problem">The Root Problem</h2>
+<p>As stated above the Docker daemon sometimes creates intermediate images with help of committing of the intermediate containers where various commands run.
+The problem with this solution is that the Docker daemon runs in context of the root user on the host system, thus also all intermediate containers it starts. Try this:</p>
+<pre tabindex="0"><code>$ ps -ef | grep dockerd
+root     15805     1  0 Oct26 ?        00:01:32 /usr/bin/dockerd
+</code></pre><p>In case of a CI platform it is a serious security flaw, because the design of a <code>Dockerfile</code> is out of scope of the platform,
+so we cannot control what e.g. a <code>RUN</code> command does during the build process.</p>
+<h2 id="the-solution">The Solution</h2>
+<p>The Docker developers know that the problem described above is an unacceptable requirement for many projects or organisations.
+Even if since Docker 20.10.0 there is a possibility to run docker daemon in non-root mode this
+feature has still some limitations (see <a href="https://docs.docker.com/engine/security/rootless/">“Run the Docker daemon as a non-root user”</a> for more).</p>
+<p>The solution to the problem is not to use Docker at all and to switch to other tool which can build a container image without the need for the root rights.
+The most interesting alternative at the time of writing is in my opinion the <a href="https://buildah.io/">Buildah</a> tool.</p>
+<h1 id="building-container-image-with-buildah">Building Container Image with Buildah</h1>
+<h2 id="the-procedure-1">The Procedure</h2>
+<p>The neat thing about Buildah is that it understands Dockerfile syntax so we can use it to build a container image with no modifications. However,
+the command line commands and parameters are different compared to these used by Docker.
+There is a special <code>command build-using-dockerfile</code> (or <code>bud</code> as an alias) in case we want to build a container image from a Dockerfile:</p>
+<pre tabindex="0"><code>$ buildah bud -t test/cowsay:1.0.0
+STEP 1: FROM library/debian:latest
+STEP 2: RUN apt-get update &amp;&amp; apt-get install -y cowsay
+Get:1 http://deb.debian.org/debian buster InRelease [121 kB]
+[...]
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+[...]
+STEP 4: ENTRYPOINT [&#34;/entrypoint.sh&#34;]
+STEP 5: COMMIT test/cowsay:1.0.0
+Getting image source signatures
+Copying blob 9780f6d83e45 skipped: already exists
+Copying blob da1ee50a72e8 done
+Copying config 0f21c6d578 done
+Writing manifest to image destination
+Storing signatures
+0f21c6d5783d8ebd954511d563ffb7f97b18ac934f022a6196c74d21d7157a70
+</code></pre><p>Buildah uses a similar concept for building container images as Docker does.
+It starts an intermediate container where the requires modifications are made.
+Finally, it commits the container as an image and finally deletes the intermediate container.
+You can observe this if you run <code>buildah ps</code> during the image is being built:</p>
+<pre tabindex="0"><code>$ buildah ps
+CONTAINER ID  BUILDER  IMAGE ID     IMAGE NAME                       CONTAINER NAME
+36a47863c34e     *     1510e8501783 docker.io/library/debian:latest  debian-working-container
+</code></pre><h2 id="the-non-existing-root-problem">The Non-existing Root Problem</h2>
+<p>In the above scenario where we build a container image using Dockerfile,
+Buildah’s primary advantage over Docker is that it does not require root rights.
+We can prove it during the build process, with help of a second terminal session, as follows:</p>
+<pre tabindex="0"><code>$ ps -ef | grep buildah
+adam     22753 24432  5 09:19 pts/1    00:00:00 buildah bud -t test/cowsay:1.0.0
+adam     22761 22753 99 09:19 pts/1    00:00:01 buildah-in-a-user-namespace bud -t test/cowsay:1.0.0
+</code></pre><p>As we can see Buildah starts two processes on the host, both in the context of logged user.
+This behaviour allows us to define in the CI platform a technical user with exactly these rights that are needed to build container images, but nothing more.</p>
+<p>As Buildah is a tool for building container images only we need another tool to run and test our image.
+Luckily we can use Docker for it, because images built with Buildah are <a href="https://opencontainers.org/">OCI compliant</a>, thus can be used by Docker with no modifications.
+However, if we list images using Docker, we will not find any image built by Buildah:</p>
+<pre tabindex="0"><code>$ buildah images
+REPOSITORY                 TAG      IMAGE ID       CREATED          SIZE
+localhost/test/cowsay      1.0.0    0f21c6d5783d   36 minutes ago   184 MB
+docker.io/library/debian   latest   1510e8501783   2 weeks ago      119 MB
+$ docker images
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+test/cowsay         1.0.0               8c71301ca77f        5 seconds ago       179MB
+debian              latest              1510e8501783        2 weeks ago         114MB
+</code></pre><p>The reason for that is the Buildah’s rootless nature.
+It stores images in user context and not in daemon’s local container store as Docker does.
+To solve this problem, Buildah provides <code>push</code> command which allows, among other targets, pushing images to this Docker’s local store:</p>
+<pre tabindex="0"><code>$ buildah push localhost/test/cowsay:1.0.0 docker-daemon:test/cowsay-buildah:1.0.0
+Getting image source signatures
+Copying blob 9780f6d83e45 done
+Copying blob da1ee50a72e8 done
+Copying config 0f21c6d578 done
+Writing manifest to image destination
+Storing signatures
+$ docker images
+REPOSITORY            TAG                 IMAGE ID            CREATED             SIZE
+test/cowsay           1.0.0               8c71301ca77f        9 minutes ago       179MB
+test/cowsay-buildah   1.0.0               0f21c6d5783d        44 minutes ago      178MB
+debian                latest              1510e8501783        2 weeks ago         114MB
+</code></pre><p>As we can see the <code>IMAGE ID</code> is identical <code>0f21c6d5783d</code> for both commands <code>buildah images</code> and <code>docker images</code>,
+thus both stored images are exactly the same. Now we can check our Buildah image running a container using Docker:</p>
+<pre tabindex="0"><code>$ docker run test/cowsay-buildah:1.0.0
+ ______________
+&lt; Moo Buildah! &gt;
+ --------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+</code></pre><h2 id="what-about-podman">What about Podman?</h2>
+<p>Using Docker to run a test container based on an image built by Buildah is not the only solution we have.
+The developers of Buildah provide a very interesting tool <a href="https://podman.io/">Podman</a> which allows to run containers (and even pods with multiple containers inside)
+based on the OCI compliant images. We can even build images with Podman, but it uses under the hood Buildah as listed by <code>podman info</code> command below:</p>
+<pre tabindex="0"><code>$ podman info
+host:
+  arch: amd64
+  buildahVersion: 1.19.8
+  cgroupManager: cgroupfs
+  cgroupVersion: v1
+  conmon:
+    package: conmon-2.0.26-3.module+el8.4.0+11311+9da8acfb.x86_64
+[...]
+</code></pre><p>Podman operates on the same local image storage as Buildah does, so we do not need any transformation of the stored images.</p>
+<p>Podman’s command line syntax is same as Docker, so the test of the image is easy as follows:</p>
+<pre tabindex="0"><code>$ podman images
+REPOSITORY                              TAG      IMAGE ID       CREATED          SIZE
+localhost/test/cowsay-buildah-by-hand   1.0.0    a0d5154f2894   25 minutes ago   184 MB
+docker.io/library/debian                latest   1510e8501783   2 weeks ago      119 MB
+$ podman run localhost/test/cowsay-buildah-by-hand:1.0.0 &#39;Hallo Podman!&#39;
+ _______________
+&lt; Hallo Podman! &gt;
+ ---------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+</code></pre><h2 id="dockerfile-less">Dockerfile-less</h2>
+<p>Buildah’s capability to build container images without root right is really great and, as we saw, quite easy to implement.
+However, Buildah provides more than just being “better” build image tool. With Buildah,
+we can create container images from the command line without using a Dockerfile!
+So let’s convert our Dockerfile to a set of Buildah commands. Here our Dockerfile again:</p>
+<pre tabindex="0"><code>FROM library/debian:latest
+LABEL maintainer=&#34;Adam Boczek&#34;
+LABEL version=&#34;1.0.0&#34;
+LABEL description=&#34;Blog post example image. Uses &#39;cowsay&#39; application to demonstrate Buildah.&#34;
+RUN apt-get update &amp;&amp; \                              
+    apt-get install -y cowsay                          
+                          
+COPY entrypoint.sh /                          
+                          
+ENTRYPOINT [&#34;/entrypoint.sh&#34;]
+</code></pre><p>We can convert the first statement as follows:</p>
+<pre tabindex="0"><code>$ buildah from library/debian:latest
+Getting image source signatures
+Copying blob e4c3d3e4f7b0 done
+Copying config 1510e85017 done
+Writing manifest to image destination
+Storing signatures
+debian-working-container
+</code></pre><p>Buildah creates an intermediate container based on the image provided.
+This container runs now, and we can extend it with additional configuration and tools.
+We can even connect to it if we e.g. need to check its state “inside”:</p>
+<pre tabindex="0"><code>$ buildah ps
+CONTAINER ID  BUILDER  IMAGE ID     IMAGE NAME                       CONTAINER NAME
+b9fc73f7cd91     *     1510e8501783 docker.io/library/debian:latest  debian-working-container
+</code></pre><p>Let us set a variable with the name of the container, as we will need it for every Buildah command:</p>
+<pre tabindex="0"><code>$ cont=debian-working-container
+</code></pre><p>Now we can connect to the container and list the files in the root folder:</p>
+<pre tabindex="0"><code>$ buildah run $cont /bin/bash
+root@adams-host:/# ls
+bin  boot  dev  etc  home  lib  lib64  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+root@adams-host:/# exit
+</code></pre><p>According to our Dockerfile, the next step is to create three labels:</p>
+<pre tabindex="0"><code>$ buildah config --label maintainer=&#34;Adam Boczek&#34; $cont
+$ buildah config --label version=&#34;1.0.0&#34; $cont
+$ buildah config --label description=&#34;Blog post example image. Uses &#39;cowsay&#39; application to demonstrate Buildah.&#34; $cont
+</code></pre><p>Running <code>apt-get update</code> and <code>apt-get install -y cowsay</code> is as simple as this:</p>
+<pre tabindex="0"><code>$ buildah run $cont apt-get update                   
+Get:1 http://security.debian.org/debian-security buster/updates InRelease [65.4 kB]
+[...]
+Packages [7856 B]
+Fetched 8396 kB in 2s (3924 kB/s)
+Reading package lists... Done
+$ buildah run $cont apt-get install -y cowsay
+Reading package lists... Done
+Building dependency tree
+[...]
+Setting up cowsay (3.03+dfsg2-6) ...
+Processing triggers for libc-bin (2.28-10) ...
+</code></pre><p>Having <code>cowsay</code> installed, we can copy the <code>entrypoint.sh</code> into container:</p>
+<pre tabindex="0"><code>$ buildah copy $cont entrypoint.sh
+</code></pre><p>One advantage of this way of building container images is the possibility to check the container if everything works as expected at any given time:</p>
+<pre tabindex="0"><code>$ buildah run $cont ./entrypoint.sh
+ ______________
+&lt; Moo Buildah! &gt;
+ --------------
+        \   ^__^
+         \  (oo)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+</code></pre><p>The last command from the Dockerfile is the definition of the <code>ENTRYPOINT</code>:</p>
+<pre tabindex="0"><code>buildah config --entrypoint &#39;[&#34;./entrypoint.sh&#34;]&#39; $cont
+</code></pre><p>However, before we commit the container as an image, we need to “reset” the <code>CMD</code> command from its default <code>bash</code> value:</p>
+<pre tabindex="0"><code>$ buildah inspect $cont | grep -i -C1 cmd\&#34;
+            ],
+            &#34;Cmd&#34;: [
+                &#34;bash&#34;
+[...]
+$ buildah config --cmd &#39;&#39; $cont
+$ buildah inspect $cont | grep -i -C1 cmd\&#34;
+            ],
+            &#34;Cmd&#34;: [],
+            &#34;ArgsEscaped&#34;: true,
+[...]
+</code></pre><p>Now we are ready to commit the container and check if the image works as expected:</p>
+<pre tabindex="0"><code>$ buildah commit debian-working-container test/cowsay-buildah-by-hand:1.0.0
+Getting image source signatures
+Copying blob 9780f6d83e45 skipped: already exists
+Copying blob d838492054b4 done
+Copying config a0d5154f28 done
+Writing manifest to image destination
+Storing signatures
+a0d5154f2894cb8b93bb2ad4a0f0066b0fcb4b5ab3c097759100a85f73ebe967
+$ buildah images
+REPOSITORY                              TAG      IMAGE ID       CREATED              SIZE
+localhost/test/cowsay-buildah-by-hand   1.0.0    a0d5154f2894   About a minute ago   184 MB
+docker.io/library/debian                latest   1510e8501783   2 weeks ago          119 MB
+$ podman run localhost/test/cowsay-buildah-by-hand:1.0.0 -p &#39;Moo Podman!&#39;
+ _____________
+&lt; Moo Podman! &gt;
+ -------------
+        \   ^__^
+         \  (@@)\_______
+            (__)\       )\/\
+                ||----w |
+                ||     ||
+</code></pre><h2 id="beyond-buildah">Beyond Buildah</h2>
+<p>This is of course not the end of the story. As stated at the beginning of this post, our customer decided to move the entire platform to the cloud.
+It means that also the container images have to be built in a containerized environment like Kubernetes.
+Is Buildah the right solution for this scenario is still an open question.
+There are already solutions on the market which sound to be a better solution for such environments, e.g. <a href="https://github.com/GoogleContainerTools/kaniko">Kaniko</a>.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>Using Buildah as the replacement for Docker in a CI platform seems to be a perfect solution for the problem with the root rights.
+Ability to build container images without Dockerfile directly from a CLI or using a shell script, give us flexibility that Docker does not provide.
+However, a new tool comes with its own problems, like different configuration or lack of support by other tools or plugins (e.g. Artifactory Jenkins plugin).
+So before you decide to use Buildah instead of Docker, it is important to test this solution with all relevant components of your CI platform.</p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/adam-boczek.jpg" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/adam-boczek">Adam Boczek</a><span>
+                    
+                </span></h3>
+                <p>Architect | Coach | Manager </p>
+                <p calss="author-socials">
+                    <a target="_blank"  href="https://github.com/grafvonb"><i class="fa-brands fa-github"></i></a>
+                    
+                    
+                    
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/development/">development</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/container/">container</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/buildah/">buildah</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/docker/">docker</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/cowsay/">cowsay</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/rootless/">rootless</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/ci/">ci</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</html>
