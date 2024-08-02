@@ -7,8 +7,15 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Fri, 19 Jul 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 02 Aug 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Part 3: Enabling annotation-based scraping</title>
+      <link>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-03-annotationbasedscraping/</link>
+      <pubDate>Fri, 02 Aug 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-03-annotationbasedscraping/</guid>
+      <description>After showing how to get an OpenTelemetry Collector to support Prometheus CRDs as scrape targets, we discover how to integrate another well-known approach to mark workloads as scrape targets. Now, we focus on annotation-based scraping - what is it, when would we want to use it and how can we integrate it in our OpenTelemetry stack? In this article, we provide answers to all these questions, and more.</description>
+    </item>
     <item>
       <title>Part 1: The Basics</title>
       <link>https://nttdata-dach.github.io/posts/dd-fluttercicd-01-basics/</link>

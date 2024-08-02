@@ -2,6 +2,42 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://nttdata-dach.github.io/authors/</loc>
+    <lastmod>2024-08-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/cloud/</loc>
+    <lastmod>2024-08-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/kubernetes/</loc>
+    <lastmod>2024-08-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/metrics/</loc>
+    <lastmod>2024-08-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/authors/mikel-jason-m%C3%BCnnekhoff/</loc>
+    <lastmod>2024-08-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/observability/</loc>
+    <lastmod>2024-08-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/opentelemetry/</loc>
+    <lastmod>2024-08-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-03-annotationbasedscraping/</loc>
+    <lastmod>2024-08-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/platform-engineering/</loc>
+    <lastmod>2024-08-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/series/</loc>
+    <lastmod>2024-08-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/</loc>
+    <lastmod>2024-08-02T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/series/transitioning-from-prometheus-to-opentelemetry-a-journey-of-a-clusters-metrics-evolution/</loc>
+    <lastmod>2024-08-02T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://nttdata-dach.github.io/tags/app-store/</loc>
     <lastmod>2024-07-19T00:00:00+00:00</lastmod>
   </url><url>
@@ -33,12 +69,6 @@
     <lastmod>2024-07-19T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/play-store/</loc>
-    <lastmod>2024-07-19T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/series/</loc>
-    <lastmod>2024-07-19T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/</loc>
     <lastmod>2024-07-19T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/api-gateway/</loc>
@@ -89,34 +119,7 @@
     <loc>https://nttdata-dach.github.io/tags/token-validation/</loc>
     <lastmod>2024-06-06T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/authors/</loc>
-    <lastmod>2024-06-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/cloud/</loc>
-    <lastmod>2024-06-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/kubernetes/</loc>
-    <lastmod>2024-06-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/metrics/</loc>
-    <lastmod>2024-06-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/authors/mikel-jason-m%C3%BCnnekhoff/</loc>
-    <lastmod>2024-06-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/observability/</loc>
-    <lastmod>2024-06-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/opentelemetry/</loc>
-    <lastmod>2024-06-03T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-02-firstmetrics/</loc>
-    <lastmod>2024-06-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/platform-engineering/</loc>
-    <lastmod>2024-06-03T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/series/transitioning-from-prometheus-to-opentelemetry-a-journey-of-a-clusters-metrics-evolution/</loc>
     <lastmod>2024-06-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/augmented-reality/</loc>

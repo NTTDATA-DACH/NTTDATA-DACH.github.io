@@ -27,6 +27,43 @@
     
     
     
+    <item>
+      <title>Transitioning from Prometheus to OpenTelemetry - A Journey of a Cluster&#39;s Metrics Evolution - Part 3: Enabling annotation-based scraping</title>
+      <link>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-03-annotationbasedscraping/</link>
+      <pubDate>Fri, 02 Aug 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/MJM-SA-OtelMetrics-03-AnnotationBasedScraping/title-image.jpg</guid>
+      <description>After showing how to get an OpenTelemetry Collector to support Prometheus CRDs as scrape targets, we discover how to integrate another well-known approach to mark workloads as scrape targets. Now, we focus on annotation-based scraping - what is it, when would we want to use it and how can we integrate it in our OpenTelemetry stack? In this article, we provide answers to all these questions, and more.</description>
+
+      
+      
+        
+    </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -43,10 +80,6 @@
       
         
     </item>
-    
-    
-    
-    
     
     
     
@@ -110,20 +143,6 @@
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     <item>
       <title>Transitioning from Prometheus to OpenTelemetry - A Journey of a Cluster&#39;s Metrics Evolution - Part 2: Scraping The First Metrics</title>
       <link>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-02-firstmetrics/</link>
@@ -136,10 +155,6 @@
       
         
     </item>
-    
-    
-    
-    
     
     
     
@@ -390,8 +405,6 @@
       
         
     </item>
-    
-    
     
     
   </channel>
