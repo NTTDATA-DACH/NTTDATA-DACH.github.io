@@ -70,7 +70,7 @@
 
 <div class="emobanner article">
     <h1>
-        <span class="pre">14.04.2024
+        <span class="pre">12.09.2024
         
          - Robert Danczak - <i class="fa-solid fa-book-open"></i> 3 min read
         
@@ -97,9 +97,13 @@
             
            
             <p>In this tutorial we want to show you, how to collect Hazelcast metrics via Prometheus. The main reason for this how-to is, that the <a href="https://docs.hazelcast.com/hazelcast/5.2/maintain-cluster/monitoring#exposing-metrics">manual</a> provided by Hazelcast does not give any hints on how to obtain the metrics in detail. They refer to their full-blown zip-file / Docker images and start it with one parameter. However, if you are running in a K8s (sidecar) container or with your own microservice, this will not help much.
-You can also get the metrics through the Management Center if it is available, but this is limited to Hazelcast Enterprise and a license.</p>
+You can also get the metrics through the Management Center if it is available, but this is limited to Hazelcast Enterprise and a corresponding license.</p>
 <h1 id="prerequisites">Prerequisites</h1>
 <p>You have a customised Hazelcast Microservice and are not using the full-blown zip-file / Docker images.</p>
+<h1 id="introduction">Introduction</h1>
+<p>Hazelcast (more specifically Hazelcast Platform since version 5.0) is an in-memory database/cache solution like Redis.
+In Hazelcast you can store different data types in various data structures such as <a href="https://docs.hazelcast.com/hazelcast/latest/data-structures/distributed-data-structures">Maps, Sets, Lists, Queues, …</a>. Furthermore, you can create <a href="https://docs.hazelcast.com/hazelcast/latest/fault-tolerance/backups">backups</a> and <a href="https://docs.hazelcast.com/hazelcast/latest/clusters/partition-group-configuration">partitions</a>. As Hazelcast is cloud agnostic you can deploy it on a any hyperscaler or your own on-prem cloud. Hazelcast also supports <a href="https://docs.hazelcast.com/hazelcast/latest/storage/persistence">persistence to disk</a>, which is an enterprise feature.
+If you combine backups with a <a href="https://docs.hazelcast.com/hazelcast/latest/clusters/partition-group-configuration#zone_aware">zone_aware</a> partitioning, K8s <a href="https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/">TopologySpread</a> and <a href="https://kubernetes.io/docs/tasks/run-application/configure-pdb/">PDB</a>, your cache can withstand whole datacentre outages in one zone without any data loss.</p>
 <h1 id="step-by-step-guide">Step-by-Step Guide</h1>
 <p>To collect metrics from Hazelcast, we need to extend an existing Hazelcast microservice with the following steps:</p>
 <ol>

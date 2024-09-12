@@ -2,6 +2,33 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://nttdata-dach.github.io/tags/docker/</loc>
+    <lastmod>2024-09-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/hazelcast/</loc>
+    <lastmod>2024-09-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/posts/rd-hazelcastmetricsviaprometheus/</loc>
+    <lastmod>2024-09-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/metrics/</loc>
+    <lastmod>2024-09-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/microservices/</loc>
+    <lastmod>2024-09-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/monitoring/</loc>
+    <lastmod>2024-09-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/prometheus/</loc>
+    <lastmod>2024-09-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/servicemonitor/</loc>
+    <lastmod>2024-09-12T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/</loc>
+    <lastmod>2024-09-12T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://nttdata-dach.github.io/authors/</loc>
     <lastmod>2024-08-02T00:00:00+00:00</lastmod>
   </url><url>
@@ -9,9 +36,6 @@
     <lastmod>2024-08-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/kubernetes/</loc>
-    <lastmod>2024-08-02T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/metrics/</loc>
     <lastmod>2024-08-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/authors/mikel-jason-m%C3%BCnnekhoff/</loc>
@@ -30,9 +54,6 @@
     <lastmod>2024-08-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/series/</loc>
-    <lastmod>2024-08-02T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/</loc>
     <lastmod>2024-08-02T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/series/transitioning-from-prometheus-to-opentelemetry-a-journey-of-a-clusters-metrics-evolution/</loc>
@@ -105,9 +126,6 @@
     <lastmod>2024-07-03T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/api-security/</loc>
-    <lastmod>2024-06-06T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/microservices/</loc>
     <lastmod>2024-06-06T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/oauth-2.0/</loc>
@@ -432,9 +450,6 @@
     <lastmod>2021-07-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/cowsay/</loc>
-    <lastmod>2021-07-12T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/docker/</loc>
     <lastmod>2021-07-12T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/rootless/</loc>

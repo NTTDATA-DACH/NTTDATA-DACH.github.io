@@ -17,6 +17,35 @@
     
     
     
+    <item>
+      <title>Hazelcast Metrics via Prometheus</title>
+      <link>https://nttdata-dach.github.io/posts/rd-hazelcastmetricsviaprometheus/</link>
+      <pubDate>Thu, 12 Sep 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/RD-HazelcastMetricsViaPrometheus/title-image.jpg</guid>
+      <description>A step-by-step guide on how to collect Hazelcast metrics via Prometheus. The tutorial is aimed at those who are running a customized Hazelcast microservice, rather than the full-blown zip-file/dockers. The guide covers all the necessary steps, from adding the Prometheus dependency to Java code configuration, updating application YAML and Dockerfile, to updating the ServiceMonitor. The article also offers helpful hints and sources for further reading.</description>
+
+      
+      
+        
+    </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -39,8 +68,6 @@
       
         
     </item>
-    
-    
     
     
     
@@ -111,8 +138,6 @@
       
         
     </item>
-    
-    
     
     
     
@@ -380,31 +405,6 @@
     </item>
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <item>
-      <title>Using Renovate to scale up automatic pull request creation on GitHub</title>
-      <link>https://nttdata-dach.github.io/posts/mjm-renovateautomaticpullrequest/</link>
-      <pubDate>Tue, 22 Aug 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://nttdata-dach.github.io//posts/img/MJM-RenovateAutomaticPullRequest/title-image.jpg</guid>
-      <description>See how we use the dependency update tool Renovate to distribute helm charts with ArgoCD applications in a GitOps fashion. This article shows how to set up Renovate for several kubernetes clusters with a centralized configuration as a GitHub action.</description>
-
-      
-      
-        
-    </item>
     
     
   </channel>

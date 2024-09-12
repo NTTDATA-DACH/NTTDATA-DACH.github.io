@@ -7,12 +7,12 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Sun, 14 Apr 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 12 Sep 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/tags/monitoring/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Hazelcast Metrics via Prometheus</title>
       <link>https://nttdata-dach.github.io/posts/rd-hazelcastmetricsviaprometheus/</link>
-      <pubDate>Sun, 14 Apr 2024 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 12 Sep 2024 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/posts/rd-hazelcastmetricsviaprometheus/</guid>
       <description>A step-by-step guide on how to collect Hazelcast metrics via Prometheus. The tutorial is aimed at those who are running a customized Hazelcast microservice, rather than the full-blown zip-file/dockers. The guide covers all the necessary steps, from adding the Prometheus dependency to Java code configuration, updating application YAML and Dockerfile, to updating the ServiceMonitor. The article also offers helpful hints and sources for further reading.</description>
     </item>
