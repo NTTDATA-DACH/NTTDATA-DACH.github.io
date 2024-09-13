@@ -9,10 +9,10 @@
   <meta property="og:type" content="article"/>
   <meta property="og:title" content="Data streaming with Confluent Kafka Connect"/>
   
-  <meta property="article:author" content="[Juergen Huber]"/>
+  <meta property="article:author" content="[Jürgen Huber]"/>
   <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/JCH-ConfluentKafkaConnect/title-image.jpg"/>
   <meta property="og:url" content="https://nttdata-dach.github.io/posts/jh-confluentkafkaconnect/"/>
-  <meta property="og:description" content="Kafka Connect, a solution from Confluent for data transfer to and from Kafka,  provides a high-performance and scalable option for connecting with over 80 different data sources including databases, messaging systems, REST interfaces, and cloud storages. Using Kafka Connect can save a lot of time and effort, particularly if scalability and security are important to your project. To use Connect, you&rsquo;ll need to understand the basic architecture, which involves workers, tasks, and connectors, as well as how to configure the workers and connectors."/>
+  <meta property="og:description" content="Kafka Connect, a solution from Confluent for transferring data to and from Kafka, provides a high-performance and scalable option for connecting to over 80 different data sources, including databases, messaging systems, REST interfaces, and cloud storage. Using Kafka Connect can save a lot of time and effort, especially if scalability and security are important to your project. To use Connect, you&rsquo;ll need to understand the basic architecture, which includes Workers, Tasks and Connectors  as well as how to configure them."/>
   
   <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
   <script src="https://nttdata-dach.github.io/js/modal.js"></script>
@@ -70,9 +70,9 @@
 
 <div class="emobanner article">
     <h1>
-        <span class="pre">19.06.2024
+        <span class="pre">12.09.2024
         
-         - Juergen Huber - <i class="fa-solid fa-book-open"></i> 5 min read
+         - Jürgen Huber - <i class="fa-solid fa-book-open"></i> 4 min read
         
         </span>
         Data streaming with Confluent Kafka Connect
@@ -97,53 +97,49 @@
             
            
             <p>Kafka Connect is a high-performance and scalable solution for transferring data to and from Kafka.
-However, getting started can be a little confusing as the online documentation quickly gets bogged down in details and lacks a basic overview to quickly find your way around. This article is intended to help you understand the basic concepts with which you can quickly create a simple Connect setup.
+However, getting started can be a bit confusing, as the online documentation quickly gets bogged down in details and lacks a basic overview to quickly find your way around. This article is intended to help you understand the basic concepts that will allow you to quickly create a simple Connect setup.
 The documentation for Kafka Connect can be found <a href="https://docs.confluent.io/platform/current/connect/index.html">here</a>.</p>
 <h1 id="what-is-confluent-kafka-connect">What is Confluent Kafka Connect?</h1>
-<p>As already mentioned, Kafka Connect is a product from Confluent for transferring data to and from Kafka. Connect runs on the Confluent platform and is purely configurative. It is not necessary to program a single line of code. With its so-called connectors, Connect offers a connection to data sources such as all common databases, messaging systems, REST interfaces, cloud storages and much more. The list of systems that can be connected currently has over 80 entries and is growing (see <a href="https://docs.confluent.io/platform/current/connect/kafka_connectors.html">here</a>).
-In addition, there are further functionalities for transforming and enriching the data or performing logic operations, which will not be discussed in this article.</p>
+<p>As mentioned above, Kafka Connect is a product from Confluent for transferring data to and from Kafka. Connect runs on the Confluent platform and is purely configurable  . It is not necessary to program a single line of code. Through its Connectors, Connect provides connectivity to data sources such as all major databases, messaging systems, REST interfaces, cloud storage and much more. The list of connectable systems currently contains more than 80 entries and is still growing (see <a href="https://docs.confluent.io/platform/current/connect/kafka_connectors.html">here</a>).
+In addition, there are other functionalities for transforming and enriching the data or performing logical operations that are not discussed in this article.</p>
 <h1 id="why-should-i-use-kafka-connect">Why should I use Kafka Connect?</h1>
-<p>Most pragmatic developers like me will initially think that it&rsquo;s very easy to write a small service that connects to Kafka with a REST interface, for example. So why should I go to the trouble of familiarizing myself with Kafka Connect? Experience shows that this is true at first, but as the project progresses, new requirements are added, such as correct further data reading after a restart, scalability, security aspects, etc., and so the small service quickly turns into a larger project. As these points are all already taken into account in Kafka Connect, such features can be added in just a few minutes with simple configurations, meaning that Connect can save a lot of time and effort.</p>
+<p>Most pragmatic developers like me will initially think that it&rsquo;s very easy to write a small service that connects to Kafka using a REST interface, for example. So why should I bother to learn about Kafka Connect? Experience shows that this is true at first, but as the project progresses, new requirements are added, such as correct further data reading after a restart, scalability, security aspects, etc., and so the small service quickly turns into a larger project. Because  Kafka Connect takes all of this into account, such features can be added in minutes with simple configurations, saving a lot of time and effort.</p>
 <h1 id="basic-concepts">Basic concepts</h1>
-<p>To get started with Connect, you first need to understand the basic architecture. There are so-called <strong>Workers</strong>, <strong>Tasks</strong> and <strong>Connectors</strong>.</p>
+<p>To get started with Connect, you need to understand the basic architecture. There are so-called <strong>Workers</strong>, <strong>Tasks</strong> and <strong>Connectors</strong>.</p>
 <h2 id="workers">Workers</h2>
-<p>Workers can be understood as the execution environment on which data streaming takes place. There are standalone workers and distributed workers.
-Standalone Workers are not recommended by Confluent for productive operation, but are rather intended for tests on a local environment. For this reason, we will not consider them further here.
-Distributed Workers run in a Kafka Cluster on the Confluent platform. One or more workers form a Connect Cluster. They run in a network and divide up the work independently. This work is the tasks.</p>
+<p>Workers can be thought of as the execution environment on which data streaming takes place. There are standalone workers and distributed workers.
+Standalone Workers are not recommended by Confluent for production use, but rather for testing in a local environment. For this reason, we will not discuss them further here.
+Distributed Workers run in a Kafka cluster  on the Confluent platform. One or more workers form a Connect Cluster. They run in a network and divide the work independently. This work is called Task.</p>
 <h2 id="tasks">Tasks</h2>
-<p>Tasks are the work that needs to be done, e.g. reading data from the source system, transforming data and writing data to the target system. Tasks can be executed sequentially or in parallel. Connectors are used for the connection to the source/target systems.</p>
+<p>Tasks are the work that needs to be done, such as reading data from the source system, transforming data, and writing data to the target system. Tasks can be executed sequentially or in parallel. Connectors are used to connect to the source/target systems.</p>
 <h2 id="connectors">Connectors</h2>
-<p>A connector is a plugin that a worker downloads from the Internet or a configured location when it is started in order to read data from a source or write data to a target. A distinction is made between source connectors for the connection to source systems and sink connectors for the connection to target systems. If a connector is classified as neither source nor sink, it can be configured as both.</p>
+<p>A connector is a plugin that a Worker downloads from the Internet or a configured location at startup to read data from a source or write data to a target. There are source connectors for connecting to source systems and sink connectors for connecting to target systems. If a connector is neither a source nor a sink, it can be configured as both.</p>
 <h1 id="configuration">Configuration</h1>
-<p>First, the workers must be configured. To do this, 5 entries in the configuration are sufficient:</p>
-<p>{{ &lt; highlight &gt;}}
-bootstrap.servers
-group.id
-config.storage.topic
-offset.storage.topic
-status.storage.topic
-{{ &lt; / highlight &gt;}}</p>
-<p><code>bootstrap.servers</code> simply refers to the Kafka cluster on which the workers are to run.
-<code>group.id</code> is the consumer groupid that the workers should use. All workers that form a group in the Connect Cluster are defined by the same group.id. There is a small pitfall here that occasionally causes headaches: the group.id must not be used again on the entire Confluent platform, for example for a normal Kafka consumer that reads from a different topic. Otherwise the workers would not start.
-The three <code>topic</code> configurations must refer to existing Kafka topics in which the connector configuration, read offsets and status are stored.
-The next step is to configure tasks and connectors. The connector configurations vary greatly depending on the system to be connected. Only the following settings are common to all:</p>
-<p>{{ &lt; highlight &gt;}}
-name
-connector.class
-tasks.max
-{{ &lt; / highlight &gt;}}</p>
+<p>First the workers must be configured. To do this, 5 entries in the configuration are sufficient:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="err">bootstrap.servers</span>
+</span></span><span class="line"><span class="cl"><span class="err">group.id</span>
+</span></span><span class="line"><span class="cl"><span class="err">config.storage.topic</span>
+</span></span><span class="line"><span class="cl"><span class="err">offset.storage.topic</span>
+</span></span><span class="line"><span class="cl"><span class="err">status.storage.topic</span></span></span></code></pre></div>
+<p><code>bootstrap.servers</code> simply refers to the Kafka cluster on which  to run the Workers    .
+<code>group.id</code> is the consumer groupid that the workers should use. All Workers that form a group in the Connect Cluster are defined by the same <code>group.id</code>. There is a small pitfall here that occasionally causes headaches: the <code>group.id</code> must not be reused thoughout the Confluent platform, for example for a normal Kafka consumer that reads from a different topic. Otherwise the Workers will not start.
+The three <code>topic</code> configurations must point to existing Kafka topics where the Connector configuration, read offsets, and status are stored.
+The next step is to configure the Tasks and Connectors. The Connector configurations vary greatly depending on the system you are connecting to. Only the following settings are common to all:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="err">name</span>
+</span></span><span class="line"><span class="cl"><span class="err">connector.class</span>
+</span></span><span class="line"><span class="cl"><span class="err">tasks.max</span></span></span></code></pre></div>
 <p>Here,</p>
 <ul>
-<li><code>name</code> is an arbitrary but unique name for the connector</li>
-<li><code>conntor.class</code> identifies the connector to be used</li>
-<li><code>tasks.max</code> is the number of tasks that the connector can use</li>
+<li><code>name</code> is an arbitrary but unique name for the Connector.</li>
+<li><code>conntor.class</code> identifies the connector to use.</li>
+<li><code>tasks.max</code> is the number of Tasks the Connector can use.</li>
 </ul>
-<p>These settings are now packed into a JSON and sent via http POST to the URL at which the connector can be reached (see <a href="https://docs.confluent.io/platform/current/connect/configuring.html#distributed-example">here</a>). This JSON is stored in the config.storage.topic mentioned above so that the configuration is taken from the topic on subsequent restarts or when new workers are added.
-Since this procedure is manual, a much better approach would be to store the JSON in a Kubernetes secret, for example, and to inform the workers via configuration that the connector is configured with the JSON from the secret.</p>
+<p>These settings are now packed into a JSON and sent via http POST to the URL where the connector can be reached (see <a href="https://docs.confluent.io/platform/current/connect/configuring.html#distributed-example">here</a>). This JSON is stored in the <code>config.storage.topic</code> mentioned above, so that on subsequent restarts or when new workers are added, the configuration is taken from the topic.
+Since this procedure is manual, a much better approach would be to store the JSON in a Kubernetes secret, for example, and inform the workers via configuration that the connector is configured with the JSON from the secret.</p>
 <h1 id="conclusion">Conclusion</h1>
-<p>And that&rsquo;s it! With just a few configurations, a simple Kafka Connect cluster with worker, tasks and connector can be set up that is immediately ready for productive use, scalable, fail-safe and start-over-capable.</p>
+<p>And that&rsquo;s it! With just a few configurations, you can set up a simple Kafka Connect cluster with Worker  , Tasks and Connector   that is ready for production use, scalable, resilient and restartable.</p>
 <h1 id="further-features-and-information">Further features and information</h1>
-<p>Security settings and more in-depth features such as data transformation were not considered. Information on this can be found in the docs: <a href="https://docs.confluent.io/platform/current/connect/security.html">security</a> and <a href="https://docs.confluent.io/platform/current/connect/transforms/overview.html">transforms</a>.</p>
+<p>Security settings and advanced features such as data transformation are not considered. Please refer to the docs on <a href="https://docs.confluent.io/platform/current/connect/security.html">security</a> and <a href="https://docs.confluent.io/platform/current/connect/transforms/overview.html">transforms</a>.</p>
 <h1 id="credits">Credits</h1>
 <p>Title image by <a href="https://www.gettyimages.com/search/photographer?photographer=baranozdemir">baranozdemir</a> on <a href="https://www.gettyimages.com">Getty Images</a></p>
 

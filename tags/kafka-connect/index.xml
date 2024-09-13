@@ -7,14 +7,14 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Wed, 19 Jun 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 12 Sep 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/tags/kafka-connect/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Data streaming with Confluent Kafka Connect</title>
       <link>https://nttdata-dach.github.io/posts/jh-confluentkafkaconnect/</link>
-      <pubDate>Wed, 19 Jun 2024 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 12 Sep 2024 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/posts/jh-confluentkafkaconnect/</guid>
-      <description>Kafka Connect, a solution from Confluent for data transfer to and from Kafka,  provides a high-performance and scalable option for connecting with over 80 different data sources including databases, messaging systems, REST interfaces, and cloud storages. Using Kafka Connect can save a lot of time and effort, particularly if scalability and security are important to your project. To use Connect, you&amp;rsquo;ll need to understand the basic architecture, which involves workers, tasks, and connectors, as well as how to configure the workers and connectors.</description>
+      <description>Kafka Connect, a solution from Confluent for transferring data to and from Kafka, provides a high-performance and scalable option for connecting to over 80 different data sources, including databases, messaging systems, REST interfaces, and cloud storage. Using Kafka Connect can save a lot of time and effort, especially if scalability and security are important to your project. To use Connect, you&amp;rsquo;ll need to understand the basic architecture, which includes Workers, Tasks and Connectors  as well as how to configure them.</description>
     </item>
   </channel>
 </rss>
