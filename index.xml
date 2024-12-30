@@ -15,6 +15,37 @@
     
     
     
+    <item>
+      <title>Data streaming with Confluent Kafka Connect</title>
+      <link>https://nttdata-dach.github.io/posts/jh-confluentkafkaconnect/</link>
+      <pubDate>Mon, 30 Dec 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/JCH-ConfluentKafkaConnect/title-image.jpg</guid>
+      <description>Kafka Connect, a solution from Confluent for transferring data to and from Kafka, provides a high-performance and scalable option for connecting to over 80 different data sources, including databases, messaging systems, REST interfaces, and cloud storage. Using Kafka Connect can save a lot of time and effort, especially if scalability and security are important to your project. To use Connect, you&amp;rsquo;ll need to understand the basic architecture, which includes Workers, Tasks and Connectors  as well as how to configure them.</description>
+
+      
+      
+        
+    </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     <item>
@@ -29,10 +60,6 @@
       
         
     </item>
-    
-    
-    
-    
     
     
     
@@ -363,46 +390,6 @@
     </item>
     
     
-    
-    
-    
-    
-    
-    
-    
-    <item>
-      <title>Building and running Flutter mobile applications for Android on AWS Device Farm</title>
-      <link>https://nttdata-dach.github.io/posts/ak-buildingrunningflutteronaws/</link>
-      <pubDate>Fri, 03 Nov 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://nttdata-dach.github.io//posts/img/AK-BuildingRunningFlutterOnAWS/title-image.jpg</guid>
-      <description>This article will give you an overview on how to build and run a Flutter cross-platform mobile application for the Android OS platform in the cloud. We will cover all the steps from the basic app itself to the integration with Appium, and ultimately the deployment and testing on several devices in the AWS Device Farm.</description>
-
-      
-      
-        
-    </item>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <item>
-      <title>Kong - The Gateway without Limitations - Part 2: Log Chunking</title>
-      <link>https://nttdata-dach.github.io/posts/as-konglogchunking/</link>
-      <pubDate>Wed, 25 Oct 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://nttdata-dach.github.io//posts/img/AS-KongLogChunking/title-image.jpg</guid>
-      <description>In the last blog, I briefly introduced Kong as a sophisticated API gateway product. This time, I will discuss a problem related to logging message size limitation and offer a solution. This problem significantly limits root cause analysis and ultimately solution development.</description>
-
-      
-      
-        
-    </item>
     
     
     
