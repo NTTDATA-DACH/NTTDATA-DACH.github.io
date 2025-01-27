@@ -6,9 +6,72 @@
     <description>Recent content in Tags on Technology Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Mon, 30 Dec 2024 00:00:00 +0000</lastBuildDate>
+    <copyright>Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
+    <lastBuildDate>Mon, 27 Jan 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>App Store</title>
+      <link>https://nttdata-dach.github.io/tags/app-store/</link>
+      <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/app-store/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Automation</title>
+      <link>https://nttdata-dach.github.io/tags/automation/</link>
+      <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/automation/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Ci</title>
+      <link>https://nttdata-dach.github.io/tags/ci/</link>
+      <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/ci/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>CI/CD</title>
+      <link>https://nttdata-dach.github.io/tags/ci/cd/</link>
+      <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/ci/cd/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Fastlane</title>
+      <link>https://nttdata-dach.github.io/tags/fastlane/</link>
+      <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/fastlane/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Flutter</title>
+      <link>https://nttdata-dach.github.io/tags/flutter/</link>
+      <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/flutter/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Github Actions</title>
+      <link>https://nttdata-dach.github.io/tags/github-actions/</link>
+      <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/github-actions/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Mobile Development</title>
+      <link>https://nttdata-dach.github.io/tags/mobile-development/</link>
+      <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/mobile-development/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Play Store</title>
+      <link>https://nttdata-dach.github.io/tags/play-store/</link>
+      <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/play-store/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Data Transfer</title>
       <link>https://nttdata-dach.github.io/tags/data-transfer/</link>
@@ -126,69 +189,6 @@
       <link>https://nttdata-dach.github.io/tags/platform-engineering/</link>
       <pubDate>Fri, 02 Aug 2024 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/platform-engineering/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>App Store</title>
-      <link>https://nttdata-dach.github.io/tags/app-store/</link>
-      <pubDate>Fri, 19 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/app-store/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Automation</title>
-      <link>https://nttdata-dach.github.io/tags/automation/</link>
-      <pubDate>Fri, 19 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/automation/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Ci</title>
-      <link>https://nttdata-dach.github.io/tags/ci/</link>
-      <pubDate>Fri, 19 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/ci/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>CI/CD</title>
-      <link>https://nttdata-dach.github.io/tags/ci/cd/</link>
-      <pubDate>Fri, 19 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/ci/cd/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Fastlane</title>
-      <link>https://nttdata-dach.github.io/tags/fastlane/</link>
-      <pubDate>Fri, 19 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/fastlane/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Flutter</title>
-      <link>https://nttdata-dach.github.io/tags/flutter/</link>
-      <pubDate>Fri, 19 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/flutter/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Github Actions</title>
-      <link>https://nttdata-dach.github.io/tags/github-actions/</link>
-      <pubDate>Fri, 19 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/github-actions/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Mobile Development</title>
-      <link>https://nttdata-dach.github.io/tags/mobile-development/</link>
-      <pubDate>Fri, 19 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/mobile-development/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Play Store</title>
-      <link>https://nttdata-dach.github.io/tags/play-store/</link>
-      <pubDate>Fri, 19 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/play-store/</guid>
       <description></description>
     </item>
     <item>

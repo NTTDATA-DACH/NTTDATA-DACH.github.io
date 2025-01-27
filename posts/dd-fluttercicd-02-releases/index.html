@@ -1,0 +1,536 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Part 2: Releases  </title>
+  <meta charset="utf-8"/> 
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Flutter CI/CD with Fastlane and GitHub Actions - Part 2: Releases"/>
+  
+  <meta property="article:author" content="[Dario Digregorio]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/DD-FlutterCICD-02-Releases/title-image.jpg"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/dd-fluttercicd-02-releases/"/>
+  <meta property="og:description" content="Let’s continue to automate the release process with versioning, GitHub releases, and promotion using Fastlane and GitHub Actions. This time we focus on setting up a new workflow that bumps the version, creates a new tag, and pushes the changes to the repository. The article also covers creating a new release with generated release notes from the commit messages and merged branches since the last tag. Finally, we will promote a release from the internal track or TestFlight to the production track in the PlayStore and AppStore respectively. All in all, this is an essential guide to streamlining the release process for your Flutter app."/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">27.01.2025
+        
+         - Dario Digregorio - <i class="fa-solid fa-book-open"></i> 7 min read
+        
+        </span>
+        Part 2: Releases
+        
+        
+        <a id="series-link" href="/series/flutter-ci/cd-with-fastlane-and-github-actions"><span class="subtitle">Flutter CI/CD with Fastlane and GitHub Actions</span></a>
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/DD-FlutterCICD-02-Releases/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <h2 id="introduction">Introduction</h2>
+<p>In the previous article, we saw how to set up Fastlane and GitHub Actions for the sample app. In this article, we will see how to further automate the release process further with versioning, GitHub Releases and promotion using Fastlane and GitHub Actions.</p>
+<p>Repository: <a href="https://github.com/dario-digregorio/flutter_github_actions">Flutter App CI/CD using Fastlane and GitHub Actions</a></p>
+<h2 id="prerequisites">Prerequisites</h2>
+<ul>
+<li>Follow the first part of the guide to set up Fastlane and GitHub Actions.</li>
+</ul>
+<h2 id="creating-the-tag-workflow">Creating the <code>Tag</code> workflow</h2>
+<p>We will create a new workflow that will bumps the <code>pubspec.yaml</code> version, creates a new tag, and pushes the changes to the repository.</p>
+<ol>
+<li>Create a new file in the <code>.github/workflows</code> directory, e.g. <code>tag.yml</code>.</li>
+<li>Add the following content to the <code>tag.yml</code> file:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Tag Release</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">on</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">workflow_dispatch</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">inputs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">action</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">choice</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l">Action type</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l">none</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">options</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span>- <span class="l">major</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span>- <span class="l">minor</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span>- <span class="l">patch</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span>- <span class="l">none</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">jobs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">tag</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">concurrency</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l">${{ github.workflow }}-${{ github.ref }}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">cancel-in-progress</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Tag</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l">self-hosted</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">permissions</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c"># Give the default GITHUB_TOKEN write permission to commit and push the</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="c"># added or changed files to the repository.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l">write</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">actions/checkout@v4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">with</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">ref</span><span class="p">:</span><span class="w"> </span><span class="l">${{ github.head_ref }}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">fetch-depth</span><span class="p">:</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="c"># Fetch the complete history for tags and branches</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">stikkyapp/update-pubspec-version@v2</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l">update-pubspec-version</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">with</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">strategy</span><span class="p">:</span><span class="w"> </span><span class="l">${{ github.event.inputs.action }}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">            </span><span class="nt">bump-build</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">stefanzweifel/git-auto-commit-action@v5</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">with</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">commit_message</span><span class="p">:</span><span class="w"> </span><span class="s2">&#34;Bump version to ${{ steps.update-pubspec-version.outputs.new-version }}&#34;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">commit_user_name</span><span class="p">:</span><span class="w"> </span><span class="l">GitHub Actions</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">tagging_message</span><span class="p">:</span><span class="w"> </span><span class="l">release/v${{ steps.update-pubspec-version.outputs.new-version }}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span></span></span></code></pre></div>
+This workflow can be triggered manually and accepts an input on what action you want to perform. There are four options: <code>major</code>, <code>minor</code>, <code>patch</code> and <code>none</code>. Each action will bump the version accordingly. See <a href="https://semver.org/">this</a> for more information on semantic versioning. We use the <code>update-pubspec-version</code> action to bump the version in the <code>pubspec.yaml</code> file and the <code>git-auto-commit-action</code> to commit the changes and create a new tag with the format <code>release/v1.0.0</code>. Each run of the workflow will always bump the build number.</li>
+<li>Trigger the workflow manually by going to the Actions tab in your GitHub repository and selecting the <code>Tag Release</code> workflow. Click on the <code>Run workflow</code> button and select the branch you want to tag.</li>
+<li>Sit back and watch the magic happen! ✨ You should see a new commit and tag in your repository.</li>
+</ol>
+
+
+
+
+
+<picture style="display: contents;"
+     >
+    
+    <img    
+        class="dynamicimage"    
+        
+        src="/posts/img/DD-FlutterCICD-02-Releases/tag.png" 
+        
+         alt="Tag Deploy" 
+        
+        
+        
+        
+        />
+    
+</picture>
+
+<h2 id="creating-the-release-workflow">Creating the <code>Release</code> workflow</h2>
+<ol>
+<li>Create a new file in the <code>.github/workflows</code> directory, e.g. <code>release.yml</code>.</li>
+<li>Add the following content to the <code>release.yml</code> file:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Create Release</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">on</span><span class="p">:</span><span class="w"> 
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">push</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">tags</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="s1">&#39;release/*&#39;</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">jobs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">release</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">concurrency</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l">${{ github.workflow }}-${{ github.ref }}-release</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">cancel-in-progress</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l">self-hosted</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">actions/checkout@v4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Create Release</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">ncipollo/release-action@v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">with</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">${{ github.ref_name }}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="l">${{ github.ref }}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">generateReleaseNotes</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span></span></span></code></pre></div>
+This workflow is triggered whenever a new tag with the format <code>release/*</code> is pushed to the repository. The action will create a new release with the tag name and generate the release notes based on the commit messages and merged branches since the last tag.</li>
+<li>We are not done yet. Triggering the <code>Tag</code> workflow doesn&rsquo;t trigger the release workflow yet. This is due to a limitation of GitHub.  Follow this <a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic">guide</a> to create a token with the scope <code>repo</code>. Add the token to your repository as a secret with the name <code>PAT</code>. Now we need to add the token to the <code>checkout</code> action in the <code>tag.yml</code> file:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="c"># Remove from here </span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">permissions</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="c"># Give the default GITHUB_TOKEN write permission to commit and push the</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="c"># added or changed files to the repository.</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">contents</span><span class="p">:</span><span class="w"> </span><span class="l">write</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">   </span><span class="c"># Until here</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">steps</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">actions/checkout@v4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">with</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">ref</span><span class="p">:</span><span class="w"> </span><span class="l">${{ github.head_ref }}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">fetch-depth</span><span class="p">:</span><span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="c"># Fetch the complete history for tags and branches</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l">${{ secrets.PAT }}</span></span></span></code></pre></div>
+Since the <code>checkout</code> action uses the <code>GITHUB_TOKEN</code> by default, we need to add the <code>PAT</code> token to the action to trigger the <code>Release</code> workflow. We can then remove the <code>permissions</code> part. It is better to trigger the workflow manually only, otherwise the workflow will run in a loop.</li>
+<li>Now trigger the <code>Tag</code> workflow again and you should see a new release in your repository after the <code>Release</code> workflow` has finished successfully.
+
+
+
+
+
+<picture style="display: contents;"
+     >
+    
+    <img    
+        class="dynamicimage"    
+        
+        src="/posts/img/DD-FlutterCICD-02-Releases/release.png" 
+        
+         alt="Release" 
+        
+        
+        
+        
+        />
+    
+</picture>
+</li>
+<li>To trigger the <code>Build and Deploy</code> workflow whenever a new tag is created. Add this to your <code>deploy.yml</code> file:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">on</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">workflow_dispatch</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">push</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">tags</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="s1">&#39;release/*&#39;</span></span></span></code></pre></div>
+This will trigger the <code>Build and Deploy</code> workflow whenever the <code>Tag</code> workflow creates a new tag. This way you can automate the whole process from versioning to deployment.</li>
+</ol>
+<h2 id="creating-the-promote-workflow">Creating the <code>Promote</code> workflow</h2>
+<p>The idea is to have a workflow that promotes a release to a specific track in the PlayStore. This can be useful if you want to promote a release from the internal track to the production track, or from TestFlight to the AppStore for example.</p>
+<ol>
+<li>
+<p>Add this lane to <code>android/fastlane/Fastfile</code>:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-ruby" data-lang="ruby"><span class="line"><span class="cl"><span class="n">platform</span> <span class="ss">:android</span> <span class="k">do</span>
+</span></span><span class="line"><span class="cl">    <span class="c1"># ...</span>
+</span></span><span class="line"><span class="cl">    <span class="n">desc</span> <span class="s2">&#34;Promote version&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="n">lane</span> <span class="ss">:promote</span> <span class="k">do</span> <span class="o">|</span><span class="n">options</span><span class="o">|</span>
+</span></span><span class="line"><span class="cl">      <span class="n">skip</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="ss">:skip</span><span class="o">]</span> <span class="o">||</span> <span class="kp">true</span>
+</span></span><span class="line"><span class="cl">      <span class="n">version</span> <span class="o">=</span> <span class="n">flutter_version</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">      <span class="n">upload_to_play_store</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">        <span class="ss">track</span><span class="p">:</span> <span class="s2">&#34;internal&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="ss">track_promote_to</span><span class="p">:</span> <span class="s2">&#34;production&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="ss">skip_upload_metadata</span><span class="p">:</span> <span class="kp">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="ss">skip_upload_images</span><span class="p">:</span> <span class="n">skip</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="ss">skip_upload_screenshots</span><span class="p">:</span> <span class="n">skip</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="ss">track_promote_release_status</span><span class="p">:</span> <span class="s2">&#34;draft&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="ss">version_code</span><span class="p">:</span> <span class="n">version</span><span class="o">[</span><span class="s2">&#34;version_code&#34;</span><span class="o">]</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">        <span class="ss">version_name</span><span class="p">:</span> <span class="n">version</span><span class="o">[</span><span class="s2">&#34;version_name&#34;</span><span class="o">]</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="k">end</span>
+</span></span><span class="line"><span class="cl"><span class="k">end</span></span></span></code></pre></div>
+Add this lane to <code>ios/fastlane/Fastfile</code>:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-ruby" data-lang="ruby"><span class="line"><span class="cl"><span class="n">platform</span> <span class="ss">:ios</span> <span class="k">do</span>
+</span></span><span class="line"><span class="cl">  <span class="c1"># ...</span>
+</span></span><span class="line"><span class="cl">  <span class="n">desc</span> <span class="s2">&#34;Promote version&#34;</span>
+</span></span><span class="line"><span class="cl">  <span class="n">lane</span> <span class="ss">:promote</span> <span class="k">do</span> <span class="o">|</span><span class="n">options</span><span class="o">|</span>
+</span></span><span class="line"><span class="cl">    <span class="n">skip</span> <span class="o">=</span> <span class="n">options</span><span class="o">[</span><span class="ss">:skip</span><span class="o">]</span> <span class="o">||</span> <span class="kp">true</span>
+</span></span><span class="line"><span class="cl">    <span class="n">version</span> <span class="o">=</span> <span class="n">flutter_version</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">    <span class="n">deliver</span><span class="p">(</span>
+</span></span><span class="line"><span class="cl">      <span class="ss">submit_for_review</span><span class="p">:</span> <span class="kp">false</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="ss">automatic_release</span><span class="p">:</span> <span class="kp">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="ss">force</span><span class="p">:</span> <span class="kp">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="ss">skip_screenshots</span><span class="p">:</span> <span class="n">skip</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="ss">skip_binary_upload</span><span class="p">:</span> <span class="kp">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="ss">overwrite_screenshots</span><span class="p">:</span> <span class="kp">true</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="ss">app_version</span><span class="p">:</span> <span class="n">version</span><span class="o">[</span><span class="s2">&#34;version_name&#34;</span><span class="o">]</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">      <span class="ss">precheck_include_in_app_purchases</span><span class="p">:</span> <span class="kp">false</span>
+</span></span><span class="line"><span class="cl">    <span class="p">)</span>
+</span></span><span class="line"><span class="cl">  <span class="k">end</span>
+</span></span><span class="line"><span class="cl"><span class="k">end</span></span></span></code></pre></div>
+We added a promote lane for both Android and iOS. The lane will promote the release from the internal track or TestFlight to the production track in the PlayStore and AppStore respectively. We also added an option to skip the screenshots upload.</p>
+</li>
+<li>
+<p>Before you can promote a release, you must have uploaded and published at least one release manually already. Make sure you have a release on the production track in the PlayStore and the app published in the AppStore.</p>
+</li>
+<li>
+<p>Run <code>fastlane promote skip:true</code> to start the lane and promote your version to the respective track. Make sure to run the command in the respective platform folder.</p>
+</li>
+<li>
+<p>After successfully promoting the release, you can now automate the process using GitHub Actions.</p>
+</li>
+<li>
+<p>Create a new file in the <code>.github/workflows</code> directory, e.g. <code>promote.yml</code>.</p>
+</li>
+<li>
+<p>Paste this content into the <code>promote.yml</code> file:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Promote Release</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">on</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">workflow_dispatch</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">inputs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">skip</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l">boolean</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l">skip screenshots</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">jobs</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">android</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">concurrency</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l">${{ github.workflow }}-${{ github.ref }}-android</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">cancel-in-progress</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Promote Android</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l">self-hosted</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">actions/checkout@v4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Decode sec json file</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l">echo &#34;${{ secrets.SEC_JSON }}&#34; | openssl base64 -d -out ./android/sec.json</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Promote Release on Play Store</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">maierj/fastlane-action@v2.3.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">with</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">subdirectory</span><span class="p">:</span><span class="w"> </span><span class="l">android</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">lane</span><span class="p">:</span><span class="w"> </span><span class="l">promote</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">ios</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">concurrency</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l">${{ github.workflow }}-${{ github.ref }}-ios</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">cancel-in-progress</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Promote iOS</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l">self-hosted</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">env</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD</span><span class="p">:</span><span class="w"> </span><span class="l">${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">steps</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">actions/checkout@v4</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Promote Release on App Store</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l">maierj/fastlane-action@v2.3.0</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">with</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">subdirectory</span><span class="p">:</span><span class="w"> </span><span class="l">ios</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">lane</span><span class="p">:</span><span class="w"> </span><span class="l">promote skip:${{ github.event.inputs.skip }}</span></span></span></code></pre></div>
+This workflow can be triggered manually and accepts an input if you want to upload screenshots as well. The workflow will take a release and promote it to the respective track in the PlayStore or AppStore.</p>
+</li>
+<li>
+<p>Trigger the workflow manually by going to the Actions tab in your GitHub repository and selecting the <code>Promote Release</code> workflow. Click on the <code>Run workflow</code> button and select the branch or tag you want to promote. Make sure that the version you want to promote has already been uploaded and published to the respective track. You can do this with the <code>Deploy</code> workflow.</p>
+</li>
+</ol>
+<h2 id="recap">Recap</h2>
+
+
+  
+
+
+<picture style="display: contents;"
+     
+    id="[392 226 443 103 483 107]"
+    onclick="openModal(this.id)"
+     >
+    
+    <source srcset="/posts/img/DD-FlutterCICD-02-Releases/overview_part2-dark.png" media="none"/>
+    
+    <img    
+        class="dynamicimage modal-pic"    
+        
+        src="/posts/img/DD-FlutterCICD-02-Releases/overview_part2-light.png" 
+        
+         alt="Overview" 
+        
+        
+        
+        
+        />
+    
+</picture>
+
+<script>
+    initPicture()
+</script>
+
+<p>So how does the whole process look like now? Whenever you want to release a new version of your app, you can manually trigger the <code>Tag Release</code> workflow. You can choose between <code>major</code>, <code>minor</code> and <code>patch</code>. The workflow will bump the version in the <code>pubspec.yaml</code> file, create a new commit and tag, and push the changes to the repository. This will trigger the <code>Release</code> workflow which will create a new release with the tag name and generated release notes. This will also trigger the <code>Build and Deploy</code> workflow which will build and deploy the app to the AppStore and PlayStore. After you have successfully deployed the app, you can manually trigger the <code>Promote Release</code> workflow. This will promote the release to the respective track in the PlayStore and AppStore.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>And that&rsquo;s it! You&rsquo;ve now set up a CI/CD pipeline for your Flutter app using Fastlane and GitHub Actions. This setup will automatically build and deploy your app to the AppStore and PlayStore. You&rsquo;ve also automated the versioning, tagging and release process with GitHub Actions. Time to kick back, relax, and let automation take care of the repetitive tasks.</p>
+<h1 id="credits">Credits</h1>
+<p>Title image by <a href="https://www.istockphoto.com/en/portfolio/igor_d">Igor Dashko</a> on <a href="https://www.istockphoto.com">iStock</a></p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/dario-digregorio.jpg" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/dario-digregorio">Dario Digregorio</a><span>
+                    
+                </span></h3>
+                <p>Senior Flutter Developer </p>
+                <p calss="author-socials">
+                    <a target="_blank"  href="https://github.com/dario-digregorio"><i class="fa-brands fa-github"></i></a>
+                    
+                    <a target="_blank"  href="https://www.linkedin.com/in/dario-digregorio-064696241"><i class="fa-brands fa-linkedin"></i></a>
+                    
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        <div class="related-block">
+            <h3 class="related-heading" id="series-list">Check out the full series</h3>
+            
+            <ul>
+                
+                <li><a class="related-link" href="/posts/dd-fluttercicd-01-basics/">FLUTTER CI/CD WITH FASTLANE AND GITHUB ACTIONS - Part 1: The Basics</a></li>
+                
+                <li><a class="related-link" href="/posts/dd-fluttercicd-02-releases/">FLUTTER CI/CD WITH FASTLANE AND GITHUB ACTIONS - Part 2: Releases</a></li>
+                
+            </ul>
+        </div>
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+                <h3 class="related-heading">You may also like</h3>
+
+                
+                
+                <ul>
+                    
+                    
+                    
+                    <li><a class="related-link" href="/posts/mjm-renovateautomaticpullrequest/">Using Renovate to scale up automatic pull request creation on GitHub</a></li>
+                    
+                    
+                    
+                    
+                    <li><a class="related-link" href="/posts/ak-buildingrunningflutteronaws/">Building and running Flutter mobile applications for Android on AWS Device Farm</a></li>
+                    
+                    
+                </ul>
+                
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/flutter/">Flutter</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/fastlane/">Fastlane</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/github-actions/">GitHub Actions</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/ci/cd/">CI/CD</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/app-store/">App Store</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/play-store/">Play Store</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/automation/">Automation</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/mobile-development/">Mobile development</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</html>

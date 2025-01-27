@@ -6,9 +6,16 @@
     <description>Recent content in Fastlane on Technology Blog</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <copyright>Copyright 2024 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Fri, 19 Jul 2024 00:00:00 +0000</lastBuildDate>
+    <copyright>Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
+    <lastBuildDate>Mon, 27 Jan 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/tags/fastlane/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Part 2: Releases</title>
+      <link>https://nttdata-dach.github.io/posts/dd-fluttercicd-02-releases/</link>
+      <pubDate>Mon, 27 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/dd-fluttercicd-02-releases/</guid>
+      <description>Let’s continue to automate the release process with versioning, GitHub releases, and promotion using Fastlane and GitHub Actions. This time we focus on setting up a new workflow that bumps the version, creates a new tag, and pushes the changes to the repository. The article also covers creating a new release with generated release notes from the commit messages and merged branches since the last tag. Finally, we will promote a release from the internal track or TestFlight to the production track in the PlayStore and AppStore respectively. All in all, this is an essential guide to streamlining the release process for your Flutter app.</description>
+    </item>
     <item>
       <title>Part 1: The Basics</title>
       <link>https://nttdata-dach.github.io/posts/dd-fluttercicd-01-basics/</link>
