@@ -7,8 +7,15 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Mon, 27 Jan 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 12 Feb 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Web Performance Optimization</title>
+      <link>https://nttdata-dach.github.io/posts/fjlm-webperformanceoptimization/</link>
+      <pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/fjlm-webperformanceoptimization/</guid>
+      <description>In this post, you will learn about the importance of optimizing web page loading times and how it impacts conversions, as well as why it&amp;rsquo;s critical for SEO positioning and visibility. We&amp;rsquo;ll also outline tips and strategies for improving website performance, ranging from website speed tests to image optimization, and minimizing CSS and Javascript among other techniques. Additionally, we discuss important metrics like time to first byte and the benefits of using technologies like HTTP/2 and Gzip compression. This post offers valuable insights into how to improve your website&amp;rsquo;s performance and user experience.</description>
+    </item>
     <item>
       <title>Part 2: Releases</title>
       <link>https://nttdata-dach.github.io/posts/dd-fluttercicd-02-releases/</link>

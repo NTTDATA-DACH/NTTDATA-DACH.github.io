@@ -27,6 +27,35 @@
     
     
     
+    <item>
+      <title>Web Performance Optimization</title>
+      <link>https://nttdata-dach.github.io/posts/fjlm-webperformanceoptimization/</link>
+      <pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/FJLM-WebPerformanceOptimization/title-image.jpg</guid>
+      <description>In this post, you will learn about the importance of optimizing web page loading times and how it impacts conversions, as well as why it&amp;rsquo;s critical for SEO positioning and visibility. We&amp;rsquo;ll also outline tips and strategies for improving website performance, ranging from website speed tests to image optimization, and minimizing CSS and Javascript among other techniques. Additionally, we discuss important metrics like time to first byte and the benefits of using technologies like HTTP/2 and Gzip compression. This post offers valuable insights into how to improve your website&amp;rsquo;s performance and user experience.</description>
+
+      
+      
+        
+    </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -43,8 +72,6 @@
       
         
     </item>
-    
-    
     
     
     
@@ -376,33 +403,6 @@
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <item>
-      <title>Secrets Handling in Kubernetes</title>
-      <link>https://nttdata-dach.github.io/posts/sk-secretshandlinginkubernetes/</link>
-      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://nttdata-dach.github.io//posts/img/SK-SecretsHandlingInKubernetes/title-image.jpg</guid>
-      <description>Committing plain .yaml files which defines Kubernetes secrets definitions to a source code management system is not very secure. This article explains why and shows two better alternatives.</description>
-
-      
-      
-        
-    </item>
     
     
     

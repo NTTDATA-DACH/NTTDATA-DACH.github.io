@@ -7,8 +7,50 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Mon, 27 Jan 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 12 Feb 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Frontend</title>
+      <link>https://nttdata-dach.github.io/tags/frontend/</link>
+      <pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/frontend/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>HTTP/2</title>
+      <link>https://nttdata-dach.github.io/tags/http/2/</link>
+      <pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/http/2/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>SEO</title>
+      <link>https://nttdata-dach.github.io/tags/seo/</link>
+      <pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/seo/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Time to First Byte</title>
+      <link>https://nttdata-dach.github.io/tags/time-to-first-byte/</link>
+      <pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/time-to-first-byte/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>User Experience</title>
+      <link>https://nttdata-dach.github.io/tags/user-experience/</link>
+      <pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/user-experience/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Web Performance Optimization</title>
+      <link>https://nttdata-dach.github.io/tags/web-performance-optimization/</link>
+      <pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/web-performance-optimization/</guid>
+      <description></description>
+    </item>
     <item>
       <title>App Store</title>
       <link>https://nttdata-dach.github.io/tags/app-store/</link>
