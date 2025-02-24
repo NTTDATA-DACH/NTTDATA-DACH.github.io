@@ -7,8 +7,64 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Wed, 12 Feb 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 24 Feb 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>ACL</title>
+      <link>https://nttdata-dach.github.io/tags/acl/</link>
+      <pubDate>Mon, 24 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/acl/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Gateway</title>
+      <link>https://nttdata-dach.github.io/tags/gateway/</link>
+      <pubDate>Mon, 24 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/gateway/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Kong</title>
+      <link>https://nttdata-dach.github.io/tags/kong/</link>
+      <pubDate>Mon, 24 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/kong/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>MTLS</title>
+      <link>https://nttdata-dach.github.io/tags/mtls/</link>
+      <pubDate>Mon, 24 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/mtls/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>OpenIDConnect</title>
+      <link>https://nttdata-dach.github.io/tags/openidconnect/</link>
+      <pubDate>Mon, 24 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/openidconnect/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Plugin Cloning</title>
+      <link>https://nttdata-dach.github.io/tags/plugin-cloning/</link>
+      <pubDate>Mon, 24 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/plugin-cloning/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Priority-Updater</title>
+      <link>https://nttdata-dach.github.io/tags/priority-updater/</link>
+      <pubDate>Mon, 24 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/priority-updater/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>ZTA</title>
+      <link>https://nttdata-dach.github.io/tags/zta/</link>
+      <pubDate>Mon, 24 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/zta/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Frontend</title>
       <link>https://nttdata-dach.github.io/tags/frontend/</link>
@@ -241,13 +297,6 @@
       <description></description>
     </item>
     <item>
-      <title>Gateway</title>
-      <link>https://nttdata-dach.github.io/tags/gateway/</link>
-      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/gateway/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>JWT</title>
       <link>https://nttdata-dach.github.io/tags/jwt/</link>
       <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
@@ -259,13 +308,6 @@
       <link>https://nttdata-dach.github.io/tags/jwt-signer/</link>
       <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/jwt-signer/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Kong</title>
-      <link>https://nttdata-dach.github.io/tags/kong/</link>
-      <pubDate>Wed, 03 Jul 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/kong/</guid>
       <description></description>
     </item>
     <item>
@@ -416,13 +458,6 @@
       <description></description>
     </item>
     <item>
-      <title>MTLS</title>
-      <link>https://nttdata-dach.github.io/tags/mtls/</link>
-      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/mtls/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Mutual TLS</title>
       <link>https://nttdata-dach.github.io/tags/mutual-tls/</link>
       <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
@@ -455,13 +490,6 @@
       <link>https://nttdata-dach.github.io/tags/ttrp/</link>
       <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/ttrp/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>ZTA</title>
-      <link>https://nttdata-dach.github.io/tags/zta/</link>
-      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/zta/</guid>
       <description></description>
     </item>
     <item>

@@ -25,6 +25,41 @@
     
     
     
+    <item>
+      <title>Kong - The Gateway without Limitations - Part 8: Plugin Cloning</title>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-plugincloning/</link>
+      <pubDate>Mon, 24 Feb 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/AS-KongGateway-PluginCloning/title-image.jpg</guid>
+      <description>This time we explore how plugin cloning of the Access Control List (ACL) Plugin enhances API security within a zero-trust architecture. We address the challenge of executing the ACL plugin twice, first for a consumer authenticated via an mTLS client certificate and then for a consumer authenticated via an OAuth2 token in the same processing pipeline, as the Kong’s architecture prevents the same plugin from running multiple times in a single request-response cycle. To meet this challenge, we introduce the Kong supported Priority-Updater tool, which enables cloning and priority configuration of existing plugins. This blog provides a comprehensive guide to implementing multi-layer authentication by plugin cloning.</description>
+
+      
+      
+        
+    </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     <item>
@@ -72,8 +107,6 @@
       
         
     </item>
-    
-    
     
     
     
@@ -178,12 +211,6 @@
       
         
     </item>
-    
-    
-    
-    
-    
-    
     
     
     
@@ -314,8 +341,6 @@
     
     
     
-    
-    
     <item>
       <title>Kong - The Gateway without Limitations - Part 5: mTLS Header</title>
       <link>https://nttdata-dach.github.io/posts/as-konggateway-mtls_header/</link>
@@ -328,8 +353,6 @@
       
         
     </item>
-    
-    
     
     
     
@@ -395,16 +418,6 @@
       
         
     </item>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
   </channel>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Priority-Updater on Technology Blog</title>
+    <link>https://nttdata-dach.github.io/tags/priority-updater/</link>
+    <description>Recent content in Priority-Updater on Technology Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
+    <lastBuildDate>Mon, 24 Feb 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://nttdata-dach.github.io/tags/priority-updater/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Part 8: Plugin Cloning</title>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-plugincloning/</link>
+      <pubDate>Mon, 24 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/as-konggateway-plugincloning/</guid>
+      <description>This time we explore how plugin cloning of the Access Control List (ACL) Plugin enhances API security within a zero-trust architecture. We address the challenge of executing the ACL plugin twice, first for a consumer authenticated via an mTLS client certificate and then for a consumer authenticated via an OAuth2 token in the same processing pipeline, as the Kong’s architecture prevents the same plugin from running multiple times in a single request-response cycle. To meet this challenge, we introduce the Kong supported Priority-Updater tool, which enables cloning and priority configuration of existing plugins. This blog provides a comprehensive guide to implementing multi-layer authentication by plugin cloning.</description>
+    </item>
+  </channel>
+</rss>

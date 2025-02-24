@@ -1,0 +1,337 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Part 8: Plugin Cloning  </title>
+  <meta charset="utf-8"/> 
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Kong - The Gateway without Limitations - Part 8: Plugin Cloning"/>
+  
+  <meta property="article:author" content="[Alexander Suchier]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/AS-KongGateway-PluginCloning/title-image.jpg"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/as-konggateway-plugincloning/"/>
+  <meta property="og:description" content="This time we explore how plugin cloning of the Access Control List (ACL) Plugin enhances API security within a zero-trust architecture. We address the challenge of executing the ACL plugin twice, first for a consumer authenticated via an mTLS client certificate and then for a consumer authenticated via an OAuth2 token in the same processing pipeline, as the Kong’s architecture prevents the same plugin from running multiple times in a single request-response cycle. To meet this challenge, we introduce the Kong supported Priority-Updater tool, which enables cloning and priority configuration of existing plugins. This blog provides a comprehensive guide to implementing multi-layer authentication by plugin cloning."/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">24.02.2025
+        
+         - Alexander Suchier - <i class="fa-solid fa-book-open"></i> 7 min read
+        
+        </span>
+        Part 8: Plugin Cloning
+        
+        
+        <a id="series-link" href="/series/kong-the-gateway-without-limitations"><span class="subtitle">Kong - The Gateway without Limitations</span></a>
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/AS-KongGateway-PluginCloning/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <p>In our previous two blog posts of the <a href="https://nttdata-dach.github.io/series/kong-the-gateway-without-limitations/">Kong Gateway series</a>, we focused on token handling in the context of the <a href="https://en.wikipedia.org/wiki/Zero_trust_security_model">Zero-Trust Architecture (ZTA)</a> principle &lsquo;<em>never trust, always verify</em>&rsquo;. For that principle implementation we explored both <a href="https://nttdata-dach.github.io/posts/as-konggateway-tokenvalidation/">token validation</a> and therapeutic <a href="https://nttdata-dach.github.io/posts/as-konggateway-tokencloning/">token cloning</a> to increase security. This time, we will take a closer look at plugin cloning, specifically how it can be used to enhance security through double ACL (Access Control List) checks to enable multi-layer authentication.</p>
+<h1 id="overview">Overview</h1>
+<p>This technical blog is about plugin cloning on the <a href="https://nttdata-dach.github.io/posts/as-kongproductintroduction/">Kong Gateway</a> and how it can increase API security. Kong plugins are powerful components that extend the functionality of the Kong Gateway by allowing administrators and developers to add features to API traffic such as authentication, rate limiting, transformation, and logging. Each plugin operates within the request-response lifecycle, modifying or interacting with requests and responses as they pass through the gateway. Plugins can be declared globally to execute on every request, or scoped to specific Kong entities such as routes, services, consumers, or <a href="https://docs.konghq.com/gateway/latest/kong-enterprise/consumer-groups/">consumer groups</a> (since Kong version 3.4), all within the Kong processing pipeline. Since Kong is built on Nginx, plugin functionality is executed in a specific <a href="https://nginx.org/en/">Nginx</a> phase, with the execution order defined by the plugin&rsquo;s priority or ordering instruction (for the structure and layering of the Kong Gateway, see my <a href="https://nttdata-dach.github.io/posts/as-kongproductintroduction/">introductory blog</a>).
+Kong plugin cloning becomes essential in a few specific scenarios:</p>
+<ul>
+<li>when to run a plugin with a different priority (and the <a href="https://docs.konghq.com/gateway/latest/kong-enterprise/plugin-ordering/">dynamic plugin ordering</a> feature, which is limited to the access phase, cannot help),</li>
+<li>when to execute a plugin twice in one request-response cycle,</li>
+<li>to quickly fix issues in an existing Kong plugin (before the Kong engineering team fixes the issue), or</li>
+<li>to extend the Kong plugin logging or functionality (until the Kong engineering team implements a feature request).</li>
+</ul>
+<p>This blog focuses on the first two scenarios, where cloning is essential for running the same plugin twice within a single request-response cycle.  However, the last two scenarios are also valuable and have proven useful to me multiple times to provide a quick solution. In this case, one distinguishes between cloning the entire plugin or patching individual Lua modules.</p>
+<h1 id="problem">Problem</h1>
+<p>The situation involves securing services using both mTLS client certificates and OAuth2 access tokens as part of a multi-layered authentication and authorization approach. In this setup, there were two different methods of presenting authentication credentials, each requiring its own access control check using <a href="https://docs.konghq.com/hub/kong-inc/acl/">Kong&rsquo;s ACL (Access Control List) plugin</a>. The Kong ACL plugin restricts access to APIs based on predefined whitelists or blacklists of consumer groups. It ensures that only authorized consumers can access specific services by checking their group membership.</p>
+<p>Kong&rsquo;s architecture prevents the same plugin from being executed multiple times within a single request-response cycle, regardless of its attachment to both a route and a service entity, causing a configuration challenge. I know experienced Kong consultants who sincerely believed that attaching a plugin to both a route and a service would make it execute twice; however, while this sounds logical, it is a common misconception. For instance, if a plugin is attached to both entities, only the route-level plugin will be executed, while the service-level plugin remains inactive. You can also learn more about this topic in the <a href="https://docs.konghq.com/gateway/latest/key-concepts/plugins/#precedence">Kong precedence</a> documentation and <a href="https://support.konghq.com/support/s/article/Kong-Gateway-Can-we-run-the-same-plugin-multiple-times-for-a-request">Kong knowledge article 1076</a>.</p>
+<aside 
+ data-content="Note" 
+
+><br/>
+    A quick test revealed how Kong behaves with plugins: Consider the <a href="https://docs.konghq.com/hub/kong-inc/request-transformer/">Request Transformer plugin</a> in this test scenario. If it is attached to a route with the header <code>X-Test1: 1234</code> and then attached to a service with the header <code>X-Test2: abcd</code>, only the route-level plugin will be executed, resulting in <code>X-Test1: 1234</code> being present in the request, while the service-level plugin will not perform its transformation. The test showed that only the route-level plugin was executed, confirming that Kong limits a plugin to be executed only once per request, with the route-level plugin taking precedence over the service-level plugin.
+</aside>
+<p>Given this behavior, it became clear that attaching the ACL plugin to both the route and the service entity would not trigger multiple executions. Based on the given <a href="https://docs.konghq.com/konnect/reference/plugins/#plugin-execution-order">priority of the ACL plugin</a> (priority 950), it is executed once after the customer identification by the <a href="https://docs.konghq.com/hub/kong-inc/openid-connect/">OpenID Connect plugin</a> (priority 1050) but not immediately after the preceding <a href="https://docs.konghq.com/hub/kong-inc/mtls-auth/">mTLS plugin</a> (priority 1600), which is also able to identify a consumer. This means that only the ACL credentials for service access of the consumer identified by the OpenID Connect plugin are checked.</p>
+<p>In most cases, the authentication plugins will likely identify the same consumer, so ACL authorization checking won’t be an issue. However, if the plugins identify different consumers, as in my case, an ACL authorization problem may arise. The following diagram illustrates this complex issue.</p>
+
+
+  
+
+
+<picture style="display: contents;"
+     
+    id="[184 174 93 486 100 175]"
+    onclick="openModal(this.id)"
+     >
+    
+    <source srcset="/posts/img/AS-KongGateway-PluginCloning/ACLWithoutCloning-dark.png" media="none"/>
+    
+    <img    
+        class="dynamicimage modal-pic"    
+        
+        src="/posts/img/AS-KongGateway-PluginCloning/ACLWithoutCloning-light.png" 
+        
+         
+        
+        
+        
+        
+        />
+    
+</picture>
+
+<script>
+    initPicture()
+</script>
+
+<p>Following the request flow in the diagram above, the mTLS plugin is executed first to identify an API consumer by the certificate’s Subject Alternative Name (SAN) or Common Name (CN), <a href="https://docs.konghq.com/hub/kong-inc/mtls-auth/how-to/manual-mapping-cert-consumers/">with CN used only if SAN is absent</a>. Without such a client certificate in the request, the mTLS plugin would reject the request immediately with a HTTP error 401 (Unauthorized). However, any valid client certificate can be presented here, even one identifying a consumer missing the ACL credentials to access service A, as the ACL plugin for authorization checks is only applied after the OpenID Connect plugin, which might identify another API consumer. A severe security vulnerability in the proposed multi-layer authentication approach.</p>
+<p>You might consider using <a href="https://docs.konghq.com/gateway/latest/kong-enterprise/plugin-ordering/">dynamic ordering</a> to place the ACL plugin before the OpenID plugin in the execution sequence. However, this would result in the ACL plugin only checking the ACL credentials of the consumer identified by the mTLS plugin. In our use case, we need to check both consumers for ACL service access permissions. As a result, an alternative approach was needed to facilitate multiple ACL checks within the request processing of the Kong pipeline, including one ACL check for mTLS-authenticated consumers and another check for token authenticated consumers (for example via the <a href="https://www.iana.org/assignments/jwt/jwt.xhtml#OpenID_Foundation_Artifact_Binding_Working_Group">AZP claim</a>).</p>
+<h1 id="solution">Solution</h1>
+<p>Basically, there are two ways to clone an existing plugin: manually or automatically. The manual method involves copying the plugin code, updating <code>schema.lua</code> and <code>handler.lua</code> with a new name for coexistence, assigning a new priority if needed, renaming database tables and cache keys to avoid collisions. The second method uses a plugin cloning tool provided by Kong, which wraps an existing plugin and only updates its priority. This approach does not support code changes but allows the same plugin to be run twice with a different priority, which is exactly what we need to run the ACL plugin twice. The tool provided by Kong is called <a href="https://github.com/Kong/priority-updater">priority-updater</a> and can be obtained from the Kong Git repository.</p>
+<aside 
+ data-content="Note" 
+
+><br/>
+    The Kong priority-updater is a tool designed to help manage and adjust the execution order of Kong Gateway plugins. Since Kong processes plugins based on priority values, this tool allows administrators to update those priorities efficiently without manually modifying any configurations or source code. It works by creating a clone of the original plugin with a new priority, enabling both the original and the cloned plugin to run separately in the same request-response cycle. This makes it possible to execute the same plugin twice with different configurations, providing greater flexibility in optimizing request and response handling for improved performance and reliability. Please not, this tool requires a Docker installation to run.
+</aside>
+<p>Using the Kong priority-updater, I created an ACL plugin clone with priority 1595 (command: <code>./create.sh &quot;acl&quot;  1595</code>). The plugin clone is therefore executed right after the mTLS plugin and thus checks the ACL credentials of the consumer authenticated by the mTLS plugin. The configuration change has created a new situation that meets the requirements of multi-layer authentication.</p>
+
+
+  
+
+
+<picture style="display: contents;"
+     
+    id="[63 290 8 243 45 454]"
+    onclick="openModal(this.id)"
+     >
+    
+    <source srcset="/posts/img/AS-KongGateway-PluginCloning/ACLWithCloning-dark.png" media="none"/>
+    
+    <img    
+        class="dynamicimage modal-pic"    
+        
+        src="/posts/img/AS-KongGateway-PluginCloning/ACLWithCloning-light.png" 
+        
+         
+        
+        
+        
+        
+        />
+    
+</picture>
+
+<script>
+    initPicture()
+</script>
+
+<p>In this configuration, the service access authorization is checked first by the mTLS-authenticated consumer, and then by the OpenID-Connect-authenticated consumer, which is retained and becomes the final consumer in the further processing pipeline, as no further authentication plugins are used. For example, this consumer will also appear in the logging plugins. The initially identified consumer is overwritten and no longer exists in the Kong processing pipeline.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>Authentication credentials arriving at the Kong Gateway must be validated. When mTLS client certificates and OAuth2 access tokens are part of a multi-layer authentication and authorization approach, both the incoming client certificates and the access tokens must be validated for service access authorization in the context of a Zero-Trust Architecture. This blog post outlines a specific implementation scenario where the ACL plugin is cloned and used twice to verify service access authorization, utilizing the Kong priority-updater tool.</p>
+<p>And as we have seen once again with the implementation of a plugin cloning approach, with Kong Gateway you will not run into any limitations.</p>
+<p>Special thanks also go to Karl Kalckstein and Carl Draper for their detailed information on the behavior of the Kong plugins in the context of ACL checking and the reference to the Kong priority-updater command-line tool.</p>
+<h1 id="credits">Credits</h1>
+<p>Title image by <a href="https://www.istockphoto.com/en/search/photographer?photographer=Martin%20Barraud">Martin Barraud</a> on <a href="https://www.istockphoto.com">iStock</a></p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/alexander-suchier.jpg" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/alexander-suchier">Alexander Suchier</a><span>
+                    
+                </span></h3>
+                <p>Senior Managing Technical Consultant and Kong Champion </p>
+                <p calss="author-socials">
+                    
+                    
+                    <a target="_blank"  href="https://www.linkedin.com/in/alexander-suchier-0608481"><i class="fa-brands fa-linkedin"></i></a>
+                    
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        <div class="related-block">
+            <h3 class="related-heading" id="series-list">Check out the full series</h3>
+            
+            <ul>
+                
+                <li><a class="related-link" href="/posts/as-kongproductintroduction/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 1: Brief Product Introduction</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konglogchunking/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 2: Log Chunking</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-onbehalfof/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 3: Token Exchange On-Behalf-Of</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-saml2bearer/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-mtls_header/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 5: mTLS Header</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-tokenvalidation/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 6: Token Validation</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-tokencloning/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 7: Token Cloning</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-plugincloning/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 8: Plugin Cloning</a></li>
+                
+            </ul>
+        </div>
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/kong/">Kong</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/gateway/">Gateway</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/plugin-cloning/">Plugin Cloning</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/zta/">ZTA</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/acl/">ACL</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/mtls/">mTLS</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/openidconnect/">OpenIDConnect</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/priority-updater/">priority-updater</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</html>
