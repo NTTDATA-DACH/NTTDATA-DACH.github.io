@@ -25,6 +25,45 @@
     
     
     
+    
+    
+    
+    
+    
+    
+    <item>
+      <title>Reproducible and consistent development environments with DevContainers</title>
+      <link>https://nttdata-dach.github.io/posts/sk-devcontainers/</link>
+      <pubDate>Fri, 14 Mar 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/SK-DevContainers/title-image.jpg</guid>
+      <description>As a developer in an agile world it becomes quite normal to be involved in more than one activity (projects, trainings and some research) at a  time. Each of these activities may require a specific setup of development environments in terms of programming languages, compiler and library versions. Installing and maintaining all this with a classical approach is error-prone and requires a lot of effort. Using task-specific virtual machines would solve the problem, but it consumes a lot of resources and causes a lot of maintenance as well, because one also needs to keep VM&amp;rsquo;s operating system up to date. This article shows, how DevContainers can help you create and maintain reproducible development environments leveraging the benefits of modern container technology.</description>
+
+      
+      
+        
+    </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <item>
       <title>Kong - The Gateway without Limitations - Part 8: Plugin Cloning</title>
       <link>https://nttdata-dach.github.io/posts/as-konggateway-plugincloning/</link>
@@ -37,8 +76,6 @@
       
         
     </item>
-    
-    
     
     
     
@@ -107,8 +144,6 @@
       
         
     </item>
-    
-    
     
     
     
@@ -357,67 +392,6 @@
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <item>
-      <title>Kong - The Gateway without Limitations - Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0</title>
-      <link>https://nttdata-dach.github.io/posts/as-konggateway-saml2bearer/</link>
-      <pubDate>Tue, 20 Feb 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://nttdata-dach.github.io//posts/img/AS-KongGateway-Saml2Bearer/title-image.jpg</guid>
-      <description>My last blog provided a solution for implementing an OAuth 2.0-based On-Behalf-Of (delegation) grant flow. This time it’s about implementing a Security Assertion Markup Language (SAML) 2.0 Profile for OAuth 2.0 Client Authentication and Authorization Grants. This flow allows OAuth 2.0 clients to obtain access tokens by presenting SAML 2.0 assertions as a form of authentication. This somewhat extended grant flow expands the scope for exchanging authentication and authorization data between different parties with seamless management, all achieved through the API Gateway.</description>
-
-      
-      
-        
-    </item>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <item>
-      <title>Transitioning from Prometheus to OpenTelemetry - A Journey of a Cluster&#39;s Metrics Evolution - Part 1: A Brief Introduction</title>
-      <link>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-01-intro/</link>
-      <pubDate>Fri, 19 Jan 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://nttdata-dach.github.io//posts/img/MJM-SA-OtelMetrics-01-Intro/title-image.jpg</guid>
-      <description>With this blog post, we kick off a series on evolving our Kubernetes metrics stack. Our journey to replace Prometheus with an OpenTelemetry solution begins with an introduction OpenTelemetry and why we see it as a valid alternative to our current implementation. After explaining the main parts of the OpenTelemetry project and briefly reviewing its history, we discuss the pros and cons. After reading this, you will be able to follow along our hands-on and deep-tech posts on how we optimize our metrics stack.</description>
-
-      
-      
-        
-    </item>
-    
-    
-    
-    
-    
-    
-    
-    <item>
-      <title>Kong - The Gateway without Limitations - Part 3: Token Exchange On-Behalf-Of</title>
-      <link>https://nttdata-dach.github.io/posts/as-konggateway-onbehalfof/</link>
-      <pubDate>Thu, 21 Dec 2023 00:00:00 +0000</pubDate>
-      
-      <guid>https://nttdata-dach.github.io//posts/img/AS-KongGateway-OnBehalfOf/title-image.jpg</guid>
-      <description>In the last blog, I provided a solution on how to overcome the character limit when logging. This time, I would like to show how to implement an OAuth 2.0-based On-Behalf-Of (delegation) grant flow. Such complex token orchestration tasks can be easily handled on the API gateway while ensuring the highest security standards which even make zero-trust architectures possible in the first place.</description>
-
-      
-      
-        
-    </item>
     
     
   </channel>

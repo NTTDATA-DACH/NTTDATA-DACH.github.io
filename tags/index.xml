@@ -7,8 +7,71 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Mon, 24 Feb 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 14 Mar 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Compiler</title>
+      <link>https://nttdata-dach.github.io/tags/compiler/</link>
+      <pubDate>Fri, 14 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/compiler/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Container</title>
+      <link>https://nttdata-dach.github.io/tags/container/</link>
+      <pubDate>Fri, 14 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/container/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>DevContainers</title>
+      <link>https://nttdata-dach.github.io/tags/devcontainers/</link>
+      <pubDate>Fri, 14 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/devcontainers/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Development Environments</title>
+      <link>https://nttdata-dach.github.io/tags/development-environments/</link>
+      <pubDate>Fri, 14 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/development-environments/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>DevOps</title>
+      <link>https://nttdata-dach.github.io/tags/devops/</link>
+      <pubDate>Fri, 14 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/devops/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Integrated Development Environment</title>
+      <link>https://nttdata-dach.github.io/tags/integrated-development-environment/</link>
+      <pubDate>Fri, 14 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/integrated-development-environment/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Java</title>
+      <link>https://nttdata-dach.github.io/tags/java/</link>
+      <pubDate>Fri, 14 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/java/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Rancher Desktop</title>
+      <link>https://nttdata-dach.github.io/tags/rancher-desktop/</link>
+      <pubDate>Fri, 14 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/rancher-desktop/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Visual Studio Code</title>
+      <link>https://nttdata-dach.github.io/tags/visual-studio-code/</link>
+      <pubDate>Fri, 14 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/visual-studio-code/</guid>
+      <description></description>
+    </item>
     <item>
       <title>ACL</title>
       <link>https://nttdata-dach.github.io/tags/acl/</link>
@@ -675,13 +738,6 @@
       <description></description>
     </item>
     <item>
-      <title>DevOps</title>
-      <link>https://nttdata-dach.github.io/tags/devops/</link>
-      <pubDate>Tue, 22 Aug 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/devops/</guid>
-      <description></description>
-    </item>
-    <item>
       <title>Control Plane</title>
       <link>https://nttdata-dach.github.io/tags/control-plane/</link>
       <pubDate>Mon, 31 Jul 2023 00:00:00 +0000</pubDate>
@@ -840,13 +896,6 @@
       <link>https://nttdata-dach.github.io/tags/financial-services/</link>
       <pubDate>Tue, 18 Oct 2022 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/financial-services/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Container</title>
-      <link>https://nttdata-dach.github.io/tags/container/</link>
-      <pubDate>Mon, 20 Jun 2022 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/container/</guid>
       <description></description>
     </item>
     <item>

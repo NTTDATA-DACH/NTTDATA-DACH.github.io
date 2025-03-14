@@ -1,0 +1,684 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Reproducible and consistent development environments with DevContainers  </title>
+  <meta charset="utf-8"/> 
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Reproducible and consistent development environments with DevContainers"/>
+  
+  <meta property="article:author" content="[Stefan Kühnel]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/SK-DevContainers/title-image.jpg"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/sk-devcontainers/"/>
+  <meta property="og:description" content="As a developer in an agile world it becomes quite normal to be involved in more than one activity (projects, trainings and some research) at a  time. Each of these activities may require a specific setup of development environments in terms of programming languages, compiler and library versions. Installing and maintaining all this with a classical approach is error-prone and requires a lot of effort. Using task-specific virtual machines would solve the problem, but it consumes a lot of resources and causes a lot of maintenance as well, because one also needs to keep VM&rsquo;s operating system up to date. This article shows, how DevContainers can help you create and maintain reproducible development environments leveraging the benefits of modern container technology."/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">14.03.2025
+        
+         - Stefan Kühnel - <i class="fa-solid fa-book-open"></i> 10 min read
+        
+        </span>
+        Reproducible and consistent development environments with DevContainers
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/SK-DevContainers/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <h1 id="introduction">Introduction</h1>
+<p>Whenever a new project team is formed or new members onboarded, the same challenge arises: each team member must establish a functional working environment on their machine to ensure productivity. This includes, but is not limited to</p>
+<ul>
+<li>Compilers and SDKs, such as Java Development Kit (JDK), Python, Rust, Go, Node.js in the correct version</li>
+<li>Access configuration files for clouds</li>
+<li>Build tools (make, gradle, maven)</li>
+<li>Local databases</li>
+<li>Various command line interfaces (e.g. <code>aws</code> for Amazon Web Services, <code>az</code> for Microsoft Azure, <code>gh</code> for GitHub, <code>ng</code> for Angular and many more)</li>
+<li>Cloud-native tools like kubectl and k9s for dealing with kubernetes clusters</li>
+<li>Integrated development environments (e.g. Visual Studio Code, IntelliJ IDEA)</li>
+<li>Container engines and local Kubernetes clusters (e.g. Rancher Desktop)</li>
+</ul>
+<p>The need for complex and extensive toolchains results in a long and error-prone setup phase before a team can start working on the actual project. Onboarding new team members may even lead to more problems because the new member might install different versions of some of the tools than the other team members.</p>
+<p>If - and this isn&rsquo;t uncommon these days - a team member works on different projects things get even worse, as different projects may use incompatible versions of the same software. For example one team may be using Java 21, while an other team may need to support an older version for backward compatibility. Thus a person contributing to both projects has to install both JDKs on his or her machine and switch between the projects by changing the value of the <code>JAVA_HOME</code> and <code>PATH</code> environment variables.</p>
+<p>Another aspect of setting up the environment is the configuring the access to the different stages locally and in the cloud: URIs of different cloud environments and repositories, database credentials and many other settings needss to be managed.</p>
+<h2 id="options">Options</h2>
+<p>In an ideal world, every single team member would simply check out the project&rsquo;s repository and would be able to create the first successful pull request on the same day. We will see, how <a href="https://containers.dev">DevContainers</a> can get us very close to this.</p>
+<p>But before we dig a little deeper, let&rsquo;s discuss some alternative approaches and their pros and cons.</p>
+<p>Some options for addressing the problem are:</p>
+<ul>
+<li>Virtual machines: When developer laptops became powerful enough and virtualization tools like <a href="https://en.wikipedia.org/wiki/VMware_Workstation_Player">VMWare Player</a> and later <a href="https://www.virtualbox.org/">VirtualBox</a> became popular about 20 years ago, the idea of putting complex development setups into a virtual machine image was used in proejcts from time to time. With this approach, all the tools needed are put into a VM image and team members use an instance of this image.</li>
+<li>Cloud-based environments: Instead of running virtual machines locally one could use project specific VDIs (Virtual Desktop Infrastructure) like <a href="https://aws.amazon.com/workspaces-family/">Amazon WorkSpaces</a> or cloud-based development environments like <a href="https://www.gitpod.io/">GitPod</a>.</li>
+<li>Package managers like <a href="https://nixos.org/">Nix</a> or <a href="https://tox.wiki/en/latest/user_guide.html">tox</a> allow to manage different versions of the required tools in parallel and would help to address the problem of different versions of the same tool, but are only solving one aspect of the problem</li>
+<li>DevContainers: <a href="https://containers.dev">DevContainers</a> combine modern technologies such as containers and modular, extensible integrated develoment environments (IDEs) such as <a href="https://code.visualstudio.com/">Visual Studio Code</a> to create reproducible and consistent development environments by code.</li>
+</ul>
+<h2 id="pros-and-cons">Pros and Cons</h2>
+ 
+ 
+ 
+ 
+
+
+
+    
+         
+    
+
+    
+         
+    
+
+    
+         
+    
+
+    
+         
+    
+
+    
+         
+    
+
+    
+         
+    
+
+    
+         
+    
+
+    
+         
+    
+
+    
+         
+    
+
+    
+         
+    
+
+    
+         
+    
+
+    
+         
+    
+
+    
+         
+    
+
+    
+         
+    
+
+    
+         
+    
+
+
+
+
+
+<table>
+    <thead>
+        <tr>
+            
+            <th></th>
+            
+            <th>Pros</th>
+            
+            <th>Cons</th>
+            
+        </tr>
+    </thead>
+    <tbody>        
+        
+        
+                        
+                        
+        
+                        
+                        
+        
+                        
+            
+                
+                 <tr>                    
+                     
+                    
+                    
+                    <td>Virtual machines</td>
+                    
+                     
+                    
+                    <td>
+                        
+                        <ul>
+                        
+                        <li>Consistent environment</li>
+                        
+                        <li>Base images can be maintained and stored centrally</li>
+                        
+                        </ul>
+                    </td>
+                    
+                     
+                    
+                    <td>
+                        
+                        <ul>
+                        
+                        <li>Drift between team members over time</li>
+                        
+                        <li>Complete OS needs to be maintained</li>
+                        
+                        <li>Virtualization host required</li>
+                        
+                        </ul>
+                    </td>
+                    
+                    
+                 </tr>
+                
+                                 
+                        
+        
+                        
+                        
+        
+                        
+                        
+        
+                        
+            
+                
+                 <tr>                    
+                     
+                    
+                    
+                    <td>Cloud-based environments</td>
+                    
+                     
+                    
+                    <td>
+                        
+                        <ul>
+                        
+                        <li>Consistent environment</li>
+                        
+                        <li>OS agnostic</li>
+                        
+                        </ul>
+                    </td>
+                    
+                     
+                    
+                    <td>
+                        
+                        <ul>
+                        
+                        <li>Runtime costs</li>
+                        
+                        <li>Network connection required</li>
+                        
+                        </ul>
+                    </td>
+                    
+                    
+                 </tr>
+                
+                                 
+                        
+        
+                        
+                        
+        
+                        
+                        
+        
+                        
+            
+                
+                 <tr>                    
+                     
+                    
+                    
+                    <td>Package managers</td>
+                    
+                     
+                    
+                    <td>
+                        
+                        <ul>
+                        
+                        <li>Different versions of tools in parallel</li>
+                        
+                        </ul>
+                    </td>
+                    
+                     
+                    
+                    <td>
+                        
+                        <ul>
+                        
+                        <li>Not providing fully automated development environments</li>
+                        
+                        </ul>
+                    </td>
+                    
+                    
+                 </tr>
+                
+                                 
+                        
+        
+                        
+                        
+        
+                        
+                        
+        
+                        
+            
+                
+                 <tr>                    
+                     
+                    
+                    
+                    <td>DevContainers</td>
+                    
+                     
+                    
+                    <td>
+                        
+                        <ul>
+                        
+                        <li>Consistent environments</li>
+                        
+                        <li>Development environment as code</li>
+                        
+                        </ul>
+                    </td>
+                    
+                     
+                    
+                    <td>
+                        
+                        <ul>
+                        
+                        <li>Container engine required</li>
+                        
+                        </ul>
+                    </td>
+                    
+                    
+                 </tr>
+                
+                                 
+                        
+                        
+    </tbody>
+</table>
+<h1 id="devcontainers">DevContainers</h1>
+<p>In recent years the idea of defining things &ldquo;as code&rdquo; has proven to have many advantages over traditional manual configuration, especially when we think about &ldquo;infrastructure as code&rdquo;: The entire configuration is defined in text files which are stored in an SCM (software configuration management) system like git, allowing an environment (e.g. a staging environment) to be &ldquo;cloned&rdquo; in a consistent and reproducible way.</p>
+<p>With the popularity of containers we can set up complex development environments for our applications locally using docker compose, but we could not manage the tools to build our software in a similarly simple way.</p>
+<p>DevContainers use container technology in a similar way as &ldquo;docker compose&rdquo; or &ldquo;infrastructure as code&rdquo;: The entire tool set of a development environment is described in a configuration file (<code>devcontainer.json</code>) which is stored in the <code>.devcontainer</code> folder of a project&rsquo;s source code repository. The environment  defined in this way is then executed in an IDE with DevContainer support (e.g. Visual Studio Code or VS Code for short) and is available in two ways:</p>
+<ul>
+<li>The CLI tools (e.g. &ldquo;<a href="https://aws.amazon.com/cli/">aws</a>&rdquo;, &ldquo;<a href="https://jqlang.org/">jq</a>&rdquo;, &ldquo;<a href="https://kubernetes.io/docs/reference/kubectl/">kubectl</a>&rdquo; or others) installed in the devcontainer as described in <code>devcontainer.json</code> are available in the integrated terminal window of the IDE.</li>
+<li>The IDE itself also runs partly in the containers, so that IDE extensions will be available in the IDE when it is connected to the devcontainer.</li>
+</ul>
+<p>When a new tool is required, it is sufficient to update the configuration of the DevContainer. When a team member updates the configuration from the SCM the IDE will notice, that the configuration has been updated and will start a rebuild of the DevContainer.</p>
+<p>There are several ways to add new software to a DevContainer:</p>
+<ul>
+<li>Add a predefined &ldquo;feature&rdquo; to the devcontainer.json. The <a href="https://containers.dev/features">list of predefined features</a> is quite long and contains a lot of software and tools from <a href="https://www.anaconda.com/about-us">Anaconda</a>, <a href="https://aws.amazon.com/cli/">AWS CLI</a> and <a href="https://learn.microsoft.com/en-us/cli/azure/">Azure CLI</a> to <a href="https://ziglang.org/">Zig</a> (a new programming language).</li>
+<li>Use a <a href="https://docs.docker.com/reference/dockerfile/">Dockerfile</a> to modify the base image of the container. This approach is especially useful when the required software is not available as a predefined feature or if some more advanced configurations are required.</li>
+</ul>
+<h3 id="integration">Integration</h3>
+<p>When the IDE is connected to the DevContainer the directories containing the source code checked out from a software configuration management (SCM) system like <a href="https://git-scm.com/">git</a> and the build artifacts still reside on the host machine whereas the local Maven and npm repositories are stored in a persistent container volume, so that their contents are not lost when the container is stopped.</p>
+<h2 id="simple-example">Simple example</h2>
+<p>The best way to demonstrate the power of DevContainers is with a practical example.</p>
+<p>Let&rsquo;s assume that  we need to maintain a legacy project from time to time which has a Java 8 codebase and cannot be migrated to a newer version. The legacy application is a simple Spring Boot application built with Maven that exposes a REST service on port 8080.</p>
+<p>Without DevContainers one would have to install the required outdated JDK (Java Development Kit) and always check the system-wide environment variables like <code>JAVA_HOME</code> and <code>PATH</code> to make sure the correct JDK is being used.</p>
+<p>Using DevContainers the correct JDK is automatically available when one opens the respective project with an IDE that supports DevContainers.</p>
+<h3 id="prerequisites">Prerequisites</h3>
+<p>In order to follow the example, you will need the following prerequisites (assuming a Windows 10 or Windows 11 machine):</p>
+<ul>
+<li>Docker Runtime (e.g. <a href="https://rancherdesktop.io/">Rancher Desktop</a>)</li>
+<li><a href="https://git-scm.com/downloads">git</a> (including git-bash)</li>
+<li><a href="https://code.visualstudio.com/Download">Visual Studio Code</a> (&ldquo;VS Code&rdquo; for short) with DevContainer extension</li>
+</ul>
+<p>
+  <img src="/posts/img/SK-DevContainers/VS-CODE_extensions_marked.png" alt="DevContainer extension in VS Code">
+
+</p>
+<h3 id="test-your-setup">Test your setup</h3>
+<p>To make sure everything is working, you should be able to run the docker hello-world image in a terminal window in VS Code:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">docker run hello-world
+</span></span></code></pre></div><p>You should see, something like this</p>
+<p>
+  <img src="/posts/img/SK-DevContainers/VS-CODE_docker_hello_world.png" alt="Docker hello world">
+
+</p>
+<h3 id="specify-the-devcontainer-for-the-legacy-application">Specify the DevContainer for the legacy application</h3>
+<p>In the repository of the legacy application we create a folder <code>.devcontainer</code> with the following file <code>devcontainer.json</code>:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;Java 8&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;image&#34;</span><span class="p">:</span> <span class="s2">&#34;mcr.microsoft.com/devcontainers/java:dev-8-jdk-bookworm&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;features&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&#34;ghcr.io/devcontainers/features/java:1&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nt">&#34;version&#34;</span><span class="p">:</span> <span class="s2">&#34;8&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">			<span class="nt">&#34;installMaven&#34;</span><span class="p">:</span> <span class="s2">&#34;true&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">			<span class="nt">&#34;installGradle&#34;</span><span class="p">:</span> <span class="s2">&#34;false&#34;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">}</span>
+</span></span><span class="line"><span class="cl">	<span class="p">}</span>	
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>When we open the repository in a new VS Code window, VS Code should recognize the <code>.devcontainer</code> folder and offer the option to reopen the project in a container:</p>
+<p>
+  <img src="/posts/img/SK-DevContainers/VS-CODE-Reopen-In-Container-highlighted-detail.PNG" alt="Reopen in Container">
+
+</p>
+<p>VS Code will now build and launch the container. When the container is ready, you will notice that the icon in the status bar has changed:</p>
+<p>
+  <img src="/posts/img/SK-DevContainers/VS-Code_icons_change.png" alt="Icon not connected">
+
+</p>
+<p>When we now open a terminal in VS Code there is an option for a &ldquo;bash&rdquo; (because the container is based on a Linux OS) and when we execute</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">java -version
+</span></span></code></pre></div><p>in this shell we get the information that Java 1.8 is installed:</p>
+<p>
+  <img src="/posts/img/SK-DevContainers/VS-CODE_java-version-output.PNG" alt="Java version">
+
+</p>
+<p>Now we run</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">mvn clean install
+</span></span></code></pre></div><p>in the bash terminal inside VS Code to build our legacy application.</p>
+<p>When we start the application with</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">java -jar target/legacy-1.0-SNAPSHOT.jar
+</span></span></code></pre></div><p>the IDE offers us to open the URL &ldquo;http://localhost:8080&rdquo; in a browser, so that the application running inside the DevContainer can be tested from the host machine.</p>
+<p>If more control is required or ports need to be mapped this can be done either  manually (Tab Ports) or in the <code>devcontainer.json</code> file.</p>
+<h1 id="advanced-example">Advanced example</h1>
+<p>In the simple example above we just used a Java image and specified an option to install Apache Maven as a build tool.</p>
+<p>In the advanced example we will use a Dockerfile to provide not only predefined features, but also some configuration files for AWS CLI login.</p>
+<p>Before we start with the advanced example, let&rsquo;s shed some light on the authentication and authorization meachnisms used by the AWS CLI:</p>
+<p>When using the AWS CLI the following information is required to access an AWS account in a particular region (see also <a href="https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-files.html">AWS Documentation</a> ):</p>
+<ul>
+<li>Access key</li>
+<li>Secret access Key</li>
+<li>Account ID</li>
+<li>Region</li>
+<li>Role to assume</li>
+</ul>
+<p>This information can be provided in environment variables (<code>AWS_ACCESS_KEY_ID</code>, <code>AWS_SECRET_ACCESS_KEY</code> and so on), but the more common option is, to use a config file in the <code>.aws</code> folder (located in the user&rsquo;s home directory) which looks like this:</p>
+<pre tabindex="0"><code>[profile my-individual-profile-name]
+sso_session=my-individual-sso-session-name
+sso_account_id=123456789011
+sso_role_name=AdminRole
+region=eu-central-1
+output=json
+</code></pre><p>Without DevContainers, each team member must maintain the <code>.aws/config</code> file and may even use individual names for the profiles.</p>
+<p>With DevContainers, the <code>.aws/config</code> file can become part of the container image and aws commands like</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">aws --profile common-profile-name s3 ls
+</span></span></code></pre></div><p>will work right out of the box in every team member&rsquo;s IDE.</p>
+<p>For the advanced example, we use the following directory strucure:</p>
+<pre tabindex="0"><code>.devcontainer
+├── aws.config
+├── devcontainer.json
+└── Dockerfile
+</code></pre><p>The content of the <code>devcontainer.json</code> is:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="cl"><span class="p">{</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;name&#34;</span><span class="p">:</span> <span class="s2">&#34;NTT Data DACH Techblog DevContainers Advanced Example&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;build&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&#34;dockerfile&#34;</span><span class="p">:</span> <span class="s2">&#34;Dockerfile&#34;</span>		
+</span></span><span class="line"><span class="cl">	<span class="p">},</span>	
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;features&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&#34;ghcr.io/devcontainers/features/java:1&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nt">&#34;version&#34;</span><span class="p">:</span> <span class="s2">&#34;21&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">			<span class="nt">&#34;installMaven&#34;</span><span class="p">:</span> <span class="s2">&#34;true&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">			<span class="nt">&#34;installGradle&#34;</span><span class="p">:</span> <span class="s2">&#34;false&#34;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">},</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&#34;ghcr.io/devcontainers-extra/features/quarkus-sdkman&#34;</span><span class="p">:</span> <span class="p">{</span>
+</span></span><span class="line"><span class="cl">			<span class="nt">&#34;version&#34;</span><span class="p">:</span> <span class="s2">&#34;latest&#34;</span>
+</span></span><span class="line"><span class="cl">		<span class="p">},</span>
+</span></span><span class="line"><span class="cl">		<span class="nt">&#34;ghcr.io/devcontainers/features/aws-cli&#34;</span><span class="p">:</span> <span class="p">{}</span>		
+</span></span><span class="line"><span class="cl">	<span class="p">},</span>
+</span></span><span class="line"><span class="cl">	<span class="nt">&#34;forwardPorts&#34;</span><span class="p">:</span> <span class="p">[</span> <span class="mi">5005</span><span class="p">,</span> <span class="mi">8080</span> <span class="p">]</span>
+</span></span><span class="line"><span class="cl"><span class="p">}</span>
+</span></span></code></pre></div><p>With this <code>devcontainer.json</code> we refer to the Dockerfile in the <code>.devcontainer</code> folder to build the base image. Additionally we add the following features:</p>
+<ul>
+<li>Java JDK 21, including Apache Maven</li>
+<li>AWS CLI</li>
+<li>Quarkus CLI</li>
+</ul>
+<p>The Dockerfile reads:</p>
+<pre tabindex="0"><code>FROM mcr.microsoft.com/devcontainers/java:1-21-bookworm
+
+# create .aws directory
+RUN mkdir /home/vscode/.aws
+RUN chown vscode:vscode /home/vscode/.aws
+# copy aws config file
+COPY --chown=vscode:vscode ./aws.config /home/vscode/.aws/config
+</code></pre><p>The actions in the Dockerfile are for copying the contents of the <code>aws.config</code> file (in the .devcontainer folder) to <code>~/.aws/config</code> in the container.</p>
+<p>Finally, the <code>aws.config</code> file defines the profile &ldquo;techblog&rdquo; for a (non existing) AWS account 123456789011 and a single-sign-on (SSO) configuration.</p>
+<p>After the new container is built we can use the AWS CLI from within the container like this</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">aws --profile techblog s3 ls
+</span></span></code></pre></div><p>In this case it fails, because we did not perform the <code>aws sso login</code> command and the account we used for the demo does not exist, but the principle should have become clear.</p>
+<p>
+  <img src="/posts/img/SK-DevContainers/VS-CODE-Advanced_Example.PNG" alt="Advanced Example">
+
+</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>With DevContainers it is possible to define and maintain a consistent set of tools (like compilers, SDKs, CLIs) and configurations as code without the neeed to execute and maintain heavy virtual machine images or use cloud-based development environments. This makes scenarios like setting up training environments or onboarding new team members much easier. It also helps to recreate the setup used for build a specific software release in a reproduceable and consistent manner.</p>
+<h1 id="credits">Credits</h1>
+<p>Title image by <a href="https://www.istockphoto.com/en/portfolio/shaunl">shaunl</a> on <a href="https://www.istockphoto.com">iStock</a></p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/stefan-kuehnel.png" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/stefan-k%c3%bchnel">Stefan Kühnel</a><span>
+                    
+                </span></h3>
+                <p>Managing Technical Consultant </p>
+                <p calss="author-socials">
+                    <a target="_blank"  href="https://github.com/eska-muc"><i class="fa-brands fa-github"></i></a>
+                    
+                    
+                    
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+                <h3 class="related-heading">You may also like</h3>
+
+                
+                
+                <ul>
+                    
+                    
+                    
+                        <li><a class="related-link" href="/posts/ns-controlplaneoperatedinfrastructure_1/">CONTROL PLANE OPERATED INFRASTRUCTURE - Part 1: Introduction to Crossplane</a></li>
+                    
+                    
+                    
+                    
+                        <li><a class="related-link" href="/posts/ab_softwaresupplychainsecurity_2/">UNDERSTANDING THE VALUE OF SOFTWARE SUPPLY CHAIN SECURITY - Part 2: Tools in your arsenal</a></li>
+                    
+                    
+                    
+                    
+                        <li><a class="related-link" href="/posts/ab_softwaresupplychainsecurity_1/">UNDERSTANDING THE VALUE OF SOFTWARE SUPPLY CHAIN SECURITY - Part 1: Attack vectors</a></li>
+                    
+                    
+                </ul>
+                
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/visual-studio-code/">Visual Studio Code</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/integrated-development-environment/">Integrated Development Environment</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/compiler/">Compiler</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/java/">Java</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/devops/">DevOps</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/development-environments/">Development Environments</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/container/">Container</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/devcontainers/">DevContainers</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/rancher-desktop/">Rancher Desktop</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</html>

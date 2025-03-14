@@ -416,56 +416,171 @@ For local testing purposes, we will use the &ldquo;fake&rdquo; provider, which a
 <p>Sealed Secrets and the External Secrets Operator both provide a way to more securely handle secrets outside of the cluster (e.g., in configuration files which are checked into a source code management system). The Kubernetes &ldquo;secrets&rdquo; resource is created by the operator at runtime.</p>
 <p>However, within the cluster, the secrets are still made available as the default Kubernetes secret, so that anyone with sufficient access rights can see the values of the secret.</p>
 <p>The advantage of this approach is that applications created for default Kubernetes secrets do not need to be modified when one of the operators is introduced.</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+ 
+ 
+ 
+ 
+
+
+
+    
+         
+    
+
+    
+         
+    
+
+    
+         
+    
+
+    
+         
+    
+
+    
+         
+    
+
+    
+         
+    
+
+    
+         
+    
+
+    
+         
+    
+
+    
+         
+    
+
+
+
+
+
 <table>
-<thead>
-<tr>
-<th></th>
-<th>Sealed Secrets</th>
-<th>External Secrets Operator</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>PROS</strong></td>
-<td>Self-contained (no external secrets store required)</td>
-<td>Large number of supported external secret stores</td>
-</tr>
-<tr>
-<td></td>
-<td>No need to change application</td>
-<td>No need to change application</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td>Deployment files cluster independent</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td>No additional command line tool required</td>
-</tr>
-<tr>
-<td></td>
-<td></td>
-<td>Automatic refresh with configurable interval</td>
-</tr>
-<tr>
-<td><strong>CONS</strong></td>
-<td>Command line tool required</td>
-<td>External secret store required</td>
-</tr>
-<tr>
-<td></td>
-<td>Change of secret value requires commit</td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>Encryption for a specific cluster</td>
-<td></td>
-</tr>
-</tbody>
+    <thead>
+        <tr>
+            
+            <th></th>
+            
+            <th>Sealed Secrets</th>
+            
+            <th>External Secrets Operator</th>
+            
+        </tr>
+    </thead>
+    <tbody>        
+        
+        
+                        
+                        
+        
+                        
+                        
+        
+                        
+            
+                
+                 <tr>                    
+                     
+                    
+                    
+                    <td>PROS</td>
+                    
+                     
+                    
+                    <td>
+                        
+                        <ul>
+                        
+                        <li>Self-contained (no external secrets store required)</li>
+                        
+                        <li>No need to change application</li>
+                        
+                        </ul>
+                    </td>
+                    
+                     
+                    
+                    <td>
+                        
+                        <ul>
+                        
+                        <li>Large number of supported external secret stores</li>
+                        
+                        <li>No need to change application</li>
+                        
+                        <li>Deployment files cluster independent</li>
+                        
+                        <li>No additional command line tool required</li>
+                        
+                        <li>Automatic refresh with configurable interval</li>
+                        
+                        </ul>
+                    </td>
+                    
+                    
+                 </tr>
+                
+                                 
+                        
+        
+                        
+                        
+        
+                        
+                        
+        
+                        
+            
+                
+                 <tr>                    
+                     
+                    
+                    
+                    <td> CONS</td>
+                    
+                     
+                    
+                    <td>
+                        
+                        <ul>
+                        
+                        <li>Command line tool required</li>
+                        
+                        <li>Change of secret value requires commit</li>
+                        
+                        <li>Encryption for a specific cluster</li>
+                        
+                        </ul>
+                    </td>
+                    
+                     
+                    
+                    <td>
+                        
+                        <ul>
+                        
+                        <li>External secret store required</li>
+                        
+                        </ul>
+                    </td>
+                    
+                    
+                 </tr>
+                
+                                 
+                        
+                        
+    </tbody>
 </table>
 <p>As promised, here is a demo and comparison of the three configurations:
 <script src="https://fast.wistia.com/embed/medias/t9830pc51y.jsonp" async></script><script src="https://fast.wistia.com/assets/external/E-v1.js" async></script><div class="wistia_responsive_padding" style="padding:56.25% 0 0 0;position:relative;"><div class="wistia_responsive_wrapper" style="height:100%;left:0;position:absolute;top:0;width:100%;"><div class="wistia_embed wistia_async_t9830pc51y seo=true videoFoam=true" style="height:100%;position:relative;width:100%"><div class="wistia_swatch" style="height:100%;left:0;opacity:0;overflow:hidden;position:absolute;top:0;transition:opacity 200ms;width:100%;"><img src="https://fast.wistia.com/embed/medias/t9830pc51y/swatch" style="filter:blur(5px);height:100%;object-fit:contain;width:100%;" alt="" aria-hidden="true" onload="this.parentNode.style.opacity=1;" /></div></div></div></div></p>

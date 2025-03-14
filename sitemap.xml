@@ -2,6 +2,45 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
+    <loc>https://nttdata-dach.github.io/authors/</loc>
+    <lastmod>2025-03-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/compiler/</loc>
+    <lastmod>2025-03-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/container/</loc>
+    <lastmod>2025-03-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/devcontainers/</loc>
+    <lastmod>2025-03-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/development-environments/</loc>
+    <lastmod>2025-03-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/devops/</loc>
+    <lastmod>2025-03-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/integrated-development-environment/</loc>
+    <lastmod>2025-03-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/java/</loc>
+    <lastmod>2025-03-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/rancher-desktop/</loc>
+    <lastmod>2025-03-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/posts/sk-devcontainers/</loc>
+    <lastmod>2025-03-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/authors/stefan-k%C3%BChnel/</loc>
+    <lastmod>2025-03-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/</loc>
+    <lastmod>2025-03-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/visual-studio-code/</loc>
+    <lastmod>2025-03-14T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://nttdata-dach.github.io/tags/acl/</loc>
     <lastmod>2025-02-24T00:00:00+00:00</lastmod>
   </url><url>
@@ -30,9 +69,6 @@
     <lastmod>2025-02-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/series/</loc>
-    <lastmod>2025-02-24T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/</loc>
     <lastmod>2025-02-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/zta/</loc>
@@ -91,9 +127,6 @@
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/play-store/</loc>
     <lastmod>2025-01-27T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/authors/</loc>
-    <lastmod>2024-12-30T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/posts/jh-confluentkafkaconnect/</loc>
     <lastmod>2024-12-30T00:00:00+00:00</lastmod>
@@ -338,9 +371,6 @@
     <loc>https://nttdata-dach.github.io/tags/secrets-manager/</loc>
     <lastmod>2023-11-24T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/authors/stefan-k%C3%BChnel/</loc>
-    <lastmod>2023-11-24T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://nttdata-dach.github.io/tags/android/</loc>
     <lastmod>2023-11-03T00:00:00+00:00</lastmod>
   </url><url>
@@ -372,9 +402,6 @@
     <lastmod>2023-08-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/dependency-management/</loc>
-    <lastmod>2023-08-22T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/devops/</loc>
     <lastmod>2023-08-22T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/posts/mjm-renovateautomaticpullrequest/</loc>
@@ -477,9 +504,6 @@
     <lastmod>2022-10-18T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/posts/yk-accessingprivateressourcesonaws/</loc>
-    <lastmod>2022-06-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/container/</loc>
     <lastmod>2022-06-20T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/development/</loc>

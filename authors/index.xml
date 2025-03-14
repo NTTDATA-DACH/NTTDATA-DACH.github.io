@@ -7,8 +7,15 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Mon, 30 Dec 2024 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 14 Mar 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/authors/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Stefan Kühnel</title>
+      <link>https://nttdata-dach.github.io/authors/stefan-k%C3%BChnel/</link>
+      <pubDate>Fri, 14 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/authors/stefan-k%C3%BChnel/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Jürgen Huber</title>
       <link>https://nttdata-dach.github.io/authors/j%C3%BCrgen-huber/</link>
@@ -21,13 +28,6 @@
       <link>https://nttdata-dach.github.io/authors/mikel-jason-m%C3%BCnnekhoff/</link>
       <pubDate>Fri, 02 Aug 2024 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/authors/mikel-jason-m%C3%BCnnekhoff/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Stefan Kühnel</title>
-      <link>https://nttdata-dach.github.io/authors/stefan-k%C3%BChnel/</link>
-      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/authors/stefan-k%C3%BChnel/</guid>
       <description></description>
     </item>
   </channel>

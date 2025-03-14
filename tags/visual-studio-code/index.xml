@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Visual Studio Code on Technology Blog</title>
+    <link>https://nttdata-dach.github.io/tags/visual-studio-code/</link>
+    <description>Recent content in Visual Studio Code on Technology Blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
+    <lastBuildDate>Fri, 14 Mar 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://nttdata-dach.github.io/tags/visual-studio-code/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Reproducible and consistent development environments with DevContainers</title>
+      <link>https://nttdata-dach.github.io/posts/sk-devcontainers/</link>
+      <pubDate>Fri, 14 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/sk-devcontainers/</guid>
+      <description>As a developer in an agile world it becomes quite normal to be involved in more than one activity (projects, trainings and some research) at a  time. Each of these activities may require a specific setup of development environments in terms of programming languages, compiler and library versions. Installing and maintaining all this with a classical approach is error-prone and requires a lot of effort. Using task-specific virtual machines would solve the problem, but it consumes a lot of resources and causes a lot of maintenance as well, because one also needs to keep VM&amp;rsquo;s operating system up to date. This article shows, how DevContainers can help you create and maintain reproducible development environments leveraging the benefits of modern container technology.</description>
+    </item>
+  </channel>
+</rss>
