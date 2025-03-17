@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Emission Metrics on Technology Blog</title>
+    <link>https://nttdata-dach.github.io/tags/emission-metrics/</link>
+    <description>Recent content in Emission Metrics on Technology Blog</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <copyright>Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
+    <lastBuildDate>Thu, 30 Jan 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://nttdata-dach.github.io/tags/emission-metrics/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Calculating your carbon footprint: a guide to measuring serverless app emissions on AWS</title>
+      <link>https://nttdata-dach.github.io/posts/fw-da-calculatingyourcarbonfootprint/</link>
+      <pubDate>Thu, 30 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/fw-da-calculatingyourcarbonfootprint/</guid>
+      <description>This blog article presents a methodology developed by NTT Data to quantify the carbon emissions of serverless applications on AWS. It examines a Campaign Management System architecture and utilizes tools like the SCI calculator to uncover insights into the relationship between application traffic and carbon emissions. The authors address challenges in metrics availability and data collection within serverless environments and discuss how Green Software Patterns can mitigate environmental impacts. The article highlights the significance of sustainability in serverless computing and lays the groundwork for future advancements in greener cloud solutions.</description>
+    </item>
+  </channel>
+</rss>

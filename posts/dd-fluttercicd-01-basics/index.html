@@ -190,7 +190,7 @@ More information about the <code>upload_to_play_store</code> action can be found
 
 <picture style="display: contents;"
      
-    id="[459 1 317 419 297 89]"
+    id="[418 53 460 17 154 63]"
     onclick="openModal(this.id)"
      >
     
@@ -264,7 +264,7 @@ More information about <a href="https://docs.fastlane.tools/actions/pilot/"><cod
 
 <picture style="display: contents;"
      
-    id="[54 472 123 465 110 46]"
+    id="[407 313 73 135 97 366]"
     onclick="openModal(this.id)"
      >
     
@@ -341,7 +341,7 @@ Copy the output and add it as a secret.</p>
 </span></span></span><span class="line"><span class="cl"><span class="sd">            keyPassword=${{ secrets.STORE_PASSWORD }}
 </span></span></span><span class="line"><span class="cl"><span class="sd">            keyAlias=upload
 </span></span></span><span class="line"><span class="cl"><span class="sd">            storeFile=./key.jks
-</span></span></span><span class="line"><span class="cl"><span class="sd">            EOF</span><span class="w">            
+</span></span></span><span class="line"><span class="cl"><span class="sd">            EOF</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Decode key file</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="l">echo &#34;${{ secrets.KEY_JKS }}&#34; | openssl base64 -d -out ./android/app/key.jks</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Decode sec json file</span><span class="w">

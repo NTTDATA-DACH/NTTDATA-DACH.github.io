@@ -130,7 +130,7 @@
 </span></span></span><span class="line"><span class="ln" id="14"><a class="lnlinks" href="#14">14</a></span><span class="cl"><span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l">kube-system</span><span class="w">
 </span></span></span><span class="line"><span class="ln" id="15"><a class="lnlinks" href="#15">15</a></span><span class="cl"><span class="w">  </span><span class="nt">helm</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="ln" id="16"><a class="lnlinks" href="#16">16</a></span><span class="cl"><span class="w">    </span><span class="nt">values</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
-</span></span></span><span class="line"><span class="ln" id="17"><a class="lnlinks" href="#17">17</a></span><span class="cl"><span class="sd">      [...]</span><span class="w">      
+</span></span></span><span class="line"><span class="ln" id="17"><a class="lnlinks" href="#17">17</a></span><span class="cl"><span class="sd">      [...]</span><span class="w">
 </span></span></span><span class="line"><span class="ln" id="18"><a class="lnlinks" href="#18">18</a></span><span class="cl"><span class="w">  </span><span class="nt">syncPolicy</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="ln" id="19"><a class="lnlinks" href="#19">19</a></span><span class="cl"><span class="w">    </span><span class="nt">automated</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="ln" id="20"><a class="lnlinks" href="#20">20</a></span><span class="cl"><span class="w">      </span><span class="nt">prune</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
@@ -209,7 +209,6 @@
 </span></span><span class="line"><span class="ln" id="15"><a class="lnlinks" href="#15">15</a></span><span class="cl"><span class="p">}</span></span></span></code></pre></div>
 <h1 id="learning-from-the-first-attempt">Learning from the first attempt</h1>
 <p>With all of these parameters in place, the action was ready to run by pushing the feature branch to the GHES. The results of the run can be viewed in the action&rsquo;s log. First, we see the action picking up all configurations and merging them into one. So far so good, nothing unexpected. Scrolling further down, we get to the first - in our case - unwanted behavior: As per default, Renovate runs with most so-called <em>managers</em>. Managers correspond to package managers and here means which language or dependency type the action is looking for.</p>
-<!-- raw HTML omitted -->
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">DEBUG: Using file match: <span class="o">(</span>^<span class="p">|</span>/<span class="o">)</span>tasks/<span class="o">[</span>^/<span class="o">]</span>+<span class="se">\.</span>ya?ml$ <span class="k">for</span> manager ansible <span class="o">(</span><span class="nv">repository</span><span class="o">=</span>org/k8s-A-dev<span class="o">)</span>
 </span></span><span class="line"><span class="cl">DEBUG: Using file match: <span class="o">(</span>^<span class="p">|</span>/<span class="o">)</span>requirements<span class="se">\.</span>ya?ml$ <span class="k">for</span> manager ansible-galaxy <span class="o">(</span><span class="nv">repository</span><span class="o">=</span>org/k8s-A-dev<span class="o">)</span>
 </span></span><span class="line"><span class="cl">DEBUG: Using file match: <span class="o">(</span>^<span class="p">|</span>/<span class="o">)</span>galaxy<span class="se">\.</span>ya?ml$ <span class="k">for</span> manager ansible-galaxy <span class="o">(</span><span class="nv">repository</span><span class="o">=</span>org/k8s-A-dev<span class="o">)</span>
@@ -231,13 +230,11 @@
 </span></span><span class="line"><span class="ln" id="8"><a class="lnlinks" href="#8">8</a></span><span class="cl">  <span class="p">},</span>
 </span></span><span class="line"><span class="ln" id="9"><a class="lnlinks" href="#9">9</a></span><span class="cl"><span class="p">}</span></span></span></code></pre></div>
 <p>Running this again leads to our applications being picked up. By path, also <code>Chart.yaml</code> and <code>values.yaml</code> are matched, but the manager correctly detects that these are no ArgoCD files and disregards them. We can see this when the actual package files are the matched files reduced by 2.</p>
-<!-- raw HTML omitted -->
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">DEBUG: Using file match: apps/.*<span class="se">\.</span>ya?ml$ <span class="k">for</span> manager argocd <span class="o">(</span><span class="nv">repository</span><span class="o">=</span>org/k8s-A-dev<span class="o">)</span>
 </span></span><span class="line"><span class="cl">DEBUG: Matched <span class="m">42</span> file<span class="o">(</span>s<span class="o">)</span> <span class="k">for</span> manager argocd: apps/Chart.yaml, apps/templates/apps/aws-alb-controller.yaml, <span class="o">[</span>...<span class="o">]</span> <span class="o">(</span><span class="nv">repository</span><span class="o">=</span>org/k8s-A-dev<span class="o">)</span>
 </span></span><span class="line"><span class="cl">DEBUG: Found argocd package files <span class="o">(</span><span class="nv">repository</span><span class="o">=</span>org/k8s-A-dev<span class="o">)</span>
 </span></span><span class="line"><span class="cl">DEBUG: Found <span class="m">40</span> package file<span class="o">(</span>s<span class="o">)</span> <span class="o">(</span><span class="nv">repository</span><span class="o">=</span>org/k8s-A-dev<span class="o">)</span></span></span></code></pre></div>
 <p>Further investigation of the action log leads to the second issue with the minimalistic setup, which is more severe. The manager <em>argocd</em> had been active, so we expected or, more realistically, hoped to see available updates or at least that everything&rsquo;s up to date. Indeed, Renovate did find our ArgoCD application files, but did not manage to compare versions properly.</p>
-<!-- raw HTML omitted -->
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">DEBUG: packageFiles with updates <span class="o">(</span><span class="nv">repository</span><span class="o">=</span>org/k8s-A-dev, <span class="nv">baseBranch</span><span class="o">=</span>feat/renovate<span class="o">)</span>
 </span></span><span class="line"><span class="cl">        <span class="s2">&#34;config&#34;</span>: <span class="o">{</span>
 </span></span><span class="line"><span class="cl">          <span class="s2">&#34;argocd&#34;</span>: <span class="o">[</span>
@@ -263,7 +260,6 @@
 </span></span><span class="line"><span class="ln" id="3"><a class="lnlinks" href="#3">3</a></span><span class="cl">  <span class="nt">&#34;versioning&#34;</span> <span class="p">:</span> <span class="s2">&#34;regex:^(?&lt;compatibility&gt;.*)/v?(?&lt;major&gt;\\d+)\\.(?&lt;minor&gt;\\d+)\\.(?&lt;patch&gt;\\d+)?$&#34;</span>
 </span></span><span class="line"><span class="ln" id="4"><a class="lnlinks" href="#4">4</a></span><span class="cl"><span class="p">}</span></span></span></code></pre></div></p>
 <p>This finally read and analyzed our applications correctly:</p>
-<!-- raw HTML omitted -->
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">DEBUG: packageFiles with updates <span class="o">(</span><span class="nv">repository</span><span class="o">=</span>org/k8s-A-dev, <span class="nv">baseBranch</span><span class="o">=</span>feat/renovate<span class="o">)</span>
 </span></span><span class="line"><span class="cl">        <span class="s2">&#34;config&#34;</span>: <span class="o">{</span>
 </span></span><span class="line"><span class="cl">          <span class="s2">&#34;argocd&#34;</span>: <span class="o">[</span>
@@ -443,8 +439,6 @@
 <h1 id="behind-the-writing-scenes">Behind the (writing) scenes</h1>
 <p>Of course, this blog post is condensed to what works and what is generic enough to be valuable for any developer or engineer out there. But let us quickly discuss two obstacles we encountered, that might be helpful to know about, too.</p>
 <p>First of all, let&rsquo;s talk about variables in dependencies. It might be nice to use helm chart variables in ArgoCD applications. We did so, too. In our case, we had the base URL of our GHES as a variable in Kubernetes. While this absolutely works for the functional part, Renovate does not template helm charts, so using variables is a blocker for Renovate and we needed to remove these first.</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
 <p>The second obstacle was one we honestly don&rsquo;t understand the reason for. Renovate offers the usage of <em>presets</em> to not start from scratch but have some well-tested configurations. We started using it out of the thought that we use it as a first start and then customize it further and further. However, there&rsquo;s one caveat you need to be aware of: Preset values take precedence over your custom configuration. We noticed this when we were trying to set the semantic commit type to <code>feat</code>. We were unable to do so, because we were using the <code>config:base</code> preset which sets this to <code>chore</code>. After reading this important detail in the docs by chance, we reverse-engineered all settings our configured presets contain, and dropped them with minimal changes on our side. Luckily, the docs list what the prefixes contain, e.g. <a href="https://docs.renovatebot.com/presets-config/#configbase">config:base</a>. It was pretty annoying to check everything (spoiler: they are built recursively), but we managed to get down to only one preset, <code>:disableDependencyDashboard</code>.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-json" data-lang="json"><span class="line"><span class="ln" id="1"><a class="lnlinks" href="#1">1</a></span><span class="cl"><span class="p">{</span>
 </span></span><span class="line"><span class="ln" id="2"><a class="lnlinks" href="#2">2</a></span><span class="cl">  <span class="err">[...]</span>
@@ -522,7 +516,7 @@
 </span></span></span><span class="line"><span class="ln" id="55"><a class="lnlinks" href="#55">55</a></span><span class="cl"><span class="c1"></span>  <span class="c1">// &#34;baseBranches&#34;: [&#34;feat/renovate&#34;],
 </span></span></span><span class="line"><span class="ln" id="56"><a class="lnlinks" href="#56">56</a></span><span class="cl"><span class="c1"></span><span class="p">}</span></span></span></code></pre></div></p>
 <h1 id="credits">Credits</h1>
-<p>Title image by <a href="https://www.shutterstock.com/g/ESB+Professional">ESB Professional</a> on <a href="https://www.shutterstock.com">Shutterstock</a></p>
+<p>Title image by <a href="https://www.shutterstock.com/g/ESB&#43;Professional">ESB Professional</a> on <a href="https://www.shutterstock.com">Shutterstock</a></p>
 
             
         </div>

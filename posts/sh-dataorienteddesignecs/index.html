@@ -141,40 +141,40 @@ If used correctly, ECS can improve performance up to 100x. You can find an examp
 <h2 id="data-locality">Data Locality</h2>
 <p>The closer the data is to your CPU, the faster it can be accessed. I have put together a table with the levels of storage including the size and approximate access time (<a href="https://stackoverflow.com/questions/4087280/approximate-cost-to-access-various-caches-and-main-memory">Source</a>).</p>
 <table>
-<thead>
-<tr>
-<th>Label</th>
-<th>Size</th>
-<th style="text-align:right">access time</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>L1 Cache</td>
-<td>512KB</td>
-<td style="text-align:right">1ns</td>
-</tr>
-<tr>
-<td>L2 Cache</td>
-<td>4MB</td>
-<td style="text-align:right">4ns</td>
-</tr>
-<tr>
-<td>L3 Cache</td>
-<td>32MB</td>
-<td style="text-align:right">20ns</td>
-</tr>
-<tr>
-<td>Memory</td>
-<td>32GB</td>
-<td style="text-align:right">100ns</td>
-</tr>
-<tr>
-<td>SSD Storage</td>
-<td>1TB</td>
-<td style="text-align:right">16000ns</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th>Label</th>
+          <th>Size</th>
+          <th style="text-align: right">access time</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td>L1 Cache</td>
+          <td>512KB</td>
+          <td style="text-align: right">1ns</td>
+      </tr>
+      <tr>
+          <td>L2 Cache</td>
+          <td>4MB</td>
+          <td style="text-align: right">4ns</td>
+      </tr>
+      <tr>
+          <td>L3 Cache</td>
+          <td>32MB</td>
+          <td style="text-align: right">20ns</td>
+      </tr>
+      <tr>
+          <td>Memory</td>
+          <td>32GB</td>
+          <td style="text-align: right">100ns</td>
+      </tr>
+      <tr>
+          <td>SSD Storage</td>
+          <td>1TB</td>
+          <td style="text-align: right">16000ns</td>
+      </tr>
+  </tbody>
 </table>
 <p>As you can see, the access time changes drastically depending on where the data is located. Therefore we want to optimize the usage of L1 and L2 cache.</p>
 <h2 id="bottom-up-query">&ldquo;Bottom Up&rdquo; Query</h2>

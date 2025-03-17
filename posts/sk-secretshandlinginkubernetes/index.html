@@ -416,8 +416,6 @@ For local testing purposes, we will use the &ldquo;fake&rdquo; provider, which a
 <p>Sealed Secrets and the External Secrets Operator both provide a way to more securely handle secrets outside of the cluster (e.g., in configuration files which are checked into a source code management system). The Kubernetes &ldquo;secrets&rdquo; resource is created by the operator at runtime.</p>
 <p>However, within the cluster, the secrets are still made available as the default Kubernetes secret, so that anyone with sufficient access rights can see the values of the secret.</p>
 <p>The advantage of this approach is that applications created for default Kubernetes secrets do not need to be modified when one of the operators is introduced.</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
  
  
  

@@ -4,8 +4,8 @@
     <title>Clients first on Technology Blog</title>
     <link>https://nttdata-dach.github.io/posts/</link>
     <description>Recent content in Clients first on Technology Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <generator>Hugo</generator>
+    <language>en</language>
     <copyright>Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
     <lastBuildDate>Fri, 14 Mar 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
@@ -15,6 +15,13 @@
       <pubDate>Fri, 14 Mar 2025 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/posts/sk-devcontainers/</guid>
       <description>As a developer in an agile world it becomes quite normal to be involved in more than one activity (projects, trainings and some research) at a  time. Each of these activities may require a specific setup of development environments in terms of programming languages, compiler and library versions. Installing and maintaining all this with a classical approach is error-prone and requires a lot of effort. Using task-specific virtual machines would solve the problem, but it consumes a lot of resources and causes a lot of maintenance as well, because one also needs to keep VM&amp;rsquo;s operating system up to date. This article shows, how DevContainers can help you create and maintain reproducible development environments leveraging the benefits of modern container technology.</description>
+    </item>
+    <item>
+      <title>Part 9: Serverless functions: Who responded?</title>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-serverlessfunctions/</link>
+      <pubDate>Fri, 28 Feb 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/as-konggateway-serverlessfunctions/</guid>
+      <description>In our previous blog posts in the Kong Gateway series, we explored various security aspects, particularly focusing on token-related issues and their solutions involving both Kong and custom-built plugins. Today, we dive deeper into another coding variant within the gateway: Kong serverless functions. We will use a real-world “Who Responded?” example to demonstrate how effectively a root cause analysis approach can be supported with minimal effort.</description>
     </item>
     <item>
       <title>Part 8: Plugin Cloning</title>
@@ -29,6 +36,13 @@
       <pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/posts/fjlm-webperformanceoptimization/</guid>
       <description>In this post, you will learn about the importance of optimizing web page loading times and how it impacts conversions, as well as why it&amp;rsquo;s critical for SEO positioning and visibility. We&amp;rsquo;ll also outline tips and strategies for improving website performance, ranging from website speed tests to image optimization, and minimizing CSS and Javascript among other techniques. Additionally, we discuss important metrics like time to first byte and the benefits of using technologies like HTTP/2 and Gzip compression. This post offers valuable insights into how to improve your website&amp;rsquo;s performance and user experience.</description>
+    </item>
+    <item>
+      <title>Calculating your carbon footprint: a guide to measuring serverless app emissions on AWS</title>
+      <link>https://nttdata-dach.github.io/posts/fw-da-calculatingyourcarbonfootprint/</link>
+      <pubDate>Thu, 30 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/fw-da-calculatingyourcarbonfootprint/</guid>
+      <description>This blog article presents a methodology developed by NTT Data to quantify the carbon emissions of serverless applications on AWS. It examines a Campaign Management System architecture and utilizes tools like the SCI calculator to uncover insights into the relationship between application traffic and carbon emissions. The authors address challenges in metrics availability and data collection within serverless environments and discuss how Green Software Patterns can mitigate environmental impacts. The article highlights the significance of sustainability in serverless computing and lays the groundwork for future advancements in greener cloud solutions.</description>
     </item>
     <item>
       <title>Part 2: Releases</title>
@@ -101,6 +115,13 @@
       <description>In this article we discuss the challenges of storing vast amounts of data to become a value-driven organization and introduce data mesh, an innovative technology that addresses these challenges. We outline the four principles of data mesh and provide a step-by-step framework for implementing the architecture. The article also gives an example of data mesh implementation using serverless tools on AWS and emphasizes that the selection between data mesh and traditional data architectures depends on the specific needs, capabilities, and goals of the business.</description>
     </item>
     <item>
+      <title>Part 6: Setting Up an Unreal Engine Project: Best Practices for Interactive Immersive Experiences</title>
+      <link>https://nttdata-dach.github.io/posts/ss-immersivetechnologies-06-settingupunrealproject/</link>
+      <pubDate>Mon, 08 Apr 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/ss-immersivetechnologies-06-settingupunrealproject/</guid>
+      <description>tbd</description>
+    </item>
+    <item>
       <title>Part 5: mTLS Header</title>
       <link>https://nttdata-dach.github.io/posts/as-konggateway-mtls_header/</link>
       <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
@@ -164,6 +185,13 @@
       <description>This tech blog article introduces Crossplane, an open-source Kubernetes add-on that extends the capabilities of infrastructure management by leveraging Kubernetes as a control plane. Crossplane uses Kubernetes&amp;rsquo; extensible API design and Custom Resource Definitions (CRDs) to manage not only services and applications but also cloud infrastructure. The article provides step-by-step instructions on how to get started with Crossplane and provision your first resources in the cloud using Kubernetes as a control plane.</description>
     </item>
     <item>
+      <title>Part 6: Setting Up a Unreal Engine Project - Best Practices for Interactive Immersive Experiences</title>
+      <link>https://nttdata-dach.github.io/posts/ss-settingupanunrealproject/</link>
+      <pubDate>Thu, 06 Jul 2023 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/ss-settingupanunrealproject/</guid>
+      <description>tbd</description>
+    </item>
+    <item>
       <title>Part 1: Brief Product Introduction</title>
       <link>https://nttdata-dach.github.io/posts/as-kongproductintroduction/</link>
       <pubDate>Mon, 15 May 2023 00:00:00 +0000</pubDate>
@@ -194,9 +222,16 @@
     <item>
       <title>A Completely New Approach: An ECS Programming Language</title>
       <link>https://nttdata-dach.github.io/posts/sh-dataorienteddesignecs/</link>
-      <pubDate>Thu, 09 Mar 2023 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 08 Mar 2023 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/posts/sh-dataorienteddesignecs/</guid>
       <description>Current enterprise software engineering is all about abstraction. We are bending our software in ways that the computer has trouble efficiently computing it. A decade ago we had to write efficient programs, because our hardware was a limiting factor. However, having better hardware is in no excuse to waste precious ressources. With Data-Oriented Design - DOD and Entity Component System - ECS, we can improve performance by up to 100 times!</description>
+    </item>
+    <item>
+      <title>Quantum-inspired approaches to the Job-Shop Problem</title>
+      <link>https://nttdata-dach.github.io/posts/mf-sw-jobshopproblem/</link>
+      <pubDate>Thu, 08 Jun 2023 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/mf-sw-jobshopproblem/</guid>
+      <description>The Job-Shop problem is a well-known optimization problem where a certain number of jobs have to be scheduled such that the total time needed to finish all jobs is minimal. In this article we shine a light on two algorithms that could be used as a possible solution for this problem.</description>
     </item>
     <item>
       <title>Three use cases highlighting the business value of private blockchain</title>

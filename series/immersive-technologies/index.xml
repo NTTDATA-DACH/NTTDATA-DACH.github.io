@@ -4,8 +4,8 @@
     <title>Immersive Technologies on Technology Blog</title>
     <link>https://nttdata-dach.github.io/series/immersive-technologies/</link>
     <description>Recent content in Immersive Technologies on Technology Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <generator>Hugo</generator>
+    <language>en</language>
     <copyright>Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
     <lastBuildDate>Wed, 15 May 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/series/immersive-technologies/index.xml" rel="self" type="application/rss+xml" />
@@ -15,6 +15,20 @@
       <pubDate>Wed, 15 May 2024 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/posts/ss-immersivetechnologies-01-basics/</guid>
       <description>Immersive technologies, alternatively referred to as XR technologies, possess the capability to either augment or replace the physical world with a digitally simulated one. This article provides an overview by describing the three categories of immersive technologies, including relevant background information, and significant use cases.</description>
+    </item>
+    <item>
+      <title>Part 6: Setting Up an Unreal Engine Project: Best Practices for Interactive Immersive Experiences</title>
+      <link>https://nttdata-dach.github.io/posts/ss-immersivetechnologies-06-settingupunrealproject/</link>
+      <pubDate>Mon, 08 Apr 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/ss-immersivetechnologies-06-settingupunrealproject/</guid>
+      <description>tbd</description>
+    </item>
+    <item>
+      <title>Part 6: Setting Up a Unreal Engine Project - Best Practices for Interactive Immersive Experiences</title>
+      <link>https://nttdata-dach.github.io/posts/ss-settingupanunrealproject/</link>
+      <pubDate>Thu, 06 Jul 2023 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/ss-settingupanunrealproject/</guid>
+      <description>tbd</description>
     </item>
   </channel>
 </rss>

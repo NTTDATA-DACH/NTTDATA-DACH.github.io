@@ -110,7 +110,7 @@
 
 <picture style="display: contents;"
      
-    id="[413 333 170 384 208 335]"
+    id="[178 7 309 84 131 28]"
     onclick="openModal(this.id)"
      >
     
@@ -177,7 +177,7 @@
 
 <picture style="display: contents;"
      
-    id="[70 277 45 106 452 72]"
+    id="[53 218 432 34 379 353]"
     onclick="openModal(this.id)"
      >
     
@@ -307,7 +307,7 @@ For more information on installing the OpenTelemetry Operator, see the <a href="
 </span></span></span><span class="line"><span class="cl"><span class="sd">          endpoint: http://o11y-metrics-collector-targetallocator:80
 </span></span></span><span class="line"><span class="cl"><span class="sd">          interval: 30s
 </span></span></span><span class="line"><span class="cl"><span class="sd">          collector_id: collector-0
-</span></span></span><span class="line"><span class="cl"><span class="sd">    [...]</span><span class="w">    </span></span></span></code></pre></div></p>
+</span></span></span><span class="line"><span class="cl"><span class="sd">    [...]</span></span></span></code></pre></div></p>
 <h3 id="processors">Processors</h3>
 <p>After successfully receiving metrics, processors proces the collected metrics before exporting them.</p>
 <p>Similar to receivers, there is an <a href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor">extensive list of processors</a>.</p>
@@ -342,7 +342,7 @@ For more information on installing the OpenTelemetry Operator, see the <a href="
 </span></span></span><span class="line"><span class="cl"><span class="sd">          - action: insert
 </span></span></span><span class="line"><span class="cl"><span class="sd">            key: collector
 </span></span></span><span class="line"><span class="cl"><span class="sd">            value: ${env:POD_NAME}
-</span></span></span><span class="line"><span class="cl"><span class="sd">    [...]</span><span class="w">    </span></span></span></code></pre></div>
+</span></span></span><span class="line"><span class="cl"><span class="sd">    [...]</span></span></span></code></pre></div>
 <p>To use <code>POD_NAME</code> here, we need to make it available as an environment variable. This is done as usual in Kubernetes - the configuration is passed directly down from the custom resource:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">spec</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">env</span><span class="p">:</span><span class="w">
@@ -360,7 +360,7 @@ For more information on installing the OpenTelemetry Operator, see the <a href="
 </span></span></span><span class="line"><span class="cl"><span class="sd">        endpoint: http://thanos-receiver:9091/api/v1/receive
 </span></span></span><span class="line"><span class="cl"><span class="sd">      prometheus: # this is for demo purposes only
 </span></span></span><span class="line"><span class="cl"><span class="sd">        endpoint: 0.0.0.0:8080
-</span></span></span><span class="line"><span class="cl"><span class="sd">    [...]</span><span class="w">    </span></span></span></code></pre></div>
+</span></span></span><span class="line"><span class="cl"><span class="sd">    [...]</span></span></span></code></pre></div>
 <p>Now, we are ready to connect the dots and build the pipeline section. The complete configuration is shown below:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">opentelemetry.io/v1alpha1</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">OpenTelemetryCollector</span><span class="w">
@@ -411,7 +411,7 @@ For more information on installing the OpenTelemetry Operator, see the <a href="
 </span></span></span><span class="line"><span class="cl"><span class="sd">        metrics:
 </span></span></span><span class="line"><span class="cl"><span class="sd">          receivers: [prometheus]
 </span></span></span><span class="line"><span class="cl"><span class="sd">          processors: [batch,attributes]
-</span></span></span><span class="line"><span class="cl"><span class="sd">          exporters: [prometheusremotewrite,prometheus]</span><span class="w">    </span></span></span></code></pre></div>
+</span></span></span><span class="line"><span class="cl"><span class="sd">          exporters: [prometheusremotewrite,prometheus]</span></span></span></code></pre></div>
 <h2 id="validating-our-scraping-pipeline">Validating our scraping pipeline</h2>
 <p>We can verify the functionality of our stack in scraping metrics by comparing the metrics exposed by any ServiceMonitor and scraped by the OtelCol Prometheus receiver by confirming the presence of a specific metric on the exporter side of our pipeline. This is what we added the Prometheus exporter for. Obviously, we need to have some metric producers that we can scrape data from. For this, we choose <a href="https://github.com/kubernetes/kube-state-metrics">kube-state-metrics</a>. It exposes metrics about the state of Kubernetes objects, such as <code>kube_deployment_created</code>. If you and your cluster are still with us, please check out the <a href="https://github.com/kubernetes/kube-state-metrics#kubernetes-deployment">Kubernetes deployment section of the KSM repository</a>.</p>
 <p>To verify, we simply port forward to kube-state-metrics with</p>
@@ -424,7 +424,7 @@ For more information on installing the OpenTelemetry Operator, see the <a href="
 <p>If this is your first contact with OpenTelemetry, you should read the following topics. We have outlined a minimal configuration for scraping Prometheus metrics. The goal here was not to have a production-ready configuration.</p>
 <ul>
 <li><a href="https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor/memorylimiterprocessor"><code>memorylimiter</code> processor</a>. But we warned: It will deny data instead of going OOMKilled, so you need to have proper alerting in place.</li>
-<li>Autoscaling: The OpenTelemetry Collector CRD provides <code>spec.autoscaler</code> for horizontal autoscaling. As the CRD implements the <code>ScaledObject</code> definition, you can also use <a href="https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/">VPA</a> to scale your collector vertically. <!-- raw HTML omitted --></li>
+<li>Autoscaling: The OpenTelemetry Collector CRD provides <code>spec.autoscaler</code> for horizontal autoscaling. As the CRD implements the <code>ScaledObject</code> definition, you can also use <a href="https://github.com/kubernetes/autoscaler/blob/master/vertical-pod-autoscaler/">VPA</a> to scale your collector vertically. </li>
 <li><a href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/healthcheckextension"><code>healthcheck</code> extension</a>: Add a health check endpoint to your collectors.</li>
 </ul>
 <h1 id="credits">Credits</h1>

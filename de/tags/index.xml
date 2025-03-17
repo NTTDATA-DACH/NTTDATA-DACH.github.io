@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Technology Blog</title>
+    <link>https://nttdata-dach.github.io/de/tags/</link>
+    <description>Recent content in Tags on Technology Blog</description>
+    <generator>Hugo</generator>
+    <language>de</language>
+    <copyright>Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
+    <atom:link href="https://nttdata-dach.github.io/de/tags/index.xml" rel="self" type="application/rss+xml" />
+  </channel>
+</rss>
