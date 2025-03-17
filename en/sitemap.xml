@@ -61,53 +61,16 @@
     <loc>https://nttdata-dach.github.io/tags/visual-studio-code/</loc>
     <lastmod>2025-03-14T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/tags/functions/</loc>
-    <lastmod>2025-02-28T00:00:00+00:00</lastmod>
+    <loc>https://nttdata-dach.github.io/tags/acl/</loc>
+    <lastmod>2025-02-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/gateway/</loc>
-    <lastmod>2025-02-28T00:00:00+00:00</lastmod>
+    <lastmod>2025-02-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/kong/</loc>
-    <lastmod>2025-02-28T00:00:00+00:00</lastmod>
+    <lastmod>2025-02-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/series/kong-the-gateway-without-limitations/</loc>
-    <lastmod>2025-02-28T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/posts/as-konggateway-serverlessfunctions/</loc>
-    <lastmod>2025-02-28T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/plugins/</loc>
-    <lastmod>2025-02-28T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/post-function/</loc>
-    <lastmod>2025-02-28T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/pre-function/</loc>
-    <lastmod>2025-02-28T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/rca/</loc>
-    <lastmod>2025-02-28T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/root-cause-analysis/</loc>
-    <lastmod>2025-02-28T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/series/</loc>
-    <lastmod>2025-02-28T00:00:00+00:00</lastmod>
-    <xhtml:link
-                rel="alternate"
-                hreflang="de"
-                href="https://nttdata-dach.github.io/de/series/"
-                />
-    <xhtml:link
-                rel="alternate"
-                hreflang="en"
-                href="https://nttdata-dach.github.io/series/"
-                />
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/serverless/</loc>
-    <lastmod>2025-02-28T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/acl/</loc>
     <lastmod>2025-02-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/mtls/</loc>
@@ -124,6 +87,19 @@
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/priority-updater/</loc>
     <lastmod>2025-02-24T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/series/</loc>
+    <lastmod>2025-02-24T00:00:00+00:00</lastmod>
+    <xhtml:link
+                rel="alternate"
+                hreflang="de"
+                href="https://nttdata-dach.github.io/de/series/"
+                />
+    <xhtml:link
+                rel="alternate"
+                hreflang="en"
+                href="https://nttdata-dach.github.io/series/"
+                />
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/zta/</loc>
     <lastmod>2025-02-24T00:00:00+00:00</lastmod>
@@ -148,33 +124,6 @@
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/web-performance-optimization/</loc>
     <lastmod>2025-02-12T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/aws/</loc>
-    <lastmod>2025-01-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/posts/fw-da-calculatingyourcarbonfootprint/</loc>
-    <lastmod>2025-01-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/carbon-footprint/</loc>
-    <lastmod>2025-01-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/cloud-architecture/</loc>
-    <lastmod>2025-01-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/emission-metrics/</loc>
-    <lastmod>2025-01-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/environmental-imapct/</loc>
-    <lastmod>2025-01-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/green-software/</loc>
-    <lastmod>2025-01-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/serverless-computing/</loc>
-    <lastmod>2025-01-30T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/sustainability/</loc>
-    <lastmod>2025-01-30T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/app-store/</loc>
     <lastmod>2025-01-27T00:00:00+00:00</lastmod>
@@ -362,12 +311,6 @@
     <loc>https://nttdata-dach.github.io/tags/etl/</loc>
     <lastmod>2024-05-02T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/posts/ss-immersivetechnologies-06-settingupunrealproject/</loc>
-    <lastmod>2024-04-08T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/tbd/</loc>
-    <lastmod>2024-04-08T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://nttdata-dach.github.io/tags/client-certificate/</loc>
     <lastmod>2024-03-27T00:00:00+00:00</lastmod>
   </url><url>
@@ -421,6 +364,9 @@
   </url><url>
     <loc>https://nttdata-dach.github.io/posts/as-konggateway-onbehalfof/</loc>
     <lastmod>2023-12-21T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/aws/</loc>
+    <lastmod>2023-11-24T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/eks/</loc>
     <lastmod>2023-11-24T00:00:00+00:00</lastmod>
@@ -509,9 +455,6 @@
     <loc>https://nttdata-dach.github.io/posts/ns-controlplaneoperatedinfrastructure_1/</loc>
     <lastmod>2023-07-31T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/posts/ss-settingupanunrealproject/</loc>
-    <lastmod>2023-07-06T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://nttdata-dach.github.io/posts/as-kongproductintroduction/</loc>
     <lastmod>2023-05-15T00:00:00+00:00</lastmod>
   </url><url>
@@ -574,21 +517,6 @@
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/entity-component-system/</loc>
     <lastmod>2023-03-09T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/chaotic-amplitude-control/</loc>
-    <lastmod>2022-11-04T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/job-shop-problem/</loc>
-    <lastmod>2022-11-04T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/optimization/</loc>
-    <lastmod>2022-11-04T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/posts/mf-sw-jobshopproblem/</loc>
-    <lastmod>2022-11-04T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/simulated-annealing/</loc>
-    <lastmod>2022-11-04T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/blockchain/</loc>
     <lastmod>2022-10-18T00:00:00+00:00</lastmod>
