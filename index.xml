@@ -21,6 +21,45 @@
     
     
     
+    <item>
+      <title>Kong - The Gateway without Limitations - Part 9: Serverless functions - Who responded?</title>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-serverlessfunctions/</link>
+      <pubDate>Wed, 19 Mar 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/AS-KongGateway-ServerlessFunctions/title-image.jpg</guid>
+      <description>In our previous blog posts in the Kong Gateway series, we explored various security aspects, particularly focusing on token-related issues and their solutions involving both Kong and custom-built plugins. Today, we dive deeper into another coding variant within the gateway: Kong serverless functions. We will use a real-world “Who Responded?” example to demonstrate how effectively a root cause analysis approach can be supported with minimal effort.</description>
+
+      
+      
+        
+    </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -56,14 +95,6 @@
     
     
     
-    
-    
-    
-    
-    
-    
-    
-    
     <item>
       <title>Kong - The Gateway without Limitations - Part 8: Plugin Cloning</title>
       <link>https://nttdata-dach.github.io/posts/as-konggateway-plugincloning/</link>
@@ -76,8 +107,6 @@
       
         
     </item>
-    
-    
     
     
     
@@ -354,35 +383,6 @@
       
       <guid>https://nttdata-dach.github.io//posts/img/NF-EN-DataMeshAsAnElementOfDataStrategy/title-image.jpg</guid>
       <description>In this article we discuss the challenges of storing vast amounts of data to become a value-driven organization and introduce data mesh, an innovative technology that addresses these challenges. We outline the four principles of data mesh and provide a step-by-step framework for implementing the architecture. The article also gives an example of data mesh implementation using serverless tools on AWS and emphasizes that the selection between data mesh and traditional data architectures depends on the specific needs, capabilities, and goals of the business.</description>
-
-      
-      
-        
-    </item>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <item>
-      <title>Kong - The Gateway without Limitations - Part 5: mTLS Header</title>
-      <link>https://nttdata-dach.github.io/posts/as-konggateway-mtls_header/</link>
-      <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://nttdata-dach.github.io//posts/img/AS-KongGateway-mTLS_Header/title-image.jpg</guid>
-      <description>Mutual transport layer security (mTLS) with consumer authentication using client certificates at the Kong Gateway plays an important role in building a zero-trust architecture. But perimeter security devices that perform TLS termination, so-called TLS terminating reverse proxies (TTRP), break the automatic mapping of client certificates to Kong consumers. This blog demonstrates mTLS consumer authentication even with preceding TTRPs, without requiring TCP passthrough.</description>
 
       
       

@@ -99,9 +99,9 @@
         <div class="content">
             
            
-            <p>In our previous <a href="https://nttdata-dach.github.io/posts/as-konggateway-tokenvalidation/" title="Part 6: Token Validation">blog post</a>, we discussed the topic of token validation in the context of the Zero-Trust Architecture (ZTA) principle &rsquo;never trust, always verify&rsquo;. This time, I would like to introduce an architecture pattern for token handling that is particularly effective in environments that use multiple <a href="https://www.csoonline.com/article/518296/what-is-iam-identity-and-access-management-explained.html">identity and access management (IAM)</a> products. With this pattern, the <a href="https://nttdata-dach.github.io/posts/as-kongproductintroduction/" title="Part 1: Brief Product Introduction">API gateway</a> acts as a benign token cloner, repairs claim defects and leads service provider to believe it is a token-issuing <a href="https://developer.okta.com/docs/concepts/auth-servers/#what-is-an-authorization-server">authorization server</a>. This pattern has several advantages, which I will explain in detail.</p>
+            <p>In our previous <a href="https://nttdata-dach.github.io/posts/as-konggateway-tokenvalidation/" title="Part 6: Token Validation">blog post</a>, we discussed the topic of token validation in the context of the Zero-Trust Architecture (ZTA) principle &rsquo;never trust, always verify&rsquo;. This time, I would like to introduce an architecture pattern for token handling that is particularly effective in environments that use multiple <a href="https://www.csoonline.com/article/518296/what-is-iam-identity-and-access-management-explained.html">identity and access management (IAM)</a> products. With this pattern, the <a href="https://nttdata-dach.github.io/posts/as-konggateway-productintroduction/" title="Part 1: Brief Product Introduction">API gateway</a> acts as a benign token cloner, repairs claim defects and leads service provider to believe it is a token-issuing <a href="https://developer.okta.com/docs/concepts/auth-servers/#what-is-an-authorization-server">authorization server</a>. This pattern has several advantages, which I will explain in detail.</p>
 <h1 id="overview">Overview</h1>
-<p>This blog post is about token cloning on the Kong Gateway (see our introductory article <a href="https://nttdata-dach.github.io/posts/as-kongproductintroduction/" title="Part 1: Brief Product Introduction">here</a>), which is also conceivable on other API gateways. More precisely, it is an architectural gateway pattern that could be referred to as ‘therapeutic token cloning’. &lsquo;Therapeutic token cloning&rsquo; is an apt metaphor to describe the process of copying access tokens, making necessary corrections, and thereafter re-signing them. This metaphor is based on the advanced concept of therapeutic cloning from the fields of biomedicine and genetic engineering, where clones are created to correct genetic defects. Similarly, therapeutic token cloning at the gateway involves duplicating, correcting, and then re-signing access tokens to make them functional and (more) secure. Fortunately, we can ignore the ethical and legal discussions about cloning in our consideration.</p>
+<p>This blog post is about token cloning on the Kong Gateway (see our introductory article <a href="https://nttdata-dach.github.io/posts/as-konggateway-productintroduction/" title="Part 1: Brief Product Introduction">here</a>), which is also conceivable on other API gateways. More precisely, it is an architectural gateway pattern that could be referred to as ‘therapeutic token cloning’. &lsquo;Therapeutic token cloning&rsquo; is an apt metaphor to describe the process of copying access tokens, making necessary corrections, and thereafter re-signing them. This metaphor is based on the advanced concept of therapeutic cloning from the fields of biomedicine and genetic engineering, where clones are created to correct genetic defects. Similarly, therapeutic token cloning at the gateway involves duplicating, correcting, and then re-signing access tokens to make them functional and (more) secure. Fortunately, we can ignore the ethical and legal discussions about cloning in our consideration.</p>
 <aside 
  data-content="Note" 
 
@@ -194,9 +194,9 @@ Although the gateway adds latency compared to a token passthrough, which is a fa
             
             <ul>
                 
-                <li><a class="related-link" href="/posts/as-kongproductintroduction/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 1: Brief Product Introduction</a></li>
+                <li><a class="related-link" href="/posts/as-konggateway-productintroduction/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 1: Brief Product Introduction</a></li>
                 
-                <li><a class="related-link" href="/posts/as-konglogchunking/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 2: Log Chunking</a></li>
+                <li><a class="related-link" href="/posts/as-konggateway-logchunking/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 2: Log Chunking</a></li>
                 
                 <li><a class="related-link" href="/posts/as-konggateway-onbehalfof/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 3: Token Exchange On-Behalf-Of</a></li>
                 
@@ -209,6 +209,8 @@ Although the gateway adds latency compared to a token passthrough, which is a fa
                 <li><a class="related-link" href="/posts/as-konggateway-tokencloning/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 7: Token Cloning</a></li>
                 
                 <li><a class="related-link" href="/posts/as-konggateway-plugincloning/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 8: Plugin Cloning</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-serverlessfunctions/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 9: Serverless functions - Who responded?</a></li>
                 
             </ul>
         </div>

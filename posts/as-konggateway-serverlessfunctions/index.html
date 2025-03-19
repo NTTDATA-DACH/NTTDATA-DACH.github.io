@@ -3,11 +3,11 @@
 <html>
 
 <head>
-  <title>  Part 9: Serverless functions: Who responded?  </title>
+  <title>  Part 9: Serverless functions - Who responded?  </title>
   <meta charset="utf-8"/> 
   
   <meta property="og:type" content="article"/>
-  <meta property="og:title" content="Kong - The Gateway without Limitations - Part 9: Serverless functions: Who responded?"/>
+  <meta property="og:title" content="Kong - The Gateway without Limitations - Part 9: Serverless functions - Who responded?"/>
   
   <meta property="article:author" content="[Alexander Suchier]"/>
   <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/AS-KongGateway-ServerlessFunctions/title-image.jpg"/>
@@ -70,12 +70,12 @@
 
 <div class="emobanner article">
     <h1>
-        <span class="pre">28.02.2025
+        <span class="pre">19.03.2025
         
          - Alexander Suchier - <i class="fa-solid fa-book-open"></i> 8 min read
         
         </span>
-        Part 9: Serverless functions: Who responded?
+        Part 9: Serverless functions - Who responded?
         
         
         <a id="series-link" href="/series/kong-the-gateway-without-limitations"><span class="subtitle">Kong - The Gateway without Limitations</span></a>
@@ -99,9 +99,9 @@
         <div class="content">
             
            
-            <p>In our previous blog posts in the <a href="https://nttdata-dach.github.io/series/kong-the-gateway-without-limitations/">Kong Gateway series</a>, we explored various security aspects, particularly focusing on token-related issues and their solutions involving both Kong and custom-built plugins. Today, we dive deeper into another coding variant within the gateway: Kong serverless functions. We will use a real-world “Who Responded?” example to demonstrate how effectively a <a href="https://en.wikipedia.org/wiki/Root_cause_analysis">root cause analysis</a> (RCA) approach can be supported with minimal effort.</p>
+            <p>In our previous blog posts in the <a href="https://nttdata-dach.github.io/series/kong-the-gateway-without-limitations/" title="Kong - The Gateway without Limitations">Kong Gateway series</a>, we explored various security aspects, particularly focusing on token-related issues and their solutions involving both Kong and custom-built plugins. Today, we dive deeper into another coding variant within the gateway: Kong serverless functions. We will use a real-world “Who Responded?” example to demonstrate how effectively a <a href="https://en.wikipedia.org/wiki/Root_cause_analysis">root cause analysis</a> (RCA) approach can be supported with minimal effort.</p>
 <h1 id="overview">Overview</h1>
-<p>This technical blog is about serverless functions on the <a href="https://nttdata-dach.github.io/posts/as-kongproductintroduction/">Kong Gateway</a> and how we can use them to complement the functionality. In our previous blog posts, we discussed the use of Kong plugins to add functionality and the rationale for occasionally cloning or patching them. Throughout this Kong blog series, we have explored programming custom plugins that enable developers and administrators to add missing functionality. We have previously mentioned serverless functions in the Kong <a href="https://nttdata-dach.github.io/posts/as-kongproductintroduction/">introduction blog</a> and in the <a href="https://nttdata-dach.github.io/posts/as-konglogchunking/">log chunking blog</a>, although the focus there was primarily on providing a supplementary overview and on logging aspects.</p>
+<p>This technical blog is about serverless functions on the <a href="https://nttdata-dach.github.io/posts/as-konggateway-productintroduction/" title="Part 1: Brief Product Introduction">Kong Gateway</a> and how we can use them to complement the functionality. In our previous blog posts, we discussed the use of Kong plugins to add functionality and the rationale for occasionally cloning or patching them. Throughout this Kong blog series, we have explored programming custom plugins that enable developers and administrators to add missing functionality. We have previously mentioned serverless functions in the Kong <a href="https://nttdata-dach.github.io/posts/as-konggateway-productintroduction/" title="Part 1: Brief Product Introduction">introduction blog</a> and in the <a href="https://nttdata-dach.github.io/posts/as-konggateway-logchunking/" title="Part 2: Log Chunking">log chunking blog</a>, although the focus there was primarily on providing a supplementary overview and on logging aspects.</p>
 <p>So what are these Kong serverless functions all about?</p>
 <p>Serverless function plugins have been available since the early <a href="https://github.com/Kong/kong/blob/master/CHANGELOG-OLD.md#plugins-52">Kong version 0.14</a>, released in 2018. And the concise answer to what they’re all about can be found in the original announcement: &ldquo;<em>(serverless functions, A.N.) dynamically run <a href="https://en.wikipedia.org/wiki/Lua_%28programming_language%29">Lua code</a> without having to write a full-fledged (custom, A.N.) plugin. Lua code snippets can be uploaded via the Admin API and be executed during Kong&rsquo;s access phase.</em>&rdquo;</p>
 <p>In summary, if the code required isn’t extensive enough to justify a full-fledged plugin, you can opt for a serverless function that adds functionality with just a few lines of code. Kong refers to these as code snippets; in this context, they could also be called code nuggets - small, often reusable, self-contained functions or methods that perform a specific, defined task that Kong lacks in the product delivery.</p>
@@ -227,9 +227,9 @@ And as we have seen once again with the implementation of serverless functions, 
             
             <ul>
                 
-                <li><a class="related-link" href="/posts/as-kongproductintroduction/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 1: Brief Product Introduction</a></li>
+                <li><a class="related-link" href="/posts/as-konggateway-productintroduction/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 1: Brief Product Introduction</a></li>
                 
-                <li><a class="related-link" href="/posts/as-konglogchunking/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 2: Log Chunking</a></li>
+                <li><a class="related-link" href="/posts/as-konggateway-logchunking/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 2: Log Chunking</a></li>
                 
                 <li><a class="related-link" href="/posts/as-konggateway-onbehalfof/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 3: Token Exchange On-Behalf-Of</a></li>
                 
@@ -243,7 +243,7 @@ And as we have seen once again with the implementation of serverless functions, 
                 
                 <li><a class="related-link" href="/posts/as-konggateway-plugincloning/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 8: Plugin Cloning</a></li>
                 
-                <li><a class="related-link" href="/posts/as-konggateway-serverlessfunctions/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 9: Serverless functions: Who responded?</a></li>
+                <li><a class="related-link" href="/posts/as-konggateway-serverlessfunctions/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 9: Serverless functions - Who responded?</a></li>
                 
             </ul>
         </div>
