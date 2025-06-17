@@ -4,7 +4,11 @@
   <sitemap>
     <loc>https://nttdata-dach.github.io/en/sitemap.xml</loc>
     
+<<<<<<< HEAD
       <lastmod>2025-06-14T00:00:00+00:00</lastmod>
+=======
+      <lastmod>2025-03-19T00:00:00+00:00</lastmod>
+>>>>>>> 42c943dc50da086a40995e09dca1fde3e9f66ed3
     
   </sitemap>
   

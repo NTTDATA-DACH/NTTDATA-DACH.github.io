@@ -21,6 +21,45 @@
     
     
     
+    <item>
+      <title>Kong - The Gateway without Limitations - Part 9: Serverless functions - Who responded?</title>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-serverlessfunctions/</link>
+      <pubDate>Wed, 19 Mar 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/AS-KongGateway-ServerlessFunctions/title-image.jpg</guid>
+      <description>In our previous blog posts in the Kong Gateway series, we explored various security aspects, particularly focusing on token-related issues and their solutions involving both Kong and custom-built plugins. Today, we dive deeper into another coding variant within the gateway: Kong serverless functions. We will use a real-world “Who Responded?” example to demonstrate how effectively a root cause analysis approach can be supported with minimal effort.</description>
+
+      
+      
+        
+    </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -394,5 +433,37 @@
     
     
     
+<<<<<<< HEAD
+=======
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <item>
+      <title>Data mesh as an element of data strategy</title>
+      <link>https://nttdata-dach.github.io/posts/nf-en-datameshasanelementofdatastrategy/</link>
+      <pubDate>Thu, 02 May 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/NF-EN-DataMeshAsAnElementOfDataStrategy/title-image.jpg</guid>
+      <description>In this article we discuss the challenges of storing vast amounts of data to become a value-driven organization and introduce data mesh, an innovative technology that addresses these challenges. We outline the four principles of data mesh and provide a step-by-step framework for implementing the architecture. The article also gives an example of data mesh implementation using serverless tools on AWS and emphasizes that the selection between data mesh and traditional data architectures depends on the specific needs, capabilities, and goals of the business.</description>
+
+      
+      
+        
+    </item>
+    
+    
+    
+    
+    
+    
+>>>>>>> 42c943dc50da086a40995e09dca1fde3e9f66ed3
   </channel>
 </rss>

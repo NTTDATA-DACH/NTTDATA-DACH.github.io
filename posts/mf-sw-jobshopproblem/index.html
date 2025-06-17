@@ -1,0 +1,498 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Quantum-inspired approaches to the Job-Shop Problem  </title>
+  <meta charset="utf-8"/> 
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Quantum-inspired approaches to the Job-Shop Problem"/>
+  
+  <meta property="article:author" content="[Markus Frankenbach Samuel Wirth]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/MF-SW-JobShopProblem/title-image.jpg"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/mf-sw-jobshopproblem/"/>
+  <meta property="og:description" content="The Job-Shop problem is a well-known optimization problem where a certain number of jobs have to be scheduled such that the total time needed to finish all jobs is minimal. In this article we shine a light on two algorithms that could be used as a possible solution for this problem."/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">04.11.2022
+        
+         - Markus Frankenbach, Samuel Wirth - <i class="fa-solid fa-book-open"></i> 19 min read
+        
+        </span>
+        Quantum-inspired approaches to the Job-Shop Problem
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/MF-SW-JobShopProblem/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <p><strong>Table of contents</strong></p>
+<nav id="TableOfContents">
+  <ol>
+    <li><a href="#JSP">The Job-Shop scheduling problem</a></li>
+    <li><a href="#an-example-problem">An example problem</a></li>
+    <li><a href="#GS">Greedy Solver</a></li>
+    <li><a href="#SA">Simulated Annealing</a>
+      <ol>
+        <li><a href="#Ii">Implementation idea</a></li>
+        <li><a href="#FotA">Functionality of the algorithm</a></li>
+        <li><a href="#I">Issues</a></li>
+      </ol>
+    </li>
+    <li><a href="#CAC">Chaotic Amplitude Control</a>
+      <ol>
+        <li><a href="#CACprep">Preparations</a></li>
+        <li><a href="#CACess">Essence of CAC</a></li>
+        <li><a href="#CACperf">Challenges and Performance</a></li>
+        <li><a href="#estimating-max_time">Estimating <code>max_time</code></a></li>
+        <li><a href="#CACsum">CAC: Summary and outlook</a></li>
+      </ol>
+    </li>
+  </ol>
+</nav>
+<h1 id="JSP">The Job-Shop scheduling problem</h1>
+<p>The Job-Shop problem is an optimization problem where $n$ jobs have to be scheduled such that the total time needed to finish all jobs is minimal.
+Each job $J$ is a sequence of $m_J$ operations, where $m_J$ may be different for each job. In addition, there are $k$ machines $M_1$, $M_2$, &hellip;, $M_k$. Each operation is bound to a specific machine and takes some individual duration to finish. The operations of a job must be executed in a given order. We aim to minimize the <em>makespan</em>, which is the time from starting the first operation until finishing the last operation. We shall illustrate this with an example.</p>
+<h1 id="an-example-problem">An example problem</h1>
+<p>The picture below represents a job-shop problem consisting of two jobs with three operations (blue circles). Each operation has to be executed on a machine $M$ and takes a duration $D$ to finish. It also has an id written beneath the blue circle, which is for simplifying explanations and is of no relevance to the problem.</p>
+<p>
+  <figure>
+    <img src="/posts/img/MF-SW-JobShopProblem/example_problem1.png" alt="Example1">
+    <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Fig. 1 - Example Job-Shop problem</figcaption>
+  </br>
+  </figure>
+
+</p>
+<p>Now we aim to <em>schedule</em> each operation, i.e. to assign it a starting time, minimizing the makespan. The schedule is subject to the following two constraints:</p>
+<ul>
+<li><strong>Sequentiality constraint</strong>: Operations have to be executed in the order indicated by arrows: If $O_{1}$ starts at time $0$, it takes $1$ timestep to finish ($D_{1}=1$), hence time $1$ is the earliest $O_{2}$ can start.</li>
+<li><strong>Machine constraint</strong>: Each machine can work on just one operation at a time: If $O_{1}$ and $O_{4}$ start at time $0$ on machines $M_1$ and $M_2$, respectively, $O_{2}$ can only begin at time $2$ or later, as machine $M_2$ was busy with $O_{4}$.</li>
+</ul>
+<p>The full schedule is usually represented as a <em>Gantt-diagram</em>, like this:</p>
+<p>
+  <figure>
+    <img src="/posts/img/MF-SW-JobShopProblem/schedule2.svg" alt="Example schedule">
+    <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Fig. 2 - Example Job-Shop schedule</figcaption>
+  </br>
+  </figure>
+
+</p>
+<p>Such a diagram tells us all about the problem and the proposed schedule: We can read off on which machine (y-axis) an operation is run, how long it takes to finish (width of the bars) and to which job it belongs (colours), and, most importantly, when it starts (x-axis).</p>
+<p>Now that we&rsquo;ve understood the job-shop problem and know how to plot schedules, we&rsquo;ll discuss some solution algorithms.</p>
+<h1 id="GS">Greedy Solver</h1>
+<p>The greedy algorithm is the fastest by far and its output can be used as a starting point for more complex approaches. It schedules operations one by one and, once scheduled, the starting time of an operation remains fixed. Rather than laying out the exact algorithmic protocol, let&rsquo;s consider the example we had before:</p>
+<p>
+  <figure>
+    <img src="/posts/img/MF-SW-JobShopProblem/example_problem1.png" alt="Example problem">
+    <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Fig. 3 - Same problem as above</figcaption>
+  </br>
+  </figure>
+
+</p>
+<p>In the greedy algorithm, we would proceed as follows (compare the Gantt-diagram below):</p>
+<ol>
+<li>Randomly pick one of the leftmost operations, i.e. $O_{1}$ or $O_{4}$. Let&rsquo;s say we <strong>schedule</strong> $O_{1}$ at time $0$, the earliest possible.</li>
+<li>Now $O_{1}$ has been scheduled, next up are $O_{2}$ (following $O_{1}$) and still $O_{4}$.
+Now comes the crucial point: $O_{4}$ can start at time $0$, occupying machine $2$ right away. By contrast, $O_{2}$ can only start once $O_{1}$ is done, i.e. at time $1$ and the machine is idle for 1 timestep. Therefore we <strong>schedule</strong> $O_{4}$. We want to minimize the time machines remain unoccupied in each scheduling step.</li>
+<li>Our next candidates are $O_{2}$ and $O_{5}$. Both can start immediately after $O_{4}$ is finished (at time $2$), so we have no preference and <strong>schedule</strong> $O_{2}$ at time $2$.</li>
+<li>Now $O_{5}$ can start right after $O_{2}$ whereas $O_{3}$ leaves machine $1$ unoccupied for $2$ timesteps. So we <strong>schedule</strong> $O_{5}$.</li>
+<li>$O_{6}$ can only start at time $4$, leaving machine $3$ idle all the time. $O_{3}$ still leaves machine $1$ unoccupied for $2$ timesteps, so we prefer it over $O_{6}$; we <strong>schedule</strong> $O_{3}$.</li>
+<li>Only $O_{6}$ is left, <strong>schedule</strong> it.</li>
+</ol>
+<p>
+  <figure>
+    <img src="/posts/img/MF-SW-JobShopProblem/schedule2.svg" alt="Greedy schedule">
+    <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Fig. 4 - Greedy schedule for example problem</figcaption>
+  </br>
+  </figure>
+
+</p>
+<p>This algorithm is pretty easy to implement and has no hyperparameters that need to be tuned. Of course, one can use the resulting schedule as a starting point and try to improve on it. This is what simulated annealing is about.</p>
+<p><em>Bonus</em>: Indeed, the above schedule is not optimal. Can you figure out how to finish all jobs by time $7$ (instead of $8$)?</p>
+<h1 id="SA">Simulated Annealing</h1>
+<p>One of the more complex approaches to optimization problems is Simulated Annealing (<strong>SA</strong>). SA gets its name from the
+annealing process in metallurgy. In this process, a material is heated and then cooled in a controlled manner, which equates to going
+from a high thermal energy state to a low thermal energy state. This transformation of states can be described algorithmically to achieve the
+optimization of a given problem, by describing the unsolved problem with a high-energy state and lowering the energy over time.
+The decrase in temperature can be interpreted as the drecease in probability of accepting a worse solution than the current one.
+While the notion of allowing a worse solution than the current one to be accepted seems counterintuitive, it allows for a greater
+exploration of the solution space, by providing a way of escaping local minima. The found solution often approximates the global optimum of a given function. The SA presented in the following sections is an adaption of the Metropolis Algorithm (&ldquo;Equation of State Calculations by Fast Computing Machines&rdquo; - N. Metropolis, A. W. Rosenbluth, M. Rosenbluth, A.H. Teller, E. Teller 1953)</p>
+<h2 id="Ii">Implementation idea</h2>
+<p>For usage in the Job Shop problem, we first have to define a couple of things.
+As described in <a href="/posts/mf-sw-jobshopproblem/#CACprep">Preparations</a>, we have a <em>timeline</em> <code>timeline = [0 1 0 0]</code> which describes the starting time of an operation. Multiple of these timelines are combined to a <em>schedule</em> <code>schedule = [0 1 0 0 | 1 0 0 0 | 0 0 1 0]</code>
+which describes the starting time of each operation in the context of the job shop problem. In this example we would
+have three operations at starting times $1$, $0$, $2$.</p>
+<p>Because we want to simulate the process of going from a high thermal energy state to a low thermal energy state, we have a need to define a temperature that decreases over time. As annealing is usually a process that involves cooling the material at air temperature, the temperature mentioned below can be interpreted as air temperature that slowly cools off, wich in turn causes the thermal energy of the material to drop as well. Since we are constrained to computing machines with discrete units, this passage of time is defined as a number of iterations. Furthermore we need to be able to compare different energy states to each other, to determine when a lower energy is reached, which would mean a more optimal solution to our problem.
+An obvious choice for the energy of the material is the makespan of the given schedule. The analogy to the energy of the system is here high makespan == high energy.
+To optimize the start time of the machines, its is therefore necessary to decrease the makespan as much as possible.</p>
+<p>This gives us a hint as to how to find <em>neighbors</em>. Neighbors in this scenario are schedules where the order of start times of the operations differs from the current schedule, but is still adhering to the constraints given by the job shop problem.</p>
+<p>One way to approach this is by permuting the start time of a chosen operation within the schedule. To do this we simply select a random operation where the start time is to be adjusted, e.g. operation $2$ in the given schedule <code>[0 1 0 0 | </code><strong><code>1</code></strong><code> 0 0 0 | 0 0 1 0]</code>.
+After selecting the operation, the start time has to be changed. To do this, we simply shuffle the bits randomly and get a <em>proposed schedule</em>
+<code>[0 1 0 0 | 0 0 0 </code><strong><code>1</code></strong><code> | 0 0 1 0]</code>.
+This new, proposed schedule has to be checked, to assure it adheres to the constraints of the job shop problem.
+If the schedule is valid, it is a candiate solution and the energy (read makespan) of the schedule has to be computed.
+If the energy of the proposed schedule is lower than the energy of the currently best schedule, it is accepted as the new best solution.</p>
+<p>If the energy of the proposed schedules is higher than the energy of the currently best schedule, it can also be accepted, depending on the probability of acceptance of worse solutions. Accepting worse solutions with a small, but non-zero probability is important, as it enables the algorithm to &ldquo;take losses&rdquo; in the short term and to find a potentially better solution in the long run. This probability of acception worse solutions should get smaller, the further the algorithms has progressed, so it is defined as</p>
+<p>$$P = e^{-\frac{c_\mathrm{proposed} - c_\mathrm{current}}{T_\mathrm{current}}}.$$</p>
+<p>Since this probability function is only used if the proposed cost is greater than the current cost, the value in the upper part of the fraction is always positive.
+Since the current temperature depending on the implementation, this is where the acceptance probability can be adjusted. In the following implementation, the temperature function is defined as $\frac{1}{\log{i}}$ where $i$ is the current iteration number. This leads to greater values of $i$ creating smaller results for the fraction, which in turn increases the value for the negative potentiated term of the exponential function. This produces then only very small numbers as probability values that further decrease with the increase of iterations.
+If it is finally not accepted, a new schedule gets generated and the process starts anew, until the preset number of iterations is reached.
+Since the algorithm theoretically can produce solutions that get worse over time, it is important to keep track of the best solution that was found and return it.</p>
+<h2 id="FotA">Functionality of the algorithm</h2>
+<p>SA implemented as julia pseudo-code could look as follows:
+Here the main function &ldquo;simulated_annealing&rdquo; consists of a <code>cost</code> function to determine if the current makespan is smaller than the previous makespan, an <code>initial_state</code> vector that represents a valid, but non-optimal schedule, a <code>neighbor</code> function to find schedules that are potentially better solutions to the problem, a <code>temperature</code> function to allow for different cooling rates, the <code>problem</code> definition to check for validity and adherence to the constraints as well as the number of <code>iterations</code> that the algorithm is supposed to run.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-julia" data-lang="julia"><span class="line"><span class="cl">   <span class="k">function</span> <span class="n">simulated_annealing</span><span class="p">(</span><span class="n">cost</span><span class="o">::</span><span class="kt">Function</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">         <span class="n">initial_state</span><span class="o">::</span><span class="kt">Vector</span><span class="p">{</span><span class="kt">Float64</span><span class="p">},</span> 
+</span></span><span class="line"><span class="cl">         <span class="n">neighbor</span><span class="o">::</span><span class="kt">Function</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="n">temperature</span><span class="o">::</span><span class="kt">Function</span><span class="p">,</span> 
+</span></span><span class="line"><span class="cl">         <span class="n">problem</span><span class="o">::</span><span class="kt">JobShopProblem</span><span class="p">,</span>
+</span></span><span class="line"><span class="cl">         <span class="n">iterations</span><span class="o">::</span><span class="kt">Int64</span><span class="p">)</span>
+</span></span></code></pre></div><p>In this pseudo code, <code>log_temperature(i)</code> is the function that is passed to the simulated annealing function to determine the temperature. Starting at an initial positive value around 1.4, with the increase of iterations over the course of the algorithm the temperature progressively decreases to values near zero.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-julia" data-lang="julia"><span class="line"><span class="cl">   <span class="k">function</span> <span class="n">log_temperature</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="mi">1</span><span class="o">/</span><span class="n">log</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">   <span class="k">end</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-julia" data-lang="julia"><span class="line"><span class="cl">   <span class="k">for</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">2</span><span class="o">:</span><span class="n">iterations</span>
+</span></span><span class="line"><span class="cl">      <span class="n">current_temperature</span> <span class="o">=</span> <span class="n">temperature</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+</span></span></code></pre></div><p>At each time step, a solution close to the current one is randomly selected and proposed.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-julia" data-lang="julia"><span class="line"><span class="cl">   <span class="n">proposed_state</span> <span class="o">=</span> <span class="n">neighbor</span><span class="p">(</span><span class="n">current_state</span><span class="p">,</span> <span class="n">problem</span><span class="p">)</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-julia" data-lang="julia"><span class="line"><span class="cl">   <span class="k">function</span> <span class="n">generate_schedule</span><span class="p">(</span><span class="n">schedule</span><span class="p">,</span> <span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="n">schedule</span><span class="p">[</span><span class="n">start_time</span><span class="o">:</span><span class="n">end_time</span><span class="p">]</span> <span class="o">=</span> <span class="n">shuffle!</span><span class="p">(</span><span class="n">schedule</span><span class="p">[</span><span class="n">start_time</span><span class="o">:</span><span class="n">end_time</span><span class="p">])</span>
+</span></span><span class="line"><span class="cl">      <span class="k">return</span> <span class="n">schedule</span>
+</span></span><span class="line"><span class="cl">   <span class="k">end</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-julia" data-lang="julia"><span class="line"><span class="cl"><span class="k">function</span> <span class="n">neighbor</span><span class="p">(</span><span class="n">schedule</span><span class="p">,</span> <span class="n">problem</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">   <span class="n">rand_operation</span> <span class="o">=</span> <span class="n">rand</span><span class="p">(</span><span class="mi">1</span><span class="o">:</span><span class="n">operations</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">   <span class="n">start_time</span> <span class="o">=</span> <span class="p">((</span><span class="n">rand_operation</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">problem</span><span class="o">.</span><span class="n">max_time</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+</span></span><span class="line"><span class="cl">   <span class="n">end_time</span> <span class="o">=</span> <span class="n">start_time</span><span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="n">problem</span><span class="o">.</span><span class="n">max_time</span>
+</span></span><span class="line"><span class="cl">   <span class="n">proposed_schedule</span> <span class="o">=</span> <span class="n">generate_schedule</span><span class="p">(</span><span class="n">proposed_schedule</span><span class="p">,</span> <span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">   <span class="k">for</span> <span class="n">iteration</span> <span class="k">in</span> <span class="mi">1</span><span class="o">:</span><span class="n">n</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="n">valid</span>
+</span></span><span class="line"><span class="cl">         <span class="k">return</span> <span class="n">proposed_schedule</span>
+</span></span><span class="line"><span class="cl">      <span class="k">else</span>
+</span></span><span class="line"><span class="cl">         <span class="n">proposed_schedule</span> <span class="o">=</span> <span class="n">generate_schedule</span><span class="p">(</span><span class="n">proposed_schedule</span><span class="p">,</span> <span class="n">start_time</span><span class="p">,</span> <span class="n">end_time</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="k">end</span>
+</span></span><span class="line"><span class="cl">   <span class="k">end</span>
+</span></span><span class="line"><span class="cl">   <span class="k">return</span> <span class="n">schedule</span>
+</span></span><span class="line"><span class="cl"><span class="k">end</span>
+</span></span></code></pre></div><p>The proposed solutions quality is measured and selected based on either being superior the the previous solution, or being chosen according to a temperature-dependent probability.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-julia" data-lang="julia"><span class="line"><span class="cl"><span class="n">current_cost</span> <span class="o">=</span> <span class="n">cost</span><span class="p">(</span><span class="n">current_state</span><span class="p">,</span> <span class="n">problem</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">   <span class="n">proposed_cost</span> <span class="o">=</span> <span class="n">cost</span><span class="p">(</span><span class="n">proposed_state</span><span class="p">,</span> <span class="n">problem</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="n">proposed_cost</span> <span class="o">&lt;=</span> <span class="n">current_cost</span>
+</span></span><span class="line"><span class="cl">         <span class="n">current_state</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">proposed_state</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">         <span class="n">current_cost</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">proposed_cost</span><span class="p">)</span>   
+</span></span><span class="line"><span class="cl">      <span class="k">else</span>
+</span></span><span class="line"><span class="cl">         <span class="n">state_change_probability</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">((</span><span class="n">proposed_cost</span> <span class="o">-</span> <span class="n">current_cost</span><span class="p">)</span> <span class="o">/</span> <span class="n">current_temperature</span><span class="p">))</span>
+</span></span><span class="line"><span class="cl">         <span class="k">if</span> <span class="n">state_change_probability</span> <span class="o">&gt;</span> <span class="n">rand</span><span class="p">()</span>
+</span></span><span class="line"><span class="cl">            <span class="n">current_state</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">proposed_state</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">current_cost</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">proposed_cost</span><span class="p">)</span>      
+</span></span><span class="line"><span class="cl">         <span class="k">end</span>
+</span></span><span class="line"><span class="cl">      <span class="k">end</span>
+</span></span><span class="line"><span class="cl">      <span class="k">if</span> <span class="n">current_cost</span> <span class="o">&lt;</span> <span class="n">cost</span><span class="p">(</span><span class="n">best_state</span><span class="p">,</span> <span class="n">problem</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">            <span class="n">best_state</span> <span class="o">=</span> <span class="n">copy</span><span class="p">(</span><span class="n">current_state</span><span class="p">)</span>
+</span></span><span class="line"><span class="cl">      <span class="k">end</span>
+</span></span></code></pre></div><p>This temperature-dependent probability starts at a positive value around 1 and decreases over time towards zero.</p>
+<h2 id="I">Issues</h2>
+<p>Unfortunately SA is not without its faults. Especially the neighbor search is a part of the algorithm where many potential solutions may apply. In this project we opted for a random change in the start time of a randomly chosen operation. While this should in theory be able to change the schedule into an optimal one (given enough time), in practice this leads to SA often not being able to find a better solution than the greedy solver. It is also suboptimal in its performance, since every time a start time is changed, the resulting schedule has to be checked in order to assure that the constraints are being kept.</p>
+<h1 id="CAC">Chaotic Amplitude Control</h1>
+<p>Generally spoken, Chaotic Amplitude Control (<strong>CAC</strong>) is an approach to discrete optimization problems where discrete variables are <em>relaxed</em>, i.e. they are allowed to take continuous values, and the problem is recast into an ordinary differential equation (ODE) in these relaxed variables. It was developed at NTT Research. A first version of the algorithm is presented in: Leleu <em>et. al.</em>, Phys. Rev. Lett. <strong>120</strong>, 040607 (2019).</p>
+<p>We briefly sketch how we used CAC to tackle the job-shop problem. Then we discuss which challenges arose and how CAC performed in our project.</p>
+<h2 id="CACprep">Preparations</h2>
+<p>First, one has to represent schedules such that they can be processed in a numerical algorithm (unlike Gantt-diagrams): Each operation has a <em>timeline</em> that starts at $0$ and ends at some time <code>max_time-1</code>. It&rsquo;s an array of length <code>max_time</code> that has a $1$ at index <code>i</code> if the operation starts at time <code>i</code> and $0$ else. So if an operation starts at time $1$ with <code>max_time</code> $4$, its timeline looks like this:</p>
+<p><code>timeline = [0 1 0 0]</code></p>
+<p>In this formulation, jobs cannot be scheduled after <code>max_time-1</code>, so <code>max_time</code> should be chosen such that the problem is feasible!</p>
+<p>Clearly, specifying an individual timeline for each operation defines a full schedule. It is convenient to concatenate all timelines to a large, binary <em>schedule vector</em> named <code>x</code>. It&rsquo;s just all the timelines in a row.</p>
+<p>Now it is important that not any <code>x</code>, a sequence of 0&rsquo;s and 1&rsquo;s, corresponds to a <em>valid</em> schedule. Operations may only start once (every timeline has one entry 1 and the rest is 0) and the problem constraints must be respected. To make a long story short, one can find a quadratic matrix $Q$ and a vector $\mathbf b$ such that a schedule $x$ is valid if and only if the expression</p>
+<p>$$ H(\mathbf{x})=\mathbf{x}^\text{T}Q\mathbf{x}+\mathbf{b}^\text{T}\mathbf{x} $$</p>
+<p>is minimal. Now machine and sequentiality constraints are encoded in $ Q$ and $\mathbf b$. $Q$ contains the constraints whereas $\mathbf b$ encourages the system to schedule jobs at all. Without $\mathbf b$, $H(\mathbf{x})$ would have the trivial minimum $\mathbf{x=0}$. Note that while any schedule $x$ that minimizes $H(\mathbf{x})$ is <em>valid</em>, its makespan needn&rsquo;t be minimal. We decided to set up an algorithm that can generate valid schedules before asking for perfect makespans.</p>
+<h2 id="CACess">Essence of CAC</h2>
+<p>Now, finally, CAC comes into play. The basic idea is to allow for continuous, real-valued entries in the schedule vector $\mathbf x$ in order to leverage analytical techniques. One sets up a system of ordinary differential equations (ODE) based on $Q$ and $\mathbf{b}$, which contain all information about the job-shop problem at hand:</p>
+<p>$$\begin{aligned} \dot x_i(t) &amp;= (p-1)x_i - x_i^3 + e_i I_i\
+\dot e_i(t) &amp;= -t, \lambda, (x_i^2-a(t))e_i\
+I_i &amp;= -\epsilon \left (2\sum_j Q_{ij}x_j + b_i\right )
+\end{aligned}$$</p>
+<p>Here $x_i$ are just the real-valued entries of our schedule vector $\mathbf x$, which has length <code>max_time * number_of_operations</code>. So the index $i$ runs from 1 to the length of $\mathbf x$. The remaining quantities are new: $e_i$ are just components of a vector $\mathbf e$ with the same dimension as $\mathbf x$ called <em>error term</em>. It evolves with time as well. Then we have $p$, $\lambda$ and $\epsilon$. They are <em>hyperparameters</em>, i.e. constant numbers that have to be set before running the algorithm. Three more hyperparameters are hidden in the <em>target amplitude</em> $a(t)$, a quantity that changes each time we reach an energetically different configuration and thereby gives the system a kick. In total, there are <em>seven</em> hyperparameters (the seventh one doesn&rsquo;t show up in the ODE). For brevity, we collect them in a variable $P$.</p>
+<p>What leads to the above equations is, roughly speaking, the following train of thought: We want to minimize a function that only accepts binary vectors (the $H(\mathbf x)$ we had in the previous section). To find this minimum, we set $\dot{\mathbf{x}}(t)$ to minus the gradient of an appropriate potential $V$. So $\mathbf x(t)$ climbs down the potential surface given by $V$. The potential should include our objective function $H$, which leads to the terms $I_i$, <em>and</em> a term that forces minima to be binary vectors. That&rsquo;s where the term $(p-1)x_i - x_i^3$ stems from. The problem with this gradient descent is that one usually gets stuck in local minima which correspond to bad schedules. Therefore, one introduces the error terms $e_i$ along with the target amplitude $a(t)$. This breaks pure gradient dynamics and enables $x(t)$ to escape local minima.</p>
+<p>In the algorithm, we proceed as follows:</p>
+<ul>
+<li>Choose a hyperparameter set $P$ as well as initial values for $\mathbf x$ and $\mathbf e$.</li>
+<li>Solve the ODE numerically.</li>
+<li>On the fly, at each timestep $t$, look at $\mathbf{x}(t)$: It has entries in $\mathbb{R}$, though it can be converted to a normal schedule vector $\mathbf{x}_s(t)$ counting negative entries as 0&rsquo;s and positive ones as 1&rsquo;s.</li>
+<li>Then evaluate the &ldquo;energy&rdquo; $H(\mathbf{x}_s(t))$ of the vector $\mathbf{x}_s(t)$ (<em>not</em> $\mathbf x(t)$). If it is smaller than all energies found before, store $\mathbf{x}_s(t)$. It&rsquo;s the best schedule found so far.</li>
+<li>Update $a(t)$ according to $a = \alpha+\rho \tanh(\delta\cdot dH)$. By $dH$ we denote the change in energy with respect to the previous timestep.</li>
+<li>Continue until some time $t_\text{max}$ is reached, return the best schedule.</li>
+</ul>
+<p>So we follow the trajectory given by the ODE, passing by various different schedules $\mathbf{x}_s(t)$ and select the best one we encounter. It looks for example like this:</p>
+<p>
+  <figure>
+    <img src="/posts/img/MF-SW-JobShopProblem/CAC_example_plot1.png" alt="Example trajectory">
+    <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Fig. 5 - Example trajectory of relaxed schedule vector</figcaption>
+  </br>
+  </figure>
+
+</p>
+<p>As you can see, the entries of $\mathbf x$ oscillate rapidly between negative and positive values, traversing numerous schedules. The hyperparameters are written on top of the plot.</p>
+<p>So after all, we just try out various schedules, guided by our ODE. In this sense, Simulated Annealing and CAC are quite alike. For further information, see Leleu <em>et al.</em>, Commun. Phys. <strong>4</strong>, 266 (2021).</p>
+<h2 id="CACperf">Challenges and Performance</h2>
+<p>Now we&rsquo;ve understood how Chaotic Amplitude Control works. However, some obstacles remain on the way to a competitive job-shop solver.</p>
+<h2 id="estimating-max_time">Estimating <code>max_time</code></h2>
+<p>Recall that we represent our schedule $\mathbf{x}_s$ as a sequence of timelines, one for each operation. Each timeline starts at 0 and ends at <code>max_time</code>. As mentioned earlier, we have to choose <code>max_time</code> as it is not specified in a job-shop problem (which just asks for a minimal makespan). If it&rsquo;s too small, it may be impossible to finish all jobs within <code>max_time</code>. On the other hand, the larger <code>max_time</code>, the more expensive solving the ODE becomes.</p>
+<p>Therefore, <code>max_time</code> should be as close as possible to the minimal makespan. However, the latter is unknown; we have to content ourselves with an upper bound (i.e. ask: &lsquo;How large is the minimal makespan at most?&rsquo;). We decided to set <code>max_time</code> equal to the makespan obtained by the greedy solver.</p>
+<p>From the plots shown below, we can get an idea of how good this estimate is. We randomly generate job-shop problems, sort them by number of operations and feed them to the greedy solver. It outputs a makespan (in red) which varies from problem to problem, hence the error bars indicating standard deviations. We also estimate the minimal makespan required (in blue) to see how the greedy solver performs; the closer the red and blue dots are relatively to the number of operations, the better.</p>
+<p>
+  <figure>
+    <img src="/posts/img/MF-SW-JobShopProblem/makespan_estimates_300reps_duration_span=[1,6]_M=1-5_dense.png" alt="Makespan bounds">
+    <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Fig. 6 - Upper and lower makespan bounds</figcaption>
+  </br>
+  </figure>
+
+</p>
+<h3 id="variable-pruning">Variable pruning</h3>
+<p>Some entries of the schedule vector are easily inferred using the problem constraints. Consider the following problem:</p>
+<p>
+  <figure>
+    <img src="/posts/img/MF-SW-JobShopProblem/variable_pruning_example.png" alt="Variable pruning">
+    <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Fig. 7 - Example problem for variable pruning</figcaption>
+  </br>
+  </figure>
+
+</p>
+<p>Let&rsquo;s assume we set <code>max_time = 4</code>. Clearly, $O_2$ cannot start at time $0$ and $O_3$ cannot start before time $2$. So the first (first two) entries in the timelines of these operations must be $0$. Similarly, $O_1$ has to start at $0$ or $1$ since otherwise, the job cannot be finished by <code>max_time</code>. So the timeline for $O_1$ must be either <code>[1 0 0 0]</code> or <code>[0 1 0 0]</code>. Building these considerations into the algorithm significantly reduces the dimension of the ODE.</p>
+<h3 id="hyperparameter-search">Hyperparameter search</h3>
+<p>A major drawback of CAC is its large number of hyperparameters. Recall that the variable $P$ in the CAC ODE contains 7 numbers which don&rsquo;t change during the computation, but have to be specified in the beginning. What choice of parameters makes a powerful job-shop solver is by no means obvious.</p>
+<p>Hyperparameter search is the most difficult part of applying CAC to the job-shop problem. Ideally, we&rsquo;d like to know one set of hyperparameters which yields satisfying results for <em>arbitrary</em> problems, seven numbers we can insert in our code and then never touch them again.
+However, such an ideal parameter set might not exist. In this case we&rsquo;d have to tailor our parameter set to the specific problem at hand.</p>
+<p>For lack of a more informed method, we just ran grid searches over 5 parameters, holding the remaining two constant. Each parameter set was benchmarked by running it on 10-20 random job-shop problems, scoring each output schedule. The score simply consists of penalties for a) constraint violations and b) not scheduling all operations. <em>This means a valid schedule has score 0, invalid ones have negative scores.</em></p>
+<p>We decided to generate only problems of a certain <em>problem class</em> in each grid search, i.e. problems with a fixed number of operations and a certain range of possible durations. The simplest class we used are problems with 9 operations and durations ranging from 1 to 3.</p>
+<p>Below, you can see an exemplary histogram of scores:</p>
+<p>
+  <figure>
+    <img src="/posts/img/MF-SW-JobShopProblem/score_distribution_best_params2_M6_[1,6]_Ms=3_duration_span=[1,6].png" alt="Benchmark for 9 operations and duration 1-6">
+    <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Fig. 8 - Benchmark for best-performing parameter set on 9 operations, durations 1-6</figcaption>
+  </br>
+  </figure>
+
+</p>
+<p>The above shows how the best parameter set found for 9 operations and durations 1-6 performs on the very same problem class. Below, we show benchmarks on some other problem classes.</p>
+<p>
+  <figure>
+    <img src="/posts/img/MF-SW-JobShopProblem/score_distribution_best_params2_M6_[1,6]_Ms=3_duration_span=[1,3].png" alt="Benchmark for 9 operations and duration 1-3">
+    <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Fig. 9 - Benchmark for best-performing parameter set on 9 operations, durations 1-3</figcaption>
+  </br>
+  </figure>
+
+</p>
+<p>
+  <figure>
+    <img src="/posts/img/MF-SW-JobShopProblem/score_distribution_best_params2_for_dur_span[1,6]_Ms=4_duration_span=[1,3].png" alt="Benchmark for arger problems">
+    <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Fig. 10 - Same parameter set tested on larger problems</figcaption>
+  </br>
+  </figure>
+
+</p>
+<p>
+  <figure>
+    <img src="/posts/img/MF-SW-JobShopProblem/score_distribution_best_params_for_dur_span[1,6]_Ms=3_Ms=5_duration_span=[1,6].png" alt="Failure for larger problems">
+    <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Fig. 11 - Failure of the parameter set on even larger problems</figcaption>
+  </br>
+  </figure>
+
+</p>
+<p>Comparing the last plot to the others, we can see that this hyperparameter set fails for problems with 25 operations. Less than 10% of the schedules are valid. We observed similar behaviour for other parameter sets.</p>
+<p>This suggests that high performance hyperparameter sets are indeed distinct for different problem classes, which severely complicates the application of CAC to the job-shop problem.</p>
+<p>In the scope of this project, we didn&rsquo;t figure out how to choose good hyperparameters and hence didn&rsquo;t produce a fully functional job solver with CAC.</p>
+<h2 id="CACsum">CAC: Summary and outlook</h2>
+<p>To sum up, we built a job-shop solver using Chaotic Amplitude Control. Challenges included casting the problem in a suitable form, estimating the new parameter <code>max_time</code>, eliminating &rsquo;trivial&rsquo; variables and, most importantly, searching appropriate hyperparameters.</p>
+<p>As we&rsquo;ve learned in the previous section, hyperparameter search remained inconclusive. To further investigate this problem, one could benchmark even more parameter sets and then perform a principal component analysis on a collection of &lsquo;good&rsquo; sets. Also, it could be smarter to use simulated annealing instead of a grid search, avoiding large regions of bad parameter sets.</p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/placeholder.png" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/markus-frankenbach">Markus Frankenbach</a><span>
+                    
+                </span></h3>
+                <p>Working student </p>
+                <p calss="author-socials">
+                    
+                    
+                    
+                    
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/placeholder.png" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/samuel-wirth">Samuel Wirth</a><span>
+                    
+                </span></h3>
+                <p>Working student </p>
+                <p calss="author-socials">
+                    
+                    
+                    
+                    
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/optimization/">optimization</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/job-shop-problem/">job shop problem</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/simulated-annealing/">simulated annealing</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/chaotic-amplitude-control/">chaotic amplitude control</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</html>
