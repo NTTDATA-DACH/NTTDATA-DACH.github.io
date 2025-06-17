@@ -7,7 +7,6 @@
     <generator>Hugo</generator>
     <language>en</language>
     <copyright>Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-<<<<<<< HEAD
     <lastBuildDate>Sat, 14 Jun 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/tags/kong/index.xml" rel="self" type="application/rss+xml" />
     <item>
@@ -18,11 +17,6 @@
       <description>This blog details how Kong API Gateway functions as an AI Gateway, providing the necessary features to manage AI integrations securely and efficiently. Kong offers a complete, high-quality middleware solution that makes AI development easier by removing the need for many special tools and frameworks. It also supports language independence to avoid any limits. Additionally, the new AI plugins empower organizations to mitigate AI risks and uphold ethical AI practices.</description>
     </item>
     <item>
-=======
-    <lastBuildDate>Wed, 19 Mar 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://nttdata-dach.github.io/tags/kong/index.xml" rel="self" type="application/rss+xml" />
-    <item>
->>>>>>> 42c943dc50da086a40995e09dca1fde3e9f66ed3
       <title>Part 9: Serverless functions - Who responded?</title>
       <link>https://nttdata-dach.github.io/posts/as-konggateway-serverlessfunctions/</link>
       <pubDate>Wed, 19 Mar 2025 00:00:00 +0000</pubDate>

@@ -7,7 +7,6 @@
     <generator>Hugo</generator>
     <language>en</language>
     <copyright>Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-<<<<<<< HEAD
     <lastBuildDate>Sat, 14 Jun 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
     <item>
@@ -43,30 +42,16 @@
       <link>https://nttdata-dach.github.io/tags/ethical-ai/</link>
       <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/ethical-ai/</guid>
-=======
-    <lastBuildDate>Wed, 19 Mar 2025 00:00:00 +0000</lastBuildDate>
-    <atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Functions</title>
-      <link>https://nttdata-dach.github.io/tags/functions/</link>
-      <pubDate>Wed, 19 Mar 2025 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/functions/</guid>
->>>>>>> 42c943dc50da086a40995e09dca1fde3e9f66ed3
       <description></description>
     </item>
     <item>
       <title>Gateway</title>
       <link>https://nttdata-dach.github.io/tags/gateway/</link>
-<<<<<<< HEAD
       <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
-=======
-      <pubDate>Wed, 19 Mar 2025 00:00:00 +0000</pubDate>
->>>>>>> 42c943dc50da086a40995e09dca1fde3e9f66ed3
       <guid>https://nttdata-dach.github.io/tags/gateway/</guid>
       <description></description>
     </item>
     <item>
-<<<<<<< HEAD
       <title>GenAI</title>
       <link>https://nttdata-dach.github.io/tags/genai/</link>
       <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
@@ -92,12 +77,6 @@
       <link>https://nttdata-dach.github.io/tags/functions/</link>
       <pubDate>Wed, 19 Mar 2025 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/functions/</guid>
-=======
-      <title>Kong</title>
-      <link>https://nttdata-dach.github.io/tags/kong/</link>
-      <pubDate>Wed, 19 Mar 2025 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/kong/</guid>
->>>>>>> 42c943dc50da086a40995e09dca1fde3e9f66ed3
       <description></description>
     </item>
     <item>
