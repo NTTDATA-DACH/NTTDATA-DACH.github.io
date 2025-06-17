@@ -99,7 +99,7 @@
         <div class="content">
             
            
-            <p>In the last <a href="https://nttdata-dach.github.io/posts/as-konglogchunking/">blog</a>, I provided a solution on how to overcome the character limit when logging. This time, I would like to show how to implement an OAuth 2.0-based On-Behalf-Of (delegation) grant flow. Such complex token orchestration tasks can be easily handled on the <a href="https://nttdata-dach.github.io/posts/as-kongproductintroduction/">API Gateway</a> while ensuring the highest security standards which even make zero-trust architectures (ZTA) possible in the first place.</p>
+            <p>In the last <a href="https://nttdata-dach.github.io/posts/as-konggateway-logchunking/" title="Part 2: Log Chunking">blog</a>, I provided a solution on how to overcome the character limit when logging. This time, I would like to show how to implement an OAuth 2.0-based On-Behalf-Of (delegation) grant flow. Such complex token orchestration tasks can be easily handled on the <a href="https://nttdata-dach.github.io/posts/as-konggateway-productintroduction/" title="Part 1: Brief Product Introduction">API Gateway</a> while ensuring the highest security standards which even make zero-trust architectures (ZTA) possible in the first place.</p>
 <h1 id="overview">Overview</h1>
 <p>In my previous blog articles, I concluded that Kong is the API Gateway without limits. In this technical blog, I would like to provide a solution for an enhanced token management flow for token exchange. The exchange flow is called On-Behalf-Of grant type, OBO for short. Once again, the Kong Gateway proves its great expansion possibilities.</p>
 <p>The OBO flow is not part of the standard OAuth 2.0 specification (<a href="https://datatracker.ietf.org/doc/html/rfc6749">RFC 6749</a>) of the Internet Engineering Task Force (IETF). Currently, it seems to be that Microsoft has a deviating OBO implementation as part of their Microsoft Azure Active Directory (AAD) product, as described and implemented in the <a href="https://learn.microsoft.com/en-us/entra/identity-platform/v2-oauth2-on-behalf-of-flow">OBO Microsoft documentation</a>. In the following, I will refer to the OBO solution offered by Microsoft AAD (recently Azure AD was renamed to <a href="https://learn.microsoft.com/en-us/entra/fundamentals/new-name#product-name">Microsoft Entra ID</a>, but for this blog I will stick to the previous well-known name and the acronym AAD). While the IETF has extended its standard to include OAuth 2.0 Token Exchange (<a href="https://datatracker.ietf.org/doc/html/rfc8693">RFC 8693</a>), but AAD does not utilize the officially introduced grant type <code>urn:ietf:params:oauth:grant-type:token-exchange</code>. Microsoft’s implementation deviates from the official documentation promoted as a standard in 2020. Still, the delegation idea remains the same (at this point I would like to point out an excellent <a href="https://www.youtube.com/watch?v=Ue8HKBGkIJY">token exchange YT video</a> by Sascha Preibisch).</p>
@@ -112,7 +112,6 @@
     In the context a central Identity Provider (IdP) like AAD and its role in Identity and Access Management (IAM), a &ldquo;user principal&rdquo; typically refers to an individual user, while a &ldquo;service principal&rdquo; refers to an identity associated with a service or application rather than an individual user. In practical terms, user principals are associated with human users, while service principals are associated with non-human entities like applications, scripts, or services that need to interact with other services or resources in an automated manner (for example in enterprise job scheduling and workload automation tasks).
 </aside>
 <p>The diagram below illustrates the general principle with an API Gateway acting as an intermediary for the OBO grant type. This detail from the overall process sequence flow assumes that user authentication and authorization have been completed, and that the authorization server (AAD) issued a security token that may have been used in previous resource server calls.</p>
-<!-- raw HTML omitted -->
 
 
   
@@ -120,7 +119,7 @@
 
 <picture style="display: contents;"
      
-    id="[454 216 246 75 267 198]"
+    id="[222 454 228 113 201 369]"
     onclick="openModal(this.id)"
      >
     
@@ -182,7 +181,7 @@ However, it should come as no surprise that I have already written a Lua OBO cus
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">ttl_factor</span><span class="p">:</span><span class="w"> </span><span class="m">0.75</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span><span class="nt">stopwatch</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span></span></span></code></pre></div>
 <p>The configuration shown above enables an HTTPS proxy configuration to reach the AAD authorization server. No client certificate is required. The OBO AAD endpoint is taken from the <code>token_endpoint</code> configuration parameter (the tenant is a path parameter). The <code>client_id</code> and <code>client_secret</code> are AAD-generated and assigned to the application client during the registration process. The scope permissions list the desired scopes as a string array. The <code>requested_token_type</code> parameter requires an official token format type for the token to be issued (Microsoft adheres to the official specification, see <a href="https://datatracker.ietf.org/doc/html/rfc8693#section-3">RFC 8693</a>). It is possible to issue a JWT, SAML1 or SAML2 token format type. The schema definition of the OBO plugin contains a description of each parameter and the default setting.
-To pass the next <a href="https://en.wikipedia.org/wiki/Penetration_test">penetration test</a>, the determined token is rendered unusable for logging above the debug logging level by removing the signature (JWT, SAML1 and SAML2). If the token cannot be fully logged due to the existing logging character limitation, the previously introduced <a href="https://nttdata-dach.github.io/posts/as-konglogchunking/">chunking module</a> can be used (coding is commented out in the Lua handler module).</p>
+To pass the next <a href="https://en.wikipedia.org/wiki/Penetration_test">penetration test</a>, the determined token is rendered unusable for logging above the debug logging level by removing the signature (JWT, SAML1 and SAML2). If the token cannot be fully logged due to the existing logging character limitation, the previously introduced <a href="https://nttdata-dach.github.io/posts/as-konggateway-logchunking/" title="Part 2: Log Chunking">chunking module</a> can be used (coding is commented out in the Lua handler module).</p>
 <p>The OBO plugin has its own stopwatch and exhibits fluctuating runtimes between 250 and 350 milliseconds in my Google Kubernetes Engine (GKE) test environment when token caching is disabled. The entire plugin runtime is almost entirely due to the AAD invocation (in OAuth2 terms the call to the authorization server). The URL *.microsoftonline.com (port HTTPS/443) is used to import/export AAD data. If caching is enabled and the token is cached, the plugin runtime at Kong info logging level is approximately 1 millisecond. The cache key is formed from the configured AAD appli-cation client ID (<code>client_id</code>) and a unique user identifier claim (<code>user_identifier_claim</code>) which is determined from the token (customizable to your requirements).</p>
 <h1 id="conclusion">Conclusion</h1>
 <p>Token management is complex but essential for communication between services. Therefore, easy-to-configure and customizable plugins are important for this task. The discussed OBO plugin fills a gap in Kong and enables a token exchange directly at the Kong Gateway. The plugin is implemented in Lua for stability and performance.
@@ -224,9 +223,9 @@ The presented plugin will solve your OBO token exchange problems with AAD. To re
             
             <ul>
                 
-                <li><a class="related-link" href="/posts/as-kongproductintroduction/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 1: Brief Product Introduction</a></li>
+                <li><a class="related-link" href="/posts/as-konggateway-productintroduction/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 1: Brief Product Introduction</a></li>
                 
-                <li><a class="related-link" href="/posts/as-konglogchunking/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 2: Log Chunking</a></li>
+                <li><a class="related-link" href="/posts/as-konggateway-logchunking/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 2: Log Chunking</a></li>
                 
                 <li><a class="related-link" href="/posts/as-konggateway-onbehalfof/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 3: Token Exchange On-Behalf-Of</a></li>
                 
@@ -239,6 +238,10 @@ The presented plugin will solve your OBO token exchange problems with AAD. To re
                 <li><a class="related-link" href="/posts/as-konggateway-tokencloning/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 7: Token Cloning</a></li>
                 
                 <li><a class="related-link" href="/posts/as-konggateway-plugincloning/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 8: Plugin Cloning</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-serverlessfunctions/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 9: Serverless functions - Who responded?</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-aigateway/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 10: AI Gateway</a></li>
                 
             </ul>
         </div>

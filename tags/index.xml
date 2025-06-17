@@ -4,11 +4,123 @@
     <title>Tags on Technology Blog</title>
     <link>https://nttdata-dach.github.io/tags/</link>
     <description>Recent content in Tags on Technology Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <generator>Hugo</generator>
+    <language>en</language>
     <copyright>Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Fri, 14 Mar 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 14 Jun 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Agentic AI</title>
+      <link>https://nttdata-dach.github.io/tags/agentic-ai/</link>
+      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/agentic-ai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>AI</title>
+      <link>https://nttdata-dach.github.io/tags/ai/</link>
+      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/ai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>AI Gateway</title>
+      <link>https://nttdata-dach.github.io/tags/ai-gateway/</link>
+      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/ai-gateway/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>AI Riskmanagement</title>
+      <link>https://nttdata-dach.github.io/tags/ai-riskmanagement/</link>
+      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/ai-riskmanagement/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Ethical AI</title>
+      <link>https://nttdata-dach.github.io/tags/ethical-ai/</link>
+      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/ethical-ai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Gateway</title>
+      <link>https://nttdata-dach.github.io/tags/gateway/</link>
+      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/gateway/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>GenAI</title>
+      <link>https://nttdata-dach.github.io/tags/genai/</link>
+      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/genai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Kong</title>
+      <link>https://nttdata-dach.github.io/tags/kong/</link>
+      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/kong/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>MCP</title>
+      <link>https://nttdata-dach.github.io/tags/mcp/</link>
+      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/mcp/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Functions</title>
+      <link>https://nttdata-dach.github.io/tags/functions/</link>
+      <pubDate>Wed, 19 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/functions/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Plugins</title>
+      <link>https://nttdata-dach.github.io/tags/plugins/</link>
+      <pubDate>Wed, 19 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/plugins/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Post-Function</title>
+      <link>https://nttdata-dach.github.io/tags/post-function/</link>
+      <pubDate>Wed, 19 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/post-function/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Pre-Function</title>
+      <link>https://nttdata-dach.github.io/tags/pre-function/</link>
+      <pubDate>Wed, 19 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/pre-function/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>RCA</title>
+      <link>https://nttdata-dach.github.io/tags/rca/</link>
+      <pubDate>Wed, 19 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/rca/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Root Cause Analysis</title>
+      <link>https://nttdata-dach.github.io/tags/root-cause-analysis/</link>
+      <pubDate>Wed, 19 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/root-cause-analysis/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Serverless</title>
+      <link>https://nttdata-dach.github.io/tags/serverless/</link>
+      <pubDate>Wed, 19 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/serverless/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Compiler</title>
       <link>https://nttdata-dach.github.io/tags/compiler/</link>
@@ -77,20 +189,6 @@
       <link>https://nttdata-dach.github.io/tags/acl/</link>
       <pubDate>Mon, 24 Feb 2025 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/acl/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Gateway</title>
-      <link>https://nttdata-dach.github.io/tags/gateway/</link>
-      <pubDate>Mon, 24 Feb 2025 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/gateway/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Kong</title>
-      <link>https://nttdata-dach.github.io/tags/kong/</link>
-      <pubDate>Mon, 24 Feb 2025 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/kong/</guid>
       <description></description>
     </item>
     <item>
@@ -838,35 +936,35 @@
     <item>
       <title>Array of Struct</title>
       <link>https://nttdata-dach.github.io/tags/array-of-struct/</link>
-      <pubDate>Thu, 09 Mar 2023 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 08 Mar 2023 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/array-of-struct/</guid>
       <description></description>
     </item>
     <item>
       <title>Computing</title>
       <link>https://nttdata-dach.github.io/tags/computing/</link>
-      <pubDate>Thu, 09 Mar 2023 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 08 Mar 2023 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/computing/</guid>
       <description></description>
     </item>
     <item>
       <title>Data-Oriented Design</title>
       <link>https://nttdata-dach.github.io/tags/data-oriented-design/</link>
-      <pubDate>Thu, 09 Mar 2023 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 08 Mar 2023 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/data-oriented-design/</guid>
       <description></description>
     </item>
     <item>
       <title>Data-Streams</title>
       <link>https://nttdata-dach.github.io/tags/data-streams/</link>
-      <pubDate>Thu, 09 Mar 2023 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 08 Mar 2023 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/data-streams/</guid>
       <description></description>
     </item>
     <item>
       <title>Entity Component System</title>
       <link>https://nttdata-dach.github.io/tags/entity-component-system/</link>
-      <pubDate>Thu, 09 Mar 2023 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 08 Mar 2023 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/entity-component-system/</guid>
       <description></description>
     </item>

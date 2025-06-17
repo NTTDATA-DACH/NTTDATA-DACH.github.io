@@ -4,11 +4,25 @@
     <title>Clients first on Technology Blog</title>
     <link>https://nttdata-dach.github.io/posts/</link>
     <description>Recent content in Clients first on Technology Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <generator>Hugo</generator>
+    <language>en</language>
     <copyright>Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Fri, 14 Mar 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 14 Jun 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Part 10: AI Gateway</title>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-aigateway/</link>
+      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/as-konggateway-aigateway/</guid>
+      <description>This blog details how Kong API Gateway functions as an AI Gateway, providing the necessary features to manage AI integrations securely and efficiently. Kong offers a complete, high-quality middleware solution that makes AI development easier by removing the need for many special tools and frameworks. It also supports language independence to avoid any limits. Additionally, the new AI plugins empower organizations to mitigate AI risks and uphold ethical AI practices.</description>
+    </item>
+    <item>
+      <title>Part 9: Serverless functions - Who responded?</title>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-serverlessfunctions/</link>
+      <pubDate>Wed, 19 Mar 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/as-konggateway-serverlessfunctions/</guid>
+      <description>In our previous blog posts in the Kong Gateway series, we explored various security aspects, particularly focusing on token-related issues and their solutions involving both Kong and custom-built plugins. Today, we dive deeper into another coding variant within the gateway: Kong serverless functions. We will use a real-world “Who Responded?” example to demonstrate how effectively a root cause analysis approach can be supported with minimal effort.</description>
+    </item>
     <item>
       <title>Reproducible and consistent development environments with DevContainers</title>
       <link>https://nttdata-dach.github.io/posts/sk-devcontainers/</link>
@@ -144,9 +158,9 @@
     </item>
     <item>
       <title>Part 2: Log Chunking</title>
-      <link>https://nttdata-dach.github.io/posts/as-konglogchunking/</link>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-logchunking/</link>
       <pubDate>Wed, 25 Oct 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/posts/as-konglogchunking/</guid>
+      <guid>https://nttdata-dach.github.io/posts/as-konggateway-logchunking/</guid>
       <description>In the last blog, I briefly introduced Kong as a sophisticated API gateway product. This time, I will discuss a problem related to logging message size limitation and offer a solution. This problem significantly limits root cause analysis and ultimately solution development.</description>
     </item>
     <item>
@@ -165,9 +179,9 @@
     </item>
     <item>
       <title>Part 1: Brief Product Introduction</title>
-      <link>https://nttdata-dach.github.io/posts/as-kongproductintroduction/</link>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-productintroduction/</link>
       <pubDate>Mon, 15 May 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/posts/as-kongproductintroduction/</guid>
+      <guid>https://nttdata-dach.github.io/posts/as-konggateway-productintroduction/</guid>
       <description>Kong Gateway is a lightweight, fast, and flexible API Gateway. It acts as an intermediary between API providers and consumers, enabling them to communicate based on policies. It also provides observability features, allowing to track API usage and performance. Overall it is a convincing and outstanding product which is briefly introduced in the following blog.</description>
     </item>
     <item>
@@ -194,7 +208,7 @@
     <item>
       <title>A Completely New Approach: An ECS Programming Language</title>
       <link>https://nttdata-dach.github.io/posts/sh-dataorienteddesignecs/</link>
-      <pubDate>Thu, 09 Mar 2023 00:00:00 +0000</pubDate>
+      <pubDate>Wed, 08 Mar 2023 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/posts/sh-dataorienteddesignecs/</guid>
       <description>Current enterprise software engineering is all about abstraction. We are bending our software in ways that the computer has trouble efficiently computing it. A decade ago we had to write efficient programs, because our hardware was a limiting factor. However, having better hardware is in no excuse to waste precious ressources. With Data-Oriented Design - DOD and Entity Component System - ECS, we can improve performance by up to 100 times!</description>
     </item>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>GenAI on Technology Blog</title>
+    <link>https://nttdata-dach.github.io/tags/genai/</link>
+    <description>Recent content in GenAI on Technology Blog</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <copyright>Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
+    <lastBuildDate>Sat, 14 Jun 2025 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://nttdata-dach.github.io/tags/genai/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Part 10: AI Gateway</title>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-aigateway/</link>
+      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/as-konggateway-aigateway/</guid>
+      <description>This blog details how Kong API Gateway functions as an AI Gateway, providing the necessary features to manage AI integrations securely and efficiently. Kong offers a complete, high-quality middleware solution that makes AI development easier by removing the need for many special tools and frameworks. It also supports language independence to avoid any limits. Additionally, the new AI plugins empower organizations to mitigate AI risks and uphold ethical AI practices.</description>
+    </item>
+  </channel>
+</rss>

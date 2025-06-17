@@ -1,0 +1,268 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Part 2: Log Chunking  </title>
+  <meta charset="utf-8"/> 
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Kong - The Gateway without Limitations - Part 2: Log Chunking"/>
+  
+  <meta property="article:author" content="[Alexander Suchier]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/AS-KongLogChunking/title-image.jpg"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/as-konggateway-logchunking/"/>
+  <meta property="og:description" content="In the last blog, I briefly introduced Kong as a sophisticated API gateway product. This time, I will discuss a problem related to logging message size limitation and offer a solution. This problem significantly limits root cause analysis and ultimately solution development."/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">25.10.2023
+        
+         - Alexander Suchier - <i class="fa-solid fa-book-open"></i> 4 min read
+        
+        </span>
+        Part 2: Log Chunking
+        
+        
+        <a id="series-link" href="/series/kong-the-gateway-without-limitations"><span class="subtitle">Kong - The Gateway without Limitations</span></a>
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/AS-KongLogChunking/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <p>In the last <a href="https://nttdata-dach.github.io/posts/as-konggateway-productintroduction/" title="Part 1: Brief Product Introduction">blog</a>, I briefly introduced Kong as a sophisticated API gateway product. This time, I will discuss a problem related to logging message size limitation and offer a solution. This problem significantly limits root cause analysis and ultimately solution development.</p>
+<h1 id="overview">Overview</h1>
+<p>My last blog ended with the statement that Kong is the API gateway without limits. In this technical blog, I would like to use an example from the important area of logging to illustrate this &ldquo;without limits&rdquo; statement. Logs are one of the three pillars of observability, along with monitoring and tracing. In particular, Kong as an intermediary primarily records events and/or message information between different parties, which makes gateway logging so important. Logs can provide fine-grained exchange data that can be used to investigate error situations, problematic activity, or behavior changes. Unfortunately, the gateway architecture imposes a per-entry limit on the number of characters that can be logged due to the underlying Nginx/OpenResty layers. Below we will see how we can overcome this limitation.</p>
+<h1 id="problem">Problem</h1>
+<p>Have you ever wondered why Kong log messages sometimes appear truncated in the logging system? This is not a problem with the log shipper or the central logging system of your choice, it is a problem with the Kong architecture and the underlying components on which the gateway is based. Kong is built on top of <a href="https://nginx.org/">Nginx</a> using the <a href="https://openresty.org/en/">OpenResty</a> framework to provide API gateway functionality. However, NGINX has a hardcoded 2048 byte limit on error message length, which affects the Kong Plugin Development Kit (<a href="https://docs.konghq.com/gateway/latest/plugin-development/pdk/">PDK</a>) <a href="https://docs.konghq.com/gateway/latest/plugin-development/pdk/kong.log/#konglog"><code>kong.log(…)</code></a> and <a href="https://docs.konghq.com/gateway/latest/plugin-development/pdk/kong.log/#kongloglevel"><code>kong.logLEVEL(…)</code></a> operations. This limit includes all prefix and suffix information added by Kong. Fortunately, the OpenResty intermediary layer <a href="https://github.com/openresty/openresty/blob/master/patches/nginx-1.19.9-larger_max_error_str.patch">patches</a> the Nginx source code to use 4096 bytes as the maximum error size. But that is it, longer messages will be truncated. Especially with debug logging, there are sometimes large blocks of information that need to be parsed. Kong is aware of this problem and has published a knowledge base article about this logging length issue (KB article number: <a href="https://support.konghq.com/support/s/article/Log-lines-are-truncated-at-4096-characters?">000001781</a>).</p>
+<h1 id="solution">Solution</h1>
+<p>Kong&rsquo;s KB article ends with the following suggestion: &ldquo;If you are logging very large lines, consider altering your calls to logging and splitting long lines into multiple shorter lines&rdquo;.
+This is where we start talking about log chunking, which is a method of breaking large message strings into smaller pieces or &ldquo;chunks&rdquo; of information. Instead of implementing length checking and - if necessary - message chunking in each <a href="https://docs.konghq.com/hub/kong-inc/serverless-functions/">serverless function</a> or <a href="https://docs.konghq.com/hub/plugins/overview/">plugin</a>, a global utility solution should be sought. Therefore, the best solution is a global Lua utility module that can be integrated into both serverless functions and plugins. This module can check if chunking is needed at all. If so, it will split a too-long message into several chunks and output the chunks with the appropriate meta-information, also taking into account the logging level. It should come as no surprise that I have already written a Lua utility logging module as described. I use it for potentially overly long log output for my own serverless functions and custom plugins. I am happy to share it with you in case you also suffer from logging information loss. Feel free to check out the NTT DATA GitHub repository <a href="https://github.com/NTTDATA-DACH/TECHblog_code/blob/main/Series-KongGateway/02-AS-KongLogChunking/chunk_utils.lua">here</a>.</p>
+<h1 id="usage">Usage</h1>
+<p>After the chunk utility module has been copied to the gateway folder (e.g. /usr/local/kong/modules), it must be registered in the package path of the kong.conf configuration file. To do this, you need to extend the <code>LUA_PACKAGE_PATH</code>, which can be easily done using the <a href="https://docs.konghq.com/gateway/latest/production/environment-variables/#environment-variables">environment variable mechanism</a> with a kong prefix, e.g.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">KONG_LUA_PACKAGE_PATH</span> <span class="o">=</span> /usr/local/kong/modules/?.lua</span></span></code></pre></div>
+<p>If the <a href="https://docs.konghq.com/gateway/latest/reference/configuration/#untrusted_lua">sandbox security</a> is enabled, you still need to allow the module code to run together with the used <a href="https://stevedonovan.github.io/Penlight/api/libraries/pl.stringx.html">Penlight string library</a>, which is already part of the Kong distribution, e.g.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">KONG_UNSTRUSTED_LUA_SANDBOX_REQUIRES</span> <span class="o">=</span> pl.stringx, kong.modules.chunk_utils</span></span></code></pre></div>
+<p>I found the Penlight library to be a great help in speeding up Lua development. After the configuration steps, the chunker utility module can be used in both serverless functions and plugins.</p>
+<p>Example of using the chunker module in a serverless function:
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-lua" data-lang="lua"><span class="line"><span class="ln" id="1"><a class="lnlinks" href="#1">1</a></span><span class="cl"><span class="kr">return</span> <span class="kr">function</span><span class="p">()</span>
+</span></span><span class="line"><span class="ln" id="2"><a class="lnlinks" href="#2">2</a></span><span class="cl">  <span class="cm">--[[ logging --]]</span>
+</span></span><span class="line"><span class="ln" id="3"><a class="lnlinks" href="#3">3</a></span><span class="cl"> 
+</span></span><span class="line"><span class="ln" id="4"><a class="lnlinks" href="#4">4</a></span><span class="cl">  <span class="kd">local</span> <span class="n">chunk_utils</span> <span class="o">=</span> <span class="n">require</span> <span class="s1">&#39;kong.modules.chunk_utils&#39;</span>
+</span></span><span class="line"><span class="ln" id="5"><a class="lnlinks" href="#5">5</a></span><span class="cl">  <span class="kd">local</span> <span class="n">chunker</span> <span class="o">=</span> <span class="n">chunk_utils.chunker</span>
+</span></span><span class="line"><span class="ln" id="6"><a class="lnlinks" href="#6">6</a></span><span class="cl"> 
+</span></span><span class="line"><span class="ln" id="7"><a class="lnlinks" href="#7">7</a></span><span class="cl">  <span class="kd">local</span> <span class="n">authorization</span> <span class="o">=</span> <span class="n">kong.request</span><span class="p">.</span><span class="n">get_header</span><span class="p">(</span><span class="s1">&#39;Authorization&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln" id="8"><a class="lnlinks" href="#8">8</a></span><span class="cl">  <span class="n">chunker.logChunks</span><span class="p">(</span><span class="n">kong.log</span><span class="p">.</span><span class="n">debug</span><span class="p">,</span> <span class="s1">&#39;authorization header: &#39;</span><span class="p">,</span> <span class="n">authorization</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln" id="9"><a class="lnlinks" href="#9">9</a></span><span class="cl"><span class="kr">end</span></span></span></code></pre></div></p>
+<p>Whenever an overly long logging message is chunked, it is output with chunk meta information.</p>
+<p><code>[&lt;chunk id&gt;, &lt;chunk index&gt;, &lt;chunks&gt; &lt;chunk size&gt;]</code></p>
+<p>With this meta information, the associated log chunks can also be automatically searched and reassembled (if necessary).</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>The last thing you need when analyzing log messages is truncated information that prevents you from finding the root cause and ultimately solving the problem. The introduced module will solve your log length problems once and for all. Coming back to my opening statement, with Kong Gateway you will not run into any limitations.</p>
+<h1 id="credits">Credits</h1>
+<p>Title image by <a href="https://www.shutterstock.com/de/g/maciek905">BEST-BACKGROUNDS</a> on <a href="https://www.shutterstock.com">Shutterstock</a></p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/alexander-suchier.jpg" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/alexander-suchier">Alexander Suchier</a><span>
+                    
+                </span></h3>
+                <p>Senior Managing Technical Consultant and Kong Champion </p>
+                <p calss="author-socials">
+                    
+                    
+                    <a target="_blank"  href="https://www.linkedin.com/in/alexander-suchier-0608481"><i class="fa-brands fa-linkedin"></i></a>
+                    
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        <div class="related-block">
+            <h3 class="related-heading" id="series-list">Check out the full series</h3>
+            
+            <ul>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-productintroduction/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 1: Brief Product Introduction</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-logchunking/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 2: Log Chunking</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-onbehalfof/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 3: Token Exchange On-Behalf-Of</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-saml2bearer/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-mtls_header/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 5: mTLS Header</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-tokenvalidation/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 6: Token Validation</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-tokencloning/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 7: Token Cloning</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-plugincloning/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 8: Plugin Cloning</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-serverlessfunctions/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 9: Serverless functions - Who responded?</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-aigateway/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 10: AI Gateway</a></li>
+                
+            </ul>
+        </div>
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/api-gateway/">API Gateway</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/api-management/">API Management</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/api-security/">API Security</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/api-developer-portal/">API Developer Portal</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/restful-api/">RESTful API</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/traffic-management/">Traffic Management</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/routing/">Routing</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</html>

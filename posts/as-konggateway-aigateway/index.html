@@ -1,0 +1,386 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Part 10: AI Gateway  </title>
+  <meta charset="utf-8"/> 
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Kong - The Gateway without Limitations - Part 10: AI Gateway"/>
+  
+  <meta property="article:author" content="[Alexander Suchier]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/AS-KongGateway-AiGateway/title-image.jpg"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/as-konggateway-aigateway/"/>
+  <meta property="og:description" content="This blog details how Kong API Gateway functions as an AI Gateway, providing the necessary features to manage AI integrations securely and efficiently. Kong offers a complete, high-quality middleware solution that makes AI development easier by removing the need for many special tools and frameworks. It also supports language independence to avoid any limits. Additionally, the new AI plugins empower organizations to mitigate AI risks and uphold ethical AI practices."/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">14.06.2025
+        
+         - Alexander Suchier - <i class="fa-solid fa-book-open"></i> 10 min read
+        
+        </span>
+        Part 10: AI Gateway
+        
+        
+        <a id="series-link" href="/series/kong-the-gateway-without-limitations"><span class="subtitle">Kong - The Gateway without Limitations</span></a>
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/AS-KongGateway-AiGateway/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <p>A<a href="https://en.wikipedia.org/wiki/Artificial_intelligence">rtificial Intelligence (AI)</a> is taking the world by storm; applications are increasingly leveraging AI to enhance their functionality, enabling smarter decision-making, improving user experience and allow greater efficiency. Applications that leverage AI do so through APIs that interface with large language models (<a href="https://en.wikipedia.org/wiki/Large_language_model">LLMs</a>), bringing us back to <a href="https://nttdata-dach.github.io/posts/as-kongproductintroduction/">API Gateways</a>, which ensure secure API traffic management. Kong Gateway is an established API Gateway that &ldquo;speaks&rdquo; AI. Therefore, it&rsquo;s time to write about the great AI capabilities of the <a href="https://nttdata-dach.github.io/posts/as-kongproductintroduction/">Kong Gateway</a> also in this <a href="https://nttdata-dach.github.io/series/kong-the-gateway-without-limitations/">blog series</a>.</p>
+<h1 id="overview">Overview</h1>
+<p>API Gateways are inherently positioned to serve as the AI traffic management layer. As they evolve into AI Gateways, the distinction between &ldquo;AI Gateway&rdquo; and &ldquo;API Gateway&rdquo; is expected to increasingly blur.</p>
+<p>AI Gateway providers see themselves as a bulwark against the <a href="https://traefik.io/blog/taming-the-wild-west-of-llms-with-traefik-ai-gateway/">&ldquo;Wild West&rdquo; enterprise AI</a>, characterized by fragmented infrastructures, proprietary APIs and inconsistent security practices. Nowadays, organizations often juggle multiple LLM providers, each with unique integration requirements, leading to increased complexity and potential security vulnerabilities. To address these challenges, technology analysts such as Gartner, Forrester, or IDC view AI infrastructure/middleware solutions like AI Gateways as a key approach to centralizing and streamlining AI service integrations with the needed observability into AI operations. This approach not only mitigates the risks associated with the current unregulated AI landscape but also facilitates more efficient and secure AI deployments in enterprise environments.</p>
+<p>Especially, companies that have adopted AI early are currently developing their own AI middleware, reflecting a common pattern in tech history of pioneering early adopters. This endeavour  requires a significant investment of resources, and the capabilities of these in-house solutions frequently fall short compared to those of established AI Gateways like the Kong Gateway. Consequently, as history has often shown in the tech industry, this approach may not be the most effective or productive.</p>
+<p>Gartner effectively outlined the features of AI Gateways in the summary of the report &ldquo;Innovation Insight: AI Gateways&rdquo;:</p>
+<blockquote>
+	AI gateways manage, secure and protect API connections to AI providers. Software engineering leaders can use AI gateways to apply security; multi-LLM routing; cost visibility and data protection, scanning and risk mitigation controls to their AI usage.
+    </br>
+    <div id="reference">
+		<cite title="Source: Gartner">
+        - 
+            Gartner 
+             in 
+          
+          
+            
+              <a href="https://www.gartner.com/en/documents/5901343" target="_blank" rel="noopener noreferrer">
+              Innovation Insight: AI Gateways</a>
+            
+          
+          
+		</cite>
+    </p>
+</blockquote>
+<p>The Gartner report explores the emerging role of AI Gateways in managing and securing interactions between applications and AI services. It emphasizes the necessity for organizations to gain better control and visibility over their AI usage. <a href="https://www.forbes.com/councils/forbestechcouncil/2024/09/19/mediation-layers-api-consumption-and-gateways/">Forbes</a> also breaks down the core features of AI Gateways.</p>
+<ul>
+<li><strong>Multi-LLM Routing</strong>: Directing requests to the optimal large language model based on specialization, cost or workload.</li>
+<li><strong>Cost Optimization</strong>: Tracking and analyzing AI service usage to optimize resource allocation and budget.</li>
+<li><strong>Outbound Security</strong>: Protecting sensitive API keys and implementing stricter access controls for AI services.</li>
+<li><strong>Data Governance Integration</strong>: Ensuring sensitive data isn&rsquo;t transmitted during interactions with external AI providers.</li>
+</ul>
+<p>As we will see, all of these features are already available on the Kong AI Gateway.</p>
+<h1 id="ethical-ai-and-ai-risk-management">Ethical AI and AI Risk Management</h1>
+<p>After weighing my options on whether to introduce the AI Gateway with an overview blog or to dive straight into the individual AI features of the Gateway, I finally decided to go with the introductory blog. In future blogs, I will focus on individual AI features and plugins. This choice reflects my primary motivation to highlight the often-overlooked yet critical topics of <a href="https://en.wikipedia.org/wiki/Ethics_of_artificial_intelligence">Ethical AI</a> and AI Risk Management, as I would like to quote the following definition from Anne Badman:</p>
+<blockquote>
+	AI Risk Management is the process of systematically identifying, mitigating and addressing the potential risks associated with AI technologies. It involves a combination of tools, practices and principles. The goal is to minimize AI’s potential negative impacts while maximizing its benefits.
+    </br>
+    <div id="reference">
+		<cite title="Source: Anne Badman">
+        - 
+            Anne Badman 
+             in 
+          
+          
+            
+              <a href="https://www.ibm.com/think/insights/ai-risk-management" target="_blank" rel="noopener noreferrer">
+              AI Risk Management</a>
+            
+          
+          
+		</cite>
+    </p>
+</blockquote>
+<p>These subjects are highly valued within my organization, NTT DATA and also play a significant role in the functionality of Kong AI Gateway.</p>
+<p>To get started, I highly recommend reading the NTT documents <a href="https://es.nttdata.com/documents/ai-regulations-v03.pdf">&ldquo;Getting ready for Trustworthy AI regulation&rdquo;</a> and <a href="https://services.global.ntt/en-us/campaigns/ethical-considerations-of-genai">&ldquo;Ethical considerations of generative AI&rdquo;</a>, which are available for download.
+Specifically on the topic of AI risk, I recommend the important article <a href="https://www.nttdata.com/global/en/insights/focus/2025/003">&ldquo;Proactive risk management: the secret to securing your AI journey&rdquo;</a> and watch the practical Kong Demo <a href="https://konghq.com/resources/demos/kong-konnect/owasp-securing-llm-deployments">&ldquo;Securing Enterprise LLM Deployments: Best Practices and Implementation&rdquo;</a>.</p>
+<p>Besides everything I have read on these subjects, this quote from <a href="https://www.iese.edu/faculty-research/faculty/javier-zamora/">Javier Zamora</a>, IESE professor, has stuck with me:</p>
+<blockquote>
+	If we want AI for good, then it depends on us to make it so.
+    </br>
+    <div id="reference">
+		<cite title="Source: Javier Zamora">
+        - 
+            Javier Zamora 
+             in 
+          
+          
+            
+              <a href="https://insightreports.iese.edu/en/artificial-intelligence-report/" target="_blank" rel="noopener noreferrer">
+              Artificial Intelligence Report</a>
+            
+          
+          
+		</cite>
+    </p>
+</blockquote>
+<p>&ldquo;AI for good&rdquo; refers to the ethical use of artificial intelligence to address societal challenges. Generative AI, alongside its promising and limitless future, presents numerous ethical issues, including perpetuating biases, manipulation, deception, copyright infringement, and issues of accountability. Safety, robustness, fairness, transparency and environmental impact are other issues to consider.</p>
+<p>We need responsible use of generative AI, including monitoring the requested and generated content and intervening when necessary to mitigate potential harm. Content moderation, albeit complex, is a vital aspect of this oversight, as AI engineers work to filter out harmful or biased results and implement safeguards that activate when users search for potentially harmful content, ensuring that the output remains appropriate and safe for specific audiences. IESE Dean, <a href="https://www.iese.edu/faculty-research/faculty/franz-heukamp/">Franz Heukamp</a>, put it succinctly:</p>
+<blockquote>
+	There is power, and there is good, and they need to come together.
+    </br>
+    <div id="reference">
+		<cite title="Source: Franz Heukamp">
+        - 
+            Franz Heukamp 
+             in 
+          
+          
+            
+              <a href="https://insightreports.iese.edu/en/artificial-intelligence-report/" target="_blank" rel="noopener noreferrer">
+              IESE’s 2022 Global Alumni Reunion</a>
+            
+          
+          
+		</cite>
+    </p>
+</blockquote>
+<p>It&rsquo;s up to all of us to ensure that unintended impacts don&rsquo;t occur. It won&rsquo;t happen by itself, an AI middleware is needed, which promotes the AI power but gives you the means to control. That’s the Kong AI Gateway.</p>
+<h1 id="kong-ai-gateway">Kong AI Gateway</h1>
+<p>Below you can find my own Kong AI Gateway overview diagram with a slightly different grouping compared to the official diagrams based on the <a href="https://docs.konghq.com/gateway/changelog/">Enterprise version 3.10</a>. In general, the Kong AI Gateway is nothing else than the Kong API Gateway with AI plugins on top, some are OSS (the green bubbles), others are only available for Enterprise customers (the red bubbles). At the heart and center of the AI Gateway are the prompt engineering controls which directly tackle Ethical AI and AI Risk Management. Access to the LLM APIs is managed through the Unified LLM Access Controls, represented by the faded orange bubbles on the right. The supported vector databases are shown at the bottom, with purple bubbles indicating the default indices used by Kong.</p>
+
+
+  
+
+
+<picture style="display: contents;"
+     
+    id="[64 36 81 171 420 112]"
+    onclick="openModal(this.id)"
+     >
+    
+    <source srcset="/posts/img/AS-KongGateway-AiGateway/KongAIGateway-dark.png" media="none"/>
+    
+    <img    
+        class="dynamicimage modal-pic"    
+        
+        src="/posts/img/AS-KongGateway-AiGateway/KongAIGateway-light.png" 
+        
+         
+        
+        
+        
+        
+        />
+    
+</picture>
+
+<script>
+    initPicture()
+</script>
+
+<p>So far, I have omitted two important components from the architecture diagram. However, they impressively demonstrate how Ethical AI and AI Risk Management can be implemented on the Kong Gateway. The <a href="https://docs.konghq.com/hub/kong-inc/ai-sanitizer/#ai-pii-anonymizer-service">&ldquo;AI PII Anonymizer&rdquo; services</a> (the blue bubble on the left side) are specialized language-specific services provided by Kong that must run in tandem with the AI sanitizer plugin. Please note that access to the Kong AI PII Anonymizer service requires a private Docker image, which is available upon request from Kong Support. This service detects and sanitizes sensitive data for the &ldquo;AI Sanitizer&rdquo; plugin. Finally, the <a href="https://azure-ai-content-safety-api-docs.developer.azure-api.net/api-details#api=content-safety-service-2023-10-01&amp;operation=TextOperations_AnalyzeText">&ldquo;Azure Content Safety SaaS&rdquo;</a> service (the faded yellow bubble on the right side) is a special SaaS offering operating on the Azure platform, which safeguards against potential harm by assessing every LLM request in relation to the <a href="https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/harm-categories">harm categories</a> &ldquo;hate and fairness&rdquo;, &ldquo;sexual&rdquo;, &ldquo;violence&rdquo; and &ldquo;self-harm&rdquo;.</p>
+<p>Let&rsquo;s go through the different control categories and list the available plugins.</p>
+<p>The <strong>Unified LLM Access Controls</strong> are generally used for API LLM provider access. The provided plugins are <a href="https://docs.konghq.com/hub/kong-inc/ai-proxy/">AI Proxy</a> and <a href="https://docs.konghq.com/hub/kong-inc/ai-proxy-advanced/">AI Proxy Advanced</a> which enable an unified access to the AI APIs of various LLM providers. The AI Proxy Advanced offers additional load balancing and semantic routing capabilities. The <a href="https://docs.konghq.com/hub/kong-inc/ai-request-transformer">AI Request Transformer</a> and <a href="https://docs.konghq.com/hub/kong-inc/ai-response-transformer">AI Response Transformer</a> plugins enhance API requests and responses through a no-code approach, allowing users to easily integrate AI capabilities. These plugins leverage a unified access approach provided by Kong, with the AI Request Transformer introspecting and transforming incoming requests before they reach upstream services and the AI Response Transformer adjusting the upstream responses based on LLM instructions before returning them to clients.</p>
+<p>The <strong>Cost and Performance Controls</strong> are represented by the two plugins <a href="https://docs.konghq.com/hub/kong-inc/ai-rate-limiting-advanced">AI Rate Limiting Advanced</a> and <a href="https://docs.konghq.com/hub/kong-inc/ai-semantic-cache/">AI Semantic Cache</a>. AI Rate Limiting introspects LLM responses to calculate token cost and enable rate limits for the LLM backend service. While the AI Semantic Cache plugin allows you to semantically cache responses from LLMs to enhance performance and reduce operational costs.The <a href="https://docs.konghq.com/hub/kong-inc/ai-rag-injector/">AI RAG Injector Plugin</a> is a <strong>Response Accuracy and Hallucination Mitigation Control</strong>. This plugin simplifies the creation of retrieval-augmented generation (RAG) by automatically injecting content from a vector database (Redis or Postgres pgvector) on the existing requests.</p>
+<p>The <strong>Prompt Engineering Controls</strong> form the heart of the AI Gateway. This is where Ethical AI and AI Risk Management (&ldquo;AI for good&rdquo;) are implemented. The <a href="https://docs.konghq.com/hub/kong-inc/ai-azure-content-safety/">Azure Content Safety</a> plugin allows administrators to enforce introspection with the <a href="https://azure.microsoft.com/en-us/products/ai-services/ai-content-safety">Azure Content Safety</a> service for all requests handled by the AI Proxy plugin (see the description above). The powerful <a href="https://docs.konghq.com/hub/kong-inc/ai-sanitizer/">AI Sanitizer</a> plugin helps to protect sensitive information in client request bodies before they reach upstream services. The plugin ensures compliance with data privacy regulations. It supports multiple sanitization modes, including replacing sensitive information with fixed placeholders or generating synthetic replacements that retain category-specific characteristics. The <a href="https://docs.konghq.com/hub/kong-inc/ai-prompt-guard">AI Prompt Guard</a> plugin allows the configuration of allow/deny lists using regular expressions. Whereas the <a href="https://docs.konghq.com/hub/kong-inc/ai-semantic-prompt-guard">AI Semantic Prompt Guard</a> plugin allows the configuration of allow/deny lists using semantically similar prompts. The <a href="https://docs.konghq.com/hub/kong-inc/ai-prompt-template">AI Prompt Template</a> plugin enables administrators to provide pre-configured AI prompts to users. The plugin prohibits arbitrary prompts and gives the AI engineers back control and optimization potential. Ethical and risk control additions can be included in the prompt template by the AI engineers (invisible to the AI consumer). Same with the <a href="https://docs.konghq.com/hub/kong-inc/ai-prompt-decorator">AI Prompt Decorator</a> plugin which injects messages at the start or end of a caller’s chat history.</p>
+<p>The final category is <strong>AI Observability and Alerting Controls</strong> which is crucial for ensuring cost-effective and reliable AI operations. Effective AI observability allows organizations to monitor, troubleshoot, and optimize AI usage in real-time, ensuring their reliability, security, and operational efficiency. These capabilities are supported by  well-known observability plugins that have been enhanced with AI-specific features. For more information, visit <a href="https://docs.konghq.com/gateway/latest/ai-gateway/#ai-observability">AI Observability</a>, <a href="https://docs.konghq.com/gateway/3.10.x/production/logging/ai-analytics/">AI Analytics</a>, and <a href="https://docs.konghq.com/gateway/3.10.x/production/monitoring/ai-metrics/">AI Metrics</a>.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>I share the <a href="https://apisix.apache.org/blog/2025/03/21/ai-gateway-vs-api-gateway-differences-explained">view</a> by one of Kong’s competitors that &ldquo;Evolved AI Gateways from API Gateways&rdquo; like the Kong Gateway are superior to &ldquo;Specific Purpose-Built AI Gateways&rdquo; in the medium and long term. AI Gateways are not a replacement, but an evolution of API Gateways. All existing API Gateway features are also required in the AI context - from hiding AI credentials to in front multi-layer authentication.</p>
+<p>Additionally, with <a href="https://en.wikipedia.org/wiki/Agentic_AI">Agentic AI</a>, it&rsquo;s already becoming apparent that AI Gateways will play an important key role in accessing autonomously the API catalog and configured API providers. The key word here is <a href="https://www.anthropic.com/news/model-context-protocol">MCP (Model Context Protocol)</a>, which will be embedded in the Kong AI Gateway. Not to mention the already existing capabilities to securely safeguard remote MCP servers like traditional APIs through the Gateway.</p>
+<p>The recently published <a href="https://www.kyndryl.com/us/en/about-us/news/2025/05/is-your-workforce-ready-for-ai">Kyndryl survey</a> reveals that approximately four out of ten CEOs believe their current infrastructure is insufficient for AI deployment, or that integrating AI into existing systems presents a significant challenge.  With Kong AI Gateway, seamless integration enables organizations to more effectively harness AI capabilities, driving innovation and maintaining a competitive advantage while ensuring risk management and compliance with ethical standards.</p>
+<p>And as we have seen once again with all the AI functionality and extensions, with Kong Gateway, you will not run into any limitations.</p>
+<h1 id="credits">Credits</h1>
+<p>Title image by <a href="https://www.istockphoto.com/en/portfolio/StefanLenz">Stefan Lenz</a> on <a href="https://www.istockphoto.com">iStock</a></p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/alexander-suchier.jpg" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/alexander-suchier">Alexander Suchier</a><span>
+                    
+                </span></h3>
+                <p>Senior Managing Technical Consultant and Kong Champion </p>
+                <p calss="author-socials">
+                    
+                    
+                    <a target="_blank"  href="https://www.linkedin.com/in/alexander-suchier-0608481"><i class="fa-brands fa-linkedin"></i></a>
+                    
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        <div class="related-block">
+            <h3 class="related-heading" id="series-list">Check out the full series</h3>
+            
+            <ul>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-productintroduction/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 1: Brief Product Introduction</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-logchunking/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 2: Log Chunking</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-onbehalfof/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 3: Token Exchange On-Behalf-Of</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-saml2bearer/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-mtls_header/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 5: mTLS Header</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-tokenvalidation/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 6: Token Validation</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-tokencloning/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 7: Token Cloning</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-plugincloning/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 8: Plugin Cloning</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-serverlessfunctions/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 9: Serverless functions - Who responded?</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-aigateway/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 10: AI Gateway</a></li>
+                
+            </ul>
+        </div>
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/kong/">Kong</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/gateway/">Gateway</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/ai/">AI</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/genai/">GenAI</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/ai-gateway/">AI Gateway</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/ethical-ai/">Ethical AI</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/ai-riskmanagement/">AI Riskmanagement</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/agentic-ai/">Agentic AI</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/mcp/">MCP</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</html>

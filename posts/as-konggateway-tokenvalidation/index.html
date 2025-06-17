@@ -101,7 +101,7 @@
            
             <p>In the previous <a href="https://nttdata-dach.github.io/posts/as-konggateway-mtls_header/" title="Part 5: mTLS Header">blog post</a>, we discussed the topic of mutual transport layer security (mTLS) with consumer authentication even when perimeter security terminates incoming TLS communications. Now, we turn our attention towards implementing and enforcing security policies around the token validation process. Token validation is a fundamental responsibility of an API gateway and enables the implementation of a <a href="https://en.wikipedia.org/wiki/Zero_trust_security_model">Zero-Trust Architecture (ZTA)</a>. In the context of the &rsquo;never trust, always verify&rsquo; core principle of ZTA, API gateways in particular have a unique responsibility and should perform an appropriate token validation process.</p>
 <h1 id="overview---the-external-perspective">Overview - the external perspective</h1>
-<p>This technical blog is about token validation on the <a href="https://nttdata-dach.github.io/posts/as-kongproductintroduction/">Kong Gateway</a>. Token validation is one of the core tasks when implementing security policies in a <a href="https://en.wikipedia.org/wiki/Zero_trust_security_model">ZTA</a>, touching on the principles of &lsquo;<em>never trust, always verify</em>&rsquo; and ‘<em>inspect and log all traffic</em>’. But before we get into the details of token validation, let’s take a quick look at the tokens used in <a href="https://en.wikipedia.org/wiki/OpenID#OpenID_Connect_(OIDC)">OpenID Connect (OIDC)</a> and <a href="https://en.wikipedia.org/wiki/OAuth#OAuth_2.0">OAuth 2.0</a>, which are widely adopted standards used for authentication and authorization in modern architectures, especially in web applications with an underlying <a href="https://en.wikipedia.org/wiki/Microservices">microservice architecture</a> approach. The Internet Engineering Task Force (IETF) OAuth 2.0 core specification <a href="https://datatracker.ietf.org/doc/html/rfc6749">RFC 6749</a> defines several ways for a client to obtain tokens. These standards distinguish between identity, access, and refresh tokens.</p>
+<p>This technical blog is about token validation on the <a href="https://nttdata-dach.github.io/posts/as-konggateway-productintroduction/" title="Part 1: Brief Product Introduction">Kong Gateway</a>. Token validation is one of the core tasks when implementing security policies in a <a href="https://en.wikipedia.org/wiki/Zero_trust_security_model">ZTA</a>, touching on the principles of &lsquo;<em>never trust, always verify</em>&rsquo; and ‘<em>inspect and log all traffic</em>’. But before we get into the details of token validation, let’s take a quick look at the tokens used in <a href="https://en.wikipedia.org/wiki/OpenID#OpenID_Connect_%28OIDC%29">OpenID Connect (OIDC)</a> and <a href="https://en.wikipedia.org/wiki/OAuth#OAuth_2.0">OAuth 2.0</a>, which are widely adopted standards used for authentication and authorization in modern architectures, especially in web applications with an underlying <a href="https://en.wikipedia.org/wiki/Microservices">microservice architecture</a> approach. The Internet Engineering Task Force (IETF) OAuth 2.0 core specification <a href="https://datatracker.ietf.org/doc/html/rfc6749">RFC 6749</a> defines several ways for a client to obtain tokens. These standards distinguish between identity, access, and refresh tokens.</p>
 <aside 
  data-content="Note" 
 
@@ -181,62 +181,62 @@ The <code>client_id</code> and <code>azp</code> claims are important because the
 </aside>
 <p>These days, however, the <a href="https://www.rfc-editor.org/rfc/rfc9068">RFC 9068</a> standard (<a href="https://www.rfc-editor.org/rfc/rfc9068">JSON Web Token Profile for OAuth 2.0 Access Tokens</a>) provides clear guidelines on which claims must, should or may be included in a JWT access token. In my opinion, you should follow this standard; the claims listed in Section <a href="https://www.rfc-editor.org/rfc/rfc9068#section-2.2">2.2</a> are mandatory, while the optional authentication information claims are listed in Section <a href="https://www.rfc-editor.org/rfc/rfc9068#section-2.2.1">2.2.1</a>. Other optional identity and authorization claim recommendations are listed in following Sections <a href="https://www.rfc-editor.org/rfc/rfc9068#section-2.2.2">2.2.2</a> and <a href="https://www.rfc-editor.org/rfc/rfc9068#section-2.2.3">2.2.3</a>. Here are the access token payload claims classified as mandatory by the RFC 9068 specification.</p>
 <table>
-<thead>
-<tr>
-<th style="text-align:left">Claim Name</th>
-<th style="text-align:left">Claim Meaning</th>
-<th style="text-align:left">Claim Description</th>
-<th style="text-align:left">Reference</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left"><code>iss</code></td>
-<td style="text-align:left">issuer</td>
-<td style="text-align:left">Identifies the principal issuing the JWT</td>
-<td style="text-align:left">Section <a href="https://www.rfc-editor.org/rfc/rfc7519#section-4.1.1">4.1.1</a> of [<a href="https://www.rfc-editor.org/rfc/rfc9068#RFC7519">RFC7519</a>]</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>exp</code></td>
-<td style="text-align:left">expiration time</td>
-<td style="text-align:left">Identifies the expiration time on or after which the JWT must not be accepted for processing.</td>
-<td style="text-align:left">Section <a href="https://www.rfc-editor.org/rfc/rfc7519#section-4.1.4">4.1.4</a> of [<a href="https://www.rfc-editor.org/rfc/rfc9068#RFC7519">RFC7519</a>]</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>iat</code></td>
-<td style="text-align:left">issued at</td>
-<td style="text-align:left">Identifies the time the JWT was issued. Determines the age of the JWT.</td>
-<td style="text-align:left">Section <a href="https://www.rfc-editor.org/rfc/rfc7519#section-4.1.6">4.1.6</a> of [<a href="https://www.rfc-editor.org/rfc/rfc9068#RFC7519">RFC7519</a>]</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>aud</code></td>
-<td style="text-align:left">audiences</td>
-<td style="text-align:left">Identifies the recipients for whom the JWT is intended. Each principal intended to process the JWT MUST identify itself with a value in the audience claim.</td>
-<td style="text-align:left">Section <a href="https://www.rfc-editor.org/rfc/rfc7519#section-4.1.3">4.1.3</a> of [<a href="https://www.rfc-editor.org/rfc/rfc9068#RFC7519">RFC7519</a>]</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>sub</code></td>
-<td style="text-align:left">subject</td>
-<td style="text-align:left">Identifies the principal that is the subject of the JWT.</td>
-<td style="text-align:left">Section <a href="https://www.rfc-editor.org/rfc/rfc7519#section-4.1.2">4.1.2</a> of [<a href="https://www.rfc-editor.org/rfc/rfc9068#RFC7519">RFC7519</a>]</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>jti</code></td>
-<td style="text-align:left">JWT id</td>
-<td style="text-align:left">Provides a unique identifier for the JWT. The <code>jti</code> claim can be used to prevent the JWT from being replayed.</td>
-<td style="text-align:left">Section <a href="https://www.rfc-editor.org/rfc/rfc7519#section-4.1.7">4.1.7</a> of [<a href="https://www.rfc-editor.org/rfc/rfc9068#RFC7519">RFC7519</a>]</td>
-</tr>
-<tr>
-<td style="text-align:left"><code>client_id</code></td>
-<td style="text-align:left">client identifier</td>
-<td style="text-align:left">Provides the client identifier that requested the token (not a secret, unique to the authorization server).</td>
-<td style="text-align:left">Section <a href="https://www.rfc-editor.org/rfc/rfc8693#section-4.3">4.3</a> of [<a href="https://www.rfc-editor.org/rfc/rfc9068#RFC8693">RFC8693</a>]</td>
-</tr>
-</tbody>
+  <thead>
+      <tr>
+          <th style="text-align: left">Claim Name</th>
+          <th style="text-align: left">Claim Meaning</th>
+          <th style="text-align: left">Claim Description</th>
+          <th style="text-align: left">Reference</th>
+      </tr>
+  </thead>
+  <tbody>
+      <tr>
+          <td style="text-align: left"><code>iss</code></td>
+          <td style="text-align: left">issuer</td>
+          <td style="text-align: left">Identifies the principal issuing the JWT</td>
+          <td style="text-align: left">Section <a href="https://www.rfc-editor.org/rfc/rfc7519#section-4.1.1">4.1.1</a> of [<a href="https://www.rfc-editor.org/rfc/rfc9068#RFC7519">RFC7519</a>]</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>exp</code></td>
+          <td style="text-align: left">expiration time</td>
+          <td style="text-align: left">Identifies the expiration time on or after which the JWT must not be accepted for processing.</td>
+          <td style="text-align: left">Section <a href="https://www.rfc-editor.org/rfc/rfc7519#section-4.1.4">4.1.4</a> of [<a href="https://www.rfc-editor.org/rfc/rfc9068#RFC7519">RFC7519</a>]</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>iat</code></td>
+          <td style="text-align: left">issued at</td>
+          <td style="text-align: left">Identifies the time the JWT was issued. Determines the age of the JWT.</td>
+          <td style="text-align: left">Section <a href="https://www.rfc-editor.org/rfc/rfc7519#section-4.1.6">4.1.6</a> of [<a href="https://www.rfc-editor.org/rfc/rfc9068#RFC7519">RFC7519</a>]</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>aud</code></td>
+          <td style="text-align: left">audiences</td>
+          <td style="text-align: left">Identifies the recipients for whom the JWT is intended. Each principal intended to process the JWT MUST identify itself with a value in the audience claim.</td>
+          <td style="text-align: left">Section <a href="https://www.rfc-editor.org/rfc/rfc7519#section-4.1.3">4.1.3</a> of [<a href="https://www.rfc-editor.org/rfc/rfc9068#RFC7519">RFC7519</a>]</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>sub</code></td>
+          <td style="text-align: left">subject</td>
+          <td style="text-align: left">Identifies the principal that is the subject of the JWT.</td>
+          <td style="text-align: left">Section <a href="https://www.rfc-editor.org/rfc/rfc7519#section-4.1.2">4.1.2</a> of [<a href="https://www.rfc-editor.org/rfc/rfc9068#RFC7519">RFC7519</a>]</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>jti</code></td>
+          <td style="text-align: left">JWT id</td>
+          <td style="text-align: left">Provides a unique identifier for the JWT. The <code>jti</code> claim can be used to prevent the JWT from being replayed.</td>
+          <td style="text-align: left">Section <a href="https://www.rfc-editor.org/rfc/rfc7519#section-4.1.7">4.1.7</a> of [<a href="https://www.rfc-editor.org/rfc/rfc9068#RFC7519">RFC7519</a>]</td>
+      </tr>
+      <tr>
+          <td style="text-align: left"><code>client_id</code></td>
+          <td style="text-align: left">client identifier</td>
+          <td style="text-align: left">Provides the client identifier that requested the token (not a secret, unique to the authorization server).</td>
+          <td style="text-align: left">Section <a href="https://www.rfc-editor.org/rfc/rfc8693#section-4.3">4.3</a> of [<a href="https://www.rfc-editor.org/rfc/rfc9068#RFC8693">RFC8693</a>]</td>
+      </tr>
+  </tbody>
 </table>
 <p>Other documents about JWT token validation include the <a href="https://www.rfc-editor.org/rfc/rfc8725">IETF RFC 8725 specification (JSON Web Token Best Current Practices)</a> and the highly recommended book <a href="https://auth0.com/resources/ebooks/jwt-handbook#!">&ldquo;The JWT Handbook&rdquo;</a> by Sebastián E. Peyrott. Also take a look at the <a href="https://owasp.org/API-Security/editions/2023/en/0x11-t10/">OWASP (Open Web Application Security Project)</a> Top 10 API security risks, which points out the most critical security risks facing APIs. Several list items are related to tokens or token management.</p>
 <h1 id="kong---token-validation-related-plugins">Kong - token validation related plugins</h1>
-<p>Now that we understand the JWT details, we can look at the validation and implementation inside the Kong Gateway. As discussed, the correct way to prevent attacks is to only consider a token valid if both the signature and the content are valid. Therefore, we look at the standard Kong plugins that take both aspects into account. But if the standard plugins are not sufficient, writing your own custom plugins with additional validation logic is always a possible solution. From my <a href="https://nttdata-dach.github.io/series/kong-the-gateway-without-limitations/">previous blogs in the Kong series</a>, where I also presented self-implemented custom plugins for various use cases, it is known that priority determines the order of plugin execution. Therefore, we will go through the relevant Kong plugins for token validation according to their predefined <a href="https://docs.konghq.com/konnect/reference/plugins/#plugin-execution-order">execution priority</a>.</p>
+<p>Now that we understand the JWT details, we can look at the validation and implementation inside the Kong Gateway. As discussed, the correct way to prevent attacks is to only consider a token valid if both the signature and the content are valid. Therefore, we look at the standard Kong plugins that take both aspects into account. But if the standard plugins are not sufficient, writing your own custom plugins with additional validation logic is always a possible solution. From my <a href="https://nttdata-dach.github.io/series/kong-the-gateway-without-limitations/" title="Kong - The Gateway without Limitations">previous blogs in the Kong series</a>, where I also presented self-implemented custom plugins for various use cases, it is known that priority determines the order of plugin execution. Therefore, we will go through the relevant Kong plugins for token validation according to their predefined <a href="https://docs.konghq.com/konnect/reference/plugins/#plugin-execution-order">execution priority</a>.</p>
 <p><strong>jwe-decrypt plugin</strong>: The first out-of-the-box plugin in the processing pipeline could be the <a href="https://docs.konghq.com/hub/kong-inc/jwe-decrypt/">jwe-decrypt plugin</a> (priority 1999). This Kong plugin allows decrypting an encrypted incoming token in the request. The plugin works unspectacularly, taking the token, decrypting it, and passing it on for further processing. So, if you have to deal with JWE tokens, this is the solution provided by Kong to make offline validation possible.</p>
 <p><strong>outh2-introspection plugin</strong>: The next Kong plugin in priority order is the <a href="https://docs.konghq.com/hub/kong-inc/oauth2-introspection/">outh2-introspection plugin</a> (priority 1700). The plugin enables the discussed online validation by the token issuer (the third-party OAuth 2.0 server) through the standardized server introspection endpoint. Authentication of a Kong consumer is optionally facilitated, and the registered claims can be proxied to the upstream service. As with other authentication plugins in the Kong plugin portfolio, the OAuth2 introspection plugin seamlessly manages anonymous users.</p>
 <p><strong>jwt plugin</strong>: The next Kong plugin in line is the <a href="https://docs.konghq.com/hub/kong-inc/jwt/">jwt plugin</a> (priority 1450). The plugin checks signed incoming tokens, verifies the token’s signature, and can check the registered claims <code>exp</code> (expiration time) and <code>nbf</code> (not before).  The plugin is primarily used to authenticate consumers via a token claim to be defined (default is the <code>iss</code> claim), which contains a JWT credential key and refers to a RSA public key or secret for token validation. The optional anonymous configuration parameter allows in the event of a failed authentication that the request is not terminated and an anonymous consumer is determined. The use of the plugin is explained in detail in a <a href="https://www.youtube.com/watch?v=OjF95vVldxY">Kong video</a>. Note that there are some special requirements for decK and Kong Ingress Controller users mentioned in the plugin documentation.</p>
@@ -316,9 +316,9 @@ The plugin is also able to refresh access tokens if a refresh token is available
             
             <ul>
                 
-                <li><a class="related-link" href="/posts/as-kongproductintroduction/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 1: Brief Product Introduction</a></li>
+                <li><a class="related-link" href="/posts/as-konggateway-productintroduction/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 1: Brief Product Introduction</a></li>
                 
-                <li><a class="related-link" href="/posts/as-konglogchunking/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 2: Log Chunking</a></li>
+                <li><a class="related-link" href="/posts/as-konggateway-logchunking/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 2: Log Chunking</a></li>
                 
                 <li><a class="related-link" href="/posts/as-konggateway-onbehalfof/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 3: Token Exchange On-Behalf-Of</a></li>
                 
@@ -331,6 +331,10 @@ The plugin is also able to refresh access tokens if a refresh token is available
                 <li><a class="related-link" href="/posts/as-konggateway-tokencloning/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 7: Token Cloning</a></li>
                 
                 <li><a class="related-link" href="/posts/as-konggateway-plugincloning/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 8: Plugin Cloning</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-serverlessfunctions/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 9: Serverless functions - Who responded?</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-aigateway/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 10: AI Gateway</a></li>
                 
             </ul>
         </div>

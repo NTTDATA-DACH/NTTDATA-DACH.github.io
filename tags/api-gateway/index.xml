@@ -4,8 +4,8 @@
     <title>API Gateway on Technology Blog</title>
     <link>https://nttdata-dach.github.io/tags/api-gateway/</link>
     <description>Recent content in API Gateway on Technology Blog</description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
+    <generator>Hugo</generator>
+    <language>en</language>
     <copyright>Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
     <lastBuildDate>Wed, 03 Jul 2024 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/tags/api-gateway/index.xml" rel="self" type="application/rss+xml" />
@@ -25,16 +25,16 @@
     </item>
     <item>
       <title>Part 2: Log Chunking</title>
-      <link>https://nttdata-dach.github.io/posts/as-konglogchunking/</link>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-logchunking/</link>
       <pubDate>Wed, 25 Oct 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/posts/as-konglogchunking/</guid>
+      <guid>https://nttdata-dach.github.io/posts/as-konggateway-logchunking/</guid>
       <description>In the last blog, I briefly introduced Kong as a sophisticated API gateway product. This time, I will discuss a problem related to logging message size limitation and offer a solution. This problem significantly limits root cause analysis and ultimately solution development.</description>
     </item>
     <item>
       <title>Part 1: Brief Product Introduction</title>
-      <link>https://nttdata-dach.github.io/posts/as-kongproductintroduction/</link>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-productintroduction/</link>
       <pubDate>Mon, 15 May 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/posts/as-kongproductintroduction/</guid>
+      <guid>https://nttdata-dach.github.io/posts/as-konggateway-productintroduction/</guid>
       <description>Kong Gateway is a lightweight, fast, and flexible API Gateway. It acts as an intermediary between API providers and consumers, enabling them to communicate based on policies. It also provides observability features, allowing to track API usage and performance. Overall it is a convincing and outstanding product which is briefly introduced in the following blog.</description>
     </item>
   </channel>

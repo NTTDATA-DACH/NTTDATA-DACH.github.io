@@ -1,0 +1,334 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Part 9: Serverless functions - Who responded?  </title>
+  <meta charset="utf-8"/> 
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Kong - The Gateway without Limitations - Part 9: Serverless functions - Who responded?"/>
+  
+  <meta property="article:author" content="[Alexander Suchier]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/AS-KongGateway-ServerlessFunctions/title-image.jpg"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/as-konggateway-serverlessfunctions/"/>
+  <meta property="og:description" content="In our previous blog posts in the Kong Gateway series, we explored various security aspects, particularly focusing on token-related issues and their solutions involving both Kong and custom-built plugins. Today, we dive deeper into another coding variant within the gateway: Kong serverless functions. We will use a real-world “Who Responded?” example to demonstrate how effectively a root cause analysis approach can be supported with minimal effort."/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">19.03.2025
+        
+         - Alexander Suchier - <i class="fa-solid fa-book-open"></i> 8 min read
+        
+        </span>
+        Part 9: Serverless functions - Who responded?
+        
+        
+        <a id="series-link" href="/series/kong-the-gateway-without-limitations"><span class="subtitle">Kong - The Gateway without Limitations</span></a>
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/AS-KongGateway-ServerlessFunctions/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <p>In our previous blog posts in the <a href="https://nttdata-dach.github.io/series/kong-the-gateway-without-limitations/" title="Kong - The Gateway without Limitations">Kong Gateway series</a>, we explored various security aspects, particularly focusing on token-related issues and their solutions involving both Kong and custom-built plugins. Today, we dive deeper into another coding variant within the gateway: Kong serverless functions. We will use a real-world “Who Responded?” example to demonstrate how effectively a <a href="https://en.wikipedia.org/wiki/Root_cause_analysis">root cause analysis</a> (RCA) approach can be supported with minimal effort.</p>
+<h1 id="overview">Overview</h1>
+<p>This technical blog is about serverless functions on the <a href="https://nttdata-dach.github.io/posts/as-konggateway-productintroduction/" title="Part 1: Brief Product Introduction">Kong Gateway</a> and how we can use them to complement the functionality. In our previous blog posts, we discussed the use of Kong plugins to add functionality and the rationale for occasionally cloning or patching them. Throughout this Kong blog series, we have explored programming custom plugins that enable developers and administrators to add missing functionality. We have previously mentioned serverless functions in the Kong <a href="https://nttdata-dach.github.io/posts/as-konggateway-productintroduction/" title="Part 1: Brief Product Introduction">introduction blog</a> and in the <a href="https://nttdata-dach.github.io/posts/as-konggateway-logchunking/" title="Part 2: Log Chunking">log chunking blog</a>, although the focus there was primarily on providing a supplementary overview and on logging aspects.</p>
+<p>So what are these Kong serverless functions all about?</p>
+<p>Serverless function plugins have been available since the early <a href="https://github.com/Kong/kong/blob/master/CHANGELOG-OLD.md#plugins-52">Kong version 0.14</a>, released in 2018. And the concise answer to what they’re all about can be found in the original announcement: &ldquo;<em>(serverless functions, A.N.) dynamically run <a href="https://en.wikipedia.org/wiki/Lua_%28programming_language%29">Lua code</a> without having to write a full-fledged (custom, A.N.) plugin. Lua code snippets can be uploaded via the Admin API and be executed during Kong&rsquo;s access phase.</em>&rdquo;</p>
+<p>In summary, if the code required isn’t extensive enough to justify a full-fledged plugin, you can opt for a serverless function that adds functionality with just a few lines of code. Kong refers to these as code snippets; in this context, they could also be called code nuggets - small, often reusable, self-contained functions or methods that perform a specific, defined task that Kong lacks in the product delivery.</p>
+<p>Subsequently, Kong functions were also supported in the <a href="https://docs.konghq.com/gateway/latest/production/deployment-topologies/db-less-and-declarative-config/">declarative DB-less</a> version and can be configured using the <a href="https://docs.konghq.com/gateway/latest/kong-manager/">Kong Manager UI</a>, complementing the ability to upload Lua code snippets via the <a href="https://docs.konghq.com/gateway/latest/admin-api/">Admin API</a> for execution during Kong&rsquo;s <a href="https://docs.konghq.com/gateway/latest/kong-enterprise/plugin-ordering/#phases">access phase</a>; we will also illustrate later how the serverless function can be described as a <a href="https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/">Custom Resource Definition</a> (CRD) in a Kubernetes manifest. Furthermore, they have been <a href="https://github.com/Kong/kong/blob/master/CHANGELOG-OLD.md#plugins-23">extended to execute in all NGINX phases since version 2.1.0</a>.</p>
+<p>Kong serverless functions can be categorized into <a href="https://docs.konghq.com/hub/kong-inc/pre-function/"><strong>pre-functions</strong></a> and <a href="https://docs.konghq.com/hub/kong-inc/post-function/"><strong>post-functions</strong></a>, each serving a distinct purpose in the API request and response lifecycle. Pre-functions are executed before the request reaches the upstream service, allowing users to validate, modify, or enhance incoming requests by performing tasks such as authentication, logging, or data transformation. In contrast, post-functions are executed after the upstream service has processed the request, but before the response is sent back to the client. They are useful for manipulating the response, logging output, or handling errors. The primary difference is in their timing and focus: pre-functions, which have the highest <a href="https://docs.konghq.com/konnect/reference/plugins/#plugin-execution-order">plugin execution priority</a> (1000000), are used for preparing and controlling requests, while post-functions, which have the lowest priority (-1000), deal with responses and post-processing tasks.</p>
+<aside 
+ data-content="Note" 
+
+><br/>
+    The <a href="https://docs.konghq.com/hub/?category=serverless">Kong plugin hub page</a> also lists other serverless plugins: <a href="https://docs.konghq.com/hub/kong-inc/aws-lambda/">AWS Lambda</a>, <a href="https://docs.konghq.com/hub/kong-inc/openwhisk/">Apache OpenWhisk</a>, and <a href="https://docs.konghq.com/hub/kong-inc/azure-functions/">Azure Functions</a>. These functions operate outside the Kong gateway, run independently as separate functions, and require a hyperscaler (Amazon Web Services, IBM Cloud, or Microsoft Azure) to run. They are built on the infrastructure provided by these large cloud service providers and are more general-purpose compute services, introducing additional latency and complexity. Kong serverless pre- and post-functions are tightly integrated with the Kong API gateway. They operate seamlessly within the context of request and response handling. This blog focuses on the latter serverless functions.
+</aside>
+<p>The advantage of pre- and post-function is easier and faster code deployment, eliminating the need for boilerplate code. This allows teams to focus on pure functionality rather than diving into more complex custom development. However, it is more difficult to introduce configuration options (see also <a href="https://support.konghq.com/support/s/article/how-to-use-custom-environment-variable-in-custom-plugin-or-serverless-functions-plugin-when-installed-kong-via-helm-chart">knowledge article number 2215</a>), and the priority is predefined outside the access phase. As of <a href="https://docs.konghq.com/gateway/changelog/#enterprise-20">version 3.0.0</a>, Kong Gateway supports <a href="https://docs.konghq.com/konnect/reference/plugins/#dynamic-plugin-ordering">dynamic plugin ordering</a> - even for serverless function plugins - during the access phase, allowing you to change a plugin’s static priority by specifying the order in which plugins are executed. Please note that <a href="https://docs.konghq.com/gateway/changelog/#breaking-changes-and-deprecations-4">starting with version 3.5.0</a>, an Enterprise license is required to use dynamic plugin ordering, which may require switching back to custom plugins. Extensive processing in pre- or post-functions can impact performance, therefore it&rsquo;s essential to keep the logic lightweight.</p>
+<p>As of version 2.2.1, the serverless functions are executed in a <a href="https://github.com/Kong/kong/blob/master/CHANGELOG-OLD.md#plugins-16">protected sandbox</a>. Kong added a sandbox to enhance security and isolation when executing arbitrary custom code. The sandbox environment prevents the <a href="https://docs.konghq.com/hub/kong-inc/pre-function/#sandboxing">pre-</a> and post-functions to access sensitive gateway data and system resources, reducing the risk of vulnerabilities and ensuring that serverless functions operate safely within the Kong Gateway. This was implemented to offer users the flexibility to run custom code while maintaining a secure and stable API environment, enabling more reliable and controlled execution of serverless functions.
+ </p>
+<h1 id="practical-function-example-who-responded">Practical function example, “Who responded?”</h1>
+<h2 id="the-q-in-qa">The Q in Q&amp;A</h2>
+<p>It&rsquo;s time to showcase a serverless function example that provides real value in the day-to-day operations of an API administrator or operator. Since the gateway typically operates in front of the service layer, most inquiries regarding errors are first directed to the API gateway staff. Typically, API clients reach out with a variety of questions to diagnose and resolve their issues.</p>
+<p>Any <a href="https://en.wikipedia.org/wiki/Root_cause_analysis">root cause analysis</a> (RCA) involves collecting and efficiently searching through log data to better understand a problem. This process includes gathering additional information, such as crash logs and application/server/gateway logs (usefully supported by   solution), to establish evidence of the issue, its duration, and frequency.</p>
+<p>However, the most pressing question is whether the error originated from the API gateway or any upstream service in the backend call chain, and who needs to be contacted. This information is crucial to help consumers determine the appropriate next steps for resolution and avoid delays in the problem resolution process.</p>
+<p>How about providing API consumers with an indication of whether an HTTP error code was generated by the gateway itself or originated from an upstream service? The question to be answered is: “Who responded, the API Gateway or any upstream service?”.</p>
+<h2 id="the-a-in-qa">The A in Q&amp;A</h2>
+<p>This answer can be easily provided by a serverless function with just a few lines of code using the <a href="https://docs.konghq.com/gateway/latest/plugin-development/pdk/">PDK</a> function <a href="https://docs.konghq.com/gateway/latest/plugin-development/pdk/kong.response/#kongresponseget_source">kong.response.get_source()</a>. After deployment, the API staff will be spared unnecessary questions when it pertains to a service response or a deliberate exit response from the API gateway.</p>
+<p>Here is the code example as a Kubernetes manifest of a post-function for a <a href="https://docs.konghq.com/kubernetes-ingress-controller/latest/">Kong Ingress Controller</a> installation. The serverless code can also be configured via the Kong Manager UI, via an Admin REST API call, or in a declarative approach.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l">configuration.konghq.com/v1</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l">KongPlugin</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">metadata</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">service-post-function</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">annotations</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">kubernetes.io/ingress.class</span><span class="p">:</span><span class="w"> </span><span class="l">kong</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">konghq.com/tags</span><span class="p">:</span><span class="w"> </span><span class="l">service-post-function</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="l">post-function</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="nt">config</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">header_filter</span><span class="p">:</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span>- <span class="p">|</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">    return function()
+</span></span></span><span class="line"><span class="cl"><span class="sd">      local res_source = &#39;unknown&#39;
+</span></span></span><span class="line"><span class="cl"><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">      if (kong.response.get_source()) then
+</span></span></span><span class="line"><span class="cl"><span class="sd">        res_source = kong.response.get_source()
+</span></span></span><span class="line"><span class="cl"><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">        if ((res_source==&#39;exit&#39;) and 
+</span></span></span><span class="line"><span class="cl"><span class="sd">            (kong.request.get_method()==&#39;OPTIONS&#39;) and
+</span></span></span><span class="line"><span class="cl"><span class="sd">            (kong.response.get_status()==200)) then
+</span></span></span><span class="line"><span class="cl"><span class="sd">          res_source = &#39;intentional-exit&#39;
+</span></span></span><span class="line"><span class="cl"><span class="sd">        end
+</span></span></span><span class="line"><span class="cl"><span class="sd">      end
+</span></span></span><span class="line"><span class="cl"><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">      kong.log.notice(&#39;X-GW-Response-Source: &#39;,res_source)
+</span></span></span><span class="line"><span class="cl"><span class="sd">      kong.response.set_header(&#39;X-GW-Response-Source&#39;,res_source)
+</span></span></span><span class="line"><span class="cl"><span class="sd">    end</span><span class="w">
+</span></span></span></code></pre></div><p>The variable res_source is initialized with the value &lsquo;unknown&rsquo; and overwritten with the function output of get_source under normal circumstances. This function returns a string with three possible values:</p>
+<ul>
+<li>The term &ldquo;exit&rdquo; is returned if a call to kong.response.exit() was made at any point during request processing. This happens when the request is short-circuited by a plugin or by Kong itself, such as in the case of invalid credentials. Here, the upstream service was not accessed.</li>
+<li>The term &ldquo;error&rdquo; is returned when an error occurs during the processing of the request, such as a timeout while connecting to the upstream service. It indicates that an unexpected and unrecoverable error occurred during request processing.</li>
+<li>The term &ldquo;service&rdquo; is returned when the response is generated by successfully contacting the proxied upstream service, regardless of the HTTP response code returned by the service.</li>
+</ul>
+<p>In 2022, I discovered a product bug that serverless functions and plugin crashes were not reported as an error. It was <a href="https://docs.konghq.com/gateway/changelog/#fixes-80">fixed in Enterprise version 2.8.1.3</a> (interested Kongers can read the details in support case <a href="https://support.konghq.com/support/s/case/5001K0000163uUMQAY/questions-on-kongresponsegetsource">SC00025886</a>).</p>
+<p>As you can see,  I have further fleshed out the exit response with the help of the <code>get_method()</code> and <code>get_status()</code> function. There are certainly cases where an exit is intentional and not a problem. One scenario is the <a href="https://docs.konghq.com/hub/kong-inc/cors/">CORS</a> plugin use, which causes an exit for <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS">OPTIONS preflight requests</a> even if a 200 return code is issued. So it&rsquo;s more of an intentional exit, that should be reflected back to the caller accordingly.</p>
+
+
+
+
+
+<picture style="display: contents;"
+     >
+    
+    <img    
+        class="dynamicimage"    
+        
+        src="/posts/img/AS-KongGateway-ServerlessFunctions/insomnia.png" 
+        
+         
+        
+         caption="Insomnia screenshot: OPTIONS preflight response with header `X-GW-Response-Source`."
+        
+         style="max-width:350px; position: relative; left: 50%; transform: translate(-50%, 0%);"
+        />
+     
+    <figcaption  >
+        Insomnia screenshot: OPTIONS preflight response with header <code>X-GW-Response-Source</code>.
+    </figcaption> 
+    
+</picture>
+
+<p>The response source information is added to the logs and additionally returned to the consumer via a response header <code>X-GW-Response-Source</code>. All that remains to be done is to inform the API consumers that they should take the <code>X-GW-Response-Source</code> return into account and, if necessary, contact the service owner directly. The API gateway team should only be contacted if the return values are &ldquo;exit&rdquo; or &ldquo;error&rdquo;.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>Kong serverless functions are another excellent example of the many ways to extend Kong&rsquo;s functionality as needed. We explored the powerful capabilities of serverless functions on the Kong Gateway, highlighting how they enhance the gateway&rsquo;s functionality without the overhead of writing full-blown custom plugins. By allowing gateway staff to execute simple Lua code snippets, serverless functions enable quick and efficient deployment of desired custom functionality. We demonstrated a practical use case, a &ldquo;Who responded?&rdquo; serverless post-function executed in the header_filter phase, which helps API administrators diagnose gateway incident issues by indicating whether a response originated from an upstream service or the API gateway itself.
+And as we have seen once again with the implementation of serverless functions, with Kong Gateway you will not run into any limitations.</p>
+<h1 id="credits">Credits</h1>
+<p>Title image by <a href="https://www.istockphoto.com/en/portfolio/guvendemir">guvendemir</a> on <a href="https://www.istockphoto.com">iStock</a></p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/alexander-suchier.jpg" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/alexander-suchier">Alexander Suchier</a><span>
+                    
+                </span></h3>
+                <p>Senior Managing Technical Consultant and Kong Champion </p>
+                <p calss="author-socials">
+                    
+                    
+                    <a target="_blank"  href="https://www.linkedin.com/in/alexander-suchier-0608481"><i class="fa-brands fa-linkedin"></i></a>
+                    
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        <div class="related-block">
+            <h3 class="related-heading" id="series-list">Check out the full series</h3>
+            
+            <ul>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-productintroduction/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 1: Brief Product Introduction</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-logchunking/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 2: Log Chunking</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-onbehalfof/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 3: Token Exchange On-Behalf-Of</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-saml2bearer/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-mtls_header/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 5: mTLS Header</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-tokenvalidation/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 6: Token Validation</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-tokencloning/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 7: Token Cloning</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-plugincloning/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 8: Plugin Cloning</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-serverlessfunctions/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 9: Serverless functions - Who responded?</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-aigateway/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 10: AI Gateway</a></li>
+                
+            </ul>
+        </div>
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/kong/">Kong</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/gateway/">Gateway</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/serverless/">Serverless</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/functions/">Functions</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/pre-function/">Pre-Function</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/post-function/">Post-Function</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/plugins/">Plugins</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/rca/">RCA</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/root-cause-analysis/">Root Cause Analysis</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</html>
