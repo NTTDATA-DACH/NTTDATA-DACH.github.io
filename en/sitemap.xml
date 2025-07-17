@@ -2,41 +2,32 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://nttdata-dach.github.io/tags/agentic-ai/</loc>
-    <lastmod>2025-06-14T00:00:00+00:00</lastmod>
-  </url><url>
     <loc>https://nttdata-dach.github.io/tags/ai/</loc>
-    <lastmod>2025-06-14T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/ai-gateway/</loc>
-    <lastmod>2025-06-14T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/ai-riskmanagement/</loc>
-    <lastmod>2025-06-14T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://nttdata-dach.github.io/tags/ethical-ai/</loc>
-    <lastmod>2025-06-14T00:00:00+00:00</lastmod>
+    <lastmod>2025-07-17T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/gateway/</loc>
-    <lastmod>2025-06-14T00:00:00+00:00</lastmod>
+    <lastmod>2025-07-17T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/genai/</loc>
-    <lastmod>2025-06-14T00:00:00+00:00</lastmod>
+    <lastmod>2025-07-17T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/hallucinations/</loc>
+    <lastmod>2025-07-17T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/kong/</loc>
-    <lastmod>2025-06-14T00:00:00+00:00</lastmod>
+    <lastmod>2025-07-17T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/series/kong-the-gateway-without-limitations/</loc>
-    <lastmod>2025-06-14T00:00:00+00:00</lastmod>
+    <lastmod>2025-07-17T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/tags/mcp/</loc>
-    <lastmod>2025-06-14T00:00:00+00:00</lastmod>
+    <loc>https://nttdata-dach.github.io/posts/as-konggateway-rag_teamplay/</loc>
+    <lastmod>2025-07-17T00:00:00+00:00</lastmod>
   </url><url>
-    <loc>https://nttdata-dach.github.io/posts/as-konggateway-aigateway/</loc>
-    <lastmod>2025-06-14T00:00:00+00:00</lastmod>
+    <loc>https://nttdata-dach.github.io/tags/rag/</loc>
+    <lastmod>2025-07-17T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/series/</loc>
-    <lastmod>2025-06-14T00:00:00+00:00</lastmod>
+    <lastmod>2025-07-17T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="de"
@@ -48,8 +39,11 @@
                 href="https://nttdata-dach.github.io/series/"
                 />
   </url><url>
+    <loc>https://nttdata-dach.github.io/tags/spring-ai/</loc>
+    <lastmod>2025-07-17T00:00:00+00:00</lastmod>
+  </url><url>
     <loc>https://nttdata-dach.github.io/tags/</loc>
-    <lastmod>2025-06-14T00:00:00+00:00</lastmod>
+    <lastmod>2025-07-17T00:00:00+00:00</lastmod>
     <xhtml:link
                 rel="alternate"
                 hreflang="de"
@@ -60,6 +54,30 @@
                 hreflang="en"
                 href="https://nttdata-dach.github.io/tags/"
                 />
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/vector-database/</loc>
+    <lastmod>2025-07-17T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/vss/</loc>
+    <lastmod>2025-07-17T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/agentic-ai/</loc>
+    <lastmod>2025-06-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/ai-gateway/</loc>
+    <lastmod>2025-06-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/ai-riskmanagement/</loc>
+    <lastmod>2025-06-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/ethical-ai/</loc>
+    <lastmod>2025-06-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/tags/mcp/</loc>
+    <lastmod>2025-06-14T00:00:00+00:00</lastmod>
+  </url><url>
+    <loc>https://nttdata-dach.github.io/posts/as-konggateway-aigateway/</loc>
+    <lastmod>2025-06-14T00:00:00+00:00</lastmod>
   </url><url>
     <loc>https://nttdata-dach.github.io/tags/functions/</loc>
     <lastmod>2025-03-19T00:00:00+00:00</lastmod>

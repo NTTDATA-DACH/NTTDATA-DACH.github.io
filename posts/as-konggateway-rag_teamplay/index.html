@@ -1,0 +1,373 @@
+
+<!doctype html>
+<html>
+
+<head>
+  <title>  Part 11: RAG team play with Spring AI  </title>
+  <meta charset="utf-8"/> 
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Kong - The Gateway without Limitations - Part 11: RAG team play with Spring AI"/>
+  
+  <meta property="article:author" content="[Alexander Suchier]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/AS-KongGateway-RAG_TeamPlay/title-image.jpg"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/as-konggateway-rag_teamplay/"/>
+  <meta property="og:description" content="This blog talks about Kong&rsquo;s potential for Retrieval-Augmented Generation (RAG) implementations. RAG is a technique that improves large language models by adding real-time, enterprise-specific data retrieval, improving response accuracy and relevance. The team play between Kong AI Gateway and Spring AI enables seamless integration and optimization of generative AI RAG workflows within enterprise environments."/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+    
+    <nav>
+
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">17.07.2025
+        
+         - Alexander Suchier - <i class="fa-solid fa-book-open"></i> 9 min read
+        
+        </span>
+        Part 11: RAG team play with Spring AI
+        
+        
+        <a id="series-link" href="/series/kong-the-gateway-without-limitations"><span class="subtitle">Kong - The Gateway without Limitations</span></a>
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/AS-KongGateway-RAG_TeamPlay/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <p>The last NTT DATA technology blog in the <a href="https://nttdata-dach.github.io/series/kong-the-gateway-without-limitations/">Kong Gateway series</a> introduced the <a href="https://nttdata-dach.github.io/posts/as-konggateway-aigateway/">Kong AI Gateway</a>, which is based on the <a href="https://nttdata-dach.github.io/posts/as-kongproductintroduction/">API Gateway</a>. One outstanding AI feature is the recently added <a href="https://en.wikipedia.org/wiki/Retrieval-augmented_generation">Retrieval-Augmented Generation (RAG)</a> capability, facilitated by the <a href="https://docs.konghq.com/hub/kong-inc/ai-rag-injector/">AI RAG Injector plugin</a> that substantially minimizes the occurrence of <a href="https://en.wikipedia.org/wiki/Hallucination_%28artificial_intelligence%29">hallucinations</a> in large <a href="https://en.wikipedia.org/wiki/Large_language_model">language model (LLM)</a> responses. RAG effectively combines the strengths of LLMs with access to relevant, up-to-date information, yielding more accurate, contextually aware and informative responses. In this post, we will explore how seamlessly we can leverage this new AI plugin and the significant role that <a href="https://spring.io/projects/spring-ai#overview">Spring AI</a> can play in various RAG implementation options.</p>
+<h1 id="overview">Overview</h1>
+<p>Retrieval-Augmented Generation (RAG) is an innovative approach to combine large language models (LLMs) with external knowledge retrieval systems to provide more accurate and specific answers. Knowledge retrieval systems are designed to find and extract relevant information from large datasets.  LLMs available to the public, trained on fixed data sets for a set time period, can&rsquo;t access the latest, special, or private information. This limitation makes them less useful in many business scenarios. RAG addresses this challenge by providing dedicated and latest information beyond the LLM’s training data cutoff date. Relevant data is retrieved and incorporated into the context window of the prompt, ensuring that the information provided is current and highly relevant to the user&rsquo;s query, thereby reducing the likelihood of generating false or irrelevant information (so-called hallucinations). This approach is particularly valuable for applications that require precise and up-to-date information, such as customer support, research or decision-making use cases. Overall, RAG enhances the accuracy and benefit of AI-generated content by combining dynamic data retrieval with advanced large language generation capabilities.</p>
+<p>RAG is straightforward to understand, but its implementation can become complex and challenging. It often involves integrating multiple new technologies and techniques, for which organizations may have limited experience. As the field of RAG continues to evolve, implementations are progressing from basic, naive approaches to more advanced and modular frameworks. So-called naive RAG solutions typically integrate generation and retrieval in a straightforward manner. They are easier and faster to implement, but lack flexibility, making it hard to adapt or improve individual RAG implementation components. In contrast, recent architectures emphasize modularity, enabling independent optimization of knowledge integration by having different pre- and post-retrieval components. For a more in-depth differentiation, I highly recommend reviewing this great foundational <a href="https://arxiv.org/abs/2407.21059">paper, which has influenced actual RAG framework implementations like Spring AI</a>.</p>
+<p>Using RAG within applications offers a significant competitive advantage and is expected to become a fundamental and essential competency for any organization leveraging <a href="https://en.wikipedia.org/wiki/Generative_artificial_intelligence">generative AI</a>, regardless of whether naive, advanced or modular RAG architectures are employed.</p>
+<p>In the following sections, let us examine three different RAG approaches, where Kong Gateway collaborates with <a href="https://spring.io/projects/spring-ai">Spring AI</a> to optimize GenAI output. Each approach represents a different level of integration, from calling external services to a most unified gateway approach. These strategies demonstrate how leveraging Kong&rsquo;s AI capabilities alongside Spring AI can enhance operational effectiveness.</p>
+<aside 
+ data-content="Note" 
+
+><br/>
+    In my opinion, Spring AI offers significant benefits, particularly in enterprise environments where <a href="https://en.wikipedia.org/wiki/Java_%28programming_language%29">Java</a> is widely used, especially with <a href="https://en.wikipedia.org/wiki/Spring_Boot">Spring Boot</a> for <a href="https://en.wikipedia.org/wiki/Microservices">Microservice</a> development. Within the discussed solutions, Spring AI could potentially be replaced by popular <a href="https://en.wikipedia.org/wiki/Python_%28programming_language%29">Python</a> frameworks like <a href="https://python.langchain.com/docs/introduction/">LangChain</a> or <a href="https://docs.llamaindex.ai/en/stable/">LlamaIndex</a>, but there is no need to switch to Python frameworks when working with GenAI. Spring AI allows organizations to seamlessly integrate advanced generative AI capabilities within their existing Java-based infrastructure, leveraging existing expertise and resources. This compatibility enables easier adoption and deployment within given standard enterprise architectures, ensuring a cohesive and efficient development process without the complexity of adopting alternative programming languages. Production-ready <a href="https://spring.io/blog/2025/05/20/spring-ai-1-0-GA-released">Spring AI version 1.0.0</a> has been released recently.
+</aside>
+<p>Before diving into the details, I want to note that <a href="https://en.wikipedia.org/wiki/Vector_database">vector databases</a> are a common and popular choice for knowledge retrieval systems. They excel at semantic search by storing high-dimensional <a href="https://www.couchbase.com/blog/what-are-vector-embeddings/">vector embeddings</a> and performing <a href="https://www.couchbase.com/blog/vector-similarity-search/">vector similarity searches (VSS)</a> using methods like cosine similarity, euclidean distance or dot product. For a more detailed explanation, I would like to highlight two great blog posts by Claudio Acquaviva, Kong Principal Architect. These blogs explain <a href="https://konghq.com/blog/engineering/rag-application-kong-ai-gateway-3-8">RAG in a Python LangChain team play</a> and  <a href="https://konghq.com/blog/engineering/semantic-processing-and-vector-similarity-search-with-kong-and-redis">vector similarity search (VSS)</a> with Redis in detail. <a href="https://redis.io/docs/latest/develop/get-started/vector-database/">Redis</a> is a supported vector database for Kong AI Gateway&rsquo;s RAG solutions, alongside <a href="https://github.com/pgvector/pgvector">Postgres PgVector</a>. There are numerous sources covering the basics of RAG using <a href="https://www.geeksforgeeks.org/nlp/what-are-embedding-models/">embedding models</a>, such as Claudio&rsquo;s RAG blog in the introductory section and many others. Therefore, I won&rsquo;t go into the basics here.</p>
+<h1 id="approach-1-pre-310-reality">Approach 1: Pre-3.10 reality</h1>
+<p>Before Kong AI Gateway enterprise version 3.10, teams had no choice rather than to implement RAG functionality as external service or they had to write their own custom plugin. At that time, there was no <a href="https://docs.konghq.com/hub/kong-inc/ai-rag-injector/">AI RAG Injector plugin</a> available in the <a href="https://docs.konghq.com/hub/">Kong Plugin Hub catalogue</a>. I consider the development of a RAG custom plugin to be much more complex than implementing an external RAG Service with the help of Spring AI which easily manages data ingestion and querying. For a clear separation of concerns, it is advisable to divide these functionalities into separate applications. One application for the (regular) ingest and another for querying the vector database.</p>
+
+
+  
+
+
+<picture style="display: contents;"
+     
+    id="[35 299 486 387 295 15]"
+    onclick="openModal(this.id)"
+     >
+    
+    <source srcset="/posts/img/AS-KongGateway-RAG_TeamPlay/01_KongRAGwithSpringAISimplified-dark.png" media="none"/>
+    
+    <img    
+        class="dynamicimage modal-pic"    
+        
+        src="/posts/img/AS-KongGateway-RAG_TeamPlay/01_KongRAGwithSpringAISimplified-light.png" 
+        
+         
+        
+        
+        
+        
+        />
+    
+</picture>
+
+<script>
+    initPicture()
+</script>
+
+<p>In my proof-of-concept implementation, as illustrated in the diagram, the similarity search operation is invoked through the configured Kong upstream service. The augmented LLM call is subsequently executed using the AI Response Transformer plugin. However, alternative approaches using the new <a href="https://docs.konghq.com/hub/kong-inc/request-callout/">Request Callout plugin</a> together with the <a href="https://docs.konghq.com/hub/kong-inc/ai-proxy/">AI Proxy</a> or <a href="https://docs.konghq.com/hub/kong-inc/ai-proxy-advanced/">AI Proxy Advanced plugin</a> are also feasible.</p>
+<p>While this approach detaches the RAG process from the gateway, it offers a significant advantage. Spring AI has begun to implement cutting-edge concepts of <a href="https://docs.spring.io/spring-ai/reference/api/retrieval-augmented-generation.html#modules">modular RAG</a>, which can also be utilized in the VSS process. This includes <a href="https://docs.spring.io/spring-ai/reference/api/retrieval-augmented-generation.html#_pre_retrieval">pre-retrieval components</a> designed to transform input queries, enhancing their effectiveness for retrieval tasks by addressing challenges such as poorly formed queries, ambiguous terms, complex vocabulary or unsupported languages. Additionally, <a href="https://docs.spring.io/spring-ai/reference/api/retrieval-augmented-generation.html">post-processing components</a> are employed for ranking strategies and to refine retrieved documents based on the query, addressing the need to reduce noise and redundancy in the retrieved information.</p>
+<p>Today, this is not yet possible with the other two approaches utilizing the RAG Injector plugin, as it is based on a naive RAG approach. While this may not necessarily be a drawback, it should always be carefully evaluated within the specific context of the use case.</p>
+<aside 
+ data-content="Note" 
+
+><br/>
+    <strong>Why not simply implement everything using Spring AI, LangChain or LlamaIndex? Why take this complementary approach?</strong> AI Gateways offer key advantages over these frameworks by providing centralized governance, a single point of control for AI model usage, cost optimization and regimentation, overall caching and protection - including secure management of LLM provider credentials (rather than distributing them across applications) - as well as enhanced observability of any AI interactions. Unlike traditional frameworks that tightly connect AI logic to a single application codebase, AI Gateways let you abstract and enforce policies at the infrastructure level, in a language- and framework-agnostic way.  This approach simplifies scaling, management, and auditing. This centralized oversight is crucial for AI risk management and ensuring ethical AI deployments, as described in my introductory <a href="https://nttdata-dach.github.io/posts/as-konggateway-aigateway/">AI Gateway blog</a>.
+</aside>
+<h1 id="approach-2-hybrid-transition">Approach 2: Hybrid transition</h1>
+<p>With the introduction of Kong&rsquo;s RAG Injector plugin in <a href="https://docs.konghq.com/gateway/changelog/#31000">version 3.10</a>, teams gained the ability to handle RAG query processing at the gateway level while continuing to leverage Spring AI&rsquo;s mature ingestion capabilities. This hybrid approach offers a later migration path if you are still running on an older Kong Gateway version. It preserves existing ingest investments while gaining gateway-level benefits for querying.</p>
+
+
+  
+
+
+<picture style="display: contents;"
+     
+    id="[153 488 74 345 394 217]"
+    onclick="openModal(this.id)"
+     >
+    
+    <source srcset="/posts/img/AS-KongGateway-RAG_TeamPlay/02_KongRAGwithInjectorSpringAISimplified-dark.png" media="none"/>
+    
+    <img    
+        class="dynamicimage modal-pic"    
+        
+        src="/posts/img/AS-KongGateway-RAG_TeamPlay/02_KongRAGwithInjectorSpringAISimplified-light.png" 
+        
+         
+        
+        
+        
+        
+        />
+    
+</picture>
+
+<script>
+    initPicture()
+</script>
+
+<p>The primary challenge with this approach lies in properly configuring Spring AI to ensure that the Kong RAG plugin can access the vector embeddings for the VSS. The Spring vector database configuration for embeddings must be correctly aligned for Kong, used index name and prefix naming in addition to the used embedding model field name and dimension, as well as using the same content field name. To achieve this, it is necessary to move away from Spring AI&rsquo;s opinionated defaults and instead employ a manual configuration approach.</p>
+<h1 id="approach-3-unified-kong-version">Approach 3: Unified Kong Version</h1>
+<p>The final approach represents a most integrated solution where Kong&rsquo;s RAG Inject plugin handles both vector database ingestion and querying, while Spring AI only reads and chunks data.
+Before feeding data to the AI Gateway, you have to split your raw data input into manageable chunks. The <a href="https://docs.konghq.com/hub/kong-inc/ai-rag-injector/how-to/#2-ingest-content-to-the-vector-database">Kong documentation</a> mentions the <a href="https://api.python.langchain.com/en/latest/text_splitters_api_reference.html">langchain_text_splitters</a> for this purpose; however, I advise utilizing various <a href="https://docs.spring.io/spring-ai/reference/api/etl-pipeline.html#_documentreaders">Spring AI document readers</a> and splitters for enhanced flexibility. Once the data is split up appropriately, you can send the pieces to the AI Gateway through the Kong Admin RAG Injector ingest API endpoint. This endpoint is automatically configured when you use the RAG Injector plugin. If required, this endpoint can also be configured to route through a standard Kong Gateway proxy, thereby avoiding the exposure of the Kong admin token. Other authentication and authorization methods can be used instead.
+This architecture minimizes external dependencies and maximizes operational efficiency.</p>
+
+
+  
+
+
+<picture style="display: contents;"
+     
+    id="[212 392 439 207 335 171]"
+    onclick="openModal(this.id)"
+     >
+    
+    <source srcset="/posts/img/AS-KongGateway-RAG_TeamPlay/03_KongRAGAllSpringAISplitterSimplified-dark.png" media="none"/>
+    
+    <img    
+        class="dynamicimage modal-pic"    
+        
+        src="/posts/img/AS-KongGateway-RAG_TeamPlay/03_KongRAGAllSpringAISplitterSimplified-light.png" 
+        
+         
+        
+        
+        
+        
+        />
+    
+</picture>
+
+<script>
+    initPicture()
+</script>
+
+<p>The diagram illustrates that only the ingestion, document reading and splitting process is implemented via Spring AI. This setup abstracts the previously discussed complexities of configuring the vector database, simplifying the overall implementation. This implementation only covers the naive RAG approach, yet offers simplicity and stability in return. Modular RAG capabilities are currently available only with the first approach.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>As more and more companies use retrieval-augmented generation solutions, the challenge of seamlessly integrating these capabilities into existing systems becomes more important. Python frameworks like LangChain and LlamaIndex, as well as Spring AI from the Spring ecosystem, offer a hand-made and more tedious way to create AI solutions, in contrast to the use of the Kong AI Gateway. There is overlap in functionality, but Kong provides a simpler, faster, most probably safer and more streamlined solution. However, particularly during the RAG ingestion phase, the capabilities of these frameworks can be leveraged to complement and enhance the overall process effectively. In traditional business environments, Java is a primary programming language. This provides Spring AI with a strategic advantage when implementing appropriate Kong AI Gateway additions, such as RAG components within the overall architecture.
+And as we have seen once again with the implementation of RAG, with Kong Gateway, you will not run into any limitations.</p>
+<h1 id="credits">Credits</h1>
+<p>Title image by <a href="https://www.istockphoto.com/en/portfolio/HoKle">Holger Kleine</a> on <a href="https://www.istockphoto.com">iStock</a></p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/alexander-suchier.jpg" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/alexander-suchier">Alexander Suchier</a><span>
+                    
+                </span></h3>
+                <p>Senior Managing Technical Consultant and Kong Champion </p>
+                <p calss="author-socials">
+                    
+                    
+                    <a target="_blank"  href="https://www.linkedin.com/in/alexander-suchier-0608481"><i class="fa-brands fa-linkedin"></i></a>
+                    
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        <div class="related-block">
+            <h3 class="related-heading" id="series-list">Check out the full series</h3>
+            
+            <ul>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-productintroduction/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 1: Brief Product Introduction</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-logchunking/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 2: Log Chunking</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-onbehalfof/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 3: Token Exchange On-Behalf-Of</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-saml2bearer/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-mtls_header/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 5: mTLS Header</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-tokenvalidation/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 6: Token Validation</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-tokencloning/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 7: Token Cloning</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-plugincloning/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 8: Plugin Cloning</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-serverlessfunctions/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 9: Serverless functions - Who responded?</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-aigateway/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 10: AI Gateway</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-rag_teamplay/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 11: RAG team play with Spring AI</a></li>
+                
+            </ul>
+        </div>
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/kong/">Kong</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/gateway/">Gateway</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/ai/">AI</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/genai/">GenAI</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/rag/">RAG</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/spring-ai/">Spring AI</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/vss/">VSS</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/vector-database/">Vector Database</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/hallucinations/">Hallucinations</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+</main>
+
+<footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+
+</html>

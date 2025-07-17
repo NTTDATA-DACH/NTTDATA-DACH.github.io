@@ -25,6 +25,35 @@
     
     
     
+    <item>
+      <title>Kong - The Gateway without Limitations - Part 11: RAG team play with Spring AI</title>
+      <link>https://nttdata-dach.github.io/posts/as-konggateway-rag_teamplay/</link>
+      <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
+      
+      <guid>https://nttdata-dach.github.io//posts/img/AS-KongGateway-RAG_TeamPlay/title-image.jpg</guid>
+      <description>This blog talks about Kong&amp;rsquo;s potential for Retrieval-Augmented Generation (RAG) implementations. RAG is a technique that improves large language models by adding real-time, enterprise-specific data retrieval, improving response accuracy and relevance. The team play between Kong AI Gateway and Spring AI enables seamless integration and optimization of generative AI RAG workflows within enterprise environments.</description>
+
+      
+      
+        
+    </item>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     
@@ -45,10 +74,6 @@
       
         
     </item>
-    
-    
-    
-    
     
     
     
@@ -347,44 +372,6 @@
       
       <guid>https://nttdata-dach.github.io//posts/img/AS-KongGateway-TokenValidation/title-image.jpg</guid>
       <description>This time we discuss token validation in the context of the Kong Gateway, covering topics such as OpenID Connect, OAuth 2.0, and Zero-Trust Architecture. The article explains the different types of tokens, the benefits of offline validation, and the various Kong plugins that support token validation. The article notes that architectural trade-offs may be required regarding revocation and fine-grained authorization validation, and concludes that Kong Gateway offers ample options for token validation, including the ability to write custom plugins.</description>
-
-      
-      
-        
-    </item>
-    
-    
-    
-    
-    
-    <item>
-      <title>Transitioning from Prometheus to OpenTelemetry - A Journey of a Cluster&#39;s Metrics Evolution - Part 2: Scraping The First Metrics</title>
-      <link>https://nttdata-dach.github.io/posts/mjm-sa-otelmetrics-02-firstmetrics/</link>
-      <pubDate>Mon, 03 Jun 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://nttdata-dach.github.io//posts/img/MJM-SA-OtelMetrics-02-FirstMetrics/title-image.jpg</guid>
-      <description>Having explained the technical implementation of the monitoring stack in our latest blog post, this article focuses on replacing Prometheus with OpenTelemetry Collector to decouple scraping from the storage and query mechanisms. The OpenTelemetry Collector uses various building blocks to construct the telemetry pipeline and requires enabling of the target allocator. Guiding you through this process we provide various practical tips, including processor ordering and horizontal autoscaling.&amp;quot;</description>
-
-      
-      
-        
-    </item>
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    <item>
-      <title>Immersive Technologies - Part 1: Introduction to immersive technologies</title>
-      <link>https://nttdata-dach.github.io/posts/ss-immersivetechnologies-01-basics/</link>
-      <pubDate>Wed, 15 May 2024 00:00:00 +0000</pubDate>
-      
-      <guid>https://nttdata-dach.github.io//posts/img/SS-ImmersiveTechnologies-01-Basics/title-image.jpg</guid>
-      <description>Immersive technologies, alternatively referred to as XR technologies, possess the capability to either augment or replace the physical world with a digitally simulated one. This article provides an overview by describing the three categories of immersive technologies, including relevant background information, and significant use cases.</description>
 
       
       

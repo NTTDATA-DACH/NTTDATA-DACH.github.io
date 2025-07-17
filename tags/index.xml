@@ -7,20 +7,76 @@
     <generator>Hugo</generator>
     <language>en</language>
     <copyright>Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Sat, 14 Jun 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 17 Jul 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AI</title>
+      <link>https://nttdata-dach.github.io/tags/ai/</link>
+      <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/ai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Gateway</title>
+      <link>https://nttdata-dach.github.io/tags/gateway/</link>
+      <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/gateway/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>GenAI</title>
+      <link>https://nttdata-dach.github.io/tags/genai/</link>
+      <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/genai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Hallucinations</title>
+      <link>https://nttdata-dach.github.io/tags/hallucinations/</link>
+      <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/hallucinations/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Kong</title>
+      <link>https://nttdata-dach.github.io/tags/kong/</link>
+      <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/kong/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>RAG</title>
+      <link>https://nttdata-dach.github.io/tags/rag/</link>
+      <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/rag/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Spring AI</title>
+      <link>https://nttdata-dach.github.io/tags/spring-ai/</link>
+      <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/spring-ai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Vector Database</title>
+      <link>https://nttdata-dach.github.io/tags/vector-database/</link>
+      <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/vector-database/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>VSS</title>
+      <link>https://nttdata-dach.github.io/tags/vss/</link>
+      <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/vss/</guid>
+      <description></description>
+    </item>
     <item>
       <title>Agentic AI</title>
       <link>https://nttdata-dach.github.io/tags/agentic-ai/</link>
       <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/agentic-ai/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>AI</title>
-      <link>https://nttdata-dach.github.io/tags/ai/</link>
-      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/ai/</guid>
       <description></description>
     </item>
     <item>
@@ -42,27 +98,6 @@
       <link>https://nttdata-dach.github.io/tags/ethical-ai/</link>
       <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/ethical-ai/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Gateway</title>
-      <link>https://nttdata-dach.github.io/tags/gateway/</link>
-      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/gateway/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>GenAI</title>
-      <link>https://nttdata-dach.github.io/tags/genai/</link>
-      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/genai/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Kong</title>
-      <link>https://nttdata-dach.github.io/tags/kong/</link>
-      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/kong/</guid>
       <description></description>
     </item>
     <item>
