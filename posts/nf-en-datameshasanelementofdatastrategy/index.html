@@ -1,10 +1,7 @@
-
-<!doctype html>
-<html>
-
-<head>
+<!DOCTYPE html>
+<html><head>
   <title>  Data mesh as an element of data strategy  </title>
-  <meta charset="utf-8"/> 
+  <meta charset="utf-8"/>
   
   <meta property="og:type" content="article"/>
   <meta property="og:title" content="Data mesh as an element of data strategy"/>
@@ -22,35 +19,32 @@
   <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
   <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
 </head>
+<body><header>
+  <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  
+  <nav>
 
-<body>
-  <header>
-    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
     
-    <nav>
+      <a   class="emphasized" 
+          href="/posts">All Blogposts</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="mailto:techblog@nttdata.com">Contact</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="https://de.nttdata.com/">About Us</a>
+    
 
-      
-        <a   class="emphasized" 
-           href="/posts">All Blogposts</a>
-      
-        <a target="_blank"   
-           href="mailto:techblog@nttdata.com">Contact</a>
-      
-        <a target="_blank"   
-           href="https://de.nttdata.com/">About Us</a>
-      
-
-      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
-      <div class="theme-switch-wrapper">
-        <label class="theme-switch" for="checkbox">
-            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
-            <div class="slider round"></div>
-        </label>
-      </div>
-    </nav>
-  </header>
-
-
+    <a target="_blank" rel="noopener noreferrer" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+    <div class="theme-switch-wrapper">
+      <label class="theme-switch" for="checkbox">
+          <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+          <div class="slider round"></div>
+      </label>
+    </div>
+  </nav>
+</header>
+<div id="content">
 
   <div>
     <div class="modal" id="uphillModal">
@@ -103,8 +97,8 @@ Here, we will provide an overview of an innovative approach called ‚Äúdata mesh‚
 <p>The first thing you should know is that a data mesh is an abstract concept introduced in 2019 by Zhamak Dehghani (ex-director of emerging technologies for ThoughtWorks in North America), so the learning and discovering processes are still going on. That is why there is so much confusion as to what it is and what it is not. In her famous blog article she introduced the concept as follows:</p>
 <blockquote>
 	Many enterprises are investing in their next generation data lake, with the hope of democratizing data at scale to provide business insights and ultimately make automated intelligent decisions. Data platforms based on the data lake architecture have common failure modes that lead to unfulfilled promises at scale. To address these failure modes, we need to shift from the centralized paradigm of a lake, or its predecessor data warehouse. We need to shift to a paradigm that draws from modern distributed architecture: considering domains as the first-class concern, applying platform thinking to create self-serve data infrastructure, and treating data as a product.
-    </br>
-    <div id="reference">
+    <br>
+    <div class="reference">
 		<cite title="Source: Zhamak Dehghani">
         - 
             Zhamak Dehghani 
@@ -118,8 +112,9 @@ Here, we will provide an overview of an innovative approach called ‚Äúdata mesh‚
           
           
 		</cite>
-    </p>
+    </div>
 </blockquote>
+
 <p>Data mesh is a framework to manage and organize data within an organization by dividing it into distinct business departments (or domains). It provides a way to decouple data services from the applications that use them, enabling each team to own and manage their data independently. The objective of the data mesh architect is to build a scalable, secure, and reliable data infrastructure in each domain that supports the needs of multiple applications. By employing this type of solution, businesses can benefit from increased efficiency when accessing or manipulating enormous amounts of data due to its decentralized nature. It also eliminates the need for complex ETL processes which often require manual steps and thus saves time while reducing errors associated with these processes.</p>
 
 
@@ -146,6 +141,7 @@ Here, we will provide an overview of an innovative approach called ‚Äúdata mesh‚
     </figcaption> 
     
 </picture>
+
 
 <p>Data mesh is built on four main principles: 1) domain ownership, 2) data as a product, 3) self-service data platform, and 4) federated computation governance. The first two principles accentuate an organizational mind shift to treat data as a product owned by individual teams. The second two principles focus on the elements of the technical foundation. Below we explain each term in more detail.</p>
 <h2 id="principles-of-data-mesh">Principles of data mesh</h2>
@@ -182,6 +178,7 @@ Here, we will provide an overview of an innovative approach called ‚Äúdata mesh‚
     
 </picture>
 
+
 <h1 id="data-mesh-architecture">Data mesh architecture</h1>
 <p>A data mesh solution is a decentralized approach that authorizes domain teams to perform cross domain analysis and respond quickly to business needs by adjusting on-the-fly with minimal disruption to other domains. In addition, due to a decentralized approach, data mesh is scalable (up or down) on demand without any interference on other data domains or products. One can scale up or down the number of domains or data volume easily. By separating individual datasets into distinct domains based on their purposes, a data mesh solution ensures that all relevant requirements are met at each stage of the process. This makes it easier for companies to keep regulatory compliance while still providing efficient access to the necessary information for decision-making purposes.</p>
 
@@ -191,7 +188,7 @@ Here, we will provide an overview of an innovative approach called ‚Äúdata mesh‚
 
 <picture style="display: contents;"
      
-    id="[410 245 386 258 373 409]"
+    id="[274 57 318 397 291 11]"
     onclick="openModal(this.id)"
      >
     
@@ -212,6 +209,7 @@ Here, we will provide an overview of an innovative approach called ‚Äúdata mesh‚
     </figcaption> 
     
 </picture>
+
 
 <p>Figure <a href="/posts/nf-en-datameshasanelementofdatastrategy/#fig-3">3</a>, is an example of 3-domains within the organization. For the sake of simplicity, imagine we have only sales, finance, and marketing domains. We call domain 1, ‚Äúsales domain‚Äù. The sales domain will obviously have the sales team and the sales team will consist of the head of sales, different sales specialists, the data experts within the sales department etc. The domain team is also responsible for managing the domain‚Äôs data contract with other domains (organization&rsquo;s operations). Each domain is going to be responsible for defining its own data needs and for building and supporting its own data products.</p>
 <p>First, we have the operational data. The operational data is generated by the organization&rsquo;s daily operations. All this operational data is fed into the data products. A data product is a product or even a service that is built around the data of the domain. In the context of data mesh, this can include anything from a dashboard that displays real-time data to a machine learning model that predicts future outcomes based on historical data. For example, a data product of sales domain could be a sales forecast for the next six months divided by the different regions and products representing some key metrics. Analytics is the process of using data to gain insights and make informed decisions. This will include things such as data mining, statistical analysis and even machine learning (ML). In the context of data mesh, each domain is responsible for defining its own analytics needs. This is important because the analysis, together with operational data, will make a data product.</p>
@@ -247,6 +245,7 @@ Here, we will provide an overview of an innovative approach called ‚Äúdata mesh‚
     
 </picture>
 
+
 <p><strong>Step 1</strong> Define your domains: A domain is a specific business capability or function within an organization. Each domain will have their own data from their day-to-day operations. In addition, they also have their own solutions. It really depends on the structure of your organization. Identifying all the domains within an organization is crucial, cause it&rsquo;s going to help to understand the data needs of each domain and how these different domains are interconnected. Also defining the domains will give a clearer picture of how complex implementing data mesh is going to be and what kind of team an organization may need.</p>
 <p><strong>Step 2</strong> Define the methodology and scope: This means one should identify the goals of implementing a data mesh in specific domains. One should set a priority list on what are the most important domains to implement on data mesh first, before you start expanding it to the other domains. You should also identify any constraints or limitations that could impact your implementation.</p>
 <p><strong>Step 3</strong> Assign domain ownership: Assigning domain ownership for each domain to a specific team or, even better, specific people within the team, is important to ensure that the accountability and responsibility for the data domain and its data products is clear from the start. This will also help ensure you have the right people responsible for the data assigned to the domain.</p>
@@ -274,7 +273,7 @@ Here, we will provide an overview of an innovative approach called ‚Äúdata mesh‚
 
 <picture style="display: contents;"
      
-    id="[69 413 63 392 267 340]"
+    id="[482 181 146 174 450 137]"
     onclick="openModal(this.id)"
      >
     
@@ -296,6 +295,7 @@ Here, we will provide an overview of an innovative approach called ‚Äúdata mesh‚
     
 </picture>
 
+
 <h1 id="in-summary">In summary</h1>
 <p>Data mesh is not just a better paradigm than data warehouse or Data Lake. It is indeed another decentralized way to design and manage data within an ecosystem. A well-organized and well-managed data warehouse or data lake can provide significant value, especially for organizations with specific use patterns and use cases. The selection between data mesh and traditional data architectures depends on the specific needs, capabilities, and goals of the business. Data mesh increases agility and scalability, as well as improved data quality and better alignment between business and technical team. By distributing data ownership and responsibility across different domains, data mesh can enable faster and more efficient data processing and analysis. Proper planning and implementation of data mesh is challenging e.g., identify and define domains, define tagging, establish data governance in each domain and cross domains, and setting up the necessary technical infrastructure and tools to support the distributed data architecture.</p>
 <p>Each approach has its strengths and drawbacks, and what works best varies from context to context. Data mesh is a modern analytics architecture targeted at mid-sized and large organizations with Big data set, which means that small organizations with small teams and small number of  data producers/consumers will most likely not benefit as much from it. Building a data mesh can be time consuming, as it requires a thorough understanding of the organization&rsquo;s data landscape and a careful design and implementation process.</p>
@@ -314,10 +314,10 @@ Here, we will provide an overview of an innovative approach called ‚Äúdata mesh‚
                     
                 </span></h3>
                 <p>Leading Technical Consultant </p>
-                <p calss="author-socials">
+                <p class="author-socials">
                     
                     
-                    <a target="_blank"  href="https://www.linkedin.com/in/dr-najmeh-foroozani"><i class="fa-brands fa-linkedin"></i></a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/dr-najmeh-foroozani"><i class="fa-brands fa-linkedin"></i></a>
                     
                 </p>
                 
@@ -336,10 +336,10 @@ Here, we will provide an overview of an innovative approach called ‚Äúdata mesh‚
                     
                 </span></h3>
                 <p>Senior Solution Architect </p>
-                <p calss="author-socials">
+                <p class="author-socials">
                     
                     
-                    <a target="_blank"  href="https://www.linkedin.com/in/esmaeil-nikumanesh-a3706740"><i class="fa-brands fa-linkedin"></i></a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/esmaeil-nikumanesh-a3706740"><i class="fa-brands fa-linkedin"></i></a>
                     
                 </p>
                 
@@ -397,9 +397,8 @@ Here, we will provide an overview of an innovative approach called ‚Äúdata mesh‚
 
 
 
-</main>
 
-<footer>
+        </div><footer>
   <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
   <nav>
     
@@ -413,7 +412,7 @@ Here, we will provide an overview of an innovative approach called ‚Äúdata mesh‚
     
   </nav>
 
-  <p class="text">Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</p>
+  <p class="text">Copyright 2026 NTT DATA Deutschland SE - This site does not use any cookies</p>
 
   <div>
     <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
@@ -429,5 +428,5 @@ Here, we will provide an overview of an innovative approach called ‚Äúdata mesh‚
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
 </script>
-
+</body>
 </html>

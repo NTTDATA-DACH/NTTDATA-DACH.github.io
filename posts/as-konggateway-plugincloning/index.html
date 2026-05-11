@@ -1,10 +1,7 @@
-
-<!doctype html>
-<html>
-
-<head>
+<!DOCTYPE html>
+<html><head>
   <title>  Part 8: Plugin Cloning  </title>
-  <meta charset="utf-8"/> 
+  <meta charset="utf-8"/>
   
   <meta property="og:type" content="article"/>
   <meta property="og:title" content="Kong - The Gateway without Limitations - Part 8: Plugin Cloning"/>
@@ -22,35 +19,32 @@
   <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
   <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
 </head>
+<body><header>
+  <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  
+  <nav>
 
-<body>
-  <header>
-    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
     
-    <nav>
+      <a   class="emphasized" 
+          href="/posts">All Blogposts</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="mailto:techblog@nttdata.com">Contact</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="https://de.nttdata.com/">About Us</a>
+    
 
-      
-        <a   class="emphasized" 
-           href="/posts">All Blogposts</a>
-      
-        <a target="_blank"   
-           href="mailto:techblog@nttdata.com">Contact</a>
-      
-        <a target="_blank"   
-           href="https://de.nttdata.com/">About Us</a>
-      
-
-      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
-      <div class="theme-switch-wrapper">
-        <label class="theme-switch" for="checkbox">
-            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
-            <div class="slider round"></div>
-        </label>
-      </div>
-    </nav>
-  </header>
-
-
+    <a target="_blank" rel="noopener noreferrer" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+    <div class="theme-switch-wrapper">
+      <label class="theme-switch" for="checkbox">
+          <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+          <div class="slider round"></div>
+      </label>
+    </div>
+  </nav>
+</header>
+<div id="content">
 
   <div>
     <div class="modal" id="uphillModal">
@@ -128,7 +122,7 @@ Kong plugin cloning becomes essential in a few specific scenarios:</p>
 
 <picture style="display: contents;"
      
-    id="[79 124 444 208 54 242]"
+    id="[376 66 147 41 456 21]"
     onclick="openModal(this.id)"
      >
     
@@ -152,6 +146,7 @@ Kong plugin cloning becomes essential in a few specific scenarios:</p>
     initPicture()
 </script>
 
+
 <p>Following the request flow in the diagram above, the mTLS plugin is executed first to identify an API consumer by the certificate’s Subject Alternative Name (SAN) or Common Name (CN), <a href="https://docs.konghq.com/hub/kong-inc/mtls-auth/how-to/manual-mapping-cert-consumers/">with CN used only if SAN is absent</a>. Without such a client certificate in the request, the mTLS plugin would reject the request immediately with a HTTP error 401 (Unauthorized). However, any valid client certificate can be presented here, even one identifying a consumer missing the ACL credentials to access service A, as the ACL plugin for authorization checks is only applied after the OpenID Connect plugin, which might identify another API consumer. A severe security vulnerability in the proposed multi-layer authentication approach.</p>
 <p>You might consider using <a href="https://docs.konghq.com/gateway/latest/kong-enterprise/plugin-ordering/">dynamic ordering</a> to place the ACL plugin before the OpenID plugin in the execution sequence. However, this would result in the ACL plugin only checking the ACL credentials of the consumer identified by the mTLS plugin. In our use case, we need to check both consumers for ACL service access permissions. As a result, an alternative approach was needed to facilitate multiple ACL checks within the request processing of the Kong pipeline, including one ACL check for mTLS-authenticated consumers and another check for token authenticated consumers (for example via the <a href="https://www.iana.org/assignments/jwt/jwt.xhtml#OpenID_Foundation_Artifact_Binding_Working_Group">AZP claim</a>).</p>
 <h1 id="solution">Solution</h1>
@@ -170,7 +165,7 @@ Kong plugin cloning becomes essential in a few specific scenarios:</p>
 
 <picture style="display: contents;"
      
-    id="[204 373 164 298 113 496]"
+    id="[49 289 251 344 429 388]"
     onclick="openModal(this.id)"
      >
     
@@ -194,6 +189,7 @@ Kong plugin cloning becomes essential in a few specific scenarios:</p>
     initPicture()
 </script>
 
+
 <p>In this configuration, the service access authorization is checked first by the mTLS-authenticated consumer, and then by the OpenID-Connect-authenticated consumer, which is retained and becomes the final consumer in the further processing pipeline, as no further authentication plugins are used. For example, this consumer will also appear in the logging plugins. The initially identified consumer is overwritten and no longer exists in the Kong processing pipeline.</p>
 <h1 id="conclusion">Conclusion</h1>
 <p>Authentication credentials arriving at the Kong Gateway must be validated. When mTLS client certificates and OAuth2 access tokens are part of a multi-layer authentication and authorization approach, both the incoming client certificates and the access tokens must be validated for service access authorization in the context of a Zero-Trust Architecture. This blog post outlines a specific implementation scenario where the ACL plugin is cloned and used twice to verify service access authorization, utilizing the Kong priority-updater tool.</p>
@@ -214,10 +210,10 @@ Kong plugin cloning becomes essential in a few specific scenarios:</p>
                     
                 </span></h3>
                 <p>Senior Managing Technical Consultant and Kong Champion </p>
-                <p calss="author-socials">
+                <p class="author-socials">
                     
                     
-                    <a target="_blank"  href="https://www.linkedin.com/in/alexander-suchier-0608481"><i class="fa-brands fa-linkedin"></i></a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/alexander-suchier-0608481"><i class="fa-brands fa-linkedin"></i></a>
                     
                 </p>
                 
@@ -307,9 +303,8 @@ Kong plugin cloning becomes essential in a few specific scenarios:</p>
 
 
 
-</main>
 
-<footer>
+        </div><footer>
   <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
   <nav>
     
@@ -323,7 +318,7 @@ Kong plugin cloning becomes essential in a few specific scenarios:</p>
     
   </nav>
 
-  <p class="text">Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</p>
+  <p class="text">Copyright 2026 NTT DATA Deutschland SE - This site does not use any cookies</p>
 
   <div>
     <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
@@ -339,5 +334,5 @@ Kong plugin cloning becomes essential in a few specific scenarios:</p>
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
 </script>
-
+</body>
 </html>

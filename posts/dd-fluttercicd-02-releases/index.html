@@ -1,10 +1,7 @@
-
-<!doctype html>
-<html>
-
-<head>
+<!DOCTYPE html>
+<html><head>
   <title>  Part 2: Releases  </title>
-  <meta charset="utf-8"/> 
+  <meta charset="utf-8"/>
   
   <meta property="og:type" content="article"/>
   <meta property="og:title" content="Flutter CI/CD with Fastlane and GitHub Actions - Part 2: Releases"/>
@@ -22,35 +19,32 @@
   <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
   <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
 </head>
+<body><header>
+  <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  
+  <nav>
 
-<body>
-  <header>
-    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
     
-    <nav>
+      <a   class="emphasized" 
+          href="/posts">All Blogposts</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="mailto:techblog@nttdata.com">Contact</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="https://de.nttdata.com/">About Us</a>
+    
 
-      
-        <a   class="emphasized" 
-           href="/posts">All Blogposts</a>
-      
-        <a target="_blank"   
-           href="mailto:techblog@nttdata.com">Contact</a>
-      
-        <a target="_blank"   
-           href="https://de.nttdata.com/">About Us</a>
-      
-
-      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
-      <div class="theme-switch-wrapper">
-        <label class="theme-switch" for="checkbox">
-            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
-            <div class="slider round"></div>
-        </label>
-      </div>
-    </nav>
-  </header>
-
-
+    <a target="_blank" rel="noopener noreferrer" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+    <div class="theme-switch-wrapper">
+      <label class="theme-switch" for="checkbox">
+          <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+          <div class="slider round"></div>
+      </label>
+    </div>
+  </nav>
+</header>
+<div id="content">
 
   <div>
     <div class="modal" id="uphillModal">
@@ -178,6 +172,7 @@ This workflow can be triggered manually and accepts an input on what action you 
     
 </picture>
 
+
 <h2 id="creating-the-release-workflow">Creating the <code>Release</code> workflow</h2>
 <ol>
 <li>Create a new file in the <code>.github/workflows</code> directory, e.g. <code>release.yml</code>.</li>
@@ -241,6 +236,7 @@ Since the <code>checkout</code> action uses the <code>GITHUB_TOKEN</code> by def
         />
     
 </picture>
+
 </li>
 <li>To trigger the <code>Build and Deploy</code> workflow whenever a new tag is created. Add this to your <code>deploy.yml</code> file:
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">on</span><span class="p">:</span><span class="w">
@@ -364,7 +360,7 @@ This workflow can be triggered manually and accepts an input if you want to uplo
 
 <picture style="display: contents;"
      
-    id="[300 29 287 129 77 471]"
+    id="[373 445 449 399 298 421]"
     onclick="openModal(this.id)"
      >
     
@@ -388,6 +384,7 @@ This workflow can be triggered manually and accepts an input if you want to uplo
     initPicture()
 </script>
 
+
 <p>So how does the whole process look like now? Whenever you want to release a new version of your app, you can manually trigger the <code>Tag Release</code> workflow. You can choose between <code>major</code>, <code>minor</code> and <code>patch</code>. The workflow will bump the version in the <code>pubspec.yaml</code> file, create a new commit and tag, and push the changes to the repository. This will trigger the <code>Release</code> workflow which will create a new release with the tag name and generated release notes. This will also trigger the <code>Build and Deploy</code> workflow which will build and deploy the app to the AppStore and PlayStore. After you have successfully deployed the app, you can manually trigger the <code>Promote Release</code> workflow. This will promote the release to the respective track in the PlayStore and AppStore.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>And that&rsquo;s it! You&rsquo;ve now set up a CI/CD pipeline for your Flutter app using Fastlane and GitHub Actions. This setup will automatically build and deploy your app to the AppStore and PlayStore. You&rsquo;ve also automated the versioning, tagging and release process with GitHub Actions. Time to kick back, relax, and let automation take care of the repetitive tasks.</p>
@@ -406,10 +403,10 @@ This workflow can be triggered manually and accepts an input if you want to uplo
                     
                 </span></h3>
                 <p>Senior Flutter Developer </p>
-                <p calss="author-socials">
-                    <a target="_blank"  href="https://github.com/dario-digregorio"><i class="fa-brands fa-github"></i></a>
+                <p class="author-socials">
+                    <a target="_blank" rel="noopener noreferrer" href="https://github.com/dario-digregorio"><i class="fa-brands fa-github"></i></a>
                     
-                    <a target="_blank"  href="https://www.linkedin.com/in/dario-digregorio-064696241"><i class="fa-brands fa-linkedin"></i></a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/dario-digregorio-064696241"><i class="fa-brands fa-linkedin"></i></a>
                     
                 </p>
                 
@@ -500,9 +497,8 @@ This workflow can be triggered manually and accepts an input if you want to uplo
 
 
 
-</main>
 
-<footer>
+        </div><footer>
   <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
   <nav>
     
@@ -516,7 +512,7 @@ This workflow can be triggered manually and accepts an input if you want to uplo
     
   </nav>
 
-  <p class="text">Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</p>
+  <p class="text">Copyright 2026 NTT DATA Deutschland SE - This site does not use any cookies</p>
 
   <div>
     <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
@@ -532,5 +528,5 @@ This workflow can be triggered manually and accepts an input if you want to uplo
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
 </script>
-
+</body>
 </html>

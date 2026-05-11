@@ -1,10 +1,7 @@
-
-<!doctype html>
-<html>
-
-<head>
+<!DOCTYPE html>
+<html><head>
   <title>  Part 1: A Brief Introduction  </title>
-  <meta charset="utf-8"/> 
+  <meta charset="utf-8"/>
   
   <meta property="og:type" content="article"/>
   <meta property="og:title" content="Transitioning from Prometheus to OpenTelemetry - A Journey of a Cluster&#39;s Metrics Evolution - Part 1: A Brief Introduction"/>
@@ -22,35 +19,32 @@
   <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
   <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
 </head>
+<body><header>
+  <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  
+  <nav>
 
-<body>
-  <header>
-    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
     
-    <nav>
+      <a   class="emphasized" 
+          href="/posts">All Blogposts</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="mailto:techblog@nttdata.com">Contact</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="https://de.nttdata.com/">About Us</a>
+    
 
-      
-        <a   class="emphasized" 
-           href="/posts">All Blogposts</a>
-      
-        <a target="_blank"   
-           href="mailto:techblog@nttdata.com">Contact</a>
-      
-        <a target="_blank"   
-           href="https://de.nttdata.com/">About Us</a>
-      
-
-      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
-      <div class="theme-switch-wrapper">
-        <label class="theme-switch" for="checkbox">
-            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
-            <div class="slider round"></div>
-        </label>
-      </div>
-    </nav>
-  </header>
-
-
+    <a target="_blank" rel="noopener noreferrer" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+    <div class="theme-switch-wrapper">
+      <label class="theme-switch" for="checkbox">
+          <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+          <div class="slider round"></div>
+      </label>
+    </div>
+  </nav>
+</header>
+<div id="content">
 
   <div>
     <div class="modal" id="uphillModal">
@@ -148,7 +142,7 @@
 
 <picture style="display: contents;"
      
-    id="[32 208 476 409 294 449]"
+    id="[79 44 123 406 434 375]"
     onclick="openModal(this.id)"
      >
     
@@ -172,14 +166,15 @@
     initPicture()
 </script>
 
+
 <p>As you might have already guess from this, integrations play a crucial role when implementing a metrics stack based on OpenTelemetry. Without at least one receiver and one exporter, the collector does not bring any value at all. Fortunately, OpenTelemetry has grown organically (we&rsquo;ll talk about the history in a moment) and is backed by many big tech players. Just to name a few: There is AWS, Azure and GCP as hyperscalers, but also well-known observability tools like Grafana, Jaeger, Datadog, Dynatrace, New Relic and Splunk (see the <a href="https://opentelemetry.io/ecosystem/vendors/">official vendors list</a>). There&rsquo;s <a href="https://aws.amazon.com/otel/">AWS Distro for OpenTelemetry</a>, a collection of software specifically for using AWS services while observing those with OpenTelemetry. <a href="https://www.datadoghq.com/blog/datadog-supports-opentelemetry-open-source/">Datadog is publicly committing to OpenTelemetry</a>, both by adding more support to its product and by contributing to the project.</p>
 <h2 id="where-does-it-come-from">Where Does It Come From?</h2>
 <p>So, where does OpenTelemetry&rsquo;s remarkably different approach come from?</p>
 <p>Distributed systems and observability have been a thing before Kubernetes and CNCF existed. In 2010, Google published a paper about <em>Dapper</em>, a tracing solution. In 2012, Twitter followed with publishing <em>Zipkin</em>, yet another distributed tracing solution. Kubernetes appeared 2014, Jaeger (guess what: distributed tracing) was introduced by Uber in 2015. That same year, Ben Sigelman, the founder of Lightstep, published <a href="https://medium.com/opentracing/towards-turnkey-distributed-tracing-5f4297d1736">a blog post, now also known as the OpenTracing manifesto</a>. He postulates that instrumenting code is broken because it always comes with a vendor lock-in (i.e. the software defining how tracing works).</p>
 <blockquote>
 	And there’s the rub: It is not reasonable to ask all OSS services and all OSS packages and all application-specific code to use a single tracing vendor; yet, if they don’t share a mechanism for trace description and propagation, the causal chain is broken and the traces are truncated, often severely. We need a single, standard mechanism to describe the behavior of our systems.
-    </br>
-    <div id="reference">
+    <br>
+    <div class="reference">
 		<cite title="Source: Ben Sigelman">
         - 
             Ben Sigelman 
@@ -193,8 +188,9 @@
           
           
 		</cite>
-    </p>
+    </div>
 </blockquote>
+
 <p>Since you typically want to trace not only your very own software but also its auxiliary applications in a stack, it&rsquo;s critical that all these applications support exactly that one tracing vendor you chose. Thus, these open-source systems would have to support numerous different vendors which is just not realistic. So, talking about specific vendors is not good and the overall tracing has to be changed to a vendor-neutral approach.</p>
 <p>This post was published right after the acceptance of his project <em>OpenTracing</em> as CNCF&rsquo;s 3rd hosted project in 2015. Another Google turn: <em>OpenCensus</em> was released in 2017. It consisted of SDKs targeting not only traces but also metrics.</p>
 <p>What does this have to do with OpenTelemetry? Well, it&rsquo;s not an additional project in this list of projects, but instead, it is a merger of OpenTracing and OpenCensus that took place in 2019. Backed with lots of experience, battle-tested individuals, and a broad publicity, OpenTelemetry aimed to be the next major release for both of its predecessors, while <a href="https://www.cncf.io/blog/2022/01/31/cncf-archives-the-opentracing-project/">OpenTracing became the second CNCF project to be archived</a>. Although <a href="https://www.cncf.io/blog/2021/08/26/opentelemetry-becomes-a-cncf-incubating-project/">OpenTelemetry was accepted as a CNCF sandbox project in 2019 and as an incubating project in 2021</a>, it is not just another newly grown open-source project with a questionable future and too much risk to take. From the beginning, it has been supported by CNCF, Google, Microsoft, Uber and others (<a href="https://www.cncf.io/blog/2019/05/21/a-brief-history-of-opentelemetry-so-far/">announcement by CNCF</a>, <a href="https://opensource.googleblog.com/2019/05/opentelemetry-merger-of-opencensus-and.html">announcement by Google</a>). So we expect it to stay and flourish.</p>
@@ -225,10 +221,10 @@
                     
                 </span></h3>
                 <p>Senior Technical Consultant </p>
-                <p calss="author-socials">
+                <p class="author-socials">
                     
                     
-                    <a target="_blank"  href="https://www.linkedin.com/in/mikel-jason-m%C3%BCnnekhoff-ab47a5140"><i class="fa-brands fa-linkedin"></i></a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/mikel-jason-m%C3%BCnnekhoff-ab47a5140"><i class="fa-brands fa-linkedin"></i></a>
                     
                 </p>
                 
@@ -247,10 +243,10 @@
                     
                 </span></h3>
                 <p>Lead Consultant </p>
-                <p calss="author-socials">
+                <p class="author-socials">
                     
                     
-                    <a target="_blank"  href="https://www.linkedin.com/in/sherief-ahmed-msc"><i class="fa-brands fa-linkedin"></i></a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/sherief-ahmed-msc"><i class="fa-brands fa-linkedin"></i></a>
                     
                 </p>
                 
@@ -344,9 +340,8 @@
 
 
 
-</main>
 
-<footer>
+        </div><footer>
   <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
   <nav>
     
@@ -360,7 +355,7 @@
     
   </nav>
 
-  <p class="text">Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</p>
+  <p class="text">Copyright 2026 NTT DATA Deutschland SE - This site does not use any cookies</p>
 
   <div>
     <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
@@ -376,5 +371,5 @@
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
 </script>
-
+</body>
 </html>

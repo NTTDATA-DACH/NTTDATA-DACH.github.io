@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Outcome-Based Ownership on Technology Blog</title>
+    <link>https://nttdata-dach.github.io/tags/outcome-based-ownership/</link>
+    <description>Recent content in Outcome-Based Ownership on Technology Blog</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <copyright>Copyright 2026 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
+    <lastBuildDate>Thu, 05 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://nttdata-dach.github.io/tags/outcome-based-ownership/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Part 03: Designing Organizations for Autonomous AI</title>
+      <link>https://nttdata-dach.github.io/posts/km-humansideofai-03-designingorganizationsforautonomousai/</link>
+      <pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/km-humansideofai-03-designingorganizationsforautonomousai/</guid>
+      <description>Process-centric organizations were rational under long industrial cycles, but compressed adoption dynamics and adaptive systems demand a different structure. Product thinking provides the necessary anchor: durable ownership, embedded learning, and outcome accountability. Governance must move from approval logic to guardrail-based design, with autonomy treated as a calibrated and reversible choice. Absorbing intelligence at scale is therefore not a technical exercise, but an architectural one requiring alignment between product, platform, and governance structures.</description>
+    </item>
+  </channel>
+</rss>

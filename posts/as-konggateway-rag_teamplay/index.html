@@ -1,10 +1,7 @@
-
-<!doctype html>
-<html>
-
-<head>
+<!DOCTYPE html>
+<html><head>
   <title>  Part 11: RAG team play with Spring AI  </title>
-  <meta charset="utf-8"/> 
+  <meta charset="utf-8"/>
   
   <meta property="og:type" content="article"/>
   <meta property="og:title" content="Kong - The Gateway without Limitations - Part 11: RAG team play with Spring AI"/>
@@ -22,35 +19,32 @@
   <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
   <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
 </head>
+<body><header>
+  <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  
+  <nav>
 
-<body>
-  <header>
-    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
     
-    <nav>
+      <a   class="emphasized" 
+          href="/posts">All Blogposts</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="mailto:techblog@nttdata.com">Contact</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="https://de.nttdata.com/">About Us</a>
+    
 
-      
-        <a   class="emphasized" 
-           href="/posts">All Blogposts</a>
-      
-        <a target="_blank"   
-           href="mailto:techblog@nttdata.com">Contact</a>
-      
-        <a target="_blank"   
-           href="https://de.nttdata.com/">About Us</a>
-      
-
-      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
-      <div class="theme-switch-wrapper">
-        <label class="theme-switch" for="checkbox">
-            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
-            <div class="slider round"></div>
-        </label>
-      </div>
-    </nav>
-  </header>
-
-
+    <a target="_blank" rel="noopener noreferrer" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+    <div class="theme-switch-wrapper">
+      <label class="theme-switch" for="checkbox">
+          <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+          <div class="slider round"></div>
+      </label>
+    </div>
+  </nav>
+</header>
+<div id="content">
 
   <div>
     <div class="modal" id="uphillModal">
@@ -121,7 +115,7 @@
 
 <picture style="display: contents;"
      
-    id="[376 320 241 334 100 129]"
+    id="[299 45 376 97 119 461]"
     onclick="openModal(this.id)"
      >
     
@@ -145,6 +139,7 @@
     initPicture()
 </script>
 
+
 <p>In my proof-of-concept implementation, as illustrated in the diagram, the similarity search operation is invoked through the configured Kong upstream service. The augmented LLM call is subsequently executed using the AI Response Transformer plugin. However, alternative approaches using the new <a href="https://docs.konghq.com/hub/kong-inc/request-callout/">Request Callout plugin</a> together with the <a href="https://docs.konghq.com/hub/kong-inc/ai-proxy/">AI Proxy</a> or <a href="https://docs.konghq.com/hub/kong-inc/ai-proxy-advanced/">AI Proxy Advanced plugin</a> are also feasible.</p>
 <p>While this approach detaches the RAG process from the gateway, it offers a significant advantage. Spring AI has begun to implement cutting-edge concepts of <a href="https://docs.spring.io/spring-ai/reference/api/retrieval-augmented-generation.html#modules">modular RAG</a>, which can also be utilized in the VSS process. This includes <a href="https://docs.spring.io/spring-ai/reference/api/retrieval-augmented-generation.html#_pre_retrieval">pre-retrieval components</a> designed to transform input queries, enhancing their effectiveness for retrieval tasks by addressing challenges such as poorly formed queries, ambiguous terms, complex vocabulary or unsupported languages. Additionally, <a href="https://docs.spring.io/spring-ai/reference/api/retrieval-augmented-generation.html">post-processing components</a> are employed for ranking strategies and to refine retrieved documents based on the query, addressing the need to reduce noise and redundancy in the retrieved information.</p>
 <p>Today, this is not yet possible with the other two approaches utilizing the RAG Injector plugin, as it is based on a naive RAG approach. While this may not necessarily be a drawback, it should always be carefully evaluated within the specific context of the use case.</p>
@@ -163,7 +158,7 @@
 
 <picture style="display: contents;"
      
-    id="[157 499 366 360 173 29]"
+    id="[115 333 451 487 49 209]"
     onclick="openModal(this.id)"
      >
     
@@ -187,6 +182,7 @@
     initPicture()
 </script>
 
+
 <p>The primary challenge with this approach lies in properly configuring Spring AI to ensure that the Kong RAG plugin can access the vector embeddings for the VSS. The Spring vector database configuration for embeddings must be correctly aligned for Kong, used index name and prefix naming in addition to the used embedding model field name and dimension, as well as using the same content field name. To achieve this, it is necessary to move away from Spring AI&rsquo;s opinionated defaults and instead employ a manual configuration approach.</p>
 <h1 id="approach-3-unified-kong-version">Approach 3: Unified Kong Version</h1>
 <p>The final approach represents a most integrated solution where Kong&rsquo;s RAG Inject plugin handles both vector database ingestion and querying, while Spring AI only reads and chunks data.
@@ -199,7 +195,7 @@ This architecture minimizes external dependencies and maximizes operational effi
 
 <picture style="display: contents;"
      
-    id="[402 239 3 381 173 343]"
+    id="[192 88 361 443 370 55]"
     onclick="openModal(this.id)"
      >
     
@@ -223,6 +219,7 @@ This architecture minimizes external dependencies and maximizes operational effi
     initPicture()
 </script>
 
+
 <p>The diagram illustrates that only the ingestion, document reading and splitting process is implemented via Spring AI. This setup abstracts the previously discussed complexities of configuring the vector database, simplifying the overall implementation. This implementation only covers the naive RAG approach, yet offers simplicity and stability in return. Modular RAG capabilities are currently available only with the first approach.</p>
 <h1 id="conclusion">Conclusion</h1>
 <p>As more and more companies use retrieval-augmented generation solutions, the challenge of seamlessly integrating these capabilities into existing systems becomes more important. Python frameworks like LangChain and LlamaIndex, as well as Spring AI from the Spring ecosystem, offer a hand-made and more tedious way to create AI solutions, in contrast to the use of the Kong AI Gateway. There is overlap in functionality, but Kong provides a simpler, faster, most probably safer and more streamlined solution. However, particularly during the RAG ingestion phase, the capabilities of these frameworks can be leveraged to complement and enhance the overall process effectively. In traditional business environments, Java is a primary programming language. This provides Spring AI with a strategic advantage when implementing appropriate Kong AI Gateway additions, such as RAG components within the overall architecture.
@@ -242,10 +239,10 @@ And as we have seen once again with the implementation of RAG, with Kong Gateway
                     
                 </span></h3>
                 <p>Senior Managing Technical Consultant and Kong Champion </p>
-                <p calss="author-socials">
+                <p class="author-socials">
                     
                     
-                    <a target="_blank"  href="https://www.linkedin.com/in/alexander-suchier-0608481"><i class="fa-brands fa-linkedin"></i></a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/alexander-suchier-0608481"><i class="fa-brands fa-linkedin"></i></a>
                     
                 </p>
                 
@@ -337,9 +334,8 @@ And as we have seen once again with the implementation of RAG, with Kong Gateway
 
 
 
-</main>
 
-<footer>
+        </div><footer>
   <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
   <nav>
     
@@ -353,7 +349,7 @@ And as we have seen once again with the implementation of RAG, with Kong Gateway
     
   </nav>
 
-  <p class="text">Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</p>
+  <p class="text">Copyright 2026 NTT DATA Deutschland SE - This site does not use any cookies</p>
 
   <div>
     <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
@@ -369,5 +365,5 @@ And as we have seen once again with the implementation of RAG, with Kong Gateway
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
 </script>
-
+</body>
 </html>

@@ -1,10 +1,7 @@
-
-<!doctype html>
-<html>
-
-<head>
+<!DOCTYPE html>
+<html><head>
   <title>  Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0  </title>
-  <meta charset="utf-8"/> 
+  <meta charset="utf-8"/>
   
   <meta property="og:type" content="article"/>
   <meta property="og:title" content="Kong - The Gateway without Limitations - Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0"/>
@@ -22,35 +19,32 @@
   <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
   <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
 </head>
+<body><header>
+  <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  
+  <nav>
 
-<body>
-  <header>
-    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
     
-    <nav>
+      <a   class="emphasized" 
+          href="/posts">All Blogposts</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="mailto:techblog@nttdata.com">Contact</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="https://de.nttdata.com/">About Us</a>
+    
 
-      
-        <a   class="emphasized" 
-           href="/posts">All Blogposts</a>
-      
-        <a target="_blank"   
-           href="mailto:techblog@nttdata.com">Contact</a>
-      
-        <a target="_blank"   
-           href="https://de.nttdata.com/">About Us</a>
-      
-
-      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
-      <div class="theme-switch-wrapper">
-        <label class="theme-switch" for="checkbox">
-            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
-            <div class="slider round"></div>
-        </label>
-      </div>
-    </nav>
-  </header>
-
-
+    <a target="_blank" rel="noopener noreferrer" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+    <div class="theme-switch-wrapper">
+      <label class="theme-switch" for="checkbox">
+          <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+          <div class="slider round"></div>
+      </label>
+    </div>
+  </nav>
+</header>
+<div id="content">
 
   <div>
     <div class="modal" id="uphillModal">
@@ -115,7 +109,7 @@ There are several prerequisites for token exchange to work. Instead of listing t
 
 <picture style="display: contents;"
      
-    id="[52 322 407 399 141 112]"
+    id="[58 349 367 351 263 132]"
     onclick="openModal(this.id)"
      >
     
@@ -139,6 +133,7 @@ There are several prerequisites for token exchange to work. Instead of listing t
     initPicture()
 </script>
 
+
 <p>The diagram shows the exchange of a SAML 2.0 Bearer Assertion for an OAuth2 access token in the context of an intermediary API gateway. In order for the API gateway to use the SAML 2.0 Bearer Assertion grant type, the authorization server must be properly configured. Discussing this configuration is beyond the scope of this blog, so please refer to the official configuration information available from SAP sources. Kong has plugins to handle the standard authorization grant flows as described in the standard IETF specification (<a href="https://datatracker.ietf.org/doc/html/rfc6749">RFC 6749</a>). However, after thorough research, there is currently no official and third-party solution for implementing the SAML 2.0 Bearer Assertion grant type. Let’s explore how we can overcome this limitation.</p>
 <h1 id="problem">Problem</h1>
 <p>Let’s say a front-end application has received a token via the authorization code grant (or implicit) flow and is communicating with services through an API gateway. The gateway applies the security policies and distributes the token to the services that accept this validated token.</p>
@@ -156,7 +151,7 @@ There are several prerequisites for token exchange to work. Instead of listing t
 
 <picture style="display: contents;"
      
-    id="[337 164 109 332 192 36]"
+    id="[497 305 306 234 267 449]"
     onclick="openModal(this.id)"
      >
     
@@ -179,6 +174,7 @@ There are several prerequisites for token exchange to work. Instead of listing t
 <script>
     initPicture()
 </script>
+
 
 <p>Plugins can add any kind of missing functionality to the gateway. Therefore, we just need to design and implement the outlined SAML 2.0 Bearer Assertion plugin and place it behind the OBO plugin in the Kong processing pipeline. In my last <a href="https://nttdata-dach.github.io/posts/as-konggateway-onbehalfof/" title="Part 3: Token Exchange On-Behalf-Of">OBO blog</a>, I have already discussed the general plugin programming, so we will not repeat that part.</p>
 <p>However, it should come as no surprise that I also wrote a custom Lua SAML 2.0 Bearer Assertion custom plugin. I am happy to share it with you in case you are also suffering from the loss of SAML 2.0 Bearer Assertion functionality. Please see the NTT DATA GitHub repository for the plugin source code <a href="https://github.com/NTTDATA-DACH/TECHblog_code/tree/main/Series-KongGateway/04-AS-Saml2Bearer">here</a>.</p>
@@ -232,10 +228,10 @@ There are several prerequisites for token exchange to work. Instead of listing t
                     
                 </span></h3>
                 <p>Senior Managing Technical Consultant and Kong Champion </p>
-                <p calss="author-socials">
+                <p class="author-socials">
                     
                     
-                    <a target="_blank"  href="https://www.linkedin.com/in/alexander-suchier-0608481"><i class="fa-brands fa-linkedin"></i></a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/alexander-suchier-0608481"><i class="fa-brands fa-linkedin"></i></a>
                     
                 </p>
                 
@@ -327,9 +323,8 @@ There are several prerequisites for token exchange to work. Instead of listing t
 
 
 
-</main>
 
-<footer>
+        </div><footer>
   <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
   <nav>
     
@@ -343,7 +338,7 @@ There are several prerequisites for token exchange to work. Instead of listing t
     
   </nav>
 
-  <p class="text">Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</p>
+  <p class="text">Copyright 2026 NTT DATA Deutschland SE - This site does not use any cookies</p>
 
   <div>
     <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
@@ -359,5 +354,5 @@ There are several prerequisites for token exchange to work. Instead of listing t
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
 </script>
-
+</body>
 </html>

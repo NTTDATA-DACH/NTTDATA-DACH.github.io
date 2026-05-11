@@ -1,10 +1,7 @@
-
-<!doctype html>
-<html>
-
-<head>
+<!DOCTYPE html>
+<html><head>
   <title>  Part 2: Scraping The First Metrics  </title>
-  <meta charset="utf-8"/> 
+  <meta charset="utf-8"/>
   
   <meta property="og:type" content="article"/>
   <meta property="og:title" content="Transitioning from Prometheus to OpenTelemetry - A Journey of a Cluster&#39;s Metrics Evolution - Part 2: Scraping The First Metrics"/>
@@ -22,35 +19,32 @@
   <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
   <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
 </head>
+<body><header>
+  <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  
+  <nav>
 
-<body>
-  <header>
-    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
     
-    <nav>
+      <a   class="emphasized" 
+          href="/posts">All Blogposts</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="mailto:techblog@nttdata.com">Contact</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="https://de.nttdata.com/">About Us</a>
+    
 
-      
-        <a   class="emphasized" 
-           href="/posts">All Blogposts</a>
-      
-        <a target="_blank"   
-           href="mailto:techblog@nttdata.com">Contact</a>
-      
-        <a target="_blank"   
-           href="https://de.nttdata.com/">About Us</a>
-      
-
-      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
-      <div class="theme-switch-wrapper">
-        <label class="theme-switch" for="checkbox">
-            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
-            <div class="slider round"></div>
-        </label>
-      </div>
-    </nav>
-  </header>
-
-
+    <a target="_blank" rel="noopener noreferrer" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+    <div class="theme-switch-wrapper">
+      <label class="theme-switch" for="checkbox">
+          <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+          <div class="slider round"></div>
+      </label>
+    </div>
+  </nav>
+</header>
+<div id="content">
 
   <div>
     <div class="modal" id="uphillModal">
@@ -110,7 +104,7 @@
 
 <picture style="display: contents;"
      
-    id="[140 396 345 161 112 47]"
+    id="[187 461 37 119 381 478]"
     onclick="openModal(this.id)"
      >
     
@@ -133,6 +127,7 @@
 <script>
     initPicture()
 </script>
+
 </p>
 <h2 id="scraping-metrics">Scraping metrics</h2>
 <p>Prometheus uses two custom resource definitions, which are extensions to the Kubernetes API, to enable auto discovery of metrics endpoints while still allowing fine-grained configuration. These can be integrated into arbitrary Kubernetes workloads, e.g. helm charts, to tell Prometheus how to scrape metrics from a particular application. Today, many open source projects offer this for their helm charts.</p>
@@ -177,7 +172,7 @@
 
 <picture style="display: contents;"
      
-    id="[447 124 390 232 169 260]"
+    id="[161 256 83 318 242 433]"
     onclick="openModal(this.id)"
      >
     
@@ -201,6 +196,7 @@
     initPicture()
 </script>
 
+
 <h2 id="scraping-metrics-1">Scraping metrics</h2>
 <p>OpenTelemetry Collector uses a different mechanism to work with the aforementioned Kubernetes CRDs. It decouples the discovery of the custom resources from the metrics collection capabilities of Prometheus, allowing them to scale independently. The OpenTelemetry project introduces an additional component called the <a href="https://opentelemetry.io/docs/kubernetes/operator/target-allocator/">Target Allocator</a>.</p>
 <blockquote>
@@ -209,8 +205,8 @@
 <li>Discovery of Prometheus Custom Resources (ServiceMonitor and PodMonitor)</li>
 <li>Even distribution of Prometheus targets among a pool of Collectors</li>
 </ul>
-    </br>
-    <div id="reference">
+    <br>
+    <div class="reference">
 		<cite title="Source: OpenTelemetry Authors">
         - 
             OpenTelemetry Authors 
@@ -224,8 +220,9 @@
           
           
 		</cite>
-    </p>
+    </div>
 </blockquote>
+
 <p>The Target Allocator is responsible for discovering scrape targets and offering them as a scrape configuration via an HTTP endpoint. The collector itself periodically polls the target allocator for available so-called jobs. This mechanism has been a feature of Prometheus, known as <a href="https://prometheus.io/docs/prometheus/latest/configuration/configuration/#http_sd_config"><code>http_sd_config</code></a>. OpenTelemetry&rsquo;s Prometheus receiver simply elevates this option as a critical step in its scraping process.</p>
 <h2 id="implementation-details">Implementation details</h2>
 <p>We are finally going to get our hands dirty. We start with an up-and-running Kubernetes cluster, which contains the <a href="https://github.com/open-telemetry/opentelemetry-operator/">OpenTelemetry Operator</a> and the <a href="https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus-operator-crds">required metrics CRDs</a>. If you want to follow along with your own cluster, make sure to match this setup.
@@ -314,8 +311,8 @@ For more information on installing the OpenTelemetry Operator, see the <a href="
 <p>We will start by using <a href="https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor/batchprocessor">Batch Processor</a> to buffer metrics for traffic optimization. We also want to add the name of the collector itself as a label. We can do this with <a href="https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/processor/attributesprocessor">attributes Processor</a>. When working with the Batch Processor, please note this recommendation about processor ordering:
 <blockquote>
 	It is highly recommended to configure the batch processor on every collector. The batch processor should be defined in the pipeline after the <code>memory_limiter</code> as well as any sampling processors. This is because batching should happen after any data drops such as sampling.
-    </br>
-    <div id="reference">
+    <br>
+    <div class="reference">
 		<cite title="Source: OpenTelemetry Authors">
         - 
             OpenTelemetry Authors 
@@ -329,8 +326,9 @@ For more information on installing the OpenTelemetry Operator, see the <a href="
           
           
 		</cite>
-    </p>
-</blockquote></p>
+    </div>
+</blockquote>
+</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yaml" data-lang="yaml"><span class="line"><span class="cl"><span class="nt">spec</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
 </span></span></span><span class="line"><span class="cl"><span class="sd">    processors:
@@ -442,10 +440,10 @@ For more information on installing the OpenTelemetry Operator, see the <a href="
                     
                 </span></h3>
                 <p>Lead Consultant </p>
-                <p calss="author-socials">
+                <p class="author-socials">
                     
                     
-                    <a target="_blank"  href="https://www.linkedin.com/in/sherief-ahmed-msc"><i class="fa-brands fa-linkedin"></i></a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/sherief-ahmed-msc"><i class="fa-brands fa-linkedin"></i></a>
                     
                 </p>
                 
@@ -464,10 +462,10 @@ For more information on installing the OpenTelemetry Operator, see the <a href="
                     
                 </span></h3>
                 <p>Senior Technical Consultant </p>
-                <p calss="author-socials">
+                <p class="author-socials">
                     
                     
-                    <a target="_blank"  href="https://www.linkedin.com/in/mikel-jason-m%C3%BCnnekhoff-ab47a5140"><i class="fa-brands fa-linkedin"></i></a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/mikel-jason-m%C3%BCnnekhoff-ab47a5140"><i class="fa-brands fa-linkedin"></i></a>
                     
                 </p>
                 
@@ -561,9 +559,8 @@ For more information on installing the OpenTelemetry Operator, see the <a href="
 
 
 
-</main>
 
-<footer>
+        </div><footer>
   <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
   <nav>
     
@@ -577,7 +574,7 @@ For more information on installing the OpenTelemetry Operator, see the <a href="
     
   </nav>
 
-  <p class="text">Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</p>
+  <p class="text">Copyright 2026 NTT DATA Deutschland SE - This site does not use any cookies</p>
 
   <div>
     <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
@@ -593,5 +590,5 @@ For more information on installing the OpenTelemetry Operator, see the <a href="
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
 </script>
-
+</body>
 </html>

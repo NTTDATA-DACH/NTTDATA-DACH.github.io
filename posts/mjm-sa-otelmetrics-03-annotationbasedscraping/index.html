@@ -1,10 +1,7 @@
-
-<!doctype html>
-<html>
-
-<head>
+<!DOCTYPE html>
+<html><head>
   <title>  Part 3: Enabling annotation-based scraping  </title>
-  <meta charset="utf-8"/> 
+  <meta charset="utf-8"/>
   
   <meta property="og:type" content="article"/>
   <meta property="og:title" content="Transitioning from Prometheus to OpenTelemetry - A Journey of a Cluster&#39;s Metrics Evolution - Part 3: Enabling annotation-based scraping"/>
@@ -22,35 +19,32 @@
   <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
   <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
 </head>
+<body><header>
+  <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  
+  <nav>
 
-<body>
-  <header>
-    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
     
-    <nav>
+      <a   class="emphasized" 
+          href="/posts">All Blogposts</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="mailto:techblog@nttdata.com">Contact</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="https://de.nttdata.com/">About Us</a>
+    
 
-      
-        <a   class="emphasized" 
-           href="/posts">All Blogposts</a>
-      
-        <a target="_blank"   
-           href="mailto:techblog@nttdata.com">Contact</a>
-      
-        <a target="_blank"   
-           href="https://de.nttdata.com/">About Us</a>
-      
-
-      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
-      <div class="theme-switch-wrapper">
-        <label class="theme-switch" for="checkbox">
-            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
-            <div class="slider round"></div>
-        </label>
-      </div>
-    </nav>
-  </header>
-
-
+    <a target="_blank" rel="noopener noreferrer" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+    <div class="theme-switch-wrapper">
+      <label class="theme-switch" for="checkbox">
+          <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+          <div class="slider round"></div>
+      </label>
+    </div>
+  </nav>
+</header>
+<div id="content">
 
   <div>
     <div class="modal" id="uphillModal">
@@ -127,8 +121,8 @@
 <p>Instead of using CRDs, you can use pod annotations to mark a pod as a scrape target offering metrics. Annotation-based scraping as a first-class feature of Prometheus <a href="https://github.com/prometheus-operator/prometheus-operator/issues/1547">was requested for the Prometheus operator in 2018</a>. One of the Prometheus team members immediately objected because of severe limitations compared to the already implemented auto-discovery feature. The enhancement proposal was open until 2021, and engineers discussed pros and cons of this approach. While the feature did not make it to implementation in Prometheus itself, and OpenTelemetry&rsquo;s target allocator also does not support it out of the box, there are common ways to implement this via scrape configuration. For example, the Prometheus community has implemented annotation-based scraping as part of their Prometheus helm chart (see <a href="https://github.com/prometheus-community/helm-charts/tree/main/charts/prometheus#scraping-pod-metrics-via-annotations">its README</a> and <a href="https://github.com/prometheus-community/helm-charts/blob/7e8db0fab052e5c0fd908dd5a30fae734a67fee7/charts/prometheus/values.yaml#L1052-L1110">their actual implementation</a>).</p>
 <blockquote>
 	While prometheus.io annotations are not a core part of Prometheus, they have become the de facto standard to configure scraping.
-    </br>
-    <div id="reference">
+    <br>
+    <div class="reference">
 		<cite >
         - 
              From 
@@ -141,8 +135,9 @@
           
           
 		</cite>
-    </p>
+    </div>
 </blockquote>
+
 <p>The discussion of the initial enhancement proposal already contained what is now used, in some open projects, as a de-facto standardization. The idea is to annotate pods with the information necessary to identify a scrape target without additional resources. These annotations are:</p>
 <ul>
 <li><code>prometheus.io/scrape: &quot;true&quot;</code>: This feature toggle is set to enable scraping.</li>
@@ -281,10 +276,10 @@
                     
                 </span></h3>
                 <p>Senior Technical Consultant </p>
-                <p calss="author-socials">
+                <p class="author-socials">
                     
                     
-                    <a target="_blank"  href="https://www.linkedin.com/in/mikel-jason-m%C3%BCnnekhoff-ab47a5140"><i class="fa-brands fa-linkedin"></i></a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/mikel-jason-m%C3%BCnnekhoff-ab47a5140"><i class="fa-brands fa-linkedin"></i></a>
                     
                 </p>
                 
@@ -303,10 +298,10 @@
                     
                 </span></h3>
                 <p>Lead Consultant </p>
-                <p calss="author-socials">
+                <p class="author-socials">
                     
                     
-                    <a target="_blank"  href="https://www.linkedin.com/in/sherief-ahmed-msc"><i class="fa-brands fa-linkedin"></i></a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/sherief-ahmed-msc"><i class="fa-brands fa-linkedin"></i></a>
                     
                 </p>
                 
@@ -400,9 +395,8 @@
 
 
 
-</main>
 
-<footer>
+        </div><footer>
   <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
   <nav>
     
@@ -416,7 +410,7 @@
     
   </nav>
 
-  <p class="text">Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</p>
+  <p class="text">Copyright 2026 NTT DATA Deutschland SE - This site does not use any cookies</p>
 
   <div>
     <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
@@ -432,5 +426,5 @@
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
 </script>
-
+</body>
 </html>

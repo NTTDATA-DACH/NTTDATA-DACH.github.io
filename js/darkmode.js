@@ -11,6 +11,9 @@ function switchMode() {
     document.documentElement.setAttribute('data-theme', targetTheme)
     localStorage.setItem('theme', targetTheme);
     updatePictures(targetTheme)
+    if (typeof window.__setMermaidTheme === "function") {
+        window.__setMermaidTheme();
+    }
 } 
 
 var storedTheme = localStorage.getItem('theme') || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");

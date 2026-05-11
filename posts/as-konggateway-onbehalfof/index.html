@@ -1,10 +1,7 @@
-
-<!doctype html>
-<html>
-
-<head>
+<!DOCTYPE html>
+<html><head>
   <title>  Part 3: Token Exchange On-Behalf-Of  </title>
-  <meta charset="utf-8"/> 
+  <meta charset="utf-8"/>
   
   <meta property="og:type" content="article"/>
   <meta property="og:title" content="Kong - The Gateway without Limitations - Part 3: Token Exchange On-Behalf-Of"/>
@@ -22,35 +19,32 @@
   <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
   <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
 </head>
+<body><header>
+  <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  
+  <nav>
 
-<body>
-  <header>
-    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
     
-    <nav>
+      <a   class="emphasized" 
+          href="/posts">All Blogposts</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="mailto:techblog@nttdata.com">Contact</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="https://de.nttdata.com/">About Us</a>
+    
 
-      
-        <a   class="emphasized" 
-           href="/posts">All Blogposts</a>
-      
-        <a target="_blank"   
-           href="mailto:techblog@nttdata.com">Contact</a>
-      
-        <a target="_blank"   
-           href="https://de.nttdata.com/">About Us</a>
-      
-
-      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
-      <div class="theme-switch-wrapper">
-        <label class="theme-switch" for="checkbox">
-            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
-            <div class="slider round"></div>
-        </label>
-      </div>
-    </nav>
-  </header>
-
-
+    <a target="_blank" rel="noopener noreferrer" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+    <div class="theme-switch-wrapper">
+      <label class="theme-switch" for="checkbox">
+          <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+          <div class="slider round"></div>
+      </label>
+    </div>
+  </nav>
+</header>
+<div id="content">
 
   <div>
     <div class="modal" id="uphillModal">
@@ -119,7 +113,7 @@
 
 <picture style="display: contents;"
      
-    id="[430 184 315 7 477 4]"
+    id="[278 5 493 294 105 150]"
     onclick="openModal(this.id)"
      >
     
@@ -142,6 +136,7 @@
 <script>
     initPicture()
 </script>
+
 
 <p>The diagram conveys the OBO idea in the context of an intermediary API Gateway. To allow the API Gateway to use the OBO grant type, the authorization server must be properly configured. Discussing this configuration exceeds the scope of this blog, so please refer to the official configuration information available in the <a href="https://learn.microsoft.com/en-us/entra/identity-platform/">AAD documentation</a> or look for other OBO articles that focus on AAD configuration (e.g. at <a href="https://www.cloudmatter.io/post/experience-with-oauth-2-0-on-behalf-of-flow">Cloud Matter</a>). Kong offers plugins for serving the standard authorization grant flows as described in the standard IETF specification (<a href="https://datatracker.ietf.org/doc/html/rfc6749">RFC 6749</a>). Yet, after thorough investigation and consultation with Kong’s advisors, there is currently no official and third-party solution for implementing the OBO grant type. Let&rsquo;s explore how we can overcome this limitation.</p>
 <h1 id="problem">Problem</h1>
@@ -201,10 +196,10 @@ The presented plugin will solve your OBO token exchange problems with AAD. To re
                     
                 </span></h3>
                 <p>Senior Managing Technical Consultant and Kong Champion </p>
-                <p calss="author-socials">
+                <p class="author-socials">
                     
                     
-                    <a target="_blank"  href="https://www.linkedin.com/in/alexander-suchier-0608481"><i class="fa-brands fa-linkedin"></i></a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/alexander-suchier-0608481"><i class="fa-brands fa-linkedin"></i></a>
                     
                 </p>
                 
@@ -300,9 +295,8 @@ The presented plugin will solve your OBO token exchange problems with AAD. To re
 
 
 
-</main>
 
-<footer>
+        </div><footer>
   <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
   <nav>
     
@@ -316,7 +310,7 @@ The presented plugin will solve your OBO token exchange problems with AAD. To re
     
   </nav>
 
-  <p class="text">Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</p>
+  <p class="text">Copyright 2026 NTT DATA Deutschland SE - This site does not use any cookies</p>
 
   <div>
     <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
@@ -332,5 +326,5 @@ The presented plugin will solve your OBO token exchange problems with AAD. To re
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
 </script>
-
+</body>
 </html>

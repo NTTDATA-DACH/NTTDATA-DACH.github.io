@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Elastic AI Autonomy on Technology Blog</title>
+    <link>https://nttdata-dach.github.io/tags/elastic-ai-autonomy/</link>
+    <description>Recent content in Elastic AI Autonomy on Technology Blog</description>
+    <generator>Hugo</generator>
+    <language>en</language>
+    <copyright>Copyright 2026 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
+    <lastBuildDate>Wed, 04 Mar 2026 00:00:00 +0000</lastBuildDate>
+    <atom:link href="https://nttdata-dach.github.io/tags/elastic-ai-autonomy/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Part 02: From Doing Work to Mentoring Systems</title>
+      <link>https://nttdata-dach.github.io/posts/km-humansideofai-02-fromdoingworktomentoringsystems/</link>
+      <pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/km-humansideofai-02-fromdoingworktomentoringsystems/</guid>
+      <description>As AI absorbs execution, responsibility can no longer remain coupled to activity. Traditional “human in the loop” oversight does not scale under continuous autonomous operation. Roles must evolve from doing work, to supervising outputs, to mentoring systems. Mentoring is a structural capability: defining intent, shaping guardrails, and recalibrating autonomy as contexts change. Responsibility becomes more abstract but more critical. The challenge is not preserving manual control, but deliberately anchoring accountability in a system-driven environment.</description>
+    </item>
+    <item>
+      <title>Part 01: Why AI Rarely Transforms Organizations</title>
+      <link>https://nttdata-dach.github.io/posts/km-humansideofai-01-whyairarelytransformsorganizations/</link>
+      <pubDate>Tue, 03 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/posts/km-humansideofai-01-whyairarelytransformsorganizations/</guid>
+      <description>AI adoption is widespread, yet structural transformation remains rare. The constraint is not technological capability, but organizational design. Most enterprises are built around process-centric logic developed for stable industrial cycles, where responsibility is tied to execution steps. Autonomous systems operate differently: they integrate across boundaries and optimize for outcomes. When introduced into unchanged structures, AI remains assistive rather than transformative. Sustainable impact requires explicit outcome ownership and alignment between technical maturity and organizational form.</description>
+    </item>
+  </channel>
+</rss>

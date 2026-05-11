@@ -1,10 +1,7 @@
-
-<!doctype html>
-<html>
-
-<head>
+<!DOCTYPE html>
+<html><head>
   <title>  Part 10: AI Gateway  </title>
-  <meta charset="utf-8"/> 
+  <meta charset="utf-8"/>
   
   <meta property="og:type" content="article"/>
   <meta property="og:title" content="Kong - The Gateway without Limitations - Part 10: AI Gateway"/>
@@ -22,35 +19,32 @@
   <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
   <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
 </head>
+<body><header>
+  <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  
+  <nav>
 
-<body>
-  <header>
-    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
     
-    <nav>
+      <a   class="emphasized" 
+          href="/posts">All Blogposts</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="mailto:techblog@nttdata.com">Contact</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="https://de.nttdata.com/">About Us</a>
+    
 
-      
-        <a   class="emphasized" 
-           href="/posts">All Blogposts</a>
-      
-        <a target="_blank"   
-           href="mailto:techblog@nttdata.com">Contact</a>
-      
-        <a target="_blank"   
-           href="https://de.nttdata.com/">About Us</a>
-      
-
-      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
-      <div class="theme-switch-wrapper">
-        <label class="theme-switch" for="checkbox">
-            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
-            <div class="slider round"></div>
-        </label>
-      </div>
-    </nav>
-  </header>
-
-
+    <a target="_blank" rel="noopener noreferrer" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+    <div class="theme-switch-wrapper">
+      <label class="theme-switch" for="checkbox">
+          <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+          <div class="slider round"></div>
+      </label>
+    </div>
+  </nav>
+</header>
+<div id="content">
 
   <div>
     <div class="modal" id="uphillModal">
@@ -107,8 +101,8 @@
 <p>Gartner effectively outlined the features of AI Gateways in the summary of the report &ldquo;Innovation Insight: AI Gateways&rdquo;:</p>
 <blockquote>
 	AI gateways manage, secure and protect API connections to AI providers. Software engineering leaders can use AI gateways to apply security; multi-LLM routing; cost visibility and data protection, scanning and risk mitigation controls to their AI usage.
-    </br>
-    <div id="reference">
+    <br>
+    <div class="reference">
 		<cite title="Source: Gartner">
         - 
             Gartner 
@@ -122,8 +116,9 @@
           
           
 		</cite>
-    </p>
+    </div>
 </blockquote>
+
 <p>The Gartner report explores the emerging role of AI Gateways in managing and securing interactions between applications and AI services. It emphasizes the necessity for organizations to gain better control and visibility over their AI usage. <a href="https://www.forbes.com/councils/forbestechcouncil/2024/09/19/mediation-layers-api-consumption-and-gateways/">Forbes</a> also breaks down the core features of AI Gateways.</p>
 <ul>
 <li><strong>Multi-LLM Routing</strong>: Directing requests to the optimal large language model based on specialization, cost or workload.</li>
@@ -136,8 +131,8 @@
 <p>After weighing my options on whether to introduce the AI Gateway with an overview blog or to dive straight into the individual AI features of the Gateway, I finally decided to go with the introductory blog. In future blogs, I will focus on individual AI features and plugins. This choice reflects my primary motivation to highlight the often-overlooked yet critical topics of <a href="https://en.wikipedia.org/wiki/Ethics_of_artificial_intelligence">Ethical AI</a> and AI Risk Management, as I would like to quote the following definition from Anne Badman:</p>
 <blockquote>
 	AI Risk Management is the process of systematically identifying, mitigating and addressing the potential risks associated with AI technologies. It involves a combination of tools, practices and principles. The goal is to minimize AI’s potential negative impacts while maximizing its benefits.
-    </br>
-    <div id="reference">
+    <br>
+    <div class="reference">
 		<cite title="Source: Anne Badman">
         - 
             Anne Badman 
@@ -151,16 +146,17 @@
           
           
 		</cite>
-    </p>
+    </div>
 </blockquote>
+
 <p>These subjects are highly valued within my organization, NTT DATA and also play a significant role in the functionality of Kong AI Gateway.</p>
 <p>To get started, I highly recommend reading the NTT documents <a href="https://es.nttdata.com/documents/ai-regulations-v03.pdf">&ldquo;Getting ready for Trustworthy AI regulation&rdquo;</a> and <a href="https://services.global.ntt/en-us/campaigns/ethical-considerations-of-genai">&ldquo;Ethical considerations of generative AI&rdquo;</a>, which are available for download.
 Specifically on the topic of AI risk, I recommend the important article <a href="https://www.nttdata.com/global/en/insights/focus/2025/003">&ldquo;Proactive risk management: the secret to securing your AI journey&rdquo;</a> and watch the practical Kong Demo <a href="https://konghq.com/resources/demos/kong-konnect/owasp-securing-llm-deployments">&ldquo;Securing Enterprise LLM Deployments: Best Practices and Implementation&rdquo;</a>.</p>
 <p>Besides everything I have read on these subjects, this quote from <a href="https://www.iese.edu/faculty-research/faculty/javier-zamora/">Javier Zamora</a>, IESE professor, has stuck with me:</p>
 <blockquote>
 	If we want AI for good, then it depends on us to make it so.
-    </br>
-    <div id="reference">
+    <br>
+    <div class="reference">
 		<cite title="Source: Javier Zamora">
         - 
             Javier Zamora 
@@ -174,14 +170,15 @@ Specifically on the topic of AI risk, I recommend the important article <a href=
           
           
 		</cite>
-    </p>
+    </div>
 </blockquote>
+
 <p>&ldquo;AI for good&rdquo; refers to the ethical use of artificial intelligence to address societal challenges. Generative AI, alongside its promising and limitless future, presents numerous ethical issues, including perpetuating biases, manipulation, deception, copyright infringement, and issues of accountability. Safety, robustness, fairness, transparency and environmental impact are other issues to consider.</p>
 <p>We need responsible use of generative AI, including monitoring the requested and generated content and intervening when necessary to mitigate potential harm. Content moderation, albeit complex, is a vital aspect of this oversight, as AI engineers work to filter out harmful or biased results and implement safeguards that activate when users search for potentially harmful content, ensuring that the output remains appropriate and safe for specific audiences. IESE Dean, <a href="https://www.iese.edu/faculty-research/faculty/franz-heukamp/">Franz Heukamp</a>, put it succinctly:</p>
 <blockquote>
 	There is power, and there is good, and they need to come together.
-    </br>
-    <div id="reference">
+    <br>
+    <div class="reference">
 		<cite title="Source: Franz Heukamp">
         - 
             Franz Heukamp 
@@ -195,8 +192,9 @@ Specifically on the topic of AI risk, I recommend the important article <a href=
           
           
 		</cite>
-    </p>
+    </div>
 </blockquote>
+
 <p>It&rsquo;s up to all of us to ensure that unintended impacts don&rsquo;t occur. It won&rsquo;t happen by itself, an AI middleware is needed, which promotes the AI power but gives you the means to control. That’s the Kong AI Gateway.</p>
 <h1 id="kong-ai-gateway">Kong AI Gateway</h1>
 <p>Below you can find my own Kong AI Gateway overview diagram with a slightly different grouping compared to the official diagrams based on the <a href="https://docs.konghq.com/gateway/changelog/">Enterprise version 3.10</a>. In general, the Kong AI Gateway is nothing else than the Kong API Gateway with AI plugins on top, some are OSS (the green bubbles), others are only available for Enterprise customers (the red bubbles). At the heart and center of the AI Gateway are the prompt engineering controls which directly tackle Ethical AI and AI Risk Management. Access to the LLM APIs is managed through the Unified LLM Access Controls, represented by the faded orange bubbles on the right. The supported vector databases are shown at the bottom, with purple bubbles indicating the default indices used by Kong.</p>
@@ -207,7 +205,7 @@ Specifically on the topic of AI risk, I recommend the important article <a href=
 
 <picture style="display: contents;"
      
-    id="[264 448 299 348 368 416]"
+    id="[60 106 6 205 72 317]"
     onclick="openModal(this.id)"
      >
     
@@ -230,6 +228,7 @@ Specifically on the topic of AI risk, I recommend the important article <a href=
 <script>
     initPicture()
 </script>
+
 
 <p>So far, I have omitted two important components from the architecture diagram. However, they impressively demonstrate how Ethical AI and AI Risk Management can be implemented on the Kong Gateway. The <a href="https://docs.konghq.com/hub/kong-inc/ai-sanitizer/#ai-pii-anonymizer-service">&ldquo;AI PII Anonymizer&rdquo; services</a> (the blue bubble on the left side) are specialized language-specific services provided by Kong that must run in tandem with the AI sanitizer plugin. Please note that access to the Kong AI PII Anonymizer service requires a private Docker image, which is available upon request from Kong Support. This service detects and sanitizes sensitive data for the &ldquo;AI Sanitizer&rdquo; plugin. Finally, the <a href="https://azure-ai-content-safety-api-docs.developer.azure-api.net/api-details#api=content-safety-service-2023-10-01&amp;operation=TextOperations_AnalyzeText">&ldquo;Azure Content Safety SaaS&rdquo;</a> service (the faded yellow bubble on the right side) is a special SaaS offering operating on the Azure platform, which safeguards against potential harm by assessing every LLM request in relation to the <a href="https://learn.microsoft.com/en-us/azure/ai-services/content-safety/concepts/harm-categories">harm categories</a> &ldquo;hate and fairness&rdquo;, &ldquo;sexual&rdquo;, &ldquo;violence&rdquo; and &ldquo;self-harm&rdquo;.</p>
 <p>Let&rsquo;s go through the different control categories and list the available plugins.</p>
@@ -257,10 +256,10 @@ Specifically on the topic of AI risk, I recommend the important article <a href=
                     
                 </span></h3>
                 <p>Senior Managing Technical Consultant and Kong Champion </p>
-                <p calss="author-socials">
+                <p class="author-socials">
                     
                     
-                    <a target="_blank"  href="https://www.linkedin.com/in/alexander-suchier-0608481"><i class="fa-brands fa-linkedin"></i></a>
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/alexander-suchier-0608481"><i class="fa-brands fa-linkedin"></i></a>
                     
                 </p>
                 
@@ -352,9 +351,8 @@ Specifically on the topic of AI risk, I recommend the important article <a href=
 
 
 
-</main>
 
-<footer>
+        </div><footer>
   <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
   <nav>
     
@@ -368,7 +366,7 @@ Specifically on the topic of AI risk, I recommend the important article <a href=
     
   </nav>
 
-  <p class="text">Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</p>
+  <p class="text">Copyright 2026 NTT DATA Deutschland SE - This site does not use any cookies</p>
 
   <div>
     <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
@@ -384,5 +382,5 @@ Specifically on the topic of AI risk, I recommend the important article <a href=
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
 </script>
-
+</body>
 </html>

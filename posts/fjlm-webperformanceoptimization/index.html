@@ -1,10 +1,7 @@
-
-<!doctype html>
-<html>
-
-<head>
+<!DOCTYPE html>
+<html><head>
   <title>  Web Performance Optimization  </title>
-  <meta charset="utf-8"/> 
+  <meta charset="utf-8"/>
   
   <meta property="og:type" content="article"/>
   <meta property="og:title" content="Web Performance Optimization"/>
@@ -22,35 +19,32 @@
   <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
   <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
 </head>
+<body><header>
+  <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  
+  <nav>
 
-<body>
-  <header>
-    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
     
-    <nav>
+      <a   class="emphasized" 
+          href="/posts">All Blogposts</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="mailto:techblog@nttdata.com">Contact</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="https://de.nttdata.com/">About Us</a>
+    
 
-      
-        <a   class="emphasized" 
-           href="/posts">All Blogposts</a>
-      
-        <a target="_blank"   
-           href="mailto:techblog@nttdata.com">Contact</a>
-      
-        <a target="_blank"   
-           href="https://de.nttdata.com/">About Us</a>
-      
-
-      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
-      <div class="theme-switch-wrapper">
-        <label class="theme-switch" for="checkbox">
-            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
-            <div class="slider round"></div>
-        </label>
-      </div>
-    </nav>
-  </header>
-
-
+    <a target="_blank" rel="noopener noreferrer" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+    <div class="theme-switch-wrapper">
+      <label class="theme-switch" for="checkbox">
+          <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+          <div class="slider round"></div>
+      </label>
+    </div>
+  </nav>
+</header>
+<div id="content">
 
   <div>
     <div class="modal" id="uphillModal">
@@ -130,6 +124,7 @@
     
 </picture>
 
+
 <p>In another <a href="https://neilpatel.com/blog/speed-is-a-killer/">study</a>, we can see how for those users who stayed on a website with long loading times and slow navigability there is up to an 80% chance that they will not return to this website again.</p>
 
 
@@ -152,6 +147,7 @@
         />
     
 </picture>
+
 
 <h2 id="improved-indexing-in-seo-positioning-visibility">Improved indexing in SEO positioning. Visibility</h2>
 <p>As we have seen, if users do not reach the conversion point, Google will determine that the website does not offer relevant content and will have a negative impact on SEO, without appearing among the first searches. On the contrary, having an optimized web page implies that all the metrics that Google uses to index a website are obtained in a shorter time, facilitating the indexing in a browser.</p>
@@ -183,6 +179,7 @@
     
 </picture>
 
+
 <p>It is important to know that as load time increases, the probability of a user bouncing is high.</p>
 
 
@@ -205,6 +202,7 @@
         />
     
 </picture>
+
 
 <h1 id="tips-for-optimizing-website-performance">Tips for optimizing website performance</h1>
 <p>As mentioned above, there is an infinite number of factors that influence the slowness of a website. Next, we are going to see some very useful tools that will allow us to analyze the performance of our website and lateron, possible solutions to address the different problems that can cause as a counterpart a low performance.</p>
@@ -234,6 +232,7 @@
         />
     
 </picture>
+
 </li>
 <li><a href="https://developers.google.com/speed/pagespeed/insights/?hl=es">PageSpeed Insights</a>: This is Google&rsquo;s tool par excellence for WPO optimization. It is easy to use and generates a complete report on the current state of web performance. The most interesting thing is that it shows a series of indications, with very useful information, on how to solve the detected problems. PageSpeed is based on Lighthouse data, which will be discussed later.
 
@@ -257,6 +256,7 @@
         />
     
 </picture>
+
 </li>
 <li><a href="https://tools.pingdom.com/">Pingdom</a>: Pingdom is one of the most powerful tools that offers a complete report detailing which are the elements that affect performance and how they can be solved in the best way.
 
@@ -280,6 +280,7 @@
         />
     
 </picture>
+
 </li>
 <li><a href="https://gtmetrix.com/">GTMetrix</a>: GTMetrix is another must-have tool thanks to its incredible load speed analysis, prioritized by priority order, and customized recommendations to mitigate problems.
 
@@ -303,6 +304,7 @@
         />
     
 </picture>
+
 </li>
 <li><a href="https://chrome.google.com/webstore/detail/lighthouse/blipmdconlkpinefehnmjammfjpmpbjk?hl=es">Lighthouse</a>: This is an open source, developer-oriented, automated tool for improving the performance, quality and correctness of your applications.
 
@@ -326,6 +328,7 @@
         />
     
 </picture>
+
 </li>
 </ul>
 <p>In order to see where the bottleneck is located, you can complement the speed tests you perform on a website with load tests. Let&rsquo;s take a closer look at some of the more advanced tools:</p>
@@ -363,6 +366,7 @@
     
 </picture>
 
+
 <h2 id="reduce-http-requests">Reduce HTTP requests</h2>
 <p>Normally, when your browser obtains data from a server, it uses the HTTP protocol. Therefore it should be noted that the more times you request information from the server, the more HTTP requests there will be, causing the loading to be slower.</p>
 <p>It is important to analyze all the requests that are being made, because add-ons such as plugins or libraries that are being used send a high number of them, and maybe not all of them are strictly necessary. In this case it is interesting to find an alternative to solve the problem.</p>
@@ -389,6 +393,7 @@
         />
     
 </picture>
+
 
 <h2 id="minimize-css-and-javascript">Minimize CSS and Javascript</h2>
 <p>Now that we know how to detect the request requests made by the website, you can start to minimize those related to CSS and Javascript.</p>
@@ -425,6 +430,7 @@
     
 </picture>
 
+
 <p>To access this information we can do it through Google&rsquo;s developer tools in your browser or others like the previously mentioned <a href="https://www.webpagetest.org/">WebPageTest</a>.</p>
 
 
@@ -447,6 +453,7 @@
         />
     
 </picture>
+
 
 <p>A high TTFB is usually due to network problems, a bad configuration of the dynamic/asynchronous content, the configuration or performance of the web server. Also in many cases, using a CDN or a more efficient DNS can lower TTFB.</p>
 <h2 id="reduce-redirects">Reduce redirects</h2>
@@ -484,6 +491,7 @@
     
 </picture>
 
+
 <p>In several case studies, it is estimated that the gain in load time is between 20% and 50% and in addition using this technique reduces saturation on the main server (<em>editor’s note: compare the articles on <a href="https://loadforge.com/guides/how-cdns-improve-website-load-times-a-technical-overview">loadforge.com</a> and <a href="https://ventureharbour.com/content-delivery-network/">ventureharbour.com</a></em>).</p>
 <p>The use of a CDN requires its own study for the type of web, number of users that consume its content and from where geographically speaking.</p>
 <h1 id="conclusions">Conclusions</h1>
@@ -506,7 +514,7 @@
                     
                 </span></h3>
                 <p> </p>
-                <p calss="author-socials">
+                <p class="author-socials">
                     
                     
                     
@@ -565,9 +573,8 @@
 
 
 
-</main>
 
-<footer>
+        </div><footer>
   <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
   <nav>
     
@@ -581,7 +588,7 @@
     
   </nav>
 
-  <p class="text">Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</p>
+  <p class="text">Copyright 2026 NTT DATA Deutschland SE - This site does not use any cookies</p>
 
   <div>
     <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
@@ -597,5 +604,5 @@
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
 </script>
-
+</body>
 </html>
