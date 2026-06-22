@@ -7,15 +7,8 @@
     <generator>Hugo</generator>
     <language>en</language>
     <copyright>Copyright 2026 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Mon, 22 Jun 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 14 Jun 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/tags/ai-riskmanagement/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Part 12: AI Gateway Reloaded</title>
-      <link>https://nttdata-dach.github.io/posts/as-konggateway-aigatewayreloaded/</link>
-      <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/posts/as-konggateway-aigatewayreloaded/</guid>
-      <description>This blog explores how Kong AI Gateway has been reloaded between versions 3.10 and 3.14, evolving from a secure AI integration layer into a powerful foundation for managing agentic AI workloads. Building on its enterprise-grade capabilities, Kong has significantly expanded its AI feature set with enhanced multi-provider support, improved resilience and fine-grained Model Context Protocol (MCP) access controls. The result is a more mature AI Gateway designed to support modern AI systems.</description>
-    </item>
     <item>
       <title>Part 10: AI Gateway</title>
       <link>https://nttdata-dach.github.io/posts/as-konggateway-aigateway/</link>

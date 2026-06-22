@@ -1,7 +1,10 @@
-<!DOCTYPE html>
-<html><head>
+
+<!doctype html>
+<html>
+
+<head>
   <title>  Calculating your carbon footprint: a guide to measuring serverless app emissions on AWS  </title>
-  <meta charset="utf-8"/>
+  <meta charset="utf-8"/> 
   
   <meta property="og:type" content="article"/>
   <meta property="og:title" content="Calculating your carbon footprint: a guide to measuring serverless app emissions on AWS"/>
@@ -19,32 +22,35 @@
   <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
   <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
 </head>
-<body><header>
-  <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
-  
-  <nav>
 
+<body>
+  <header>
+    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
     
-      <a   class="emphasized" 
-          href="/posts">All Blogposts</a>
-    
-      <a target="_blank" rel="noopener noreferrer"   
-          href="mailto:techblog@nttdata.com">Contact</a>
-    
-      <a target="_blank" rel="noopener noreferrer"   
-          href="https://de.nttdata.com/">About Us</a>
-    
+    <nav>
 
-    <a target="_blank" rel="noopener noreferrer" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
-    <div class="theme-switch-wrapper">
-      <label class="theme-switch" for="checkbox">
-          <input type="checkbox" id="checkbox" onChange="switchMode()"/>
-          <div class="slider round"></div>
-      </label>
-    </div>
-  </nav>
-</header>
-<div id="content">
+      
+        <a   class="emphasized" 
+           href="/posts">All Blogposts</a>
+      
+        <a target="_blank"   
+           href="mailto:techblog@nttdata.com">Contact</a>
+      
+        <a target="_blank"   
+           href="https://de.nttdata.com/">About Us</a>
+      
+
+      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+      <div class="theme-switch-wrapper">
+        <label class="theme-switch" for="checkbox">
+            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+            <div class="slider round"></div>
+        </label>
+      </div>
+    </nav>
+  </header>
+
+
 
   <div>
     <div class="modal" id="uphillModal">
@@ -124,7 +130,6 @@
     
 </picture>
 
-
 <p>The architecture of the system relies on popular serverless solutions available in AWS, such as Lambda for backend processing, DynamoDB for campaign data storage, S3 for static content storage and frontend deployment, and API Gateway for managing access to the backend. The chosen CPU architecture for all components is the default, which is the x86. These specific services were chosen because they are well-established in the industry and have been widely adopted by developers, making them an ideal basis for evaluating the CO2 emissions of serverless solutions.</p>
 <h1 id="measurement-strategy">Measurement Strategy</h1>
 <p>With the help of our SCI calculator, which is <a href="https://greensoftware.foundation/articles/how-intesa-and-ntt-data-measure-energy-consumption-of-software">a tool to measure software carbon footprint and carbon intensity</a>, we can approximate the carbon footprint of different hardware components based on the resource usage of the given serverless service.</p>
@@ -159,7 +164,6 @@
     
 </picture>
 
-
 <p>The network emissions are not measured outside of the box. Therefore, a different kind of setup is needed. The first step is to gather bytes that traverse the application network. If this information is available, it is possible to transform this value with a specific formula from GSF, which is described <a href="https://sci-guide.greensoftware.foundation/E/NetworkEnergy">here</a>. After that, the carbon emissions can be combined with other components to calculate the SCI.</p>
 <p>VPC flow logs can be used to get carbon emissions created by network traffic. The logs from your VPC can be stored in an S3 bucket, which can then be queried with Athena. In a log entry, we have the number of bytes sent per packet. That can be summed up for a given time range to get an idea of what the network emissions were.</p>
 
@@ -183,7 +187,6 @@
         />
     
 </picture>
-
 
 <p>The green software pattern <a href="https://patterns.greensoftware.foundation/catalog/cloud/reduce-transmitted-data">“Reduce transmitted data”</a> is a great option for comparing a multitude of different executions. Between the different executions, different image sizes can be uploaded. A larger image size that is uploaded through the creation of the campaign should not only cause higher network traffic but also increase the number of bytes that are stored in the different storage solutions used.</p>
 <p>Together with k6 and AWS CodeBuild, the load test is executed to give us first insights about CO2 emissions in our serverless architecture.</p>
@@ -210,7 +213,7 @@
                     
                 </span></h3>
                 <p> </p>
-                <p class="author-socials">
+                <p calss="author-socials">
                     
                     
                     
@@ -232,7 +235,7 @@
                     
                 </span></h3>
                 <p> </p>
-                <p class="author-socials">
+                <p calss="author-socials">
                     
                     
                     
@@ -309,8 +312,9 @@
 
 
 
+</main>
 
-        </div><footer>
+<footer>
   <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
   <nav>
     
@@ -324,7 +328,7 @@
     
   </nav>
 
-  <p class="text">Copyright 2026 NTT DATA Deutschland SE - This site does not use any cookies</p>
+  <p class="text">Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</p>
 
   <div>
     <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
@@ -340,5 +344,5 @@
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
 </script>
-</body>
+
 </html>

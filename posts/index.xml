@@ -7,36 +7,8 @@
     <generator>Hugo</generator>
     <language>en</language>
     <copyright>Copyright 2026 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Mon, 22 Jun 2026 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 17 Jul 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Part 12: AI Gateway Reloaded</title>
-      <link>https://nttdata-dach.github.io/posts/as-konggateway-aigatewayreloaded/</link>
-      <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/posts/as-konggateway-aigatewayreloaded/</guid>
-      <description>This blog explores how Kong AI Gateway has been reloaded between versions 3.10 and 3.14, evolving from a secure AI integration layer into a powerful foundation for managing agentic AI workloads. Building on its enterprise-grade capabilities, Kong has significantly expanded its AI feature set with enhanced multi-provider support, improved resilience and fine-grained Model Context Protocol (MCP) access controls. The result is a more mature AI Gateway designed to support modern AI systems.</description>
-    </item>
-    <item>
-      <title>Part 03: Designing Organizations for Autonomous AI</title>
-      <link>https://nttdata-dach.github.io/posts/km-humansideofai-03-designingorganizationsforautonomousai/</link>
-      <pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/posts/km-humansideofai-03-designingorganizationsforautonomousai/</guid>
-      <description>Process-centric organizations were rational under long industrial cycles, but compressed adoption dynamics and adaptive systems demand a different structure. Product thinking provides the necessary anchor: durable ownership, embedded learning, and outcome accountability. Governance must move from approval logic to guardrail-based design, with autonomy treated as a calibrated and reversible choice. Absorbing intelligence at scale is therefore not a technical exercise, but an architectural one requiring alignment between product, platform, and governance structures.</description>
-    </item>
-    <item>
-      <title>Part 02: From Doing Work to Mentoring Systems</title>
-      <link>https://nttdata-dach.github.io/posts/km-humansideofai-02-fromdoingworktomentoringsystems/</link>
-      <pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/posts/km-humansideofai-02-fromdoingworktomentoringsystems/</guid>
-      <description>As AI absorbs execution, responsibility can no longer remain coupled to activity. Traditional “human in the loop” oversight does not scale under continuous autonomous operation. Roles must evolve from doing work, to supervising outputs, to mentoring systems. Mentoring is a structural capability: defining intent, shaping guardrails, and recalibrating autonomy as contexts change. Responsibility becomes more abstract but more critical. The challenge is not preserving manual control, but deliberately anchoring accountability in a system-driven environment.</description>
-    </item>
-    <item>
-      <title>Part 01: Why AI Rarely Transforms Organizations</title>
-      <link>https://nttdata-dach.github.io/posts/km-humansideofai-01-whyairarelytransformsorganizations/</link>
-      <pubDate>Tue, 03 Mar 2026 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/posts/km-humansideofai-01-whyairarelytransformsorganizations/</guid>
-      <description>AI adoption is widespread, yet structural transformation remains rare. The constraint is not technological capability, but organizational design. Most enterprises are built around process-centric logic developed for stable industrial cycles, where responsibility is tied to execution steps. Autonomous systems operate differently: they integrate across boundaries and optimize for outcomes. When introduced into unchanged structures, AI remains assistive rather than transformative. Sustainable impact requires explicit outcome ownership and alignment between technical maturity and organizational form.</description>
-    </item>
     <item>
       <title>Part 11: RAG team play with Spring AI</title>
       <link>https://nttdata-dach.github.io/posts/as-konggateway-rag_teamplay/</link>
@@ -78,13 +50,6 @@
       <pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/posts/fjlm-webperformanceoptimization/</guid>
       <description>In this post, you will learn about the importance of optimizing web page loading times and how it impacts conversions, as well as why it&amp;rsquo;s critical for SEO positioning and visibility. We&amp;rsquo;ll also outline tips and strategies for improving website performance, ranging from website speed tests to image optimization, and minimizing CSS and Javascript among other techniques. Additionally, we discuss important metrics like time to first byte and the benefits of using technologies like HTTP/2 and Gzip compression. This post offers valuable insights into how to improve your website&amp;rsquo;s performance and user experience.</description>
-    </item>
-    <item>
-      <title>Calculating your carbon footprint: a guide to measuring serverless app emissions on AWS</title>
-      <link>https://nttdata-dach.github.io/posts/fw-da-calculatingyourcarbonfootprint/</link>
-      <pubDate>Thu, 30 Jan 2025 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/posts/fw-da-calculatingyourcarbonfootprint/</guid>
-      <description>This blog article presents a methodology developed by NTT Data to quantify the carbon emissions of serverless applications on AWS. It examines a Campaign Management System architecture and utilizes tools like the SCI calculator to uncover insights into the relationship between application traffic and carbon emissions. The authors address challenges in metrics availability and data collection within serverless environments and discuss how Green Software Patterns can mitigate environmental impacts. The article highlights the significance of sustainability in serverless computing and lays the groundwork for future advancements in greener cloud solutions.</description>
     </item>
     <item>
       <title>Part 2: Releases</title>
@@ -157,13 +122,6 @@
       <description>In this article we discuss the challenges of storing vast amounts of data to become a value-driven organization and introduce data mesh, an innovative technology that addresses these challenges. We outline the four principles of data mesh and provide a step-by-step framework for implementing the architecture. The article also gives an example of data mesh implementation using serverless tools on AWS and emphasizes that the selection between data mesh and traditional data architectures depends on the specific needs, capabilities, and goals of the business.</description>
     </item>
     <item>
-      <title>Part 6: Setting Up an Unreal Engine Project: Best Practices for Interactive Immersive Experiences</title>
-      <link>https://nttdata-dach.github.io/posts/ss-immersivetechnologies-06-settingupunrealproject/</link>
-      <pubDate>Mon, 08 Apr 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/posts/ss-immersivetechnologies-06-settingupunrealproject/</guid>
-      <description>tbd</description>
-    </item>
-    <item>
       <title>Part 5: mTLS Header</title>
       <link>https://nttdata-dach.github.io/posts/as-konggateway-mtls_header/</link>
       <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
@@ -227,13 +185,6 @@
       <description>This tech blog article introduces Crossplane, an open-source Kubernetes add-on that extends the capabilities of infrastructure management by leveraging Kubernetes as a control plane. Crossplane uses Kubernetes&amp;rsquo; extensible API design and Custom Resource Definitions (CRDs) to manage not only services and applications but also cloud infrastructure. The article provides step-by-step instructions on how to get started with Crossplane and provision your first resources in the cloud using Kubernetes as a control plane.</description>
     </item>
     <item>
-      <title>Part 6: Setting Up a Unreal Engine Project - Best Practices for Interactive Immersive Experiences</title>
-      <link>https://nttdata-dach.github.io/posts/ss-settingupanunrealproject/</link>
-      <pubDate>Thu, 06 Jul 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/posts/ss-settingupanunrealproject/</guid>
-      <description>tbd</description>
-    </item>
-    <item>
       <title>Part 1: Brief Product Introduction</title>
       <link>https://nttdata-dach.github.io/posts/as-konggateway-productintroduction/</link>
       <pubDate>Mon, 15 May 2023 00:00:00 +0000</pubDate>
@@ -267,13 +218,6 @@
       <pubDate>Wed, 08 Mar 2023 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/posts/sh-dataorienteddesignecs/</guid>
       <description>Current enterprise software engineering is all about abstraction. We are bending our software in ways that the computer has trouble efficiently computing it. A decade ago we had to write efficient programs, because our hardware was a limiting factor. However, having better hardware is in no excuse to waste precious ressources. With Data-Oriented Design - DOD and Entity Component System - ECS, we can improve performance by up to 100 times!</description>
-    </item>
-    <item>
-      <title>Quantum-inspired approaches to the Job-Shop Problem</title>
-      <link>https://nttdata-dach.github.io/posts/mf-sw-jobshopproblem/</link>
-      <pubDate>Thu, 08 Jun 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/posts/mf-sw-jobshopproblem/</guid>
-      <description>The Job-Shop problem is a well-known optimization problem where a certain number of jobs have to be scheduled such that the total time needed to finish all jobs is minimal. In this article we shine a light on two algorithms that could be used as a possible solution for this problem.</description>
     </item>
     <item>
       <title>Three use cases highlighting the business value of private blockchain</title>

@@ -16,19 +16,5 @@
       <guid>https://nttdata-dach.github.io/posts/ss-immersivetechnologies-01-basics/</guid>
       <description>Immersive technologies, alternatively referred to as XR technologies, possess the capability to either augment or replace the physical world with a digitally simulated one. This article provides an overview by describing the three categories of immersive technologies, including relevant background information, and significant use cases.</description>
     </item>
-    <item>
-      <title>Part 6: Setting Up an Unreal Engine Project: Best Practices for Interactive Immersive Experiences</title>
-      <link>https://nttdata-dach.github.io/posts/ss-immersivetechnologies-06-settingupunrealproject/</link>
-      <pubDate>Mon, 08 Apr 2024 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/posts/ss-immersivetechnologies-06-settingupunrealproject/</guid>
-      <description>tbd</description>
-    </item>
-    <item>
-      <title>Part 6: Setting Up a Unreal Engine Project - Best Practices for Interactive Immersive Experiences</title>
-      <link>https://nttdata-dach.github.io/posts/ss-settingupanunrealproject/</link>
-      <pubDate>Thu, 06 Jul 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/posts/ss-settingupanunrealproject/</guid>
-      <description>tbd</description>
-    </item>
   </channel>
 </rss>
