@@ -7,27 +7,76 @@
     <generator>Hugo</generator>
     <language>en</language>
     <copyright>Copyright 2026 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Thu, 17 Jul 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 22 Jun 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>A2A</title>
+      <link>https://nttdata-dach.github.io/tags/a2a/</link>
+      <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/a2a/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Agentic AI</title>
+      <link>https://nttdata-dach.github.io/tags/agentic-ai/</link>
+      <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/agentic-ai/</guid>
+      <description></description>
+    </item>
     <item>
       <title>AI</title>
       <link>https://nttdata-dach.github.io/tags/ai/</link>
-      <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/ai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>AI Gateway</title>
+      <link>https://nttdata-dach.github.io/tags/ai-gateway/</link>
+      <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/ai-gateway/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>AI Riskmanagement</title>
+      <link>https://nttdata-dach.github.io/tags/ai-riskmanagement/</link>
+      <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/ai-riskmanagement/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Ethical AI</title>
+      <link>https://nttdata-dach.github.io/tags/ethical-ai/</link>
+      <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/ethical-ai/</guid>
       <description></description>
     </item>
     <item>
       <title>Gateway</title>
       <link>https://nttdata-dach.github.io/tags/gateway/</link>
-      <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/gateway/</guid>
       <description></description>
     </item>
     <item>
       <title>GenAI</title>
       <link>https://nttdata-dach.github.io/tags/genai/</link>
-      <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/genai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Kong</title>
+      <link>https://nttdata-dach.github.io/tags/kong/</link>
+      <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/kong/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>MCP</title>
+      <link>https://nttdata-dach.github.io/tags/mcp/</link>
+      <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/mcp/</guid>
       <description></description>
     </item>
     <item>
@@ -35,13 +84,6 @@
       <link>https://nttdata-dach.github.io/tags/hallucinations/</link>
       <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/hallucinations/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Kong</title>
-      <link>https://nttdata-dach.github.io/tags/kong/</link>
-      <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/kong/</guid>
       <description></description>
     </item>
     <item>
@@ -70,41 +112,6 @@
       <link>https://nttdata-dach.github.io/tags/vss/</link>
       <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/vss/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Agentic AI</title>
-      <link>https://nttdata-dach.github.io/tags/agentic-ai/</link>
-      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/agentic-ai/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>AI Gateway</title>
-      <link>https://nttdata-dach.github.io/tags/ai-gateway/</link>
-      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/ai-gateway/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>AI Riskmanagement</title>
-      <link>https://nttdata-dach.github.io/tags/ai-riskmanagement/</link>
-      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/ai-riskmanagement/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Ethical AI</title>
-      <link>https://nttdata-dach.github.io/tags/ethical-ai/</link>
-      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/ethical-ai/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>MCP</title>
-      <link>https://nttdata-dach.github.io/tags/mcp/</link>
-      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/mcp/</guid>
       <description></description>
     </item>
     <item>
