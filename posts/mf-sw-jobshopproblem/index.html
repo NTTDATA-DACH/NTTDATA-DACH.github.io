@@ -1,10 +1,7 @@
-
-<!doctype html>
-<html>
-
-<head>
+<!DOCTYPE html>
+<html><head>
   <title>  Quantum-inspired approaches to the Job-Shop Problem  </title>
-  <meta charset="utf-8"/> 
+  <meta charset="utf-8"/>
   
   <meta property="og:type" content="article"/>
   <meta property="og:title" content="Quantum-inspired approaches to the Job-Shop Problem"/>
@@ -22,35 +19,32 @@
   <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
   <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
 </head>
+<body><header>
+  <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  
+  <nav>
 
-<body>
-  <header>
-    <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
     
-    <nav>
+      <a   class="emphasized" 
+          href="/posts">All Blogposts</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="mailto:techblog@nttdata.com">Contact</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="https://de.nttdata.com/">About Us</a>
+    
 
-      
-        <a   class="emphasized" 
-           href="/posts">All Blogposts</a>
-      
-        <a target="_blank"   
-           href="mailto:techblog@nttdata.com">Contact</a>
-      
-        <a target="_blank"   
-           href="https://de.nttdata.com/">About Us</a>
-      
-
-      <a target="_blank" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
-      <div class="theme-switch-wrapper">
-        <label class="theme-switch" for="checkbox">
-            <input type="checkbox" id="checkbox" onChange="switchMode()"/>
-            <div class="slider round"></div>
-        </label>
-      </div>
-    </nav>
-  </header>
-
-
+    <a target="_blank" rel="noopener noreferrer" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+    <div class="theme-switch-wrapper">
+      <label class="theme-switch" for="checkbox">
+          <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+          <div class="slider round"></div>
+      </label>
+    </div>
+  </nav>
+</header>
+<div id="content">
 
   <div>
     <div class="modal" id="uphillModal">
@@ -129,7 +123,7 @@ Each job $J$ is a sequence of $m_J$ operations, where $m_J$ may be different for
   <figure>
     <img src="/posts/img/MF-SW-JobShopProblem/example_problem1.png" alt="Example1">
     <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Fig. 1 - Example Job-Shop problem</figcaption>
-  </br>
+  <br>
   </figure>
 
 </p>
@@ -143,7 +137,7 @@ Each job $J$ is a sequence of $m_J$ operations, where $m_J$ may be different for
   <figure>
     <img src="/posts/img/MF-SW-JobShopProblem/schedule2.svg" alt="Example schedule">
     <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Fig. 2 - Example Job-Shop schedule</figcaption>
-  </br>
+  <br>
   </figure>
 
 </p>
@@ -155,7 +149,7 @@ Each job $J$ is a sequence of $m_J$ operations, where $m_J$ may be different for
   <figure>
     <img src="/posts/img/MF-SW-JobShopProblem/example_problem1.png" alt="Example problem">
     <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Fig. 3 - Same problem as above</figcaption>
-  </br>
+  <br>
   </figure>
 
 </p>
@@ -173,7 +167,7 @@ Now comes the crucial point: $O_{4}$ can start at time $0$, occupying machine $2
   <figure>
     <img src="/posts/img/MF-SW-JobShopProblem/schedule2.svg" alt="Greedy schedule">
     <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Fig. 4 - Greedy schedule for example problem</figcaption>
-  </br>
+  <br>
   </figure>
 
 </p>
@@ -295,7 +289,7 @@ I_i &amp;= -\epsilon \left (2\sum_j Q_{ij}x_j + b_i\right )
   <figure>
     <img src="/posts/img/MF-SW-JobShopProblem/CAC_example_plot1.png" alt="Example trajectory">
     <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Fig. 5 - Example trajectory of relaxed schedule vector</figcaption>
-  </br>
+  <br>
   </figure>
 
 </p>
@@ -311,7 +305,7 @@ I_i &amp;= -\epsilon \left (2\sum_j Q_{ij}x_j + b_i\right )
   <figure>
     <img src="/posts/img/MF-SW-JobShopProblem/makespan_estimates_300reps_duration_span=[1,6]_M=1-5_dense.png" alt="Makespan bounds">
     <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Fig. 6 - Upper and lower makespan bounds</figcaption>
-  </br>
+  <br>
   </figure>
 
 </p>
@@ -321,7 +315,7 @@ I_i &amp;= -\epsilon \left (2\sum_j Q_{ij}x_j + b_i\right )
   <figure>
     <img src="/posts/img/MF-SW-JobShopProblem/variable_pruning_example.png" alt="Variable pruning">
     <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Fig. 7 - Example problem for variable pruning</figcaption>
-  </br>
+  <br>
   </figure>
 
 </p>
@@ -337,7 +331,7 @@ However, such an ideal parameter set might not exist. In this case we&rsquo;d ha
   <figure>
     <img src="/posts/img/MF-SW-JobShopProblem/score_distribution_best_params2_M6_[1,6]_Ms=3_duration_span=[1,6].png" alt="Benchmark for 9 operations and duration 1-6">
     <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Fig. 8 - Benchmark for best-performing parameter set on 9 operations, durations 1-6</figcaption>
-  </br>
+  <br>
   </figure>
 
 </p>
@@ -346,7 +340,7 @@ However, such an ideal parameter set might not exist. In this case we&rsquo;d ha
   <figure>
     <img src="/posts/img/MF-SW-JobShopProblem/score_distribution_best_params2_M6_[1,6]_Ms=3_duration_span=[1,3].png" alt="Benchmark for 9 operations and duration 1-3">
     <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Fig. 9 - Benchmark for best-performing parameter set on 9 operations, durations 1-3</figcaption>
-  </br>
+  <br>
   </figure>
 
 </p>
@@ -354,7 +348,7 @@ However, such an ideal parameter set might not exist. In this case we&rsquo;d ha
   <figure>
     <img src="/posts/img/MF-SW-JobShopProblem/score_distribution_best_params2_for_dur_span[1,6]_Ms=4_duration_span=[1,3].png" alt="Benchmark for arger problems">
     <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Fig. 10 - Same parameter set tested on larger problems</figcaption>
-  </br>
+  <br>
   </figure>
 
 </p>
@@ -362,7 +356,7 @@ However, such an ideal parameter set might not exist. In this case we&rsquo;d ha
   <figure>
     <img src="/posts/img/MF-SW-JobShopProblem/score_distribution_best_params_for_dur_span[1,6]_Ms=3_Ms=5_duration_span=[1,6].png" alt="Failure for larger problems">
     <figcaption style="font-size: 16px; padding-top: 0px; margin-top: -20px; padding-bottom: 10px;">Fig. 11 - Failure of the parameter set on even larger problems</figcaption>
-  </br>
+  <br>
   </figure>
 
 </p>
@@ -385,7 +379,7 @@ However, such an ideal parameter set might not exist. In this case we&rsquo;d ha
                     
                 </span></h3>
                 <p>Working student </p>
-                <p calss="author-socials">
+                <p class="author-socials">
                     
                     
                     
@@ -407,7 +401,7 @@ However, such an ideal parameter set might not exist. In this case we&rsquo;d ha
                     
                 </span></h3>
                 <p>Working student </p>
-                <p calss="author-socials">
+                <p class="author-socials">
                     
                     
                     
@@ -462,9 +456,8 @@ However, such an ideal parameter set might not exist. In this case we&rsquo;d ha
 
 
 
-</main>
 
-<footer>
+        </div><footer>
   <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
   <nav>
     
@@ -478,7 +471,7 @@ However, such an ideal parameter set might not exist. In this case we&rsquo;d ha
     
   </nav>
 
-  <p class="text">Copyright 2025 NTT DATA Deutschland SE - This site does not use any cookies</p>
+  <p class="text">Copyright 2026 NTT DATA Deutschland SE - This site does not use any cookies</p>
 
   <div>
     <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
@@ -494,5 +487,5 @@ However, such an ideal parameter set might not exist. In this case we&rsquo;d ha
 <script type="text/x-mathjax-config">
   MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
 </script>
-
+</body>
 </html>

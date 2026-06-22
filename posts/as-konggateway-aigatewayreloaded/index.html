@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html><head>
+  <title>  Part 12: AI Gateway Reloaded  </title>
+  <meta charset="utf-8"/>
+  
+  <meta property="og:type" content="article"/>
+  <meta property="og:title" content="Kong - The Gateway without Limitations - Part 12: AI Gateway Reloaded"/>
+  
+  <meta property="article:author" content="[Alexander Suchier]"/>
+  <meta property="og:image" content="https://nttdata-dach.github.io/posts/img/AS-KongGateway-AiGatewayReloaded/title-image.jpg"/>
+  <meta property="og:url" content="https://nttdata-dach.github.io/posts/as-konggateway-aigatewayreloaded/"/>
+  <meta property="og:description" content="This blog explores how Kong AI Gateway has been reloaded between versions 3.10 and 3.14, evolving from a secure AI integration layer into a powerful foundation for managing agentic AI workloads. Building on its enterprise-grade capabilities, Kong has significantly expanded its AI feature set with enhanced multi-provider support, improved resilience and fine-grained Model Context Protocol (MCP) access controls. The result is a more mature AI Gateway designed to support modern AI systems."/>
+  
+  <script src="https://nttdata-dach.github.io/js/darkmode.js"></script>
+  <script src="https://nttdata-dach.github.io/js/modal.js"></script>
+  
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/syntax.css">
+  <link rel="stylesheet" href="https://nttdata-dach.github.io/css/main.css">
+  <link href="" rel="feed" type="application/rss+xml" title="Technology Blog" />
+  <script src="https://kit.fontawesome.com/ed40ccf940.js" crossorigin="anonymous"></script>
+</head>
+<body><header>
+  <a href="/"><img id="logo" src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  
+  <nav>
+
+    
+      <a   class="emphasized" 
+          href="/posts">All Blogposts</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="mailto:techblog@nttdata.com">Contact</a>
+    
+      <a target="_blank" rel="noopener noreferrer"   
+          href="https://de.nttdata.com/">About Us</a>
+    
+
+    <a target="_blank" rel="noopener noreferrer" class="github" href="https://github.com/NTTDATA-DACH/"><img src="/images/GitHub.png"></a>
+    <div class="theme-switch-wrapper">
+      <label class="theme-switch" for="checkbox">
+          <input type="checkbox" id="checkbox" onChange="switchMode()"/>
+          <div class="slider round"></div>
+      </label>
+    </div>
+  </nav>
+</header>
+<div id="content">
+
+  <div>
+    <div class="modal" id="uphillModal">
+    <div class="modal-background"></div>
+    <div class="modal-content">
+        <picture class="image is-4by3" id="modalContainer">
+            <div id="modalInner">
+                <img src="" alt="" id="modalImg">
+                <figcaption id="caption">
+                </figcaption>
+            </div>
+        </picture>
+    </div>
+    <button class="modal-close is-large" aria-label="close"></button>
+</div>
+</div>
+
+<div class="emobanner article">
+    <h1>
+        <span class="pre">22.06.2026
+        
+         - Alexander Suchier - <i class="fa-solid fa-book-open"></i> 8 min read
+        
+        </span>
+        Part 12: AI Gateway Reloaded
+        
+        
+        <a id="series-link" href="/series/kong-the-gateway-without-limitations"><span class="subtitle">Kong - The Gateway without Limitations</span></a>
+        
+    </h1>
+
+    
+        <div class="article-header-img" style="background: url('/posts/img/AS-KongGateway-AiGatewayReloaded/title-image.jpg') no-repeat center center; background-size: cover">
+            <div class="article-header-gradient"></div>
+        </div> 
+    
+
+
+    
+</div>
+
+<main>
+
+    <div class="container">
+        <div class="spacer"></div>
+        <div class="content">
+            
+           
+            <p><a href="https://en.wikipedia.org/wiki/Artificial_intelligence">Artificial intelligence (AI)</a> continues to evolve at a rapid pace, and so do the platforms that make it usable in enterprise environments. Since the release of Kong AI Gateway 3.10 and my <a href="https://nttdata-dach.github.io/posts/as-konggateway-aigateway/">introductory blog</a> on its AI capabilities, the landscape has shifted from simple <a href="https://en.wikipedia.org/wiki/Large_language_model">large language model (LLM)</a> integrations toward more complex, agent-driven architectures. With versions 3.11 through 3.14, Kong has significantly expanded its AI capabilities and introduced more advanced mechanisms, including <a href="https://modelcontextprotocol.io/docs/getting-started/intro">Model Context Protocol (MCP)</a> access controls. It is time to revisit the AI Gateway and explore what “reloaded” means in practice for this new phase of AI adoption.</p>
+<h1 id="overview">Overview</h1>
+<p>When Kong AI Gateway 3.10 was released, the journey that began with early AI capabilities in Kong Gateway 3.6 — where the first AI Gateway features were introduced — had reached an important milestone, establishing a strong foundation for integrating LLMs into enterprise environments. The focus was clear: LLM-agnostic integration, secure AI access, centralized traffic management, and support for ethical AI safeguards and risk mitigation through AI plugins.</p>
+<p>These capabilities are integrated directly into the existing Kong Gateway platform, avoiding the need to introduce specialized SDK frameworks or standalone LLM intermediary platforms that are separate from the existing enterprise architecture.</p>
+<p>The continued evolution from Kong Enterprise versions 3.11 to 3.14 can be observed across three key dimensions:</p>
+<ol>
+<li>broader AI ecosystem integration,</li>
+<li>enhanced routing, load balancing, and reliability for production AI workloads, and</li>
+<li>deeper support for agentic architectures through Model Context Protocol (MCP) enhancements,</li>
+<li>emerging AI-to-AI (A2A) communication capabilities enabled by the A2A proxy plugin.</li>
+</ol>
+<p>The following sections revisit the Kong AI Gateway concepts introduced in the previous blog and explore how recent developments effectively “reload” the architecture.</p>
+<h1 id="reloaded-ai-gateway-architecture">Reloaded AI gateway architecture</h1>
+<p><a href="https://nttdata-dach.github.io/posts/as-konggateway-aigateway/">Kong AI Gateway</a> is built on the mature <a href="https://nttdata-dach.github.io/posts/as-konggateway-productintroduction/">Kong API Gateway</a> and enhanced with <a href="https://developer.konghq.com/plugins/?category=ai">AI-specific plugins</a>, some available in the open-source edition, others are provided as Enterprise capabilities that require an appropriate license. The layered architecture below illustrates how <a href="https://developer.konghq.com/plugins/?category=ai">AI and MCP plugins</a> extend the existing API Gateway stack, which in turn builds on the proven <a href="https://en.wikipedia.org/wiki/Nginx">NGINX</a>-based runtime foundation. Still an emerging capability, WebAssembly (WASM) is also supported in Kong Gateway as an alternative to LuaJIT.</p>
+
+
+
+
+
+<picture style="display: contents;"
+     >
+    
+    <source srcset="/posts/img/AS-KongGateway-AiGatewayReloaded/KongGatewayLayout-dark.png" media="none"/>
+    
+    <img    
+        class="dynamicimage"    
+        
+        src="/posts/img/AS-KongGateway-AiGatewayReloaded/KongGatewayLayout-light.png" 
+        
+         
+        
+        
+        
+         style="max-width:500px; position: relative; left: 50%; transform: translate(-50%, 0%);"
+        />
+    
+</picture>
+
+<script>
+    initPicture()
+</script>
+
+
+<p>This layered view highlights that AI capabilities are embedded directly into the established Kong Gateway runtime. By extending the existing plugin framework and core traffic management layer, the AI Gateway inherits the stability, performance and operational maturity of the underlying API platform.<br>
+Building on this technical foundation, the expanded AI plugin ecosystem can be organized into clearly defined control domains. Each domain represents a structured grouping of related capabilities, including observability, guardrails, performance and cost optimization, access governance, and agentic protection, as illustrated in the updated overview below.</p>
+
+
+  
+
+
+<picture style="display: contents;"
+     
+    id="[64 143 416 487 158 113]"
+    onclick="openModal(this.id)"
+     >
+    
+    <source srcset="/posts/img/AS-KongGateway-AiGatewayReloaded/KongAIGateway-dark.png" media="none"/>
+    
+    <img    
+        class="dynamicimage modal-pic"    
+        
+        src="/posts/img/AS-KongGateway-AiGatewayReloaded/KongAIGateway-light.png" 
+        
+         
+        
+        
+        
+        
+        />
+    
+</picture>
+
+<script>
+    initPicture()
+</script>
+
+
+<p>At the heart of this architectural model is the “Prompt and Response Engineering Controls” domain. Positioned at the center of the diagram, it directly addresses ethical AI principles and structured AI risk management by governing how prompts are validated, how responses are filtered, and how guardrail mechanisms are applied.<br>
+By positioning these controls at the core of the AI Gateway, the architecture emphasizes that responsible AI usage is not an optional add-on but a foundational design principle. Surrounding domains such as observability, performance and cost optimization, unified LLM access, and MCP protection build upon this core, together forming a modular AI access and control framework. Additionally, the new <a href="https://developer.konghq.com/plugins/ai-a2a-proxy/">A2A proxy plugin</a> supports observability and control for agent-to-agent traffic by transparently handling <a href="https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/">A2A protocol</a> requests through the gateway.<br>
+The following section examines how recent enhancements and newly introduced plugins strengthen these control domains and further mature the AI Gateway architecture.</p>
+<h1 id="advancing-ai-plugin-capabilities">Advancing AI plugin capabilities</h1>
+<p>With the foundation established in 3.10, the subsequent releases focused on deepening and refining the AI plugin landscape. The evolution of <a href="https://developer.konghq.com/plugins/ai-proxy/">AI Proxy</a>, <a href="https://developer.konghq.com/plugins/ai-proxy-advanced/">AI Proxy Advanced</a>, and newly introduced AI plugins reflects a clear shift toward greater operational control, enhanced visibility, improved performance management, and stronger support for agent-driven architectures. This is further complemented by emerging support for agent-to-agent (A2A) communication.</p>
+<p>Within the domain of <strong>AI Observability and Alerting Controls</strong>, the AI Gateway introduced enhanced logging, metrics exposure, and tracing capabilities for AI traffic, enabling deeper insight into prompt execution, token usage, and provider interactions. These improvements allow teams to monitor AI behavior more transparently, define alerting thresholds, and detect anomalies or misuse in production environments.</p>
+<p>The <strong>Unified LLM Access Controls</strong> category is primarily shaped by the capabilities of the <a href="https://developer.konghq.com/plugins/ai-proxy-advanced/">AI Proxy Advanced plugin</a>. This plugin introduces advanced traffic management mechanisms for LLM integrations. In addition to semantic routing, which enables request distribution based on contextual similarity rather than traditional balancing algorithms, the gateway now provides cost-aware provider selection, controlled retry policies, and explicit failover criteria. Usage-based load steering, configurable failure thresholds, and automated health-driven rerouting across multiple LLM providers transform AI consumption into production-grade traffic management.</p>
+<p>The <strong>Prompt and Response Engineering Controls</strong> domain has been significantly strengthened through the introduction of additional hyperscaler-based guardrail integrations. Expanding beyond the previously available Azure Content Safety integration, recent releases introduced dedicated plugins such as <a href="https://developer.konghq.com/plugins/ai-aws-guardrails/">AI AWS Guardrails</a>, <a href="https://developer.konghq.com/plugins/ai-gcp-model-armor/">AI GCP Model Armor</a>, and the <a href="https://developer.konghq.com/plugins/ai-lakera-guard/">AI Lakera Guard plugin</a>, which integrates with the independent Lakera Guard SaaS solution. To provide maximum flexibility, the new <a href="https://developer.konghq.com/plugins/ai-custom-guardrail/">AI Custom Guardrail plugin</a> enables fully customizable validation and enforcement logic for both prompts and responses.<br>
+In addition, the <a href="https://developer.konghq.com/plugins/ai-semantic-response-guard/">AI Semantic Response Guard plugin</a> extends protection capabilities by evaluating model responses based on semantic characteristics and configurable policies directly within the gateway. Together with the <a href="https://developer.konghq.com/plugins/ai-semantic-prompt-guard/">AI Semantic Prompt Guard plugin</a>, which focuses on semantic prompt control, it establishes a complementary mechanism: one plugin governs prompt input, while the other governs model output.<br>
+These plugins enable both external and gateway-level evaluation and filtering of prompts and model responses, supporting policy enforcement, toxicity detection, data leakage prevention, and the implementation and verification of compliance-related control requirements. By integrating these guardrail mechanisms directly into the gateway layer, Kong supports ethical AI practices and structured risk management without requiring application-level modifications.</p>
+<p>The <strong>Cost and Performance Controls</strong> domain has been further enhanced through the introduction of the <a href="https://developer.konghq.com/plugins/ai-prompt-compressor/">AI Prompt Compressor plugin</a>. In long-running conversational and agent-driven workloads, context windows can continuously grow, increasing token consumption, latency, and operational cost. At the same time, excessive context can contribute to what is often referred to as “context rot” — a phenomenon in which large language models may gradually lose accuracy and reliability as the volume of input data expands and relevant signals become diluted.<br>
+The AI Prompt Compressor addresses this challenge by reducing prompt size while preserving semantic intent, helping to maintain response quality, control token usage, and stabilize performance characteristics. By optimizing prompt payloads directly at the gateway layer, Kong contributes to more efficient and sustainable AI consumption without requiring application-level redesign.</p>
+<p>The <strong>Response Accuracy and Hallucination Mitigation Controls</strong> domain has been expanded through the introduction of the <a href="https://developer.konghq.com/plugins/ai-llm-as-judge/">AI LLM-as-Judge plugin</a>. This plugin enables automated evaluation of prompt-response pairs using a dedicated LLM acting as a reviewer. It assigns a numerical score to generated responses on a scale from 1 to 100, where lower values indicate incorrect or irrelevant outputs and higher values reflect stronger alignment with the expected response quality.<br>
+By introducing a scoring-based evaluation mechanism directly within the AI plugin suite, Kong makes it straightforward to integrate automated validation and retry activities for LLM interactions. Responses can be assessed against configurable quality criteria and, based on the evaluation outcome, re-generated or routed to an alternative model. This assessment feature enables automated quality control and can help reduce the risk of unchecked hallucinations.</p>
+<p>The <strong>MCP Proxy and Protection Controls</strong> domain addresses the growing need to securely expose tools and services to agent-based AI systems. The Model Context Protocol (MCP) defines a standardized way for AI agents to interact with external tools and data sources, enabling structured tool usage within agent workflows.<br>
+To support this emerging ecosystem, Kong introduced dedicated MCP capabilities through the <a href="https://developer.konghq.com/plugins/ai-mcp-proxy/">AI MCP Proxy</a> and <a href="https://developer.konghq.com/plugins/ai-mcp-oauth2/">AI MCP OAuth2 plugins</a>. The AI MCP Proxy plugin allows MCP-based tool interactions to be routed and managed through the gateway, applying the same traffic control and policy enforcement mechanisms used for API traffic. Complementing this, the AI MCP OAuth2 plugin enables secure authentication and authorization for MCP tool access, ensuring that agent interactions follow established identity and access control policies. Together, these plugins extend the AI Gateway from managing LLM access to governing agent-to-tool interactions within MCP-based architectures.</p>
+<p>Taken together, these enhancements highlight how the AI Gateway is evolving toward a broader operational layer for AI-driven systems. As agentic workflows and multi-model environments continue to emerge, the gateway will increasingly act as the point where AI interactions are governed, secured, and optimized, supported by the new A2A proxy plugin for agent-to-agent communication.</p>
+<h1 id="conclusion">Conclusion</h1>
+<p>With the continued evolution of its AI plugin ecosystem, Kong AI Gateway has matured from an LLM integration layer into a broader platform for governing modern AI workloads. The expanding set of plugins shows how traditional API Gateway capabilities naturally extend into the AI domain.
+One prediction from the previous article has already materialized: the importance of the Model Context Protocol (MCP). As agent-based systems increasingly rely on structured access to tools and data sources, MCP support in the Kong AI Gateway provides a standardized and secure way to govern these interactions at the gateway layer.<br>
+This reinforces the broader architectural idea that AI Gateways are not a replacement for API Gateways, but their natural evolution. As AI systems become more deeply integrated into enterprise architectures, the gateway remains the logical control point for managing access, enforcing policies, and protecting critical infrastructure.<br>
+And as we have seen once again with all the AI functionality and extensions, Kong AI Gateway can help reduce architectural limitations and provide the flexibility needed to meet the demands of the evolving AI era</p>
+<h1 id="credits">Credits</h1>
+<p>A special note of thanks to Johannes Reim for reviewing every article in this series and for the invaluable feedback.</p>
+<p>Title image by <a href="https://www.istockphoto.com/en/portfolio/dell640">dell640</a> on <a href="https://www.istockphoto.com">iStock</a></p>
+
+            
+        </div>
+        <div class="spacer"></div>
+    </div>
+    <div class="author-container">
+        <figure class="author">
+            <img src="../../authors/alexander-suchier.jpg" alt=""/>
+            <figcaption>
+                <h3><a href="/authors/alexander-suchier">Alexander Suchier</a><span>
+                    
+                </span></h3>
+                <p>Senior Managing Technical Consultant and Kong Champion </p>
+                <p class="author-socials">
+                    
+                    
+                    <a target="_blank" rel="noopener noreferrer" href="https://www.linkedin.com/in/alexander-suchier-0608481"><i class="fa-brands fa-linkedin"></i></a>
+                    
+                </p>
+                
+                    
+            </figcaption>
+        </figure>
+        
+    </div>
+    
+    
+
+    <div class="related-container">
+        
+        <div class="related-block">
+            <h3 class="related-heading" id="series-list">Check out the full series</h3>
+            
+            <ul>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-productintroduction/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 1: Brief Product Introduction</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-logchunking/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 2: Log Chunking</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-onbehalfof/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 3: Token Exchange On-Behalf-Of</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-saml2bearer/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 4: SAML 2.0 Bearer Assertion Flow for OAuth 2.0</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-mtls_header/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 5: mTLS Header</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-tokenvalidation/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 6: Token Validation</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-tokencloning/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 7: Token Cloning</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-plugincloning/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 8: Plugin Cloning</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-serverlessfunctions/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 9: Serverless functions - Who responded?</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-aigateway/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 10: AI Gateway</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-rag_teamplay/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 11: RAG team play with Spring AI</a></li>
+                
+                <li><a class="related-link" href="/posts/as-konggateway-aigatewayreloaded/">KONG - THE GATEWAY WITHOUT LIMITATIONS - Part 12: AI Gateway Reloaded</a></li>
+                
+            </ul>
+        </div>
+        
+        
+        
+        <div class="related-block">
+            
+            
+            
+            
+
+        </div>
+    </div>
+    
+
+    
+    
+    <div class="footer-wrapper">
+        <div class="footer-container">
+            <h2 class="footer">Article Tags</h2>
+            
+
+<ul class="tag-list-linked">
+  
+  <li><a href="https://nttdata-dach.github.io/tags/kong/">Kong</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/gateway/">Gateway</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/ai/">AI</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/genai/">GenAI</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/ai-gateway/">AI Gateway</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/ethical-ai/">Ethical AI</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/ai-riskmanagement/">AI Riskmanagement</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/agentic-ai/">Agentic AI</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/a2a/">A2A</a> </li>
+  
+  <li><a href="https://nttdata-dach.github.io/tags/mcp/">MCP</a> </li>
+  
+</ul>
+        </div>
+    </div>
+    
+</main>
+
+
+
+
+
+        </div><footer>
+  <a href="/"><img src="/images/GlobalLogo_NTTDATA_White.png"></a>
+  <nav>
+    
+    <a  href="/imprint">Imprint</a>
+    
+    <a  href="/privacy">Privacy Notice</a>
+    
+    <a  href="/legal">Legal Notice</a>
+    
+    <a  href="mailto:techblog@nttdata.com">Contact</a>
+    
+  </nav>
+
+  <p class="text">Copyright 2026 NTT DATA Deutschland SE - This site does not use any cookies</p>
+
+  <div>
+    <span class="first"><a href="https://de.nttdata.com/" target="_blank" rel="noopener noreferrer">de.nttdata.com</a></span>
+    
+    <a class="top" href="#">back to top &#8679;</a>
+  </div>
+
+</footer>
+
+<script type="text/javascript"
+  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({ tex2jax: {inlineMath: [["$","$"],["\\(","\\)"]]} })
+</script>
+</body>
+</html>

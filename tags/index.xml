@@ -7,27 +7,160 @@
     <generator>Hugo</generator>
     <language>en</language>
     <copyright>Copyright 2026 NTT DATA Deutschland SE - This site does not use any cookies</copyright>
-    <lastBuildDate>Thu, 17 Jul 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 22 Jun 2026 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://nttdata-dach.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>A2A</title>
+      <link>https://nttdata-dach.github.io/tags/a2a/</link>
+      <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/a2a/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Agentic AI</title>
+      <link>https://nttdata-dach.github.io/tags/agentic-ai/</link>
+      <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/agentic-ai/</guid>
+      <description></description>
+    </item>
     <item>
       <title>AI</title>
       <link>https://nttdata-dach.github.io/tags/ai/</link>
-      <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/ai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>AI Gateway</title>
+      <link>https://nttdata-dach.github.io/tags/ai-gateway/</link>
+      <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/ai-gateway/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>AI Riskmanagement</title>
+      <link>https://nttdata-dach.github.io/tags/ai-riskmanagement/</link>
+      <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/ai-riskmanagement/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Ethical AI</title>
+      <link>https://nttdata-dach.github.io/tags/ethical-ai/</link>
+      <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/ethical-ai/</guid>
       <description></description>
     </item>
     <item>
       <title>Gateway</title>
       <link>https://nttdata-dach.github.io/tags/gateway/</link>
-      <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/gateway/</guid>
       <description></description>
     </item>
     <item>
       <title>GenAI</title>
       <link>https://nttdata-dach.github.io/tags/genai/</link>
-      <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/genai/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Kong</title>
+      <link>https://nttdata-dach.github.io/tags/kong/</link>
+      <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/kong/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>MCP</title>
+      <link>https://nttdata-dach.github.io/tags/mcp/</link>
+      <pubDate>Mon, 22 Jun 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/mcp/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>AI Governance Framework</title>
+      <link>https://nttdata-dach.github.io/tags/ai-governance-framework/</link>
+      <pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/ai-governance-framework/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Autonomous AI at Scale</title>
+      <link>https://nttdata-dach.github.io/tags/autonomous-ai-at-scale/</link>
+      <pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/autonomous-ai-at-scale/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Embedded AI Governance</title>
+      <link>https://nttdata-dach.github.io/tags/embedded-ai-governance/</link>
+      <pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/embedded-ai-governance/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Enterprise AI Architecture</title>
+      <link>https://nttdata-dach.github.io/tags/enterprise-ai-architecture/</link>
+      <pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/enterprise-ai-architecture/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Outcome-Based Ownership</title>
+      <link>https://nttdata-dach.github.io/tags/outcome-based-ownership/</link>
+      <pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/outcome-based-ownership/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Product-Centric Operating Model</title>
+      <link>https://nttdata-dach.github.io/tags/product-centric-operating-model/</link>
+      <pubDate>Thu, 05 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/product-centric-operating-model/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>AI Accountability Model</title>
+      <link>https://nttdata-dach.github.io/tags/ai-accountability-model/</link>
+      <pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/ai-accountability-model/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>AI Responsibility Framework</title>
+      <link>https://nttdata-dach.github.io/tags/ai-responsibility-framework/</link>
+      <pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/ai-responsibility-framework/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>AI Stewardship</title>
+      <link>https://nttdata-dach.github.io/tags/ai-stewardship/</link>
+      <pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/ai-stewardship/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Elastic AI Autonomy</title>
+      <link>https://nttdata-dach.github.io/tags/elastic-ai-autonomy/</link>
+      <pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/elastic-ai-autonomy/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Governing Autonomous Systems</title>
+      <link>https://nttdata-dach.github.io/tags/governing-autonomous-systems/</link>
+      <pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/governing-autonomous-systems/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Human-AI Role Evolution</title>
+      <link>https://nttdata-dach.github.io/tags/human-ai-role-evolution/</link>
+      <pubDate>Wed, 04 Mar 2026 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/human-ai-role-evolution/</guid>
       <description></description>
     </item>
     <item>
@@ -35,13 +168,6 @@
       <link>https://nttdata-dach.github.io/tags/hallucinations/</link>
       <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/hallucinations/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Kong</title>
-      <link>https://nttdata-dach.github.io/tags/kong/</link>
-      <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/kong/</guid>
       <description></description>
     </item>
     <item>
@@ -70,41 +196,6 @@
       <link>https://nttdata-dach.github.io/tags/vss/</link>
       <pubDate>Thu, 17 Jul 2025 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/vss/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Agentic AI</title>
-      <link>https://nttdata-dach.github.io/tags/agentic-ai/</link>
-      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/agentic-ai/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>AI Gateway</title>
-      <link>https://nttdata-dach.github.io/tags/ai-gateway/</link>
-      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/ai-gateway/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>AI Riskmanagement</title>
-      <link>https://nttdata-dach.github.io/tags/ai-riskmanagement/</link>
-      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/ai-riskmanagement/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Ethical AI</title>
-      <link>https://nttdata-dach.github.io/tags/ethical-ai/</link>
-      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/ethical-ai/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>MCP</title>
-      <link>https://nttdata-dach.github.io/tags/mcp/</link>
-      <pubDate>Sat, 14 Jun 2025 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/mcp/</guid>
       <description></description>
     </item>
     <item>
@@ -301,6 +392,62 @@
       <link>https://nttdata-dach.github.io/tags/web-performance-optimization/</link>
       <pubDate>Wed, 12 Feb 2025 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/web-performance-optimization/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Aws</title>
+      <link>https://nttdata-dach.github.io/tags/aws/</link>
+      <pubDate>Thu, 30 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/aws/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Carbon Footprint</title>
+      <link>https://nttdata-dach.github.io/tags/carbon-footprint/</link>
+      <pubDate>Thu, 30 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/carbon-footprint/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Cloud Architecture</title>
+      <link>https://nttdata-dach.github.io/tags/cloud-architecture/</link>
+      <pubDate>Thu, 30 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/cloud-architecture/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Emission Metrics</title>
+      <link>https://nttdata-dach.github.io/tags/emission-metrics/</link>
+      <pubDate>Thu, 30 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/emission-metrics/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Environmental Imapct</title>
+      <link>https://nttdata-dach.github.io/tags/environmental-imapct/</link>
+      <pubDate>Thu, 30 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/environmental-imapct/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Green Software</title>
+      <link>https://nttdata-dach.github.io/tags/green-software/</link>
+      <pubDate>Thu, 30 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/green-software/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Serverless Computing</title>
+      <link>https://nttdata-dach.github.io/tags/serverless-computing/</link>
+      <pubDate>Thu, 30 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/serverless-computing/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Sustainability</title>
+      <link>https://nttdata-dach.github.io/tags/sustainability/</link>
+      <pubDate>Thu, 30 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/sustainability/</guid>
       <description></description>
     </item>
     <item>
@@ -633,6 +780,13 @@
       <description></description>
     </item>
     <item>
+      <title>Tbd</title>
+      <link>https://nttdata-dach.github.io/tags/tbd/</link>
+      <pubDate>Mon, 08 Apr 2024 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/tbd/</guid>
+      <description></description>
+    </item>
+    <item>
       <title>Client Certificate</title>
       <link>https://nttdata-dach.github.io/tags/client-certificate/</link>
       <pubDate>Wed, 27 Mar 2024 00:00:00 +0000</pubDate>
@@ -728,13 +882,6 @@
       <link>https://nttdata-dach.github.io/tags/on-behalf-of/</link>
       <pubDate>Thu, 21 Dec 2023 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/on-behalf-of/</guid>
-      <description></description>
-    </item>
-    <item>
-      <title>Aws</title>
-      <link>https://nttdata-dach.github.io/tags/aws/</link>
-      <pubDate>Fri, 24 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>https://nttdata-dach.github.io/tags/aws/</guid>
       <description></description>
     </item>
     <item>
@@ -1001,6 +1148,34 @@
       <link>https://nttdata-dach.github.io/tags/entity-component-system/</link>
       <pubDate>Wed, 08 Mar 2023 00:00:00 +0000</pubDate>
       <guid>https://nttdata-dach.github.io/tags/entity-component-system/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Chaotic Amplitude Control</title>
+      <link>https://nttdata-dach.github.io/tags/chaotic-amplitude-control/</link>
+      <pubDate>Thu, 08 Jun 2023 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/chaotic-amplitude-control/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Job Shop Problem</title>
+      <link>https://nttdata-dach.github.io/tags/job-shop-problem/</link>
+      <pubDate>Thu, 08 Jun 2023 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/job-shop-problem/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Optimization</title>
+      <link>https://nttdata-dach.github.io/tags/optimization/</link>
+      <pubDate>Thu, 08 Jun 2023 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/optimization/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Simulated Annealing</title>
+      <link>https://nttdata-dach.github.io/tags/simulated-annealing/</link>
+      <pubDate>Thu, 08 Jun 2023 00:00:00 +0000</pubDate>
+      <guid>https://nttdata-dach.github.io/tags/simulated-annealing/</guid>
       <description></description>
     </item>
     <item>
